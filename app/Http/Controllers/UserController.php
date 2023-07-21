@@ -1,0 +1,712 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Santri;
+use App\Models\Lorong;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
+class UserController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the create form of lorong.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function my_profile()
+    {
+        $user = auth()->user();
+
+        return view('user.my_profile', ['user' => $user]);
+    }
+
+    /**
+     * Show the create form of lorong.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function edit_my_profile()
+    {
+        $user = auth()->user();
+        $lorongs = Lorong::all();
+
+        return view('user.edit_my_profile', ['user' => $user, 'lorongs' => $lorongs]);
+    }
+
+    /**
+     * Show the list and manage table of lorongs.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function list_and_manage($angkatan = null, $role = null)
+    {
+        $list_angkatan = DB::table('santris')
+            ->select('angkatan')
+            ->whereNull('exit_at')
+            ->groupBy('angkatan')
+            ->get();
+        $list_role = DB::table('roles')
+            ->select('id', 'name')
+            ->get();
+
+        $is_all = true;
+        if (isset($angkatan) and isset($role)) {
+            $is_all = false;
+            if ($angkatan != '-' and $role == '-') {
+                $users = User::whereHas('santri', function ($query) {
+                    $query->whereNull('exit_at');
+                })->whereHas('santri', function ($query) use ($angkatan) {
+                    $query->where('angkatan', $angkatan);
+                })->orderBy('fullname', 'asc')->get();
+            } elseif ($angkatan == '-' and $role != '-') {
+                $users = User::whereHas('santri', function ($query) {
+                    $query->whereNull('exit_at');
+                })->whereHas('model_has_roles', function ($query) use ($role) {
+                    $query->where('role_id', $role);
+                })->orderBy('fullname', 'asc')->get();
+            } elseif ($angkatan != '-' and $role != '-') {
+                $users = User::whereHas('santri', function ($query) {
+                    $query->whereNull('exit_at');
+                })->whereHas('santri', function ($query) use ($angkatan) {
+                    $query->where('angkatan', $angkatan);
+                })->whereHas('model_has_roles', function ($query) use ($role) {
+                    $query->where('role_id', $role);
+                })->orderBy('fullname', 'asc')->get();
+            } else {
+                $is_all = true;
+            }
+        } else {
+            $is_all = true;
+        }
+        if ($is_all) {
+            $users = User::whereHas('santri', function ($query) {
+                $query->whereNull('exit_at');
+            })->orderBy('fullname', 'asc')->get();
+        }
+
+        return view('user.list_and_manage', [
+            'users' => $users,
+            'select_angkatan' => $angkatan,
+            'list_angkatan' => $list_angkatan,
+            'select_role' => $role,
+            'list_role' => $list_role
+        ]);
+    }
+
+    public function list_alumni($angkatan = null)
+    {
+        $list_angkatan = DB::table('santris')
+            ->select('angkatan')
+            ->whereNotNull('exit_at')
+            ->groupBy('angkatan')
+            ->get();
+        if (isset($angkatan)) {
+            $users = User::whereHas('santri', function ($query) {
+                $query->where('exit_at', '!=', null);
+            })->whereHas('santri', function ($query) use ($angkatan) {
+                $query->where('angkatan', $angkatan);
+            })->orderBy('fullname', 'asc')->get();
+        } else {
+            $users = User::whereHas('santri', function ($query) {
+                $query->where('exit_at', '!=', null);
+            })->orderBy('fullname', 'asc')->get();
+        }
+
+        return view('user.list_alumni', ['users' => $users, 'select_angkatan' => $angkatan, 'list_angkatan' => $list_angkatan]);
+    }
+
+    public function list_muballigh($angkatan = null)
+    {
+        $list_angkatan = DB::table('santris')
+            ->select('angkatan')
+            ->groupBy('angkatan')
+            ->get();
+
+        if (isset($angkatan)) {
+            $users = DB::table('users')
+                ->join('santris', 'fkUser_id', '=', 'users.id')
+                ->join('model_has_roles', 'model_id', '=', 'users.id')
+                ->where('model_has_roles.role_id', 10)
+                ->where('santris.angkatan', $angkatan)
+                ->get();
+        } else {
+            $users = DB::table('users')
+                ->join('santris', 'fkUser_id', '=', 'users.id')
+                ->join('model_has_roles', 'model_id', '=', 'users.id')
+                ->where('model_has_roles.role_id', 10)
+                ->get();
+        }
+
+        return view('user.list_muballigh', ['users' => $users, 'select_angkatan' => $angkatan, 'list_angkatan' => $list_angkatan]);
+    }
+
+    public function list_pelanggaran()
+    {
+        $users = DB::table('users')
+            ->join('santris', 'fkUser_id', '=', 'users.id')
+            ->join('model_has_roles', 'model_id', '=', 'users.id')
+            ->where('model_has_roles.role_id', 10)
+            ->get();
+
+        return view('user.list_pelanggaran', ['users' => $users]);
+    }
+
+    /**
+     * Show the create form of lorong.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function create()
+    {
+        $lorongs = Lorong::all();
+
+        return view('user.create', ['lorongs' => $lorongs]);
+    }
+
+    /**
+     * Insert user.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function store(Request $request)
+    {
+        if (!auth()->user()->can('create users')) return redirect()->route('presence report');
+
+        $request->validate([
+            'fullname' => 'required|max:100',
+            'email' => 'required|max:100|email|unique:users',
+            'password' => 'required|max:100',
+            'birthdate' => 'required|date',
+            'gender' => 'required|string'
+        ]);
+
+        if ($request->input('role-santri'))
+            $request->validate([
+                'nis' => 'required|integer|unique:santris',
+                'angkatan' => 'required|integer',
+                'join_at' => 'required|date'
+            ]);
+
+        if ($request->input('fkLorong_id')) {
+            $request->validate([
+                'fkLorong_id' => 'integer|nullable'
+            ]);
+        }
+
+        // check for image first
+        if ($request->hasFile('profileImg')) {
+            $request->validate([
+                'profileImg' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
+            ]);
+
+            // Save the file locally in the storage/public/ folder under a new folder named /destinations
+            $request->profileImg->store('users', 'public');
+        }
+
+        // GUARD for role superadmin
+        if ($request->input('role-superadmin') && !auth()->user()->hasRole('superadmin'))
+            return redirect()->route('create user')->withErrors(['superadmin_only' => `Hanya superadmin yang bisa memberi role superadmin.`]);
+
+        // GUARD for role RJ1
+        if ($request->input('role-rj1') && !auth()->user()->hasRole('superadmin'))
+            return redirect()->route('create user')->withErrors(['superadmin_only' => `Hanya superadmin yang bisa memberi role rj1.`]);
+
+        // start inserting user
+        $inserted_user = User::create([
+            'fullname' => $request->input('fullname'),
+            'nohp' => $request->input('nohp'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'birthdate' => $request->input('birthdate'),
+            'gender' => $request->input('gender'),
+            'profileImgUrl' => $request->hasFile('profileImg') ? $request->profileImg->hashName() : null
+        ]);
+
+        if (!$inserted_user)
+            return redirect()->route('create user')->withErrors(['failed_adding_user' => 'Gagal menambah user baru.']);
+
+        if ($request->input('role-santri')) {
+            $inserted_santri = Santri::create([
+                'nama_ortu' => $request->input('nama_ortu'),
+                'nohp_ortu' => $request->input('nohp_ortu'),
+                'nis' => $request->input('nis'),
+                'angkatan' => $request->input('angkatan'),
+                'fkLorong_id' => $request->input('fkLorong_id') ? $request->input('fkLorong_id') : null,
+                'join_at' => $request->input('join_at'),
+                'fkUser_id' => $inserted_user->id
+            ]);
+
+            if (!$inserted_santri)
+                return redirect()->route('create user')->withErrors(['failed_updating_santri_data' => 'User berhasil ditambah namun data santri gagal ditambah.']);
+
+            // assign role
+            $roleSantri = Role::findByName('santri');
+
+            if (!$roleSantri)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_santri' => 'User dan data santri berhasil ditambah namun gagal memberi role santri (Role santri tidak ditemukan). Ini fatal, harap hilangkan role santri dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleSantri);
+        }
+
+        if ($request->input('role-divisi-it')) {
+            // assign role
+            $roleDivisiIt = Role::findByName('divisi it');
+
+            if (!$roleDivisiIt)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_divisi_it' => 'User dan data santri berhasil ditambah namun gagal memberi role divisi it (Role divisi it tidak ditemukan). Harap hilangkan role divisi it dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleDivisiIt);
+        }
+
+        if ($request->input('role-pengabsen')) {
+            // assign role
+            $rolePengabsen = Role::findByName('pengabsen');
+
+            if (!$rolePengabsen)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_pengabsen' => 'User dan data santri berhasil ditambah namun gagal memberi role pengabsen (Role pengabsen tidak ditemukan). Harap hilangkan role pengabsen dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($rolePengabsen);
+        }
+
+        if ($request->input('role-divisi-kurikulum')) {
+            // assign role
+            $roleDivisiKurikulum = Role::findByName('divisi kurikulum');
+
+            if (!$roleDivisiKurikulum)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_kurikulum' => 'User dan data santri berhasil ditambah namun gagal memberi role divisi kurikulum (Role divisi kurikulum tidak ditemukan). Harap hilangkan role divisi kurikulum dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleDivisiKurikulum);
+        }
+
+        if ($request->input('role-wk')) {
+            // assign role
+            $roleWk = Role::findByName('divisi kurikulum');
+
+            if (!$roleWk)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_wk' => 'User dan data santri berhasil ditambah namun gagal memberi role WK (Role WK tidak ditemukan). Harap hilangkan role WK dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleWk);
+        }
+
+        if ($request->input('role-dewan-guru')) {
+            // assign role
+            $roleDewanGuru = Role::findByName('dewan guru');
+
+            if (!$roleDewanGuru)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_dewan_guru' => 'User dan data santri berhasil ditambah namun gagal memberi role dewan guru (Role dewan guru tidak ditemukan). Harap hilangkan role dewan guru dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleDewanGuru);
+        }
+
+        if ($request->input('role-mubalegh')) {
+            // assign role
+            $roleMubalegh = Role::findByName('mubalegh');
+
+            if (!$roleMubalegh)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_mubalegh' => 'User dan data santri berhasil ditambah namun gagal memberi role mubalegh (Role mubalegh tidak ditemukan). Harap hilangkan role mubalegh dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleMubalegh);
+        }
+
+        // GUARD ALREADY AT TOP
+        if ($request->input('role-rj1')) {
+            // assign role
+            $roleRj1 = Role::findByName('rj1');
+
+            if (!$roleRj1)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_rj1' => 'User dan data santri berhasil ditambah namun gagal memberi role RJ1 (Role RJ1 tidak ditemukan). Harap hilangkan role RJ1 dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleRj1);
+        }
+
+        // GUARD ALREADY AT TOP
+        if ($request->input('role-superadmin')) {
+            // assign role
+            $roleSuperadmin = Role::findByName('superadmin');
+
+            if (!$roleSuperadmin)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_superadmin' => 'User dan data santri berhasil ditambah namun gagal memberi role superadmin (Role superadmin tidak ditemukan). Ini FATAL, harap hubungi Developer.']);
+
+            $inserted_user->assignRole($roleSuperadmin);
+        }
+
+        if ($request->input('role-santri'))
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('create user'))->with('success', 'Berhasil menambah user baru dengan role santri.');
+        else
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('create user'))->with('success', 'Berhasil menambah user baru.');
+    }
+
+    /**
+     * Show the create form of lorong.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function edit($id)
+    {
+        if (!auth()->user()->can('update users')) return redirect()->route('presence report');
+
+        $user = User::find($id);
+        $lorongs = Lorong::all();
+
+        return view('user.edit', ['user' => $user, 'lorongs' => $lorongs]);
+    }
+
+    /**
+     * Update user.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function update(Request $request)
+    {
+        $userIdToUpdate = $request->route('id');
+
+        if (auth()->user()->id != $userIdToUpdate)
+            if (!auth()->user()->can('update users')) return redirect()->route('presence report');
+
+        $request->validate([
+            'fullname' => 'required|max:100',
+            'email' => 'required|max:100|email',
+            'birthdate' => 'required|date',
+            'gender' => 'required|string',
+        ]);
+
+        // GUARD for role superadmin
+        if ($request->input('role-superadmin') && !auth()->user()->hasRole('superadmin'))
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['superadmin_only' => `Hanya superadmin yang bisa memberi role superadmin.`]);
+
+        // GUARD for role RJ1
+        if ($request->input('role-rj1') && !auth()->user()->hasRole('superadmin'))
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['superadmin_only' => `Hanya superadmin yang bisa memberi role RJ1.`]);
+
+        if ($request->input('role-santri')) {
+            if ($request->input('santri_id')) {
+                $santri = Santri::find($request->input('santri_id'));
+
+                $request->validate([
+                    'nis' => 'required|integer|unique:santris,nis,' . $santri->id,
+                    'angkatan' => 'required|integer',
+                    'fkLorong_id' => 'integer|nullable',
+                    'join_at' => 'required|date'
+                ]);
+            } else
+                $request->validate([
+                    'nis' => 'required|integer|unique:santris',
+                    'angkatan' => 'required|integer',
+                    'fkLorong_id' => 'integer|nullable',
+                    'join_at' => 'required|date'
+                ]);
+        }
+
+        // validate availability of user existence
+        $user = User::find($userIdToUpdate);
+
+        if (!$user)
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['user_not_found' => `Can't update unexisting user.`]);
+
+        // check for image first
+        if ($request->hasFile('profileImg')) {
+            $request->validate([
+                'profileImg' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
+            ]);
+
+            // Save the file locally in the storage/public/ folder under a new folder named /destinations
+            $request->profileImg->store('users', 'public');
+        }
+
+        // start updating user
+        $user->fullname = $request->input('fullname');
+        $user->nohp = $request->input('nohp');
+        $user->email = $request->input('email');
+        $user->birthdate = $request->input('birthdate');
+        $user->gender = $request->input('gender');
+
+        if ($request->input('password'))
+            $user->password = Hash::make($request->input('password'));
+
+        if ($request->hasFile('profileImg'))
+            $user->profileImgurl = $request->profileImg->hashName();
+
+        $updated_user = $user->save();
+
+        if (!$updated_user)
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_updating_user' => 'Gagal mengubah user.']);
+
+        // handling role changes, only authorized are able to update
+        if (auth()->user()->can('update users')) {
+            if ($request->input('role-santri')) {
+                if ($user->santri && $request->input('fkLorong_id')) {
+                    // validate that picked santri is not a leader
+                    $lorongsUnderLead = Lorong::where('fkSantri_leaderId', $user->santri->id)->get();
+
+                    if (sizeof($lorongsUnderLead) >= 1)
+                        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['santri_already_a_leader' => 'Santri sudah menjadi koor lorong, tidak bisa menjadi anggota.']);
+                }
+
+                $updated_santri = Santri::updateOrCreate(
+                    ['fkUser_id' => $userIdToUpdate],
+                    [
+                        'nama_ortu' => $request->input('nama_ortu'),
+                        'nohp_ortu' => $request->input('nohp_ortu'),
+                        'angkatan' => $request->input('angkatan'),
+                        'nis' => $request->input('nis'),
+                        'fkLorong_id' => $request->input('fkLorong_id') ? $request->input('fkLorong_id') : null,
+                        'join_at' => $request->input('join_at'),
+                        'exit_at' => $request->input('exit_at') ? $request->input('exit_at') : null,
+                    ]
+                );
+
+                if (!$updated_santri)
+                    return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_updating_santri_data' => 'User berhasil diubah namun data santri gagal diubah.']);
+
+                // assign role
+                $roleSantri = Role::findByName('santri');
+
+                if (!$roleSantri)
+                    return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_santri' => 'User dan data santri berhasil diubah namun gagal memberi role santri (Role santri tidak ditemukan). Ini fatal, harap hilangkan role santri dan tambahkan kembali atau hubungi developer.']);
+
+                if (!$user->hasRole('santri'))
+                    $user->assignRole($roleSantri);
+            } else {
+                // assign role
+                $roleSantri = Role::findByName('santri');
+
+                if (!$roleSantri)
+                    return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_removing_role_santri' => 'User berhasil diubah namun gagal menghapus role dan data santri (Role santri tidak ditemukan). Ini fatal, harap hilangkan role santri dan tambahkan kembali atau hubungi developer.']);
+
+                $user->removeRole($roleSantri);
+
+                if ($request->input('santri_id')) {
+                    $santri = Santri::find($request->input('santri_id'));
+
+                    if (!$santri)
+                        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_deleting_santri_data' => 'User berhasil diubah dan role berhasil dihapus, namun gagal menghapus data santri (Data santri tidak ditemukan). Ini fatal, harap hilangkan role santri dan tambahkan kembali atau hubungi developer.']);
+
+                    $deleted = $santri->delete();
+
+                    if (!$deleted)
+                        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_deleting_santri_data' => 'User berhasil diubah dan role berhasil dihapus, namun gagal menghapus data santri. Ini fatal, harap hilangkan role santri dan tambahkan kembali atau hubungi developer.']);
+                }
+            }
+
+            // Divisi IT role
+            $roleDivisiIt = Role::findByName('divisi it');
+
+            if (!$roleDivisiIt)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_divisi_it' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role divisi it (Role divisi it tidak ditemukan). Ini fatal, harap hilangkan role divisi it dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-divisi-it')) {
+                $user->assignRole($roleDivisiIt);
+            } else {
+                // remove role                
+                $user->removeRole($roleDivisiIt);
+            }
+
+            // Pengabsen role
+            $rolePengabsen = Role::findByName('pengabsen');
+
+            if (!$rolePengabsen)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_pengabsen' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role pengabsen (Role pengabsen tidak ditemukan). Ini fatal, harap hilangkan role divisi it dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-pengabsen')) {
+                $user->assignRole($rolePengabsen);
+            } else {
+                // remove role                
+                $user->removeRole($rolePengabsen);
+            }
+
+            // Divisi Kurikulum role
+            $roleDivisiKurikulum = Role::findByName('divisi kurikulum');
+
+            if (!$roleDivisiKurikulum)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_divisi_kurikulum' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role divisi kurikulum (Role divisi kurikulum tidak ditemukan). Ini fatal, harap hilangkan role divisi kurikulum dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-divisi-kurikulum')) {
+                $user->assignRole($roleDivisiKurikulum);
+            } else {
+                // remove role                
+                $user->removeRole($roleDivisiKurikulum);
+            }
+
+            // WK role
+            $roleWk = Role::findByName('wk');
+
+            if (!$roleWk)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_wk' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role WK (Role WK tidak ditemukan). Ini fatal, harap hilangkan role WK dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-wk')) {
+                $user->assignRole($roleWk);
+            } else {
+                // remove role                
+                $user->removeRole($roleWk);
+            }
+
+            // Dewan guru role
+            $roleDewanGuru = Role::findByName('dewan guru');
+
+            if (!$roleDewanGuru)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_dewan_guru' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role dewan guru (Role dewan guru tidak ditemukan). Harap hilangkan role dewan guru dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-dewan-guru')) {
+                $user->assignRole($roleDewanGuru);
+            } else {
+                // remove role                
+                $user->removeRole($roleDewanGuru);
+            }
+
+            // Dewan mubalegh
+            $roleMubalegh = Role::findByName('mubalegh');
+
+            if (!$roleMubalegh)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_mubalegh' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role mubalegh (Role mubalegh tidak ditemukan). Harap hilangkan role mubalegh dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-mubalegh')) {
+                $user->assignRole($roleMubalegh);
+            } else {
+                // remove role                
+                $user->removeRole($roleMubalegh);
+            }
+
+            // Superadmin role
+            // >>>> !!! Guard already at top !!! <<<<
+            $roleRj1 = Role::findByName('rj1');
+
+            if (!$roleRj1)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_superadmin' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role RJ1 (Role RJ1 tidak ditemukan). Ini fatal, harap hubungi developer.']);
+
+            if ($request->input('role-rj1')) {
+                $user->assignRole($roleRj1);
+            } else {
+                // remove role                
+                $user->removeRole($roleRj1);
+            }
+
+            // Superadmin role
+            // >>>> !!! Guard already at top !!! <<<<
+            $roleSuperadmin = Role::findByName('superadmin');
+
+            if (!$roleSuperadmin)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_superadmin' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role superadmin (Role superadmin tidak ditemukan). Ini fatal, harap hubungi developer.']);
+
+            if ($request->input('role-superadmin')) {
+                $user->assignRole($roleSuperadmin);
+            } else {
+                // remove role                
+                $user->removeRole($roleSuperadmin);
+            }
+        }
+
+        if ($request->input('role-santri'))
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->with('success', 'Berhasil mengubah user dan data santri.');
+        else
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->with('success', 'Berhasil mengubah user.');
+    }
+
+    /**
+     * Update user.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function update_my_profile(Request $request)
+    {
+        $request->validate([
+            'fullname' => 'required|max:100',
+            'email' => 'required|max:100|email',
+            'birthdate' => 'required|date',
+            'gender' => 'required|string',
+        ]);
+
+        // validate availability of user existence
+        $user = auth()->user();
+
+        if (!$user)
+            return redirect()->route('edit my profile')->withErrors(['user_not_found' => `Can't update unexisting user.`]);
+
+        // check for image first
+        if ($request->hasFile('profileImg')) {
+            $request->validate([
+                'profileImg' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
+            ]);
+
+            // Save the file locally in the storage/public/ folder under a new folder named /destinations
+            $request->profileImg->store('users', 'public');
+        }
+
+        // start updating user
+        $user->fullname = $request->input('fullname');
+        $user->nohp = $request->input('nohp');
+        $user->email = $request->input('email');
+        $user->birthdate = $request->input('birthdate');
+        $user->gender = $request->input('gender');
+
+        if ($request->input('password'))
+            $user->password = Hash::make($request->input('password'));
+
+        if ($request->hasFile('profileImg'))
+            $user->profileImgurl = $request->profileImg->hashName();
+
+        $updated_user = $user->save();
+
+        if (!$updated_user)
+            return redirect()->route('edit my profile')->withErrors(['failed_updating_user' => 'Gagal mengubah user.']);
+
+        return redirect()->route('edit my profile')->with('success', 'Berhasil mengubah user.');
+    }
+
+    /**
+     * Show the presence info and its lorongs.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function view()
+    {
+        return view('user.view');
+    }
+
+    /**
+     * Delete user.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function delete(Request $request)
+    {
+        $id = $request->route('id');
+        $user = User::find($id);
+
+        if ($user) {
+            // check if user is a lorong leader
+            if ($user->santri) {
+                $isALorongLeader = Lorong::where('fkSantri_leaderId', $user->santri->id)->first();
+
+                if ($isALorongLeader)
+                    return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->withErrors(['user_is_lorong_leader' => 'User merupakan koor lorong.']);
+            }
+
+            $updated_santri = Santri::updateOrCreate(
+                ['fkUser_id' => $id],
+                [
+                    'fkLorong_id' => null,
+                    'exit_at' => date('Y-m-d')
+                ]
+            );
+
+            if (!$updated_santri)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->withErrors(['failed_deleting_user' => 'Gagal menghapus user.']);
+        }
+
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->with('success', 'Berhasil menghapus user');
+    }
+}

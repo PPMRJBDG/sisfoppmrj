@@ -1,0 +1,137 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
+
+Route::get('/register', [App\Http\Controllers\RegisterController::class, 'register'])->name('register');
+Route::post('/register/store', [App\Http\Controllers\RegisterController::class, 'store_from_public'])->name('store user from public');
+
+Auth::routes(['register' => false]);
+
+Route::get('/profil', [App\Http\Controllers\UserController::class, 'my_profile'])->name('my profile');
+Route::get('/profil/edit', [App\Http\Controllers\UserController::class, 'edit_my_profile'])->name('edit my profile');
+Route::post('/profile/update', [App\Http\Controllers\UserController::class, 'update_my_profile'])->name('update my profile');
+
+Route::get('/presensi/izin/persetujuan/create', [App\Http\Controllers\PresenceController::class, 'create_permit'])->name('create presence permit')->middleware('role:koor lorong');
+Route::post('/presensi/izin/persetujuan/store', [App\Http\Controllers\PresenceController::class, 'store_permit'])->name('store presence permit')->middleware('role:koor lorong');
+Route::get('/presensi/izin/persetujuan/delete', [App\Http\Controllers\PresenceController::class, 'delete_permit'])->name('delete presence permit')->middleware('role:koor lorong');
+
+Route::get('/presensi/izin/pengajuan', [App\Http\Controllers\PresenceController::class, 'create_my_permit'])->name('presence permit submission')->middleware('role:santri');
+Route::get('/presensi/izin/pengajuan/berjangka', [App\Http\Controllers\PresenceController::class, 'create_my_ranged_permit'])->name('ranged presence permit submission')->middleware('role:santri');
+Route::post('/presensi/izin/pengajuan/store', [App\Http\Controllers\PresenceController::class, 'store_my_permit'])->name('store my presence permit')->middleware('role:santri');
+Route::post('/presensi/izin/pengajuan/berjangka/store', [App\Http\Controllers\PresenceController::class, 'store_my_ranged_permit'])->name('store my ranged presence permit')->middleware('role:santri');
+Route::get('/presensi/izin/persetujuan', [App\Http\Controllers\PresenceController::class, 'permit_approval'])->name('presence permit approval')->middleware('permission:approve permits');
+Route::get('/presensi/izin/saya', [App\Http\Controllers\PresenceController::class, 'my_permits'])->name('my presence permits')->middleware('role:santri');
+Route::get('/presensi/izin/saya/edit', [App\Http\Controllers\PresenceController::class, 'edit_permit'])->name('edit presence permit')->middleware('role:santri');
+Route::post('/presensi/izin/saya/update', [App\Http\Controllers\PresenceController::class, 'update_permit'])->name('update presence permit')->middleware('role:santri');
+Route::get('/presensi/izin/saya/delete', [App\Http\Controllers\PresenceController::class, 'delete_my_permit'])->name('delete my presence permit')->middleware('role:santri');
+Route::get('/presensi/izin/saya/berjangka/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_my_ranged_permit'])->name('delete my ranged presence permit')->middleware('role:santri');
+Route::get('/presensi/izin/saya/approve', [App\Http\Controllers\PresenceController::class, 'approve_permit'])->name('approve presence permit')->middleware('permission:approve permits');
+Route::get('/presensi/izin/saya/reject', [App\Http\Controllers\PresenceController::class, 'reject_permit'])->name('reject presence permit')->middleware('permission:approve permits');
+Route::get('/presensi/izin/list', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1');
+
+// Route::get('/presensi/laporan', [App\Http\Controllers\PresenceController::class, 'report'])->name('presence report');
+
+
+// presences
+Route::get('/presensi/terbaru', [App\Http\Controllers\PresenceController::class, 'latest_list'])->name('latest presences')->middleware('role:santri|superadmin|koor lorong');
+Route::get('/presensi/laporan-umum', [App\Http\Controllers\PresenceController::class, 'report'])->name('presence report');
+Route::get('/presensi/list', [App\Http\Controllers\PresenceController::class, 'list_and_manage'])->name('presence tm')->middleware('permission:view presences list');
+Route::get('/presensi/list/create', [App\Http\Controllers\PresenceController::class, 'create'])->name('create presence')->middleware('permission:create presences');
+Route::get('/presensi/list/{id}', [App\Http\Controllers\PresenceController::class, 'view'])->name('view presence')->middleware('permission:view presences list');
+Route::get('/presensi/list/{id}/present/create', [App\Http\Controllers\PresenceController::class, 'create_present'])->name('create present')->middleware('permission:create presents');
+Route::post('/presensi/list/store', [App\Http\Controllers\PresenceController::class, 'store'])->name('store presence')->middleware('permission:create presents');
+Route::post('/presensi/list/update/{id}', [App\Http\Controllers\PresenceController::class, 'update'])->name('update presence')->middleware('permission:update presences');
+Route::get('/presensi/list/edit/{id}', [App\Http\Controllers\PresenceController::class, 'edit'])->name('edit presence')->middleware('permission:update presences');
+Route::get('/presensi/list/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete'])->name('delete presence')->middleware('permission:delete presences');
+Route::get('/presensi/{id}', [App\Http\Controllers\PresenceController::class, 'create_my_present'])->name('create my present')->middleware('role:santri');
+Route::post('/presensi/{id}/store/me', [App\Http\Controllers\PresenceController::class, 'store_my_present'])->name('store my present')->middleware('role:santri');
+Route::post('/presensi/{id}/store', [App\Http\Controllers\PresenceController::class, 'store_present'])->name('store present')->middleware('permission:create presents');
+Route::get('/presensi/{id}/delete/{santriId}', [App\Http\Controllers\PresenceController::class, 'delete_present'])->name('delete present')->middleware('permission:delete presents');
+
+// presence groups
+Route::get('/presensi/list/group/check-schedules', [App\Http\Controllers\PresenceController::class, 'check_schedules'])->name('check presence schedules');
+Route::get('/presensi/list/group/create', [App\Http\Controllers\PresenceController::class, 'create_group'])->name('create presence group')->middleware('permission:create presences');;
+Route::get('/presensi/list/group/{id}', [App\Http\Controllers\PresenceController::class, 'view_group'])->name('view presence group')->middleware('permission:view presences list');;
+Route::post('/presensi/list/group/store', [App\Http\Controllers\PresenceController::class, 'store_group'])->name('store presence group')->middleware('permission:create presences');
+Route::post('/presensi/list/group/update/{id}', [App\Http\Controllers\PresenceController::class, 'update_group'])->name('update presence group')->middleware('permission:update presences');
+Route::get('/presensi/list/group/edit/{id}', [App\Http\Controllers\PresenceController::class, 'edit_group'])->name('edit presence group')->middleware('permission:update presences');
+Route::get('/presensi/list/group/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_group'])->name('delete presence group')->middleware('permission:delete presences');
+Route::get('/presensi/list/group/{id}/recap', [App\Http\Controllers\PresenceController::class, 'select_presence_group_recap'])->name('select presence group recap')->middleware('permission:view presences list');
+Route::get('/presensi/list/group/{id}/recap/{fromDate}/{toDate}/{lorongId}', [App\Http\Controllers\PresenceController::class, 'view_presence_group_recap'])->name('view presence group recap')->middleware('permission:view presences list');
+Route::get('/recap/{year}/{month}/{date}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
+Route::get('/recap/{year}/{month}/{date}/{presenceId}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
+Route::get('/presensi/list/group/{id}/presensi/create', [App\Http\Controllers\PresenceController::class, 'create_in_group'])->name('create presence in group')->middleware('permission:create presences');
+Route::post('/presensi/list/group/{id}/presensi/store', [App\Http\Controllers\PresenceController::class, 'store_in_group'])->name('store presence in group')->middleware('permission:create presences');
+
+// Lorongs
+Route::get('/lorong/saya', [App\Http\Controllers\LorongController::class, 'my_lorong'])->name('my lorong')->middleware('role:santri|koor lorong|superadmin');
+Route::get('/lorong/list', [App\Http\Controllers\LorongController::class, 'list_and_manage'])->name('lorong tm')->middleware('permission:view lorongs list');
+Route::get('/lorong/list/create', [App\Http\Controllers\LorongController::class, 'create'])->name('create lorong')->middleware('permission:create lorongs');
+Route::get('/lorong/list/{id}', [App\Http\Controllers\LorongController::class, 'view'])->name('view lorong')->middleware('permission:view lorongs list');
+Route::get('/lorong/list/{id}/add-member', [App\Http\Controllers\LorongController::class, 'add_member'])->name('add lorong member')->middleware('permission:add lorong members');
+Route::get('/lorong/list/{id}/add-member/store', [App\Http\Controllers\LorongController::class, 'store_member'])->name('store lorong member')->middleware('permission:add lorong members');
+Route::get('/lorong/list/{id}/delete-member/{santriId}', [App\Http\Controllers\LorongController::class, 'delete_member'])->name('delete lorong member')->middleware('permission:remove lorong members');
+Route::post('/lorong/list/store', [App\Http\Controllers\LorongController::class, 'store'])->name('store lorong')->middleware('permission:create lorongs');
+Route::post('/lorong/list/update/{id}', [App\Http\Controllers\LorongController::class, 'update'])->name('update lorong')->middleware('permission:update lorongs');
+Route::get('/lorong/list/edit/{id}', [App\Http\Controllers\LorongController::class, 'edit'])->name('edit lorong')->middleware('permission:update lorongs');
+Route::get('/lorong/list/delete/{id}', [App\Http\Controllers\LorongController::class, 'delete'])->name('delete lorong')->middleware('permission:delete lorongs');
+
+// users
+Route::get('/user/list/santri', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm')->middleware('permission:view users list');
+Route::get('/user/list/santri/{angkatan}', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm')->middleware('permission:view users list');
+Route::get('/user/list/santri/{angkatan}/{role}', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm')->middleware('permission:view users list');
+Route::get('/user/list/muballigh', [App\Http\Controllers\UserController::class, 'list_muballigh'])->name('user tm')->middleware('permission:view users list');
+Route::get('/user/list/muballigh/{angkatan}', [App\Http\Controllers\UserController::class, 'list_muballigh'])->name('user tm')->middleware('permission:view users list');
+Route::get('/user/list/alumni', [App\Http\Controllers\UserController::class, 'list_alumni'])->name('user alumni')->middleware('permission:view users list');
+Route::get('/user/list/alumni/{angkatan}', [App\Http\Controllers\UserController::class, 'list_alumni'])->name('user alumni')->middleware('permission:view users list');
+Route::get('/user/list/create', [App\Http\Controllers\UserController::class, 'create'])->name('create user')->middleware('permission:create users');
+Route::get('/user/list/{id}', [App\Http\Controllers\UserController::class, 'view'])->name('view user')->middleware('permission:view users list');
+Route::post('/user/list/store', [App\Http\Controllers\UserController::class, 'store'])->name('store user')->middleware('permission:create users');
+Route::post('/user/list/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update user')->middleware('permission:update users');
+Route::get('/user/list/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('edit user')->middleware('permission:update users');
+Route::get('/user/list/delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('delete user')->middleware('permission:delete users');
+
+// materis
+Route::get('/materi/list', [App\Http\Controllers\MateriController::class, 'list_and_manage'])->name('materi tm')->middleware('permission:view materis list');
+Route::get('/materi/list/create', [App\Http\Controllers\MateriController::class, 'create'])->name('create materi')->middleware('permission:create materis');
+Route::post('/materi/list/store', [App\Http\Controllers\MateriController::class, 'store'])->name('store materi')->middleware('permission:create materis');
+Route::get('/materi/list/edit/{id}', [App\Http\Controllers\MateriController::class, 'edit'])->name('edit materi')->middleware('permission:update materis');
+Route::post('/materi/list/update/{id}', [App\Http\Controllers\MateriController::class, 'update'])->name('update materi')->middleware('permission:update materis');
+Route::get('/materi/list/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete'])->name('delete materi')->middleware('permission:delete materis');
+
+// monitoring materis
+Route::get('/materi/monitoring/list', [App\Http\Controllers\MonitoringMateriController::class, 'list_and_manage'])->name('monitoring materi tm');
+Route::get('/materi/monitoring/list/{materiId}/{santriId}', [App\Http\Controllers\MonitoringMateriController::class, 'edit'])->name('edit monitoring materi');
+Route::post('/materi/monitoring/list/update', [App\Http\Controllers\MonitoringMateriController::class, 'update'])->name('update monitoring materi')->middleware('permission:update monitoring materis');
+Route::get('/materi/monitoring/matching', [App\Http\Controllers\MonitoringMateriController::class, 'match_empty_pages'])->name('match empty monitoring materi pages');
+
+// pelanggaran
+Route::get('/pelanggaran/list', [App\Http\Controllers\UserController::class, 'list_pelanggaran'])->name('user tm')->middleware('permission:view users list');
+
+Route::get('/run/migrate', function (Request $request) {
+    return Artisan::call('migrate', ["--force" => true]);
+});
+
+Route::get('/run/seed', function (Request $request) {
+    Artisan::call('db:seed', ['--class' => 'PermissionRoleSeeder', "--force" => true]);
+    return Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', "--force" => true]);
+});
+
+Route::get('/run/link', function () {
+    return Artisan::call('storage:link');
+});

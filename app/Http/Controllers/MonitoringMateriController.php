@@ -1,0 +1,129 @@
+<?php 
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\MonitoringMateri;
+use App\Models\Santri;
+use App\Models\Materi;
+use App\Models\Lorong;
+use App\Models\User;
+
+class MonitoringMateriController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:update monitoring materis')->only(['update']);
+    }
+
+
+    /**
+     * Show the list and manage table of monitoringMateris.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function list_and_manage()
+    {      
+        $lorongs = Lorong::all();
+        $monitoringMateris = MonitoringMateri::all();
+        $materis = Materi::all();
+
+        return view('monitoringMateri.list_and_manage', ['lorongs' => $lorongs, 'materis' => $materis, 'monitoringMateris' => $monitoringMateris]);
+    }
+
+    /**
+     * Show the create form of monitoringMateri.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function edit($materiId, $santriId)
+    {
+        if(!auth()->user()->can('update monitoring materis') && $santriId != auth()->user()->santri->id)
+            return abort(403);
+
+        $materi = Materi::find($materiId);
+        $santri = Santri::find($santriId);
+
+        $monitoringMateris = MonitoringMateri::where('fkSantri_id', $santriId)->where('fkMateri_id', $materiId)->get();
+
+        return view('monitoringMateri.edit', ['santri' => $santri, 'materi' => $materi, 'monitoringMateris' => $monitoringMateris]);
+    }
+
+    /**
+     * Insert new monitoringMateri.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function update(Request $request)
+    {
+        $request->validate([
+            'fkSantri_id' => 'required|integer',
+            'fkMateri_id' => 'required|integer',
+            'pages' => 'required',
+            'statusOfPages' => 'required'
+        ]);
+
+        $materiId = $request->input('fkMateri_id');
+        $santriId = $request->input('fkSantri_id');
+
+        $pages = $request->input('pages');
+        $statusOfPages = $request->input('statusOfPages');
+        $failedPages = [];
+        
+        foreach($pages as $key => $page)
+        {
+            $inserted = MonitoringMateri::updateOrCreate(
+            [
+                'fkSantri_id' => $request->input('fkSantri_id'),
+                'fkMateri_id' => $request->input('fkMateri_id'),
+                'page' => $page,
+            ],                
+            [
+                'fkSantri_id' => $request->input('fkSantri_id'),
+                'fkMateri_id' => $request->input('fkMateri_id'),
+                'page' => $page,
+                'status' => $statusOfPages[$key]
+            ]);   
+
+            if(!$inserted)
+                $failedPages[] = $page;
+        }
+        
+        return redirect()->route('edit monitoring materi', [$materiId, $santriId])->with(sizeof($failedPages) == 0 ? 'success' : 'failed' , sizeof($failedPages) == 0 ? 'Monitoring materi berhasil diupdate.' : 'Gagal mengupdate monitoring materi di halaman ' . implode(', ', $failedPages));
+    }
+
+    public function match_empty_pages(Request $request)
+    {
+        $users = User::whereHas('santri')->orderBy('fullname')->get();
+        $materis = Materi::all();
+
+        $santriIds = $request->get('santri_ids');
+        $materiId = $request->get('materi_id');
+        $status = $request->get('status');
+
+        $santriIds = explode(',', $santriIds);
+        $selectedSantris = Santri::whereIn('id', $santriIds)->get();
+        
+        $santriMonitoringMateris = MonitoringMateri::where('fkMateri_id', $materiId)->whereIn('fkSantri_id', $santriIds)->get();
+
+        $materi = Materi::where('id', $materiId)->first();
+        
+        // detect full pages
+        $fullPages = [];
+
+        foreach($santriMonitoringMateris as $monitoringMateri)
+        {
+            if(!isset($fullPages[$monitoringMateri->page]))
+                $fullPages[$monitoringMateri->page] = array('complete' => 0, 'partial' => 0, 'blank' => 0);
+
+            $fullPages[$monitoringMateri->page][$monitoringMateri->status] += 1;            
+        }
+
+        return view('monitoringMateri.match_empty_pages', ['selectedSantris' => $selectedSantris, 'status' => $status, 'santriIds' => $santriIds, 'fullPages' => $fullPages, 'materi' => $materi, 'santriMonitoringMateris' => $santriMonitoringMateris, 'users' => $users, 'materis' => $materis]);
+    }
+}

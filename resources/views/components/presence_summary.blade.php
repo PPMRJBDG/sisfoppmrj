@@ -1,0 +1,2 @@
+<span class="mb-2 text-xs">Waktu kegiatan: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presence->event_date }}</span></span>
+<span class="mb-2 text-xs">Waktu buka: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presence->start_date_time }}</span></span>
