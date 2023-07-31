@@ -35,9 +35,16 @@
   <link id="pagestyle" href="{{ asset('css/argon-dashboard.css?v=2.0.2') }}" rel="stylesheet" />
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!--   Core JS Files   -->
+  <script src="{{ asset('js/core/popper.min.js') }}"></script>
+  <script src="{{ asset('js/core/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/plugins/perfect-scrollbar.min.js') }}"></script>
+  <script src="{{ asset('js/plugins/smooth-scrollbar.min.js') }}"></script>
+  <script src="{{ asset('js/argon-dashboard.min.js?v=2.0.2') }}"></script>
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300 bg-primary position-absolute w-100" style="min-height:100% !important;"></div>
   <main class="main-content position-relative border-radius-lg ">
     <div class="container-fluid py-4 {{ isset($containerClass) ? $containerClass : '' }}">

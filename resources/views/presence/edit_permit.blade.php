@@ -32,6 +32,14 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
+            <label class="form-control-label">Kategori</label>
+            <input class="form-control" type="text" value="{{ $permit->reason_category }}" readonly>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
             <label for="fkPresence_id" class="form-control-label">Alasan</label>
             <textarea class="form-control" name="reason" placeholder="Cth: Sakit">{{ $permit->reason }}</textarea>
           </div>

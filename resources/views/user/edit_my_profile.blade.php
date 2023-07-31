@@ -61,14 +61,14 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">New Password</label>
             <input class="form-control" type="password" name="password" placeholder="Kosongkan jika tidak ingin mengubah">
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">

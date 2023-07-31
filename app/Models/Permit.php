@@ -8,13 +8,14 @@ use App\Models\Santri;
 use App\Models\Presence;
 
 class Permit extends Model
-{    
+{
     protected $fillable = [
         'fkSantri_id',
         'fkPresence_id',
         'status',
         'reason',
-        'reason_category'
+        'reason_category',
+        'ids'
     ];
 
     /**
@@ -49,4 +50,3 @@ class Permit extends Model
         return $query;
     }
 }
-

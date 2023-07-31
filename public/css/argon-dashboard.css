@@ -22216,7 +22216,8 @@ hr.horizontal.gray-light {
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
   display: block;
   overflow: auto;
-  height: calc(100vh - 256px);
+  height: 75%;
+  /* calc(100vh - 256px); */
 }
 
 .navbar-vertical.navbar-expand-xs>[class*="container"] {
@@ -22244,8 +22245,10 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical.navbar-expand-xs .navbar-nav .nav-link {
-  padding-top: 0.675rem;
-  padding-bottom: 0.675rem;
+  /* padding-top: 0.675rem;
+  padding-bottom: 0.675rem; */
+  padding-top: 2px;
+  padding-bottom: 2px;
   margin: 0 0.5rem;
 }
 
@@ -26607,5 +26610,3 @@ pre[class*="language-"] {
     overflow: auto !important;
   }
 }
-
-/*# sourceMappingURL=dashboard-free.css.map */

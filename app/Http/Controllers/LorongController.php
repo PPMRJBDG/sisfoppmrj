@@ -200,7 +200,10 @@ class LorongController extends Controller
     public function add_member($id)
     {
         $lorong = Lorong::find($id);
-        $santris = Santri::all();
+        $santris = Santri::whereNull('exit_at')->get();
+        // $santris = User::whereHas('santri', function ($query) {
+        //     $query->whereNull('exit_at');
+        // })->orderBy('fullname', 'asc')->get();
 
         return view('lorong.add_member', ['lorong' => $lorong, 'santris' => $santris]);
     }
@@ -278,8 +281,11 @@ class LorongController extends Controller
      */
     public function my_lorong()
     {
-        $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
-
+        if (isset(auth()->user()->santri->id)) {
+            $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
+        } else {
+            $lorong = null;
+        }
         if (!$lorong) {
             if (isset(auth()->user()->santri->fkLorong_id)) {
                 $lorong = Lorong::find(auth()->user()->santri->fkLorong_id);

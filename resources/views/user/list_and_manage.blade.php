@@ -72,7 +72,19 @@
                   <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
                 </div>
                 <div class="d-flex flex-column justify-content-center">
-                  <h6 class="mb-0 text-sm">{{ $user->fullname }}</h6>
+                  <?php
+                  $is_kl = false;
+                  foreach ($user->getRoleNames() as $role) {
+                    if ($role == 'koor lorong') {
+                      $is_kl = true;
+                    }
+                  }
+                  $unkl = false;
+                  if ($user->santri->fkLorong_id == '' && !$is_kl) {
+                    $unkl = true;
+                  }
+                  ?>
+                  <h6 class="mb-0 text-sm {{ ($unkl) ? 'text-warning' : '' }}">{{ $user->fullname }}</h6>
                 </div>
               </div>
             </td>
@@ -102,7 +114,7 @@
             <td>
               @foreach ($user->getRoleNames() as $role)
               @if($role!='santri' && $role!='mubalegh')
-              <span class="badge bg-gradient-success">{{ $role }}</span>
+              <span class="badge {{ $role=='koor lorong' ? 'bg-gradient-primary' : 'bg-gradient-success' }}">{{ $role }}</span>
               @endif
               @endforeach
             </td>

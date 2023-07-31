@@ -136,6 +136,14 @@
               <input class="form-check-input" type="checkbox" name="role-mubalegh">
             </div>
           </div>
+          @if(auth()->user()->hasRole('superadmin'))
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">KU</label>
+              <input class="form-check-input" type="checkbox" name="role-ku">
+            </div>
+          </div>
+          @endif
         </div>
       </div>
       <section id="santri-data-section" style="display: none">
@@ -145,7 +153,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Nama Ortu (Bapak/Ibu)</label>
-              <input class="form-control" type="text" name="nama_ortu" placeholder="Contoh: Tamara Zayya" required>
+              <input class="form-control" type="text" name="nama_ortu" placeholder="Contoh: Tamara Zayya">
             </div>
           </div>
         </div>
@@ -153,7 +161,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Nomor HP Ortu (WA)</label>
-              <input class="form-control" type="text" name="nohp_ortu" placeholder="Contoh: 082312345678" required>
+              <input class="form-control" type="text" name="nohp_ortu" placeholder="Contoh: 082312345678">
             </div>
           </div>
         </div>

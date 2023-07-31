@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Santri;
 use App\Models\Lorong;
+use App\Helpers\CommonHelpers;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -154,6 +155,19 @@ class UserController extends Controller
         return view('user.list_muballigh', ['users' => $users, 'select_angkatan' => $angkatan, 'list_angkatan' => $list_angkatan]);
     }
 
+    public function list_others()
+    {
+        // $users = DB::table('users')
+        //     ->join('model_has_roles', 'model_id', '=', 'users.id')
+        //     ->whereIn('model_has_roles.role_id', [1, 6, 11])
+        //     ->get();
+        $users = User::whereHas('model_has_roles', function ($query) {
+            $query->whereIn('role_id', [1, 6, 11]);
+        })->get();
+
+        return view('user.list_others', ['users' => $users]);
+    }
+
     public function list_pelanggaran()
     {
         $users = DB::table('users')
@@ -236,6 +250,8 @@ class UserController extends Controller
             'profileImgUrl' => $request->hasFile('profileImg') ? $request->profileImg->hashName() : null
         ]);
 
+        CommonHelpers::createWaContact($request);
+
         if (!$inserted_user)
             return redirect()->route('create user')->withErrors(['failed_adding_user' => 'Gagal menambah user baru.']);
 
@@ -314,12 +330,22 @@ class UserController extends Controller
 
         if ($request->input('role-mubalegh')) {
             // assign role
-            $roleMubalegh = Role::findByName('mubalegh');
+            $roleMubalegh = Role::findByName('ku');
 
             if (!$roleMubalegh)
                 return redirect()->route('create user')->withErrors(['failed_giving_role_mubalegh' => 'User dan data santri berhasil ditambah namun gagal memberi role mubalegh (Role mubalegh tidak ditemukan). Harap hilangkan role mubalegh dan tambahkan kembali atau hubungi Developer.']);
 
             $inserted_user->assignRole($roleMubalegh);
+        }
+
+        if ($request->input('role-ku')) {
+            // assign role
+            $roleKu = Role::findByName('ku');
+
+            if (!$roleKu)
+                return redirect()->route('create user')->withErrors(['failed_giving_role_ku' => 'User berhasil ditambah namun gagal memberi role KU (Role KU tidak ditemukan). Harap hilangkan role KU dan tambahkan kembali atau hubungi Developer.']);
+
+            $inserted_user->assignRole($roleKu);
         }
 
         // GUARD ALREADY AT TOP
@@ -384,6 +410,8 @@ class UserController extends Controller
             'gender' => 'required|string',
         ]);
 
+        CommonHelpers::createWaContact($request);
+
         // GUARD for role superadmin
         if ($request->input('role-superadmin') && !auth()->user()->hasRole('superadmin'))
             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['superadmin_only' => `Hanya superadmin yang bisa memberi role superadmin.`]);
@@ -434,6 +462,8 @@ class UserController extends Controller
         $user->birthdate = $request->input('birthdate');
         $user->gender = $request->input('gender');
 
+        if ($request->input('exit_at'))
+            $user->password = Hash::make('Bismillah@354');
         if ($request->input('password'))
             $user->password = Hash::make($request->input('password'));
 
@@ -580,6 +610,19 @@ class UserController extends Controller
                 $user->removeRole($roleMubalegh);
             }
 
+            // KU
+            $roleKu = Role::findByName('ku');
+
+            if (!$roleKu)
+                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role_ku' => 'User berhasil diubah namun gagal menambah/menghapus role KU (Role KU tidak ditemukan). Harap hilangkan role KU dan tambahkan kembali atau hubungi developer.']);
+
+            if ($request->input('role-ku')) {
+                $user->assignRole($roleKu);
+            } else {
+                // remove role                
+                $user->removeRole($roleKu);
+            }
+
             // Superadmin role
             // >>>> !!! Guard already at top !!! <<<<
             $roleRj1 = Role::findByName('rj1');
@@ -628,6 +671,8 @@ class UserController extends Controller
             'birthdate' => 'required|date',
             'gender' => 'required|string',
         ]);
+
+        CommonHelpers::createWaContact($request);
 
         // validate availability of user existence
         $user = auth()->user();
@@ -683,30 +728,32 @@ class UserController extends Controller
      */
     public function delete(Request $request)
     {
-        $id = $request->route('id');
-        $user = User::find($id);
 
-        if ($user) {
-            // check if user is a lorong leader
-            if ($user->santri) {
-                $isALorongLeader = Lorong::where('fkSantri_leaderId', $user->santri->id)->first();
+        // $id = $request->route('id');
+        // $user = User::find($id);
 
-                if ($isALorongLeader)
-                    return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->withErrors(['user_is_lorong_leader' => 'User merupakan koor lorong.']);
-            }
+        // if ($user) {
+        //     // check if user is a lorong leader
+        //     if ($user->santri) {
+        //         $isALorongLeader = Lorong::where('fkSantri_leaderId', $user->santri->id)->first();
 
-            $updated_santri = Santri::updateOrCreate(
-                ['fkUser_id' => $id],
-                [
-                    'fkLorong_id' => null,
-                    'exit_at' => date('Y-m-d')
-                ]
-            );
+        //         if ($isALorongLeader)
+        //             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->withErrors(['user_is_lorong_leader' => 'User merupakan koor lorong.']);
 
-            if (!$updated_santri)
-                return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->withErrors(['failed_deleting_user' => 'Gagal menghapus user.']);
-        }
+        //         $updated_santri = Santri::updateOrCreate(
+        //             ['fkUser_id' => $id],
+        //             [
+        //                 'fkLorong_id' => null,
+        //                 'exit_at' => date('Y-m-d')
+        //             ]
+        //         );
 
-        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->with('success', 'Berhasil menghapus user');
+        //         if (!$updated_santri)
+        //             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->withErrors(['failed_deleting_user' => 'Gagal menghapus user.']);
+        //     }
+        //     echo var_dump($request);
+        //     exit;
+        //     return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('user tm'))->with('success', 'Berhasil menghapus user');
+        // }
     }
 }

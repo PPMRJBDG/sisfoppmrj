@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}">
-  <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/logo.png') }}">
+  <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
   <title>
     {{app()->version()}} SISFO PPMRJ - LOGIN
   </title>
@@ -118,7 +118,7 @@
               </div>
             </div>
             <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: {{ asset('img/foto-ppm.jpg') }};background-size: cover;">
+              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url({{ asset('img/foto-pp.jpg') }});background-size: cover;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
                 <h4 class="mt-5 text-white font-weight-bolder position-relative">Sistem Informasi PPMRJ</h4>
                 <p class="text-white position-relative"></p>

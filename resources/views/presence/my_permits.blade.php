@@ -21,6 +21,7 @@
       Belum ada data.
   </div>
   @endif
+
   <div class="table-responsive p-0">
     <table class="table align-items-center mb-0">
       <thead>
@@ -28,7 +29,7 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Presensi</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kategori Alasan</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Alasan</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width:20%;">Alasan</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Pengajuan</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
@@ -44,7 +45,7 @@
                 <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
               </div>
               <div class="d-flex flex-column justify-content-center">
-                <h6 class="mb-0 text-sm">{{ $myPermit->santri->user->fullname }}</h6>
+                <h6 class="mb-0 text-sm">{{ ($myPermit->santri) ? $myPermit->santri->user->fullname : '-' }}</h6>
               </div>
             </div>
           </td>
@@ -52,10 +53,10 @@
             {{ $myPermit->presence->name }}
           </td>
           <td>
-            {{ $myPermit->reason_category }}
+            {{ ucfirst($myPermit->reason_category) }}
           </td>
           <td>
-            {{ $myPermit->reason }}
+            {{ ucfirst(substr($myPermit->reason,0,30)) }}...
           </td>
           <td>
             {{ $myPermit->updated_at }}
@@ -64,7 +65,9 @@
             <span class="badge {{ $myPermit->status == 'pending' ? 'bg-gradient-secondary' : ($myPermit->status == 'approved' ? 'bg-gradient-success' : ($myPermit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($myPermit->status) }}</span>
           </td>
           <td class="align-middle text-center text-sm">
+            @if($myPermit->status=='approved')
             <a href="{{ route('edit presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-primary btn-sm mb-0">Edit</a>
+            @endif
             <a href="{{ route('delete my presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
           </td>
         </tr>
@@ -107,10 +110,11 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Dari Tanggal</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sampai Tanggal</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-          <th class="text-secondary opacity-7"></th>
+          <!-- <th class="text-secondary opacity-7"></th> -->
         </tr>
       </thead>
       <tbody>
+        @isset($myRangedPermits)
         @foreach($myRangedPermits as $myRangedPermit)
         <tr>
           <td>
@@ -119,7 +123,7 @@
                 <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
               </div>
               <div class="d-flex flex-column justify-content-center">
-                <h6 class="mb-0 text-sm">{{ $myPermit->santri->user->fullname }}</h6>
+                <h6 class="mb-0 text-sm">{{ ($myRangedPermit->santri) ? $myRangedPermit->santri->user->fullname : '-' }}</h6>
               </div>
             </div>
           </td>
@@ -127,10 +131,10 @@
             {{ $myRangedPermit->presenceGroup->name }}
           </td>
           <td>
-            {{ $myRangedPermit->reason }}
+            {{ ucfirst($myRangedPermit->reason_category) }}
           </td>
           <td>
-            {{ $myRangedPermit->reason_category }}
+            {{ ucfirst(substr($myRangedPermit->reason,50)) }}
           </td>
           <td>
             {{ $myRangedPermit->from_date }}
@@ -139,11 +143,11 @@
             {{ $myRangedPermit->to_date }}
           </td>
           <td class="align-middle text-center text-sm">
-            <!-- <a href="{{ route('edit presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-primary btn-sm mb-0">Edit</a> -->
             <a href="{{ route('delete my ranged presence permit', $myRangedPermit->id) }}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
           </td>
         </tr>
         @endforeach
+        @endisset
       </tbody>
     </table>
   </div>

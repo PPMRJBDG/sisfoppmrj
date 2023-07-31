@@ -14,6 +14,7 @@ use App\Models\Permit;
 use App\Models\RangedPermitGenerator;
 use App\Models\Lorong;
 use App\Helpers\PresenceGroupsChecker;
+use App\Helpers\WaSchedules;
 use App\Models\SystemMetaData;
 
 use Carbon\Carbon;
@@ -40,7 +41,7 @@ class PresenceController extends Controller
      */
     public function report()
     {
-        return 'Halaman ini ditutup sementara karena sepertinya menggunakan resource yang besar.';
+        // return 'Halaman ini ditutup sementara karena sepertinya menggunakan resource yang besar.';
 
         $listedPresenceGroups = PresenceGroup::where('show_summary_at_home', 1)->get();
 
@@ -734,7 +735,6 @@ class PresenceController extends Controller
         if (!$lastScheduleCheck || $lastScheduleCheck->value != date('Y-m-d')) {
             PresenceGroupsChecker::checkPresenceGroups();
             PresenceGroupsChecker::checkPermitGenerators();
-
             SystemMetaData::updateOrCreate(['key' => 'lastScheduleCheck'], ['value' => date('Y-m-d')]);
         }
 
@@ -763,7 +763,7 @@ class PresenceController extends Controller
         }
 
         // include all Koor lorongs if user has RJ1 role
-        if (auth()->user()->hasRole('rj1'))
+        if (auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
             $permits->orWhereHas('santri', function ($query) {
                 $query->whereHas('user', function ($query2) {
                     $query2->whereHas('roles', function ($query3) {
@@ -848,18 +848,23 @@ class PresenceController extends Controller
         if (!$lastScheduleCheck || $lastScheduleCheck->value != date('Y-m-d')) {
             PresenceGroupsChecker::checkPresenceGroups();
             PresenceGroupsChecker::checkPermitGenerators();
-
             SystemMetaData::updateOrCreate(['key' => 'lastScheduleCheck'], ['value' => date('Y-m-d')]);
         }
 
         // get current santri
         $santri = auth()->user()->santri;
-
         if ($santri) {
-            $myPermits = Permit::where('fkSantri_id', $santri->id)->get();
-
-            $myRangedPermits = RangedPermitGenerator::where('fkSantri_id', $santri->id)->get();
-
+            $from = date_format(date_create(date('Y-m') . "-01 00:00:00"), "Y-m-d H:i:s");
+            $to = date_format(date_create(date('Y-m') . "-31 23:59:59"), "Y-m-d H:i:s");
+            $myPermits = Permit::where('fkSantri_id', $santri->id)->whereBetween('created_at', [$from, $to])->get();
+            $myRangedPermits = RangedPermitGenerator::where('fkSantri_id', $santri->id)->orderBy('created_at', 'DESC')->get();
+            return view('presence.my_permits', ['myPermits' => $myPermits, 'myRangedPermits' => $myRangedPermits]);
+        } elseif (auth()->user()->hasRole('superadmin')) {
+            $time = strtotime(date('Y-m') . "-01 00:00:00");
+            $from = date("Y-m-d H:i:s", strtotime("-1 month", $time));
+            $to = date_format(date_create(date('Y-m') . "-31 23:59:59"), "Y-m-d H:i:s");
+            $myPermits = Permit::whereBetween('created_at', [$from, $to])->get();
+            $myRangedPermits = RangedPermitGenerator::orderBy('created_at', 'DESC')->get();
             return view('presence.my_permits', ['myPermits' => $myPermits, 'myRangedPermits' => $myRangedPermits]);
         }
 
@@ -876,7 +881,7 @@ class PresenceController extends Controller
         $page = $request->get('page') ? $request->get('page') : 1;
 
         // get current santri
-        $permits = Permit::query()->orderBy('created_at', 'DESC')->paginate(10);
+        $permits = Permit::query()->orderBy('created_at', 'DESC')->paginate(20);
 
         return view('presence.permits_list', ['permits' => $permits, 'page' => $page]);
     }
@@ -921,7 +926,7 @@ class PresenceController extends Controller
         $presenceIdToInsert = $request->input('fkPresence_id');
 
         // get current santri
-        $santri = auth()->user()->santri;
+        $santri = Santri::find(auth()->user()->santri->id);
 
         if (!$santri)
             return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
@@ -944,18 +949,41 @@ class PresenceController extends Controller
         if (isset($existingPresent))
             return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
 
+        $ids = uniqid();
+        $inserted = false;
         $inserted = Permit::create([
             'fkSantri_id' => $santri->id,
             'fkPresence_id' => $request->input('fkPresence_id'),
             'reason' => $request->input('reason'),
             'reason_category' => $request->input('reason_category'),
-            'status' => 'pending'
+            'status' => 'approved', // default (apabila ijin tidak sesuai baru di reject)
+            'ids' => $ids
         ]);
 
-        if (!$inserted)
-            return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Gagal membuat izin.']);
+        if ($inserted) {
+            $presence = Presence::find($request->input('fkPresence_id'));
+            if ($santri->fkLorong_id == '') {
+                $lorong = '*Koor Lorong*';
+            } else {
+                $lorong = '*' . $santri->lorong->name . '*';
+            }
+            $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 
-        return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+' . $lorong . '
+Presensi: ' . $presence->name . '
+Kategori: ' . $request->input('reason_category') . '
+Alasan: ' . $request->input('reason') . '
+            
+Link reject: ' . env("APP_URL") . '/permit/' . $ids . '
+            
+Alhamdulillah Jazakumullohu Khoiro';
+
+            WaSchedules::insertToKetertiban($santri, $caption);
+
+            return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+        } else {
+            return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Gagal membuat izin.']);
+        }
     }
 
     /**
@@ -968,7 +996,7 @@ class PresenceController extends Controller
         $presenceIdToInsert = $request->input('fkPresence_id');
 
         // get current santri
-        $santri = auth()->user()->santri;
+        $santri = Santri::find(auth()->user()->santri->id);
 
         if (!$santri)
             return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
@@ -1032,12 +1060,14 @@ class PresenceController extends Controller
             if (isset($existingPresent))
                 continue;
 
+            $ids = uniqid();
             $inserted = Permit::create([
                 'fkSantri_id' => $santri->id,
                 'fkPresence_id' => $presence->id,
                 'reason' => $request->input('reason'),
                 'reason_category' => $request->input('reason_category'),
-                'status' => 'pending'
+                'status' => 'approved',
+                'ids' => $ids
             ]);
         }
 
@@ -1051,10 +1081,32 @@ class PresenceController extends Controller
             'to_date' => $request->input('to_date'),
         ]);
 
-        if (!$inserted)
-            return redirect()->route('presence permit submission')->withErrors(['failed_adding_permit' => 'Gagal membuat izin berjangka.']);
+        if ($inserted) {
+            $presencex = PresenceGroup::find($request->input('fkPresenceGroup_id'));
+            if ($santri->fkLorong_id == '') {
+                $lorong = '*Koor Lorong*';
+            } else {
+                $lorong = '*' . $santri->lorong->name . '*';
+            }
+            $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 
-        return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+' . $lorong . '
+Presensi: ' . $presencex->name . '
+Kategori: ' . $request->input('reason_category') . '
+Alasan: ' . $request->input('reason') . '
+Dari: ' . $request->input('from_date') . '
+Sampai: ' . $request->input('to_date') . '
+            
+NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo
+            
+Alhamdulillah Jazakumullohu Khoiro';
+
+            WaSchedules::insertToKetertiban($santri, $caption);
+
+            return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+        } else {
+            return redirect()->route('presence permit submission')->withErrors(['failed_adding_permit' => 'Gagal membuat izin berjangka.']);
+        }
     }
 
     public function delete_my_ranged_permit($id)
@@ -1085,15 +1137,23 @@ class PresenceController extends Controller
      */
     public function create_permit(Request $request)
     {
-        $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
+        $dayname = date('D', strtotime(today()));
+        if ($dayname == "Fri") {
+            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(15)->get();
+        } else {
+            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(14)->get();
+        }
 
-        $openPresences = Presence::orderBy('event_date', 'DESC')->get();
-
-        $usersWithSantri = User::whereHas('santri', function ($query) {
-            $query->where('id', '!=', auth()->user()->santri->id);
-            $query->whereNull('exit_at');
-        })->orderBy('fullname')->get();
-
+        if (auth()->user()->hasRole('superadmin')) {
+            $usersWithSantri = User::whereHas('santri', function ($query) {
+                $query->whereNull('exit_at');
+            })->orderBy('fullname')->get();
+        } else {
+            $usersWithSantri = User::whereHas('santri', function ($query) {
+                $query->where('id', '!=', auth()->user()->santri->id);
+                $query->whereNull('exit_at');
+            })->orderBy('fullname')->get();
+        }
         // $usersWithSantri = User::whereHas('santri', function($query) {
         //     $query->whereNull('exit_at');
         // })->orderBy('fullname')->get();
@@ -1130,18 +1190,41 @@ class PresenceController extends Controller
         if (isset($existingPresent))
             return redirect()->route('create presence permit')->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
 
+        $ids = uniqid();
         $inserted = Permit::create([
             'fkSantri_id' => $santriId,
             'fkPresence_id' => $request->input('fkPresence_id'),
             'reason' => $request->input('reason'),
             'reason_category' => $request->input('reason_category'),
-            'status' => $request->input('status')
+            'status' => $request->input('status'),
+            'ids' => $ids
         ]);
 
-        if (!$inserted)
-            return redirect()->route('create presence permit')->withErrors(['failed_adding_permit' => 'Gagal membuat izin.']);
+        if ($inserted) {
+            $santri = Santri::find($santriId);
+            $presence = Presence::find($request->input('fkPresence_id'));
+            if ($santri->fkLorong_id == '') {
+                $lorong = '*Koor Lorong*';
+            } else {
+                $lorong = '*' . $santri->lorong->name . '*';
+            }
+            $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 
-        return redirect()->route('presence permit approval')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+' . $lorong . '
+Presensi: ' . $presence->name . '
+Kategori: ' . $request->input('reason_category') . '
+Alasan: ' . $request->input('reason') . '
+            
+Link reject: ' . env("APP_URL") . '/permit/' . $ids . '
+            
+Alhamdulillah Jazakumullohu Khoiro';
+
+            WaSchedules::insertToKetertiban($santri, $caption);
+
+            return redirect()->route('presence permit approval')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+        } else {
+            return redirect()->route('create presence permit')->withErrors(['failed_adding_permit' => 'Gagal membuat izin.']);
+        }
     }
 
     /**

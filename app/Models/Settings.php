@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Settings extends Model
+{
+    public $timestamps = false;
+
+    protected $fillable = [
+        'wa_sender_account_id',
+        'wa_team_id',
+        'wa_type',
+        'wa_template',
+        'wa_min_delay',
+        'wa_max_delay'
+    ];
+}

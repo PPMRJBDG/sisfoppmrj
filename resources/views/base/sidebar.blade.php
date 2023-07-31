@@ -1,13 +1,13 @@
-<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
+<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 shadow-lg" id="sidenav-main">
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href=" {{ url('') }}">
-      <img src="https://ppmrjbandung.com/wp-content/uploads/2017/07/lgoppm-1.png" class="navbar-brand-img h-100" alt="main_logo">
+      <img src="{{ asset('img/logo.png') }}" class="navbar-brand-img h-100" alt="main_logo">
       <span class="ms-1 font-weight-bold">SISFO PPMRJ</span>
     </a>
   </div>
   <hr class="horizontal dark mt-0">
-  <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+  <div class="collapse navbar-collapse w-auto ps" id="sidenav-collapse-main">
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link {{ $path == '' ? 'active' : '' }}" href="{{ url('') }}">
@@ -17,6 +17,34 @@
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('ku'))
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">PENGURUS</h6>
+      </li>
+      <li class="nav-item">
+        @if(!auth()->user()->hasRole('ku'))
+        <a class="nav-link {{ $path == 'setting' ? 'active' : '' }}" href="{{ url('setting') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-settings text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Setting</span>
+        </a>
+        <a class="nav-link {{ $path == 'pelanggaran' ? 'active' : '' }}" href="{{ url('pelanggaran') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-umbrella-13 text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Daftar Pelanggaran</span>
+        </a>
+        @endif
+        <a class="nav-link {{ $path == 'sodaqoh/list' ? 'active' : '' }}" href="{{ url('sodaqoh/list') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
+        </a>
+      </li>
+      @endif
+      @can('view presences list')
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Presensi</h6>
       </li>
@@ -36,7 +64,6 @@
             <span class="nav-link-text ms-1">Laporan Umum</span>
           </a>
         </li> -->
-      @can('view presences list')
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/list' ? 'active' : '' }}" href="{{ url('presensi/list') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -46,7 +73,7 @@
         </a>
       </li>
       @endcan
-      @if(auth()->user()->hasRole('santri'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('santri'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/terbaru' ? 'active' : '' }}" href="{{ url('presensi/terbaru') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -56,7 +83,7 @@
         </a>
       </li>
       @endif
-      @if(auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('pengabsen'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('pengabsen'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/izin/persetujuan' ? 'active' : '' }}" href="{{ url('presensi/izin/persetujuan') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -66,7 +93,7 @@
         </a>
       </li>
       @endif
-      @if(auth()->user()->hasRole('santri'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('santri'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/izin/saya' ? 'active' : '' }}" href="{{ url('presensi/izin/saya') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -99,7 +126,7 @@
         </a>
       </li>
       @endcan
-      @if(isset(auth()->user()->santri->fkLorong_id) || auth()->user()->hasRole('koor lorong'))
+      @if(auth()->user()->hasRole('superadmin') || isset(auth()->user()->santri->fkLorong_id) || auth()->user()->hasRole('koor lorong'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'lorong/saya' ? 'active' : '' }}" href="{{ url('lorong/saya') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -114,12 +141,14 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">User</h6>
       </li>
       <li class="nav-item">
+        @if(auth()->user()->hasRole('superadmin'))
         <a class="nav-link {{ $path == 'user/list/camaba' ? 'active' : '' }}" href="{{ url('user/list/camaba') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-collection text-info text-sm opacity-10"></i>
           </div>
-          <span class="nav-link-text ms-1">Daftar Calon MABA <span style="color:red;">[enh]</span></span>
+          <span class="nav-link-text ms-1">Daftar Camaba</span>
         </a>
+        @endif
         <a class="nav-link {{ $path == 'user/list/santri' ? 'active' : '' }}" href="{{ url('user/list/santri') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-collection text-info text-sm opacity-10"></i>
@@ -138,6 +167,14 @@
           </div>
           <span class="nav-link-text ms-1">Daftar Muballigh</span>
         </a>
+        @if(auth()->user()->hasRole('superadmin'))
+        <a class="nav-link {{ $path == 'user/list/others' ? 'active' : '' }}" href="{{ url('user/list/others') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-collection text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Others</span>
+        </a>
+        @endif
       </li>
       @endcan
       @if(auth()->user()->hasRole('santri') || auth()->user()->hasRole('superadmin'))
@@ -168,25 +205,6 @@
             <i class="ni ni-collection text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Monitoring Materi Santri</span>
-        </a>
-      </li>
-      @endif
-      @if(auth()->user()->hasRole('superadmin'))
-      <li class="nav-item mt-3">
-        <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Lainnya <span style="color:red;">[enhancement]</span></h6>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {{ $path == 'pelanggaran/list' ? 'active' : '' }}" href="{{ url('pelanggaran/list') }}">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-umbrella-13 text-info text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1">Daftar Pelanggaran</span>
-        </a>
-        <a class="nav-link {{ $path == 'sodaqoh/list' ? 'active' : '' }}" href="{{ url('sodaqoh/list') }}">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1">Daftar Sodaqoh PPM</span>
         </a>
       </li>
       @endif

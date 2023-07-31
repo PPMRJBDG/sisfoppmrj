@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,6 +8,7 @@ use App\Models\Santri;
 use App\Models\Materi;
 use App\Models\Lorong;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class MonitoringMateriController extends Controller
 {
@@ -28,12 +30,16 @@ class MonitoringMateriController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function list_and_manage()
-    {      
+    {
         $lorongs = Lorong::all();
-        $monitoringMateris = MonitoringMateri::all();
+        // $view_usantri = DB::table('v_user_santri')->orderBy('fullname')->get();
+        $users = User::whereHas('santri', function ($query) {
+            $query->whereNull('exit_at');
+        })->orderBy('fullname', 'asc')->get();
+        $monitoringMateris = null; //MonitoringMateri::all();
         $materis = Materi::all();
 
-        return view('monitoringMateri.list_and_manage', ['lorongs' => $lorongs, 'materis' => $materis, 'monitoringMateris' => $monitoringMateris]);
+        return view('monitoringMateri.list_and_manage', ['lorongs' => $lorongs, 'users' => $users, 'materis' => $materis, 'monitoringMateris' => $monitoringMateris]);
     }
 
     /**
@@ -43,7 +49,7 @@ class MonitoringMateriController extends Controller
      */
     public function edit($materiId, $santriId)
     {
-        if(!auth()->user()->can('update monitoring materis') && $santriId != auth()->user()->santri->id)
+        if (!auth()->user()->can('update monitoring materis') && $santriId != auth()->user()->santri->id)
             return abort(403);
 
         $materi = Materi::find($materiId);
@@ -74,27 +80,27 @@ class MonitoringMateriController extends Controller
         $pages = $request->input('pages');
         $statusOfPages = $request->input('statusOfPages');
         $failedPages = [];
-        
-        foreach($pages as $key => $page)
-        {
-            $inserted = MonitoringMateri::updateOrCreate(
-            [
-                'fkSantri_id' => $request->input('fkSantri_id'),
-                'fkMateri_id' => $request->input('fkMateri_id'),
-                'page' => $page,
-            ],                
-            [
-                'fkSantri_id' => $request->input('fkSantri_id'),
-                'fkMateri_id' => $request->input('fkMateri_id'),
-                'page' => $page,
-                'status' => $statusOfPages[$key]
-            ]);   
 
-            if(!$inserted)
+        foreach ($pages as $key => $page) {
+            $inserted = MonitoringMateri::updateOrCreate(
+                [
+                    'fkSantri_id' => $request->input('fkSantri_id'),
+                    'fkMateri_id' => $request->input('fkMateri_id'),
+                    'page' => $page,
+                ],
+                [
+                    'fkSantri_id' => $request->input('fkSantri_id'),
+                    'fkMateri_id' => $request->input('fkMateri_id'),
+                    'page' => $page,
+                    'status' => $statusOfPages[$key]
+                ]
+            );
+
+            if (!$inserted)
                 $failedPages[] = $page;
         }
-        
-        return redirect()->route('edit monitoring materi', [$materiId, $santriId])->with(sizeof($failedPages) == 0 ? 'success' : 'failed' , sizeof($failedPages) == 0 ? 'Monitoring materi berhasil diupdate.' : 'Gagal mengupdate monitoring materi di halaman ' . implode(', ', $failedPages));
+
+        return redirect()->route('edit monitoring materi', [$materiId, $santriId])->with(sizeof($failedPages) == 0 ? 'success' : 'failed', sizeof($failedPages) == 0 ? 'Monitoring materi berhasil diupdate.' : 'Gagal mengupdate monitoring materi di halaman ' . implode(', ', $failedPages));
     }
 
     public function match_empty_pages(Request $request)
@@ -108,20 +114,19 @@ class MonitoringMateriController extends Controller
 
         $santriIds = explode(',', $santriIds);
         $selectedSantris = Santri::whereIn('id', $santriIds)->get();
-        
+
         $santriMonitoringMateris = MonitoringMateri::where('fkMateri_id', $materiId)->whereIn('fkSantri_id', $santriIds)->get();
 
         $materi = Materi::where('id', $materiId)->first();
-        
+
         // detect full pages
         $fullPages = [];
 
-        foreach($santriMonitoringMateris as $monitoringMateri)
-        {
-            if(!isset($fullPages[$monitoringMateri->page]))
+        foreach ($santriMonitoringMateris as $monitoringMateri) {
+            if (!isset($fullPages[$monitoringMateri->page]))
                 $fullPages[$monitoringMateri->page] = array('complete' => 0, 'partial' => 0, 'blank' => 0);
 
-            $fullPages[$monitoringMateri->page][$monitoringMateri->status] += 1;            
+            $fullPages[$monitoringMateri->page][$monitoringMateri->status] += 1;
         }
 
         return view('monitoringMateri.match_empty_pages', ['selectedSantris' => $selectedSantris, 'status' => $status, 'santriIds' => $santriIds, 'fullPages' => $fullPages, 'materi' => $materi, 'santriMonitoringMateris' => $santriMonitoringMateris, 'users' => $users, 'materis' => $materis]);
