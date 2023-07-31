@@ -24,7 +24,7 @@ class Santri extends Model
 
     public function monitoringMateris()
     {
-        return $this->hasMany(MonitoringMAteri::class, 'fkSantri_id');
+        return $this->hasMany(MonitoringMateri::class, 'fkSantri_id');
     }
 
     /**
