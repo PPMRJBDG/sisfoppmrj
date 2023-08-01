@@ -1,5 +1,6 @@
 @include('base.start_without_bars', ['path' => 'permit', 'containerClass' => 'p-0', 'title' => "Link Reject"])
 
+@if($permit)
 <div class="card m-2">
     <div class="card-body">
         <h6 class="font-weight-bold mb-0 text-center">Perijinan dari {{ $permit->santri->user->fullname}}</h6>
@@ -47,3 +48,10 @@
         </div>
     </div>
 </div>
+@else
+<div class="card m-2">
+    <div class="card-body">
+        <h6 class="font-weight-bold mb-0 text-center">Perijinan tidak ditemukan</h6>
+    </div>
+</div>
+@endif

@@ -129,9 +129,10 @@ function build_calendar($month, $year)
             1. Silahkan izin dengan sebenar-benarnya dan penuh tanggung jawab<br>
             2. Bagi yang izin, mudah-mudahan lancar barokah, dan diampuni dosanya<br>
             3. Bagi yang izin karena sakit, mudah-mudahan Allah paring sembuh dan sehat barokah<br>
-            4. Bagi yang mengajar prasaringan/musyawarah tidak perlu izin<br>
-            5. Jika memungkinkan, mengikuti KBM melalui SDC<br>
-            6. Ijin ini akan dikirim otomatis via WA ke Koor Lorong
+            4. Bagi yang <b>izin pulang, jangan lupa meminta SS</b><br>
+            5. Bagi yang mengajar prasaringan/musyawarah tidak perlu izin<br>
+            6. Jika memungkinkan, mengikuti KBM melalui SDC<br>
+            7. Ijin ini akan dikirim otomatis via WA ke Koor Lorong
           </div>
         </div>
         <div class="col-md-12">
@@ -158,6 +159,7 @@ function build_calendar($month, $year)
               <option value="Tugas">Tugas</option>
               <option value="Kuliah Malam">Kuliah Malam</option>
               <option value="Praktikum Malam">Praktikum Malam</option>
+              <option value="Jaga Malam">Jaga Malam</option>
               <option value="Pulang - Keluarga Meninggal">Pulang - Keluarga Meninggal</option>
               <option value="Pulang - Undangan Pernikahan Keluarga">Pulang - Undangan Pernikahan Keluarga</option>
               <option value="Pulang - Kontrol Sakit">Pulang - Kontrol Sakit</option>

@@ -1,4 +1,11 @@
 <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 shadow-lg" id="sidenav-main">
+
+  <div class="p-2">
+    <audio controls style="width: 100%;">
+      <source src="/Syair Krasan Mondok l Lagu Santri.mp3" type="audio/mpeg">
+      Your browser does not support the audio tag.
+    </audio>
+  </div>
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href=" {{ url('') }}">
@@ -29,6 +36,20 @@
           </div>
           <span class="nav-link-text ms-1">Setting</span>
         </a>
+        @if(!auth()->user()->hasRole('rj1'))
+        <a class="nav-link {{ $path == 'database' ? 'active' : '' }}" href="{{ url('database') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-bag-17 text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Database</span>
+        </a>
+        @endif
+        <a class="nav-link {{ $path == 'scheduler' ? 'active' : '' }}" href="{{ url('scheduler') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-calendar-grid-58 text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Scheduler</span>
+        </a>
         <a class="nav-link {{ $path == 'pelanggaran' ? 'active' : '' }}" href="{{ url('pelanggaran') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-umbrella-13 text-info text-sm opacity-10"></i>
@@ -36,12 +57,14 @@
           <span class="nav-link-text ms-1">Daftar Pelanggaran</span>
         </a>
         @endif
+        @if(!auth()->user()->hasRole('rj1'))
         <a class="nav-link {{ $path == 'sodaqoh/list' ? 'active' : '' }}" href="{{ url('sodaqoh/list') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
         </a>
+        @endif
       </li>
       @endif
       @can('view presences list')
@@ -210,9 +233,9 @@
       @endif
     </ul>
   </div>
-  <div class="sidenav-footer mx-3 ">
+  <!-- <div class="sidenav-footer mx-3">
     <div class="card card-plain shadow-none" id="sidenavCard">
       <img class="w-50 mx-auto" src="{{ asset('img/illustrations/icon-documentation.svg') }}" alt="sidebar_illustration">
     </div>
-  </div>
+  </div> -->
 </aside>

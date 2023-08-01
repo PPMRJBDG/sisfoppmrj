@@ -2,14 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use App\Helpers\PresenceGroupsChecker;
 use Illuminate\Support\Facades\DB;
-use App\Models\Presence;
-use App\Models\SystemMetaData;
-use App\Models\Lorong;
-use App\Models\Santri;
+use App\Models\Permit;
 use App\Models\PresenceGroup;
 
 class HomeController extends Controller
@@ -31,19 +25,8 @@ class HomeController extends Controller
      */
     public function dashboard($tb = null)
     {
-        // $lastScheduleCheck = SystemMetaData::where('key', 'lastScheduleCheck')->first();
-        // if (!$lastScheduleCheck || $lastScheduleCheck->value != date('Y-m-d')) {
-        //     PresenceGroupsChecker::checkPresenceGroups();
-        //     PresenceGroupsChecker::checkPermitGenerators();
-        //     SystemMetaData::updateOrCreate(['key' => 'lastScheduleCheck'], ['value' => date('Y-m-d')]);
-        // }
-        // $today = date('Y-m-d', strtotime(today()));
-        // $presences = Presence::orderBy('event_date', 'DESC')->whereMonth('event_date', '=', Carbon::now()->month)->whereYear('event_date', '=', Carbon::now()->year)->get();
-
-        // SELECT DATE_FORMAT(event_date,"%Y-%m") as ym FROM presences WHERE event_date > '2022-05-05' GROUP BY ym;
-
         $presence_group = PresenceGroup::get();
-        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru')) {
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
                 ->groupBy('ym')
@@ -64,11 +47,20 @@ class HomeController extends Controller
         $view_usantri = null;
         $datapg = null;
         $all_presences = null;
-        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru')) {
+        $permit = null;
+        $all_permit = array();
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
             $view_usantri = DB::table('v_user_santri')->orderBy('fullname')->get();
             foreach ($presence_group as $pg) {
                 $all_presences[$pg->id] = DB::select("SELECT COUNT(*) as c_all FROM presences WHERE fkPresence_group_id=" . $pg->id . " AND event_date LIKE '%" . $tb . "%'");
                 $presences[$pg->id] = DB::select("SELECT a.santri_id, a.fullname, COUNT(b.fkSantri_id) as cp FROM v_user_santri a LEFT JOIN v_presensi b ON a.santri_id=b.fkSantri_id AND b.event_date LIKE '%" . $tb . "%' AND b.fkPresence_group_id=" . $pg->id . " GROUP BY a.santri_id ORDER BY a.fullname");
+
+                $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.status='approved' AND a.created_at LIKE '%$tb%' AND b.fkPresence_group_id = $pg->id GROUP BY a.fkSantri_id");
+                if ($permit != null) {
+                    foreach ($permit as $p) {
+                        $all_permit[$pg->id][$p->fkSantri_id] = $p->approved;
+                    }
+                }
             }
         } elseif (auth()->user()->hasRole('santri')) {
             $presences = DB::table('presences as a')
@@ -100,6 +92,7 @@ class HomeController extends Controller
         } else {
             $presences = null;
         }
+
         return view('dashboard', [
             'presences' => $presences,
             'presence_group' => $presence_group,
@@ -107,7 +100,8 @@ class HomeController extends Controller
             'tahun_bulan' => $tahun_bulan,
             'tb' => $tb,
             'view_usantri' => $view_usantri,
-            'all_presences' => $all_presences
+            'all_presences' => $all_presences,
+            'all_permit' => $all_permit
         ]);
     }
 }

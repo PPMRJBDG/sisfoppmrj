@@ -42,7 +42,7 @@
     <h6>Daftar Hadir | {{$date .'/'. $month .'/'. $year}}</h6>
     <div class="table-responsive p-0">
       <table id="recap-table" class="table align-items-center mb-0">
-        <thead>
+        <thead style="background-color:#f6f9fc;">
           <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
@@ -74,7 +74,7 @@
     <h6>Daftar Izin</h6>
     <div class="table-responsive p-0">
       <table id="recap-permits-table" class="table align-items-center mb-0">
-        <thead>
+        <thead style="background-color:#f6f9fc;">
           <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
             <th></th>

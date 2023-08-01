@@ -29,9 +29,9 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                 @endif
             </select>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-2">
             <table class="table align-items-center mb-0">
-                <thead>
+                <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Angkatan</th>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama</th>

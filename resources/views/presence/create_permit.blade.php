@@ -52,6 +52,7 @@
               <option value="Tugas">Tugas</option>
               <option value="Kuliah Malam">Kuliah Malam</option>
               <option value="Praktikum Malam">Praktikum Malam</option>
+              <option value="Jaga Malam">Jaga Malam</option>
               <option value="Pulang - Keluarga Meninggal">Pulang - Keluarga Meninggal</option>
               <option value="Pulang - Undangan Pernikahan Keluarga">Pulang - Undangan Pernikahan Keluarga</option>
               <option value="Pulang - Kontrol Sakit">Pulang - Kontrol Sakit</option>

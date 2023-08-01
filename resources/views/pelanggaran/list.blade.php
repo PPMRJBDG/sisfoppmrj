@@ -39,10 +39,10 @@
         </div>
     </div>
     @endif
-    <div class="card-body">
+    <div class="card-body pt-0">
         <div class="table-responsive">
             <table class="table align-items-center mb-0">
-                <thead>
+                <thead style="background-color:#f6f9fc;">
                     <tr>
                         @foreach($column as $c)
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">{{$c}}</th>

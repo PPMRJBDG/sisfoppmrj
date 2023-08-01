@@ -752,8 +752,11 @@ class PresenceController extends Controller
                 $lorong = Lorong::where('fkSantri_leaderId', $santri->id)->first();
 
             // if pengabsen
-            if (auth()->user()->hasRole('pengabsen'))
-                $lorong = Lorong::where('fkSantri_leaderId', $santri->lorong->leader->id)->first();
+            if (auth()->user()->hasRole('pengabsen')) {
+                if ($santri->fkLorong_id != '') {
+                    $lorong = Lorong::where('fkSantri_leaderId', $santri->lorong->leader->id)->first();
+                }
+            }
 
             if ($lorong) {
                 if (auth()->user()->hasRole('koor lorong'))
@@ -1216,7 +1219,7 @@ Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason') . '
             
-Link reject: ' . env("APP_URL") . '/permit/' . $ids . '
+Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
             
 Alhamdulillah Jazakumullohu Khoiro';
 

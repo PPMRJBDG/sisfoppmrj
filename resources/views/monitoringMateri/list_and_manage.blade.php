@@ -34,8 +34,9 @@ function printMateriOptions($materis, $santri)
         cursor: pointer;
     }
 </style>
-<div class="card">
-    <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
+
+<div class="card mb-3">
+    <div class="card-body p-3 d-flex justify-content-between align-items-center">
         <h6 class="mb-0">Daftar Monitoring Materi</h6>
         @if(!auth()->user()->hasRole('santri'))
         <a href="{{ route('create materi') }}" class="btn btn-primary">
@@ -44,7 +45,10 @@ function printMateriOptions($materis, $santri)
         </a>
         @endif
     </div>
-    <div class="card-body pt-4 p-3">
+</div>
+
+<div class="card mb-3">
+    <div class="card-body pt-0 p-3">
         @if (session('success'))
         <div class="alert alert-success text-white">
             {{ session('success') }}
@@ -53,14 +57,13 @@ function printMateriOptions($materis, $santri)
         @if(!auth()->user()->hasRole('santri'))
         <!-- <input id="search" placeholder="Cari nama..." class="form-control mb-4" type="text"> -->
         @endif
-        @if(sizeof($lorongs) <= 0) Belum ada data. @endif <ul class="list-group">
-            @if(auth()->user()->santri)
+        @if(sizeof($lorongs) <= 0) Belum ada data. @endif @if(auth()->user()->santri)
             <div class="row">
                 <div class="table-responsive">
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI SAYA</th>
                                 <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
                                 <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
                             </tr>
@@ -72,9 +75,14 @@ function printMateriOptions($materis, $santri)
                 </div>
             </div>
             @endif
+    </div>
+</div>
 
-            <div class="row">
-                <div class="col-md-6">
+<div class="card">
+    <div class="card-body p-3">
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-group">
                     @can('view monitoring materis list')
                     @foreach($users as $user)
                     @if(!$user->santri->user->hasRole('mubalegh'))
@@ -112,9 +120,11 @@ function printMateriOptions($materis, $santri)
                     @endif
                     @endforeach
                     @endcan
-                </div>
+                </ul>
+            </div>
 
-                <div class="col-md-6">
+            <div class="col-md-6">
+                <ul class="list-group">
                     @can('view monitoring materis list')
                     @foreach($users as $user)
                     @if($user->santri->user->hasRole('mubalegh'))
@@ -152,9 +162,9 @@ function printMateriOptions($materis, $santri)
                     @endif
                     @endforeach
                     @endcan
-                </div>
+                </ul>
             </div>
-            </ul>
+        </div>
     </div>
 </div>
 <script>

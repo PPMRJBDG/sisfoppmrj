@@ -22,8 +22,10 @@
             1. Silahkan izin dengan sebenar-benarnya dan penuh tanggung jawab<br>
             2. Bagi yang izin, mudah-mudahan lancar barokah, dan diampuni dosanya<br>
             3. Bagi yang izin karena sakit, mudah-mudahan Allah paring sembuh dan sehat barokah<br>
-            4. Bagi yang mengajar prasaringan/musyawarah tidak perlu izin<br>
-            5. Jika memungkinkan, mengikuti KBM melalui SDC
+            4. Bagi yang <b>izin pulang, jangan lupa meminta SS</b><br>
+            5. Bagi yang mengajar prasaringan/musyawarah tidak perlu izin<br>
+            6. Jika memungkinkan, mengikuti KBM melalui SDC<br>
+            7. Ijin ini akan dikirim otomatis via WA ke Koor Lorong
           </div>
         </div>
         <div class="col-md-12">
@@ -57,17 +59,18 @@
           <div class="form-group">
             <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
             <select name="reason_category" class="form-control" required>
-              <option selected disabled>Pilih kategori alasan</option>
-              <option value="sakit">Sakit (di PPM)</option>
-              <option value="kontrol_sakit">Kontrol Sakit</option>
-              <option value="opname">Opname</option>
-              <option value="tugas">Tugas</option>
-              <option value="kuliah">Kuliah Malam</option>
-              <option value="praktikum">Praktikum Malam</option>
-              <option value="pulang_kel_meninggal">Pulang - Keluarga Meninggal</option>
-              <option value="pulang_undangan_nikah">Pulang - Undangan Pernikahan Keluarga</option>
-              <option value="pulang_kontrol">Pulang - Kontrol Sakit</option>
-              <option value="pulang_ortu">Pulang - Permintaan Ortu (Ortu wajib minta ijin ke Ketua terlebih dahulu)</option>
+              <option value="">Pilih kategori alasan</option>
+              <option value="Sakit (di PPM)">Sakit (di PPM)</option>
+              <option value="Kontrol Sakit">Kontrol Sakit</option>
+              <option value="Opname">Opname</option>
+              <option value="Tugas">Tugas</option>
+              <option value="Kuliah Malam">Kuliah Malam</option>
+              <option value="Praktikum Malam">Praktikum Malam</option>
+              <option value="Jaga Malam">Jaga Malam</option>
+              <option value="Pulang - Keluarga Meninggal">Pulang - Keluarga Meninggal</option>
+              <option value="Pulang - Undangan Pernikahan Keluarga">Pulang - Undangan Pernikahan Keluarga</option>
+              <option value="Pulang - Kontrol Sakit">Pulang - Kontrol Sakit</option>
+              <option value="Pulang - Permintaan Ortu">Pulang - Permintaan Ortu</option>
             </select>
           </div>
         </div>
