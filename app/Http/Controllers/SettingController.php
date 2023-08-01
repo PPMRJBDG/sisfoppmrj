@@ -24,7 +24,7 @@ class SettingController extends Controller
     public function index()
     {
         $list_periode = Periode::get();
-        $list_liburan = Liburan::get();
+        $list_liburan = Liburan::orderBy('id', 'DESC')->limit(10)->get();
         $list_jenis_pelanggaran = JenisPelanggaran::get();
         $list_setting = Settings::first();
         $list_wa_user = SpUsers::where('username', 'ppmhs.roudhotuljannah')->get();
