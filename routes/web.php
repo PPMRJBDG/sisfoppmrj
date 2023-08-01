@@ -148,7 +148,7 @@ Route::get('/setting/delete_periode/{id}', [App\Http\Controllers\SettingControll
 Route::get('/setting/delete_liburan/{id}', [App\Http\Controllers\SettingController::class, 'delete_liburan'])->name('delete liburan')->middleware('role:superadmin|rj1');
 Route::get('/setting/delete_jenis_pelanggaran/{id}', [App\Http\Controllers\SettingController::class, 'delete_jenis_pelanggaran'])->name('delete jenis pelanggaran')->middleware('role:superadmin|rj1');
 Route::post('/setting/store_generate_sodaqoh', [App\Http\Controllers\SettingController::class, 'store_generate_sodaqoh'])->name('store generate sodaqoh')->middleware('role:superadmin|rj1');
-Route::post('/setting/store_wa_settings', [App\Http\Controllers\SettingController::class, 'store_wa_settings'])->name('store wa settings')->middleware('role:superadmin');
+Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::class, 'store_settings'])->name('store settings')->middleware('role:superadmin');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);

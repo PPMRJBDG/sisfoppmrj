@@ -8,6 +8,11 @@ use App\Models\Settings;
 
 class CommonHelpers
 {
+    public static function settings()
+    {
+        return Settings::find(1);
+    }
+
     public static function createWaContact($request)
     {
         $team_id = Settings::find(1);

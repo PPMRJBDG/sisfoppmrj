@@ -16,6 +16,7 @@ use App\Models\Lorong;
 use App\Helpers\PresenceGroupsChecker;
 use App\Helpers\WaSchedules;
 use App\Models\SystemMetaData;
+use App\Helpers\CommonHelpers;
 
 use Carbon\Carbon;
 
@@ -974,7 +975,7 @@ Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason') . '
             
-Link reject: ' . env("APP_URL") . '/permit/' . $ids . '
+Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
             
 Alhamdulillah Jazakumullohu Khoiro';
 

@@ -14,6 +14,8 @@ class Settings extends Model
         'wa_type',
         'wa_template',
         'wa_min_delay',
-        'wa_max_delay'
+        'wa_max_delay',
+        'wa_ketertiban_group_id',
+        'host_url'
     ];
 }

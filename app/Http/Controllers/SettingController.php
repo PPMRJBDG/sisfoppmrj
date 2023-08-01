@@ -44,7 +44,7 @@ class SettingController extends Controller
                 $id_team[] = $user->id;
             }
             $list_wa_account = SpAccounts::where('social_network', 'whatsapp')->whereIn('team_id', $id_team)->get();
-            $list_wa_group = SpWhatsappContacts::whereIn('team_id', $id_team)->get();
+            $list_wa_group = SpWhatsappContacts::whereIn('team_id', $id_team)->where('name', 'LIKE', '%Group%')->get();
         }
 
         return view('setting', [
@@ -58,9 +58,10 @@ class SettingController extends Controller
         ]);
     }
 
-    public function store_wa_settings(Request $request)
+    public function store_settings(Request $request)
     {
         $request->validate([
+            'host_url' => 'required',
             'wa_team_id' => 'required',
             'wa_sender_account_id' => 'required',
             'wa_type' => 'required',
@@ -72,6 +73,7 @@ class SettingController extends Controller
         $setting = Settings::find(1);
         if ($setting == null) {
             Settings::create([
+                'host_url' => $request->input('host_url'),
                 'wa_team_id' => $request->input('wa_team_id'),
                 'wa_sender_account_id' => $request->input('wa_sender_account_id'),
                 'wa_type' => $request->input('wa_type'),
@@ -81,6 +83,7 @@ class SettingController extends Controller
                 'wa_ketertiban_group_id' => $request->input('wa_ketertiban_group_id'),
             ]);
         } else {
+            $setting->host_url = $request->input('host_url');
             $setting->wa_team_id = $request->input('wa_team_id');
             $setting->wa_sender_account_id = $request->input('wa_sender_account_id');
             $setting->wa_type = $request->input('wa_type');

@@ -190,13 +190,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-5">
-                            <form action="{{ route('store wa settings') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('store settings') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="form-control-label">
-                                                Team WA Account
+                                                Host URL
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->host_url : '' }}" name="host_url" required>
+                                            <label class="form-control-label">
+                                                WA - Team Account
                                             </label>
                                             <select class="wa_team_id form-control" name="wa_team_id" id="wa_team_id">
                                                 <option value="">--pilih--</option>
@@ -209,7 +213,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endif
                                             </select>
                                             <label class="form-control-label">
-                                                Sender WA Account
+                                                WA - Sender Account
                                             </label>
                                             <select class="wa_sender_account_id form-control" name="wa_sender_account_id" id="wa_sender_account_id">
                                                 <option value="">--pilih--</option>
@@ -222,7 +226,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endif
                                             </select>
                                             <label class="form-control-label">
-                                                Grup Ketertiban
+                                                WA - Grup Ketertiban
                                             </label>
                                             <select class="wa_ketertiban_group_id form-control" name="wa_ketertiban_group_id" id="wa_ketertiban_group_id">
                                                 <option value="">--pilih--</option>
@@ -235,19 +239,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endif
                                             </select>
                                             <label class="form-control-label">
-                                                WA Type
+                                                WA - Type
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_type : '' }}" name="wa_type" required>
                                             <label class="form-control-label">
-                                                WA Template
+                                                WA - Template
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_template : '' }}" name="wa_template" required>
                                             <label class="form-control-label">
-                                                WA Min Delay
+                                                WA - Min Delay
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_min_delay : '' }}" name="wa_min_delay" required>
                                             <label class="form-control-label">
-                                                WA Max Delay
+                                                WA - Max Delay
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_max_delay : '' }}" name="wa_max_delay" required>
                                         </div>
