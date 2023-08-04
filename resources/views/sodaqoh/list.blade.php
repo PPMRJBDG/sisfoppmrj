@@ -33,13 +33,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             <table class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Angkatan</th>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama</th>
                         <?php for ($i = 1; $i <= 12; $i++) { ?>
                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">{{$i}}</th>
                         <?php } ?>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Total</th>
-                        <!-- <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Rukhso</th> -->
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Ket</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,10 +46,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                     @foreach($datax as $data)
                     <tr class="text-sm" id="data{{$data->fkSantri_id}}">
                         <td>
-                            {{ $data->santri->angkatan }}
-                        </td>
-                        <td>
-                            {{ $data->santri->user->fullname }}
+                            <b>[{{ $data->santri->angkatan }}]</b> {{ $data->santri->user->fullname }}
                         </td>
                         <?php
                         $status_lunas = 0;
@@ -62,13 +58,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </td>
                         <?php
                         }
+                        $text_error = '';
+                        if (isset($periode)) {
+                            if ($status_lunas < $datax[0]->nominal) {
+                                $text_error = 'text-warning';
+                            }
+                        }
                         ?>
-                        <td>
+                        <td class="{{ $text_error }}">
                             <b>{{ number_format($status_lunas,0) }}</b>
                         </td>
-                        <!-- <td>
-                            {{ $data->status_rukhso }}
-                        </td> -->
+                        <td>
+                            <a href="#" onclick="openSodaqoh({{$data->id}},'{{$periode}}','ket',{{$data->fkSantri_id}})">{{ ($data->keterangan!='') ? $data->keterangan : 'click' }}</a>
+                        </td>
                     </tr>
                     @endforeach
                     @endif
@@ -84,10 +86,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     })
 
     function openSodaqoh(id, periode, bulan, idSantri) {
-        var value = prompt("Masukkan jumlah sodaqoh!");
+        if (bulan == 'ket') {
+            var value = prompt("Masukkan keterangan sodaqoh!");
+        } else {
+            var value = prompt("Masukkan jumlah sodaqoh!");
+        }
+
         if (value != null && value != "") {
-            value = parseInt(value);
-            if (Number.isInteger(value)) {
+            if (bulan != 'ket') {
+                value = parseInt(value);
+            }
+            if (Number.isInteger(value) || bulan == 'ket') {
                 $.post("{{ route('store sodaqoh') }}", {
                         id: id,
                         periode: periode,

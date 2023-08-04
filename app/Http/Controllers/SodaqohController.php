@@ -46,10 +46,14 @@ class SodaqohController extends Controller
             // crosscheck
             if ($check->fkSantri_id == $request->input('santri_id')) {
                 $bulan = $request->input('bulan');
-                if ($check->$bulan == null || $check->$bulan == "") {
-                    $check->$bulan = 0;
+                if ($bulan == 'ket') {
+                    $check->keterangan = $request->input('jumlah');
+                } else {
+                    if ($check->$bulan == null || $check->$bulan == "") {
+                        $check->$bulan = 0;
+                    }
+                    $check->$bulan = intval($check->$bulan) + intval($request->input('jumlah'));
                 }
-                $check->$bulan = intval($check->$bulan) + intval($request->input('jumlah'));
                 if ($check->save()) {
                     return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
                 } else {

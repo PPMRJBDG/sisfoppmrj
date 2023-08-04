@@ -24,7 +24,8 @@ class Sodaqoh extends Model
         'nov',
         'des',
         'status_lunas',
-        'status_rukhso'
+        'status_rukhso',
+        'keterangan'
     ];
 
     public function santri()
