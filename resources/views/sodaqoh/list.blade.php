@@ -20,6 +20,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     <div class="card-body">
         <center><b>Periode {{ isset($periode) ? $periode.': Nominal Rp '.number_format($datax[0]->nominal,0).',- / Tahun' : '' }}</b></center>
         <div class="d-flex">
+            <select class="select_angkatan form-control" name="" id="select_angkatan">
+                <option value="-">Filter Angkatan</option>
+                @foreach($list_angkatan as $angkatan)
+                <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
+                @endforeach
+            </select>
             <select class="select_periode form-control" name="select_periode" id="select_periode">
                 <option value="-">Filter Periode</option>
                 @if(count($list_periode)>0)
@@ -81,8 +87,13 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 </div>
 
 <script>
+    $('.select_angkatan').change((e) => {
+        var periode = $('#select_periode').val()
+        window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/${$(e.currentTarget).val()}`)
+    })
     $('.select_periode').change((e) => {
-        window.location.replace(`{{ url("/") }}/sodaqoh/list/${$(e.currentTarget).val()}`)
+        var angkatan = $('#select_angkatan').val()
+        window.location.replace(`{{ url("/") }}/sodaqoh/list/${$(e.currentTarget).val()}/` + angkatan)
     })
 
     function openSodaqoh(id, periode, bulan, idSantri) {

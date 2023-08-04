@@ -15,19 +15,37 @@ class SodaqohController extends Controller
         $this->middleware('auth');
     }
 
-    public function list($periode = null)
+    public function list($periode = null, $angkatan = null)
     {
         $datax = null;
+        $list_angkatan = DB::table('santris')
+            ->select('angkatan')
+            ->whereNull('exit_at')
+            ->groupBy('angkatan')
+            ->get();
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
-        if (count($list_periode) == 1) {
-            $periode = $list_periode[0]->periode;
-        }
-        if (isset($periode)) {
+
+        if ($periode != '-' && $angkatan != '-') {
+            $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                $query->where('angkatan', $angkatan);
+            })->where('periode', $periode)->get();
+        } elseif ($periode == '-' && $angkatan != '-') {
+            $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                $query->where('angkatan', $angkatan);
+            })->get();
+        } elseif ($periode != '-' && $angkatan == '-') {
             $datax = Sodaqoh::where('periode', $periode)->get();
+        } elseif ($periode == '-' && $angkatan == '-') {
+            $datax = null;
+            $periode = null;
+            $angkatan = null;
         }
+
         return view('sodaqoh.list', [
             'datax' => $datax,
+            'select_angkatan' => $angkatan,
             'list_periode' => $list_periode,
+            'list_angkatan' => $list_angkatan,
             'periode' => $periode,
         ]);
     }

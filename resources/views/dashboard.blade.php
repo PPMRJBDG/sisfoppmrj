@@ -78,7 +78,7 @@
                             $all_ijin = $all_ijin + $ijin;
                             $all_alpha = $all_kbm - ($all_hadir + $all_ijin);
                             ?>
-                            <span class="font-weight-bolder {{($persentase<75) ? 'text-danger' : '' }}">({{ $persentase }}%)</span>
+                            <span class="font-weight-bolder {{($persentase<80) ? 'text-danger' : '' }}">({{ $persentase }}%)</span>
                             @endif
                             @endforeach
                         </td>

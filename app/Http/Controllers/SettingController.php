@@ -191,6 +191,6 @@ class SettingController extends Controller
             }
         }
 
-        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list periode sodaqoh', $request->input('periode')))->with('success', 'Berhasil generate sodaqoh tahunan ' . $loop . ' mahasiswa.');
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list periode sodaqoh', [$request->input('periode'), '-']))->with('success', 'Berhasil generate sodaqoh tahunan ' . $loop . ' mahasiswa.');
     }
 }

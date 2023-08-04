@@ -48,7 +48,6 @@ Route::get('/presensi/izin/list', [App\Http\Controllers\PresenceController::clas
 
 // Route::get('/presensi/laporan', [App\Http\Controllers\PresenceController::class, 'report'])->name('presence report');
 
-
 // presences
 Route::get('/presensi/terbaru', [App\Http\Controllers\PresenceController::class, 'latest_list'])->name('latest presences')->middleware('role:santri|superadmin|koor lorong');
 Route::get('/presensi/laporan-umum', [App\Http\Controllers\PresenceController::class, 'report'])->name('presence report');
@@ -137,6 +136,7 @@ Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranControl
 // sodaqoh
 Route::get('/sodaqoh/list', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/sodaqoh/list/{periode}', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
+Route::get('/sodaqoh/list/{periode}/{angkatan}', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::post('/sodaqoh/list/store', [App\Http\Controllers\SodaqohController::class, 'store'])->name('store sodaqoh')->middleware('role:ku|superadmin');
 
 // setting
