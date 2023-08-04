@@ -12,6 +12,11 @@
       </ul>
     </div>
     @endif
+    @if (session('success'))
+    <div class="alert alert-success text-white">
+      {{ session('success') }}
+    </div>
+    @endif
     <form action="{{ route('store user') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="row">
@@ -84,10 +89,40 @@
               <input class="form-check-input" type="checkbox" id="role-santri" name="role-santri">
             </div>
           </div>
-          <div class="col-md-4">
+          <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Superadmin</label>
               <input class="form-check-input" type="checkbox" name="role-superadmin">
+            </div>
+          </div> -->
+          <!-- <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Dewan Guru</label>
+              <input class="form-check-input" type="checkbox" name="role-dewan-guru">
+            </div>
+          </div> -->
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">RJ1</label>
+              <input class="form-check-input" type="checkbox" name="role-rj1">
+            </div>
+          </div>
+          <!-- <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Pengabsen</label>
+              <input class="form-check-input" type="checkbox" name="role-pengabsen">
+            </div>
+          </div> -->
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">WK</label>
+              <input class="form-check-input" type="checkbox" name="role-wk">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Sekretaris</label>
+              <input class="form-check-input" type="checkbox" name="role-sekretaris">
             </div>
           </div>
           <div class="col-md-4">
@@ -96,8 +131,6 @@
               <input class="form-check-input" type="checkbox" name="role-divisi-it">
             </div>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Divisi Kurikulum</label>
@@ -106,28 +139,44 @@
           </div>
           <div class="col-md-4">
             <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Dewan Guru</label>
-              <input class="form-check-input" type="checkbox" name="role-dewan-guru">
+              <label class="custom-control-label" for="customCheck1">Divisi Kebersihan</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-kebersihan">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">RJ1</label>
-              <input class="form-check-input" type="checkbox" name="role-rj1">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Pengabsen</label>
-              <input class="form-check-input" type="checkbox" name="role-pengabsen">
+              <label class="custom-control-label" for="customCheck1">Divisi Sarpras</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-sarpras">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">WK</label>
-              <input class="form-check-input" type="checkbox" name="role-wk">
+              <label class="custom-control-label" for="customCheck1">Divisi Olahraga</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-olahraga">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Divisi Kreatif</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-kreatif">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Divisi PT</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-pt">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Divisi Asad</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-asad">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Divisi Keamanan</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-keamanan">
             </div>
           </div>
           <div class="col-md-4">
@@ -169,7 +218,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Angkatan</label>
-              <input class="form-control" type="text" name="angkatan" placeholder="Contoh: 24/09/2022">
+              <input class="form-control" type="text" name="angkatan" placeholder="Contoh: 2022">
             </div>
           </div>
         </div>
@@ -185,7 +234,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">NIS</label>
-              <input class="form-control" type="text" name="nis" placeholder="Contoh: 39012930123">
+              <input class="form-control" type="number" name="nis" placeholder="Contoh: 39012930123">
             </div>
           </div>
         </div>

@@ -72,10 +72,10 @@
                             {{ $user->angkatan }}
                         </td>
                         <td>
-                            {{ $user->nama_ortu }}
+                            {{ $user->santri->nama_ortu }}
                         </td>
                         <td>
-                            {{ $user->nohp_ortu }}
+                            {{ $user->santri->nohp_ortu }}
                         </td>
                         <td>
                             {{ $user->exit_at }}

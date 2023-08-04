@@ -78,10 +78,10 @@
               {{ $user->santri ? $user->santri->angkatan : 'Bukan santri' }}
             </td>
             <td>
-              {{ $user->nama_ortu }}
+              {{ $user->santri->nama_ortu }}
             </td>
             <td>
-              {{ $user->nohp_ortu }}
+              {{ $user->santri->nohp_ortu }}
             </td>
             <td>
               {{ $user->santri ? $user->santri->exit_at : '' }}

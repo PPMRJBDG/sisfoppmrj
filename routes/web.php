@@ -97,8 +97,8 @@ Route::get('/lorong/list/delete/{id}', [App\Http\Controllers\LorongController::c
 
 // users
 Route::get('/user/list/santri', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm')->middleware('permission:view users list');
-Route::get('/user/list/santri/{angkatan}', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm')->middleware('permission:view users list');
-Route::get('/user/list/santri/{angkatan}/{role}', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm')->middleware('permission:view users list');
+Route::get('/user/list/santri/{angkatan}', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm a')->middleware('permission:view users list');
+Route::get('/user/list/santri/{angkatan}/{role}', [App\Http\Controllers\UserController::class, 'list_and_manage'])->name('user tm ar')->middleware('permission:view users list');
 Route::get('/user/list/muballigh', [App\Http\Controllers\UserController::class, 'list_muballigh'])->name('user mt')->middleware('permission:view users list');
 Route::get('/user/list/muballigh/{angkatan}', [App\Http\Controllers\UserController::class, 'list_muballigh'])->name('user mt')->middleware('permission:view users list');
 Route::get('/user/list/others', [App\Http\Controllers\UserController::class, 'list_others'])->name('user others')->middleware('role:superadmin');
