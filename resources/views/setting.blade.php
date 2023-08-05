@@ -1,4 +1,5 @@
 @include('base.start', ['path' => 'setting', 'title' => 'Setting', 'breadcrumbs' => ['Setting']])
+
 <?php
 $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
 ?>
@@ -306,7 +307,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         </div>
                         <div class="col-md-7">
                             <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
+                                <table id="table-pelanggaran" class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
@@ -340,4 +341,11 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
     </div>
 </div>
+<script>
+    $('#table-pelanggaran').DataTable({
+        order: [
+            [1, 'desc']
+        ],
+    });
+</script>
 @include('base.end')

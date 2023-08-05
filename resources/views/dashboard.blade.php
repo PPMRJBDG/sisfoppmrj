@@ -20,7 +20,7 @@
         </div>
         @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
         <div class="table-responsive mt-2">
-            <table class="table align-items-center mb-0">
+            <table id="table-hadir" class="table align-items-center mb-0">
                 <thead class="thead-light">
                     <tr style="background-color:#f6f9fc;">
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">NAMA</th>
@@ -157,6 +157,12 @@
 @include('base.end')
 
 <script>
+    $('#table-hadir').DataTable({
+        order: [
+            [1, 'desc']
+        ],
+        pageLength: 25
+    });
     $('.select_tb').change((e) => {
         window.location.replace(`{{ url("/") }}/home/${$(e.currentTarget).val()}`)
     })

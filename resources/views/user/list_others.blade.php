@@ -26,7 +26,7 @@
         </div>
         @endif
         <div class="table-responsive p-0">
-            <table class="table align-items-center mb-0">
+            <table id="table" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -34,7 +34,6 @@
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No HP</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-                        <th class="text-secondary opacity-7"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,4 +76,12 @@
         </div>
     </div>
 </div>
+<script>
+    $('#table').DataTable({
+        order: [
+            [1, 'desc']
+        ],
+        pageLength: 25
+    });
+</script>
 @include('base.end')

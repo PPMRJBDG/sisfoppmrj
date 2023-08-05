@@ -2,7 +2,7 @@
 @if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
 <div class="card">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-    <h6>Daftar izin {{ isset($lorong) ? $lorong->name : '' }}</h6>
+    <h6>Daftar izin {{ isset($lorong) ? $lorong->name : '' }} (add date filter)</h6>
 
     @role('koor lorong|superadmin')
     <a href="{{ route('create presence permit') }}" class="btn btn-primary mb-0">
@@ -29,8 +29,8 @@
       </div>
     </div>
     @endif
-    <div class="table-responsive p-0">
-      <table class="table align-items-center mb-0">
+    <div class="table-responsive p-2">
+      <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -39,7 +39,6 @@
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Pengajuan</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-            <!-- <th class="text-secondary opacity-7"></th> -->
           </tr>
         </thead>
         <tbody>
@@ -78,9 +77,9 @@
           </tr>
         </tbody>
       </table>
-      <div class="p-3">
+      <!-- <div class="p-3">
         @include('components.paginator', ['page' => $page])
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -93,4 +92,12 @@
   </div>
 </div>
 @endif
+<script>
+  $('#table').DataTable({
+    order: [
+      [1, 'desc']
+    ],
+    pageLength: 25
+  });
+</script>
 @include('base.end')

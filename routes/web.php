@@ -74,8 +74,8 @@ Route::get('/presensi/list/group/edit/{id}', [App\Http\Controllers\PresenceContr
 Route::get('/presensi/list/group/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_group'])->name('delete presence group')->middleware('permission:delete presences');
 Route::get('/presensi/list/group/{id}/recap', [App\Http\Controllers\PresenceController::class, 'select_presence_group_recap'])->name('select presence group recap')->middleware('permission:view presences list');
 Route::get('/presensi/list/group/{id}/recap/{fromDate}/{toDate}/{lorongId}', [App\Http\Controllers\PresenceController::class, 'view_presence_group_recap'])->name('view presence group recap')->middleware('permission:view presences list');
-Route::get('/recap/{year}/{month}/{date}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
-Route::get('/recap/{year}/{month}/{date}/{presenceId}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
+// Route::get('/recap/{year}/{month}/{date}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
+Route::get('/recap/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
 Route::get('/presensi/list/group/{id}/presensi/create', [App\Http\Controllers\PresenceController::class, 'create_in_group'])->name('create presence in group')->middleware('permission:create presences');
 Route::post('/presensi/list/group/{id}/presensi/store', [App\Http\Controllers\PresenceController::class, 'store_in_group'])->name('store presence in group')->middleware('permission:create presences');
 Route::get('/permit/{ids}', [App\Http\Controllers\PublicController::class, 'view_permit'])->name('view permit');

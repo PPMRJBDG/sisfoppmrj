@@ -27,7 +27,7 @@
         </div>
         @endif
         <div class="table-responsive p-0">
-            <table class="table align-items-center mb-0">
+            <table id="table" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -72,10 +72,10 @@
                             {{ $user->angkatan }}
                         </td>
                         <td>
-                            {{ $user->santri->nama_ortu }}
+                            {{ isset($user->santri) ? $user->santri->nama_ortu : '' }}
                         </td>
                         <td>
-                            {{ $user->santri->nohp_ortu }}
+                            {{ isset($user->santri) ? $user->santri->nohp_ortu : '' }}
                         </td>
                         <td>
                             {{ $user->exit_at }}
@@ -96,6 +96,12 @@
     </div>
 </div>
 <script>
+    $('#table').DataTable({
+        order: [
+            [1, 'desc']
+        ],
+        pageLength: 25
+    });
     $('.angkatan-list').change((e) => {
         window.location.replace(`{{ url("/") }}/user/list/muballigh/${$(e.currentTarget).val()}`)
     })

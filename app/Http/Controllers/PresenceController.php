@@ -776,7 +776,8 @@ class PresenceController extends Controller
                 });
             });
 
-        $permits = $permits->orderBy('created_at', 'DESC')->paginate(10);
+        // $permits = $permits->orderBy('created_at', 'DESC')->paginate(10);
+        $permits = $permits->orderBy('created_at', 'DESC')->get();
 
         return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'page' => $page]);
     }
@@ -885,7 +886,8 @@ class PresenceController extends Controller
         $page = $request->get('page') ? $request->get('page') : 1;
 
         // get current santri
-        $permits = Permit::query()->orderBy('created_at', 'DESC')->paginate(20);
+        // $permits = Permit::query()->orderBy('created_at', 'DESC')->paginate(20);
+        $permits = Permit::query()->orderBy('created_at', 'DESC')->get();
 
         return view('presence.permits_list', ['permits' => $permits, 'page' => $page]);
     }

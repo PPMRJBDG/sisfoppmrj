@@ -15,94 +15,87 @@
 </style>
 <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<div class="card m-1">
-  <div class="card-body p-2">
-    @if(sizeof($presencesInDate) > 0)
-    <ul class="nav nav-tabs">
-      @foreach($presencesInDate as $presenceInDate)
-      <li class="nav-item">
-        <a class="nav-link {{ $presence ? ($presence->id == $presenceInDate->id ? 'active' : '') : '' }}" aria-current="page" href="{{ route('view daily public presences recaps', [
-                'year' => $year,
-                'month' => $month,
-                'date' => $date,
-                'presenceId' => $presenceInDate->id
-              ]) }}">{{ $presenceInDate->presenceGroup ? $presenceInDate->presenceGroup->name : $presenceInDate->name}}</a>
-      </li>
-      @endforeach
-    </ul>
-    @else
-    Tidak ada presensi pada tanggal ini.
-    @endif
-  </div>
-</div>
 
-@if($presence)
-<div class="card m-1">
-  <div class="card-body p-2">
-    <h6>Daftar Hadir | {{$date .'/'. $month .'/'. $year}}</h6>
-    <div class="table-responsive p-0">
-      <table id="recap-table" class="table align-items-center mb-0">
-        <thead style="background-color:#f6f9fc;">
-          <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($presents as $present)
-          <tr>
-            <td>
-              <div class="d-flex">
-                <div class="d-flex flex-column justify-content-center">
-                  <h6 class="mb-0 text-sm">{{ $present->santri->user->fullname }}</h6>
-                </div>
-              </div>
-            </td>
-            <td>
-              {{ $present->is_late ? 'Telat' : 'Tidak telat' }}
-            </td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+<div class="p-2">
+  @if($presence)
+  <div class="card">
+    <div class="card-body p-2">
+      <center>
+        <h6>Daftar Hadir Angkatan {{$angkatan}} | {{$date .'/'. $month .'/'. $year}}</h6>
+      </center>
+      <div class="row text-center p-2">
+        <div class="col-4">
+          <i class="ni ni-check-bold text-info text-sm opacity-10"></i> Hadir
+        </div>
+        <div class="col-4">
+          <i class="ni ni-user-run text-warning text-sm opacity-10"></i> Ijin
+        </div>
+        <div class="col-4">
+          <i class="ni ni-fat-remove text-danger text-sm opacity-10"></i> Alpha
+        </div>
+      </div>
+      <div class="table-responsive p-0">
+        <table id="recap-table" class="table align-items-center mb-0">
+          <thead style="background-color:#f6f9fc;">
+            <tr>
+              <th class="text-uppercase text-secondary text-xs font-weight-bolder">Nama</th>
+              @if(sizeof($presencesInDate) > 0)
+              @foreach($presencesInDate as $presenceInDate)
+              <th class="text-uppercase text-secondary text-xs font-weight-bolder">
+                {{ $presenceInDate->presenceGroup ? $presenceInDate->presenceGroup->name : $presenceInDate->name}}
+              </th>
+              @endforeach
+              @endif
+            </tr>
+          </thead>
+          <tbody>
+            @if(sizeof($mahasiswa) > 0)
+            @foreach($mahasiswa as $mhs)
+            <tr>
+              <td>
+                <h6 class="mb-0 text-xs">{{ $mhs->fullname }}</h6>
+              </td>
+
+              @if(sizeof($presencesInDate) > 0)
+              @foreach($presencesInDate as $pid)
+              <td>
+                <?php
+                $icon = 'fat-remove text-danger';
+                foreach ($presents[$pid->id] as $present) {
+                  if ($present->fkSantri_id == $mhs->santri->id) {
+                    $icon = 'check-bold text-info';
+                  }
+                }
+                if (sizeof($permits) > 0) {
+                  foreach ($permits[$pid->id] as $permit) {
+                    if ($permit->fkSantri_id == $mhs->santri->id) {
+                      $icon = 'user-run text-warning';
+                    }
+                  }
+                }
+                ?>
+                <i style="font-size:18px !important;" class="ni ni-{{$icon}} opacity-10"></i>
+              </td>
+              @endforeach
+              @endif
+            </tr>
+            @endforeach
+            @endif
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="card m-1">
-  <div class="card-body p-2">
-    <h6>Daftar Izin</h6>
-    <div class="table-responsive p-0">
-      <table id="recap-permits-table" class="table align-items-center mb-0">
-        <thead style="background-color:#f6f9fc;">
-          <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($permits as $permit)
-          <tr>
-            <td>
-              {{ $permit->santri->user->fullname }} ({{ $permit->reason }})
-            </td>
-            <td></td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+  @else
+  @if(sizeof($presencesInDate) > 0)
+  <div class="card m-1">
+    <div class="card-body p-2">
+      <div class="alert alert-info text-white">Pilih presensi untuk mulai melihat.</div>
     </div>
   </div>
+  @endif
+  @endif
 </div>
-@else
-@if(sizeof($presencesInDate) > 0)
-<div class="card m-1">
-  <div class="card-body p-2">
-    <div class="alert alert-info text-white">Pilih presensi untuk mulai melihat.</div>
-  </div>
-</div>
-@endif
-@endif
 
 @if($presence)
 <script>
@@ -110,14 +103,8 @@
     order: [
       [1, 'desc']
     ],
-    paging: false
-  });
-
-  $('#recap-permits-table').DataTable({
-    order: [
-      [1, 'desc']
-    ],
-    paging: false
+    paging: false,
+    searching: false
   });
 </script>
 @endif

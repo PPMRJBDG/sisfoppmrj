@@ -22,8 +22,8 @@
   </div>
   @endif
 
-  <div class="table-responsive p-0">
-    <table class="table align-items-center mb-0">
+  <div class="table-responsive p-2">
+    <table id="table-izin" class="table align-items-center mb-0">
       <thead style="background-color:#f6f9fc;">
         <tr>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -33,7 +33,6 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Pengajuan</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-          <th class="text-secondary opacity-7"></th>
         </tr>
       </thead>
       <tbody>
@@ -99,8 +98,8 @@
       Belum ada data.
   </div>
   @endif
-  <div class="table-responsive p-0">
-    <table class="table align-items-center mb-0">
+  <div class="table-responsive p-2">
+    <table id="table-generator" class="table align-items-center mb-0">
       <thead style="background-color:#f6f9fc;">
         <tr>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -110,7 +109,6 @@
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Dari Tanggal</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sampai Tanggal</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-          <!-- <th class="text-secondary opacity-7"></th> -->
         </tr>
       </thead>
       <tbody>
@@ -153,4 +151,18 @@
   </div>
 </div>
 </div>
+<script>
+  $('#table-izin').DataTable({
+    order: [
+      [1, 'desc']
+    ],
+    pageLength: 25
+  });
+  $('#table-generator').DataTable({
+    order: [
+      [1, 'desc']
+    ],
+    pageLength: 25
+  });
+</script>
 @include('base.end')

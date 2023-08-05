@@ -1,7 +1,7 @@
 @include('base.start', ['path' => 'presensi/izin/list', 'title' => 'Daftar Izin', 'breadcrumbs' => ['Daftar Izin']])
 <div class="card">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-    <h6>Daftar Izin</h6>
+    <h6>Daftar Izin (add date filter)</h6>
   </div>
   <div class="card-body px-0 pt-0 pb-0">
     @if (session('success'))
@@ -15,8 +15,8 @@
       Belum ada data.
   </div>
   @endif
-  <div class="table-responsive p-0">
-    <table class="table align-items-center mb-0">
+  <div class="table-responsive p-2">
+    <table id="table" class="table align-items-center mb-0">
       <thead style="background-color:#f6f9fc;">
         <tr>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -59,10 +59,18 @@
         @endforeach
       </tbody>
     </table>
-    <div class="p-3">
+    <!-- <div class="p-3">
       @include('components.paginator', ['page' => $page])
-    </div>
+    </div> -->
   </div>
 </div>
 </div>
+<script>
+  $('#table').DataTable({
+    order: [
+      [1, 'desc']
+    ],
+    pageLength: 25
+  });
+</script>
 @include('base.end')
