@@ -5,10 +5,154 @@ namespace App\Http\Controllers;
 use App\Models\Presence;
 use App\Models\Permit;
 use App\Models\User;
+use App\Models\Settings;
+use App\Models\Liburan;
+use App\Models\PresenceGroup;
+use App\Models\Pelanggaran;
+use App\Helpers\WaSchedules;
+use App\Helpers\CommonHelpers;
+use App\Models\Pelanggaran;
+use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
-    public function view_daily_public_presences_recaps($year, $month, $date, $angkatan)
+    public function report_schedule($time)
+    {
+        $setting = Settings::find(1);
+        $contact_id = $setting->wa_ortu_group_id;
+        $name = '';
+        $caption = '';
+        $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
+        $yesterday = date('Y-m-d', $yesterday);
+
+        // DAILY
+        if ($time == 'daily') {
+            $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
+            if (count($check_liburan) == 0) {
+                $list_angkatan = DB::table('santris')
+                    ->select('angkatan')
+                    ->whereNull('exit_at')
+                    ->groupBy('angkatan')
+                    ->get();
+
+                $angkatan_caption = '';
+                foreach ($list_angkatan as $la) {
+                    $angkatan_caption = $angkatan_caption . '*Angkatan ' . $la->angkatan . '*
+';
+                    $angkatan_caption = $angkatan_caption . CommonHelpers::settings()->host_url . '/daily/' . date_format(date_create($yesterday), "Y/m/d") . '/' . $la->angkatan . '
+
+';
+                }
+                $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
+
+                $caption = '
+*[SISFO PPMRJ]*
+
+Assalamualaikum Ayah Bunda, berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
+Silahkan klik link dibawah ini sesuai angkatannya:
+
+' . $angkatan_caption . '
+Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
+';
+
+                if ($contact_id != '') {
+                    $insert = WaSchedules::report_schedule($contact_id, $name, $caption);
+                    if ($insert) {
+                        echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
+                    } else {
+                        echo json_encode(['status' => false, 'message' => 'failed insert scheduler']);
+                    }
+                } else {
+                    echo json_encode(['status' => false, 'message' => 'group id not found']);
+                }
+            } else {
+                echo json_encode(['status' => false, 'message' => 'holiday']);
+            }
+        }
+
+        // WEEKLY
+        elseif ($time == 'weekly') {
+        }
+
+        // MONTHLY
+        elseif ($time == 'monthly') {
+        }
+
+        // ALL REPORT
+        elseif ($time == 'all_report') {
+        }
+    }
+
+    public function report($ids)
+    {
+        // get all tahun bulan
+        $tahun_bulan = DB::table('presences')
+            ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+            ->where('event_date', '>=', $ids)
+            ->groupBy('ym')
+            ->get();
+
+        // loop presensi berdasarkan tahun bulan
+        $presence_group = PresenceGroup::get();
+        foreach ($tahun_bulan as $tb) {
+            $presences = DB::table('presences as a')
+                ->leftJoin('presents as b', function ($join) {
+                    $join->on('a.id', '=', 'b.fkPresence_id');
+                    $join->where('b.fkSantri_id', 24);
+                })
+                ->select('a.name', 'a.fkPresence_group_id', 'b.*')
+                // ->where('b.fkSantri_id', $ids)
+                ->where('a.event_date', 'like', '%' . $tb->ym . '%')
+                ->orderBy('a.event_date', 'ASC')
+                ->get();
+            // echo '<pre>' . var_export($presences, true) . '</pre>';
+            // exit;
+            if ($presences != null) {
+                foreach ($presence_group as $pg) {
+                    $datapg[$tb->ym][$pg->id]['kbm']     = 0;
+                    $datapg[$tb->ym][$pg->id]['hadir']   = 0;
+                    $datapg[$tb->ym][$pg->id]['ijin']    = 0;
+                    $datapg[$tb->ym][$pg->id]['alpha']   = 0;
+                    $kbm = 0;
+                    $hadir = 0;
+                    $ijin = 0;
+                    $alpha = 0;
+                    foreach ($presences as $ps) {
+                        if ($pg->id == $ps->fkPresence_group_id) {
+                            $kbm++;
+                            if ($ps->fkSantri_id != "") {
+                                $hadir++;
+                            }
+                            $datapg[$tb->ym][$pg->id]['kbm'] = $kbm;
+                        }
+                        $datapg[$tb->ym][$pg->id]['hadir'] = $hadir;
+                    }
+                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $ids AND a.status='approved' AND a.created_at LIKE '%$tb->ym%' AND b.fkPresence_group_id = $pg->id GROUP BY a.fkSantri_id");
+                    if ($permit != null) {
+                        foreach ($permit as $p) {
+                            $ijin++;
+                        }
+                        $datapg[$tb->ym][$pg->id]['ijin']    = $ijin;
+                    }
+                    $datapg[$tb->ym][$pg->id]['alpha'] = $datapg[$tb->ym][$pg->id]['kbm'] - ($datapg[$tb->ym][$pg->id]['hadir'] + $datapg[$tb->ym][$pg->id]['ijin']);
+                }
+            }
+        }
+        echo '<pre>' . var_export($datapg, true) . '</pre>';
+        exit;
+
+        // get pelanggaran
+        $pelanggaran = Pelanggaran::where('fkSantri_id', $ids)->get();
+
+        // get pencapaian materi
+
+        return view('report.all_report', [
+            'datapg' => $datapg,
+            'pelanggaran' => $pelanggaran
+        ]);
+    }
+
+    public function daily_presences($year, $month, $date, $angkatan)
     {
         $presencesInDate = Presence::whereDate('event_date', '=', "$year-$month-$date")->get();
         $mahasiswa = User::whereHas('santri', function ($query) {
@@ -35,10 +179,8 @@ class PublicController extends Controller
                 :
                 null;
         }
-        // echo var_dump(($presents[549]));
-        // exit;
 
-        return view('presence.view_daily_public_presences_recaps', [
+        return view('report.daily_presences', [
             'mahasiswa' => $mahasiswa,
             'presence' => $presence,
             'permits' => $permits,

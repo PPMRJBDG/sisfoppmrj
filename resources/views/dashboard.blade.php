@@ -8,7 +8,110 @@
 
 @if(!auth()->user()->hasRole('ku'))
 <div class="card shadow-lg mt-4 mb-4">
-    <div class="card-body pt-2 pb-2">
+    <div class="card-body">
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+        <!-- <div class="row mb-3">
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
+                                    <h5 class="font-weight-bolder">
+                                        $53,000
+                                    </h5>
+                                    <p class="mb-0">
+                                        <span class="text-success text-sm font-weight-bolder">+55%</span>
+                                        since yesterday
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
+                                    <h5 class="font-weight-bolder">
+                                        2,300
+                                    </h5>
+                                    <p class="mb-0">
+                                        <span class="text-success text-sm font-weight-bolder">+3%</span>
+                                        since last week
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
+                                    <h5 class="font-weight-bolder">
+                                        +3,462
+                                    </h5>
+                                    <p class="mb-0">
+                                        <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                                        since last quarter
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
+                                    <h5 class="font-weight-bolder">
+                                        $103,430
+                                    </h5>
+                                    <p class="mb-0">
+                                        <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        @endif
         <center>Pilih Tahun-Bulan:</center>
         <div class="p-0 d-flex">
             <select class="select_tb form-control" name="select_tb" id="select_tb">
@@ -24,7 +127,6 @@
                 <thead class="thead-light">
                     <tr style="background-color:#f6f9fc;">
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">NAMA</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">ANGKATAN</th>
                         @foreach($presence_group as $pg)
                         <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">
                             {{$pg->name}}
@@ -34,19 +136,17 @@
                         @endforeach
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
                         <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>HADIR</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>APPROVED</th>
+                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>IJIN</th>
                         <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>ALPHA</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>ALL</th>
+                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>KBM</th>
+                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>PERSENTASE</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($view_usantri as $vu)
                     <tr class="text-sm">
                         <td>
-                            {{ $vu->fullname }}
-                        </td>
-                        <td class="text-center">
-                            {{ $vu->angkatan }}
+                            [{{ $vu->angkatan }}] {{ $vu->fullname }}
                         </td>
                         <?php
                         $all_persantase = 0;
@@ -87,9 +187,10 @@
                         <td class="text-center">{{ $all_hadir  }}</td>
                         <td class="text-center">{{ $all_ijin  }}</td>
                         <td class="text-center">{{ $all_alpha }}</td>
+                        <td class="text-center">{{ $all_kbm }}</td>
                         <td class="text-center">
-                            <span class="font-weight-bolder {{ (($all_persantase/3)<75) ? 'text-danger' : ''}}">
-                                {{ ($all_hadir+$all_ijin) .' / '.$all_kbm.' ('.number_format($all_persantase/3,2) }}%)
+                            <span class="font-weight-bolder {{ (($all_persantase/3)<80) ? 'text-danger' : ''}}">
+                                {{ number_format($all_persantase/3,2) }}%
                             </span>
                         </td>
                     </tr>
@@ -111,7 +212,7 @@
                         }
                         ?>)
                 </h6>
-                <div class="table-responsive" style="background-color:#efefef;border-radius:8px;">
+                <div class="table-responsive" style="background-color:#f9f9f9;border-radius:8px;">
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
@@ -161,7 +262,7 @@
         order: [
             [1, 'desc']
         ],
-        pageLength: 25
+        pageLength: 15
     });
     $('.select_tb').change((e) => {
         window.location.replace(`{{ url("/") }}/home/${$(e.currentTarget).val()}`)

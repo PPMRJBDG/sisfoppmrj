@@ -12,7 +12,7 @@ function printMateriOptions($materis, $santri)
         $partiallyCompletedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'partial')->count();
         $totalPages = $completedPages + ($partiallyCompletedPages / 2);
 ?>
-        <tr class="text-xs">
+        <tr class="text-sm">
             <td class="p-0">{{ $materi->name }}</td>
             <td class="p-0">{{ $totalPages."/".$materi->pageNumbers." page = ".number_format((float) $totalPages / $materi->pageNumbers * 100, 2, '.', '') }}%</td>
             <td class="p-0">
@@ -47,6 +47,7 @@ function printMateriOptions($materis, $santri)
     </div>
 </div>
 
+@if(auth()->user()->santri)
 <div class="card mb-3">
     <div class="card-body pt-0 p-3">
         @if (session('success'))
@@ -54,130 +55,172 @@ function printMateriOptions($materis, $santri)
             {{ session('success') }}
         </div>
         @endif
-        @if(!auth()->user()->hasRole('santri'))
-        <!-- <input id="search" placeholder="Cari nama..." class="form-control mb-4" type="text"> -->
+
+        @if(sizeof($lorongs) >= 0)
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI SAYA</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php printMateriOptions($materis, auth()->user()->santri) ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         @endif
-        @if(sizeof($lorongs) <= 0) Belum ada data. @endif @if(auth()->user()->santri)
-            <div class="row">
+    </div>
+</div>
+@endif
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-3">
+                <h6 class="text-center text-primary">Kelas Reguler</h6>
+                @can('view monitoring materis list')
                 <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
+                    <table id="table-mhs-reg" class="table align-items-center mb-0">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI SAYA</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">LORONG</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php printMateriOptions($materis, auth()->user()->santri) ?>
+                            @foreach($users as $user)
+                            @if(!$user->santri->user->hasRole('mubalegh'))
+                            <tr onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" style="cursor:pointer;">
+                                <td>{{$user->fullname}}</td>
+                                <td>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</td>
+                            </tr>
+                            @endif
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
+                @endcan
             </div>
-            @endif
+        </div>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-body p-3">
-        <div class="row">
-            <div class="col-md-6">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-3">
+                <h6 class="text-center text-primary">Kelas MT</h6>
                 <ul class="list-group">
                     @can('view monitoring materis list')
-                    @foreach($users as $user)
-                    @if(!$user->santri->user->hasRole('mubalegh'))
-                    <li class="list-group-item lorongs-list-item border-0 pt-1 pb-1 pl-2 mb-2 bg-gray-100 border-radius-lg">
-                        <div class="d-flex flex-column">
-                            <h6 class="text-sm mb-0">{{ $user->fullname }} <i class="fas fa-caret-down ms-2" aria-hidden="true"></i></h6>
-                        </div>
-                        <ul class="list-group santris-list">
-                            <li class="list-group-item members-list-item pt-0" style="background:none;border:none">
-                                <div class="row">
-                                    <div class="col-md">
-                                        <div class="row">
-                                            <div class="table-responsive">
-                                                <table class="table align-items-center mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
-                                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        printMateriOptions($materis, $user->santri);
-                                                        ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
-                    @endforeach
-                    @endcan
-                </ul>
-            </div>
-
-            <div class="col-md-6">
-                <ul class="list-group">
-                    @can('view monitoring materis list')
-                    @foreach($users as $user)
-                    @if($user->santri->user->hasRole('mubalegh'))
-                    <li class="list-group-item lorongs-list-item border-0 pt-1 pb-1 pl-2 mb-2 bg-gray-100 border-radius-lg">
-                        <div class="d-flex flex-column">
-                            <h6 class="text-sm mb-0">{{ $user->fullname }} <i class="fas fa-caret-down ms-2" aria-hidden="true"></i></h6>
-                        </div>
-                        <ul class="list-group santris-list">
-                            <li class="list-group-item members-list-item pt-0" style="background:none;border:none">
-                                <div class="row">
-                                    <div class="col-md">
-                                        <div class="row">
-                                            <div class="table-responsive">
-                                                <table class="table align-items-center mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
-                                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        printMateriOptions($materis, $user->santri);
-                                                        ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
-                    @endforeach
+                    <div class="table-responsive">
+                        <table id="table-mhs-mt" class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
+                                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">LORONG</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($users as $user)
+                                @if($user->santri->user->hasRole('mubalegh'))
+                                <tr onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" style="cursor:pointer;">
+                                    <td>{{$user->fullname}}</td>
+                                    <td>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     @endcan
                 </ul>
             </div>
         </div>
     </div>
 </div>
-<script>
-    $('.lorongs-list-item h6').click((e) => {
-        if ($(e.currentTarget).parent().parent().find('.santris-list').css('display') == 'none')
-            $(e.currentTarget).parent().parent().find('.santris-list').show();
-        else
-            $(e.currentTarget).parent().parent().find('.santris-list').hide();
 
-        if ($(e.currentTarget).find('.fa-caret-down').length > 0)
-            $(e.currentTarget).find('.fa-caret-down').removeClass('fa-caret-down').addClass('fa-caret-up');
-        else
-            $(e.currentTarget).find('.fa-caret-up').removeClass('fa-caret-up').addClass('fa-caret-down');
-    })
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h6 class="modal-title" id="exampleModalLabel">Pencapaian Materi</h6>
+                    <h5 class="modal-title" id="exampleModalLabel"><span id="nm"></span></h5>
+                </div>
+            </div>
+            <div class="modal-body">
+                <table class="table align-items-center mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contentMateri">
+                        <tr>
+                            <td colspan="3">
+                                <span class="text-center">
+                                    Loading...
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getMateri(santri_id, nama) {
+        $('#exampleModal').fadeIn();
+        $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
+        $('#exampleModal').css('z-index', '10000');
+        $('#exampleModalLabel span#nm').text(nama);
+        $.post("{{ route('materi santri') }}", {
+                santri_id: santri_id
+            },
+            function(data) {
+                $('#contentMateri').html(data);
+            }
+        );
+    }
+
+    $('#close').click(function() {
+        $('#exampleModal').fadeOut();
+        $('#contentMateri').html('<td colspan="3"><span class="text-center">Loading...</span></td>');
+    });
+
+    $('#table-mhs-reg').DataTable({
+        order: [
+            [1, 'desc']
+        ],
+        pageLength: 25
+    });
+    $('#table-mhs-mt').DataTable({
+        order: [
+            [1, 'desc']
+        ],
+        pageLength: 25
+    });
+
+    // $('.lorongs-list-item h6').click((e) => {
+    //     if ($(e.currentTarget).parent().parent().find('.santris-list').css('display') == 'none')
+    //         $(e.currentTarget).parent().parent().find('.santris-list').show();
+    //     else
+    //         $(e.currentTarget).parent().parent().find('.santris-list').hide();
+
+    //     if ($(e.currentTarget).find('.fa-caret-down').length > 0)
+    //         $(e.currentTarget).find('.fa-caret-down').removeClass('fa-caret-down').addClass('fa-caret-up');
+    //     else
+    //         $(e.currentTarget).find('.fa-caret-up').removeClass('fa-caret-up').addClass('fa-caret-down');
+    // })
 </script>
 @include('base.end')

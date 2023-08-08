@@ -121,7 +121,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         if (return_data.status) {
                             location.reload();
                         }
-                    });
+                    }
+                );
             } else {
                 alert("Silahkan input berupa angka!");
             }

@@ -74,12 +74,11 @@ Route::get('/presensi/list/group/edit/{id}', [App\Http\Controllers\PresenceContr
 Route::get('/presensi/list/group/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_group'])->name('delete presence group')->middleware('permission:delete presences');
 Route::get('/presensi/list/group/{id}/recap', [App\Http\Controllers\PresenceController::class, 'select_presence_group_recap'])->name('select presence group recap')->middleware('permission:view presences list');
 Route::get('/presensi/list/group/{id}/recap/{fromDate}/{toDate}/{lorongId}', [App\Http\Controllers\PresenceController::class, 'view_presence_group_recap'])->name('view presence group recap')->middleware('permission:view presences list');
-// Route::get('/recap/{year}/{month}/{date}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
-Route::get('/recap/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'view_daily_public_presences_recaps'])->name('view daily public presences recaps');
 Route::get('/presensi/list/group/{id}/presensi/create', [App\Http\Controllers\PresenceController::class, 'create_in_group'])->name('create presence in group')->middleware('permission:create presences');
 Route::post('/presensi/list/group/{id}/presensi/store', [App\Http\Controllers\PresenceController::class, 'store_in_group'])->name('store presence in group')->middleware('permission:create presences');
 Route::get('/permit/{ids}', [App\Http\Controllers\PublicController::class, 'view_permit'])->name('view permit');
 Route::get('/permit/reject/{ids}', [App\Http\Controllers\PublicController::class, 'reject_permit'])->name('reject permit');
+Route::get('/report_schedule/{time}', [App\Http\Controllers\PublicController::class, 'report_schedule']);
 
 // Lorongs
 Route::get('/lorong/saya', [App\Http\Controllers\LorongController::class, 'my_lorong'])->name('my lorong')->middleware('role:santri|koor lorong|superadmin');
@@ -123,6 +122,7 @@ Route::get('/materi/monitoring/list', [App\Http\Controllers\MonitoringMateriCont
 Route::get('/materi/monitoring/list/{materiId}/{santriId}', [App\Http\Controllers\MonitoringMateriController::class, 'edit'])->name('edit monitoring materi');
 Route::post('/materi/monitoring/list/update', [App\Http\Controllers\MonitoringMateriController::class, 'update'])->name('update monitoring materi')->middleware('permission:update monitoring materis');
 Route::get('/materi/monitoring/matching', [App\Http\Controllers\MonitoringMateriController::class, 'match_empty_pages'])->name('match empty monitoring materi pages');
+Route::post('/materi/monitoring/materi_santri', [App\Http\Controllers\MonitoringMateriController::class, 'materi_santri'])->name('materi santri');
 
 // pelanggaran
 Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm')->middleware('role:superadmin|rj1');
@@ -149,6 +149,10 @@ Route::get('/setting/delete_liburan/{id}', [App\Http\Controllers\SettingControll
 Route::get('/setting/delete_jenis_pelanggaran/{id}', [App\Http\Controllers\SettingController::class, 'delete_jenis_pelanggaran'])->name('delete jenis pelanggaran')->middleware('role:superadmin|rj1');
 Route::post('/setting/store_generate_sodaqoh', [App\Http\Controllers\SettingController::class, 'store_generate_sodaqoh'])->name('store generate sodaqoh')->middleware('role:superadmin|rj1');
 Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::class, 'store_settings'])->name('store settings')->middleware('role:superadmin');
+
+// report
+Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
+Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);

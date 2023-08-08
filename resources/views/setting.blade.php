@@ -240,6 +240,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endif
                                             </select>
                                             <label class="form-control-label">
+                                                WA - Grup Ortu
+                                            </label>
+                                            <select class="wa_ortu_group_id form-control" name="wa_ortu_group_id" id="wa_ortu_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_ortu_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                            <label class="form-control-label">
                                                 WA - Type
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_type : '' }}" name="wa_type" required>

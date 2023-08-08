@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Santri;
 use App\Models\Sodaqoh;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 
 class SodaqohController extends Controller

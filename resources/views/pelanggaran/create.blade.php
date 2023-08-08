@@ -1,5 +1,19 @@
 @include('base.start', ['path' => 'pelanggaran/create', 'title' => 'Input Pelanggaran', 'breadcrumbs' => ['Input Pelanggaran'], 'backRoute' => route('pelanggaran tm')
 ])
+@if ($errors->any())
+<div class="alert alert-danger text-white">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+@if (session('success'))
+<div class="alert alert-success text-white">
+    {{ session('success') }}
+</div>
+@endif
 <div class="card">
     <div class="card-body pt-4 p-3">
         <form action="{{ route('store pelanggaran') }}" method="post">
@@ -43,7 +57,7 @@
                             @endif
                         </label>
                         @if($c=='fkSantri_id')
-                        <select class="form-control" {{ (isset($datax)) ? 'disabled' : '' }} name="{{$c}}">
+                        <select class="form-control" {{ (isset($datax)) ? 'readonly' : '' }} name="{{$c}}">
                             <option value="">Pilih Mahasiswa</option>
                             @foreach($list_santri as $mhs)
                             <option <?php if (isset($datax)) {

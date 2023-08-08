@@ -114,14 +114,18 @@ class PelanggaranController extends Controller
     public function store(Request $request)
     {
         $message = '';
+        $update = false;
         $column = DB::getSchemaBuilder()->getColumnListing('pelanggarans');
         if ($request->input('id') != null) {
+            $update = true;
             $request->validate([
                 'fkSantri_id' => 'required'
             ]);
             $data = Pelanggaran::find($request->input('id'));
             foreach ($column as $c) {
-                $data->$c = $request->input($c);
+                if ($c != 'is_archive' && $c != 'created_at' && $c != 'updated_at') {
+                    $data->$c = $request->input($c);
+                }
             }
             $message = 'Berhasil mengubah data';
         } else {
@@ -137,6 +141,10 @@ class PelanggaranController extends Controller
             $message = 'Data gagal disimpan';
         }
 
-        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('pelanggaran tm'))->with('success', $message);
+        if ($update) {
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit pelanggaran', $request->input('id')))->with('success', $message);
+        } else {
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('pelanggaran tm'))->with('success', $message);
+        }
     }
 }

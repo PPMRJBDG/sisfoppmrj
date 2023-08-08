@@ -42,6 +42,31 @@ class MonitoringMateriController extends Controller
         return view('monitoringMateri.list_and_manage', ['lorongs' => $lorongs, 'users' => $users, 'materis' => $materis, 'monitoringMateris' => $monitoringMateris]);
     }
 
+    public function materi_santri(Request $request)
+    {
+        $materis = Materi::all();
+        $santri = Santri::find($request->input('santri_id'));
+        $data = '';
+        foreach ($materis as $materi) {
+            if ($materi->for == 'mubalegh' && !$santri->user->hasRole('mubalegh'))
+                continue;
+            if ($materi->for != 'mubalegh' && $santri->user->hasRole('mubalegh'))
+                continue;
+            $completedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'complete')->count();
+            $partiallyCompletedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'partial')->count();
+            $totalPages = $completedPages + ($partiallyCompletedPages / 2);
+            $data = $data . '
+            <tr class="text-sm">
+                <td class="p-0">' . $materi->name . '</td>
+                <td class="p-0">' . $totalPages . '/' . $materi->pageNumbers . ' page = ' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
+                <td class="p-0">
+                    <a target="_blank" href="' . route('edit monitoring materi', [$materi->id, $santri->id]) . '" class="btn btn-success btn-xs mb-0">Lihat</a>
+                </td>
+            </tr>';
+        }
+        return $data;
+    }
+
     /**
      * Show the create form of monitoringMateri.
      *

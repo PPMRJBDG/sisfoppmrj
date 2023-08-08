@@ -9,6 +9,36 @@ use App\Models\SpWhatsappPhoneNumbers;
 
 class WaSchedules
 {
+    public static function report_schedule($contact_id, $name, $caption)
+    {
+        $setting = Settings::find(1);
+        $insert = SpWhatsappSchedules::create([
+            'ids' => uniqid(),
+            'team_id' => $setting->wa_team_id, // superadmin
+            'type' => $setting->wa_type,
+            'template' => $setting->wa_template,
+            'accounts' => '["' . $setting->wa_sender_account_id . '"]', // akun WA pengirim
+            'contact_id' => $contact_id, // nomor or group tujuan
+            'time_post' => strtotime('+1 minutes'),
+            'min_delay' => $setting->wa_min_delay,
+            'max_delay' => $setting->wa_max_delay,
+            'schedule_time' => '',
+            'timezone' => 'Asia/Jakarta',
+            'name' => $name,
+            'caption' => $caption,
+            'media' => '',
+            'run' => 0,
+            'status' => 1,
+            'changed' => time(),
+            'created' => time()
+        ]);
+        if ($insert) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function save($santri, $caption, $contact_id)
     {
         $caption = $caption . '
@@ -29,8 +59,8 @@ class WaSchedules
                 'accounts' => '["' . $setting->wa_sender_account_id . '"]', // akun WA pengirim
                 'contact_id' => $contact_id, // nomor or group tujuan
                 'time_post' => strtotime('+1 minutes'),
-                'min_delay' => 1,
-                'max_delay' => 1,
+                'min_delay' => $setting->wa_min_delay,
+                'max_delay' => $setting->wa_max_delay,
                 'schedule_time' => '',
                 'timezone' => 'Asia/Jakarta',
                 'name' => 'Perijinan Dari ' . $santri->user->fullname,

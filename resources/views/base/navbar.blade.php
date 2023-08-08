@@ -11,7 +11,7 @@
         <ol class="breadcrumb bg-transparent m-0 p-0 font-weight-bolder">
           <li class="breadcrumb-item text-sm text-white active" aria-current="page">
             <!-- <a href="{{ route('presence report') }}" class="text-white">Home</a> -->
-            <a href="" class="text-white">Home</a>
+            <a href="{{ route('dashboard') }}" class="text-white">Home</a>
           </li>
           @foreach($breadcrumbs as $breadcrumb)
           <li class="breadcrumb-item text-sm text-white active" aria-current="page">
