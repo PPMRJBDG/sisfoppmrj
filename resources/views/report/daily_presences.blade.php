@@ -101,7 +101,7 @@
 <script>
   $('#recap-table').DataTable({
     order: [
-      [1, 'desc']
+      // [1, 'desc']
     ],
     paging: false,
     searching: false

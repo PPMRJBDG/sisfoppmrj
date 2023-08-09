@@ -200,13 +200,13 @@ function printMateriOptions($materis, $santri)
 
     $('#table-mhs-reg').DataTable({
         order: [
-            [1, 'desc']
+            // [1, 'desc']
         ],
         pageLength: 25
     });
     $('#table-mhs-mt').DataTable({
         order: [
-            [1, 'desc']
+            // [1, 'desc']
         ],
         pageLength: 25
     });

@@ -60,7 +60,9 @@
                                 <h6 class="mb-0">SP {{ $plg->keringanan_sp }}</h6>
                             </td>
                             <td class="ps-0">
+                                @if($plg->tanggal_melanggar!='')
                                 <h6 class="mb-0">{{ date_format(date_create($plg->tanggal_melanggar),'d M Y') }}</h6>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

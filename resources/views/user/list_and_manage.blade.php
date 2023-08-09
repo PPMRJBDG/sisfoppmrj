@@ -169,7 +169,7 @@
   });
   $('#table').DataTable({
     order: [
-      [1, 'desc']
+      // [1, 'desc']
     ],
     pageLength: 25
   });

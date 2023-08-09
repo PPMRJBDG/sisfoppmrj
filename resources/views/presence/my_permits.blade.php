@@ -154,13 +154,13 @@
 <script>
   $('#table-izin').DataTable({
     order: [
-      [1, 'desc']
+      // [1, 'desc']
     ],
     pageLength: 25
   });
   $('#table-generator').DataTable({
     order: [
-      [1, 'desc']
+      // [1, 'desc']
     ],
     pageLength: 25
   });

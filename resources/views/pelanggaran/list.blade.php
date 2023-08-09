@@ -139,7 +139,7 @@
 <script>
     $('#table').DataTable({
         order: [
-            [1, 'desc']
+            // [1, 'desc']
         ]
     });
 </script>

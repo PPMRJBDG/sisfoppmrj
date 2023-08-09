@@ -357,7 +357,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 <script>
     $('#table-pelanggaran').DataTable({
         order: [
-            [1, 'desc']
+            // [1, 'desc']
         ],
     });
 </script>
