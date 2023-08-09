@@ -112,10 +112,15 @@
             </div>
         </div> -->
         @endif
-        <center>Pilih Tahun-Bulan:</center>
         <div class="p-0 d-flex">
+            <select class="select_angkatan form-control" name="select_angkatan" id="select_angkatan">
+                <option value="-">Pilih Angkatan</option>
+                @foreach($list_angkatan as $la)
+                <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">{{$la->angkatan}}</option>
+                @endforeach
+            </select>
             <select class="select_tb form-control" name="select_tb" id="select_tb">
-                <option value="-">Filter Tahun Bulan</option>
+                <option value="-">Keseluruhan</option>
                 @foreach($tahun_bulan as $tbx)
                 <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
                 @endforeach
@@ -144,7 +149,7 @@
                 </thead>
                 <tbody>
                     @foreach($view_usantri as $vu)
-                    <tr class="text-sm">
+                    <tr class="text-sm" onclick="getReport('<?php echo $vu->nohp_ortu; ?>','<?php echo $vu->santri_id; ?>')" style="cursor:pointer;">
                         <td>
                             [{{ $vu->angkatan }}] {{ $vu->fullname }}
                         </td>
@@ -170,9 +175,8 @@
                             if ($all_presences[$pg->id][0]->c_all == 0) {
                                 $persentase = 0;
                             } else {
-                                $persentase = number_format((($listcp->cp + $ijin) / $all_presences[$pg->id][0]->c_all) * 100, 2);
+                                $persentase = number_format(($listcp->cp + $ijin) / $all_presences[$pg->id][0]->c_all * 100, 2);
                             }
-                            $all_persantase = $all_persantase + $persentase;
                             $all_kbm = $all_kbm + $all_presences[$pg->id][0]->c_all;
                             $all_hadir = $all_hadir + $listcp->cp;
                             $all_ijin = $all_ijin + $ijin;
@@ -189,8 +193,11 @@
                         <td class="text-center">{{ $all_alpha }}</td>
                         <td class="text-center">{{ $all_kbm }}</td>
                         <td class="text-center">
-                            <span class="font-weight-bolder {{ (($all_persantase/3)<80) ? 'text-danger' : ''}}">
-                                {{ number_format($all_persantase/3,2) }}%
+                            <?php
+                            $all_persantase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                            ?>
+                            <span class="font-weight-bolder {{ ($all_persantase<80) ? 'text-danger' : ''}}">
+                                {{ number_format($all_persantase,2) }}%
                             </span>
                         </td>
                     </tr>
@@ -255,16 +262,63 @@
     </div>
 </div>
 @endif
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:600px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h6 class="modal-title" id="exampleModalLabel">Report</h6>
+                    <h5 class="modal-title" id="exampleModalLabel"><span id="nm"></span></h5>
+                </div>
+            </div>
+            <div class="modal-body" id="contentReport" style="height:600px!important;">
+                <tr>
+                    <td colspan="3">
+                        <span class="text-center">
+                            Loading...
+                        </span>
+                    </td>
+                </tr>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @include('base.end')
 
 <script>
+    function getReport(nohp, santri_id) {
+        $('#exampleModal').fadeIn();
+        $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
+        $('#exampleModal').css('z-index', '10000');
+        if (nohp == '') {
+            $('#contentReport').html('<h6>Nomor HP Orang Tua belum diinput</h6>');
+        } else {
+            $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + nohp + '/' + santri_id + '"  style="height:100%;width:100%;">< /iframe>');
+        }
+    }
+
+    $('#close').click(function() {
+        $('#exampleModal').fadeOut();
+        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
+    });
+
     $('#table-hadir').DataTable({
         order: [
-            [1, 'desc']
+            // [1, 'desc']
         ],
         pageLength: 15
     });
+
     $('.select_tb').change((e) => {
-        window.location.replace(`{{ url("/") }}/home/${$(e.currentTarget).val()}`)
+        var angkatan = $('#select_angkatan').val();
+        window.location.replace(`{{ url("/") }}/home/${$(e.currentTarget).val()}/` + angkatan)
+    })
+
+    $('.select_angkatan').change((e) => {
+        var tb = $('#select_tb').val();
+        window.location.replace(`{{ url("/") }}/home/` + tb + `/${$(e.currentTarget).val()}`)
     })
 </script>

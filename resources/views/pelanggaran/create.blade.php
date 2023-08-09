@@ -109,7 +109,7 @@
                 @endif
                 @endforeach
             </div>
-
+            @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -117,6 +117,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </form>
     </div>
 </div>

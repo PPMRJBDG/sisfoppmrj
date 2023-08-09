@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\WaSchedules;
+use App\Helpers\CommonHelpers;
 use App\Models\Presence;
 use App\Models\Permit;
 use App\Models\User;
@@ -9,9 +11,8 @@ use App\Models\Settings;
 use App\Models\Liburan;
 use App\Models\PresenceGroup;
 use App\Models\Pelanggaran;
-use App\Helpers\WaSchedules;
-use App\Helpers\CommonHelpers;
-use App\Models\Pelanggaran;
+use App\Models\Materi;
+use App\Models\Santri;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -83,30 +84,33 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
         }
     }
 
-    public function report($ids)
+    public function report($nohp, $ids)
     {
+        $santri = Santri::where('id', $ids)->where('nohp_ortu', $nohp)->first();
         // get all tahun bulan
-        $tahun_bulan = DB::table('presences')
-            ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
-            ->where('event_date', '>=', $ids)
+        $tahun_bulan = DB::table('presences as a')
+            ->select(DB::raw('DATE_FORMAT(a.event_date, "%Y-%m") as ym'))
+            ->leftJoin('presents as b', function ($join) {
+                $join->on('a.id', '=', 'b.fkPresence_id');
+            })
+            ->where('b.fkSantri_id', $ids)
+            ->orderBy('ym', 'DESC')
             ->groupBy('ym')
             ->get();
 
         // loop presensi berdasarkan tahun bulan
         $presence_group = PresenceGroup::get();
+        $datapg = array();
         foreach ($tahun_bulan as $tb) {
             $presences = DB::table('presences as a')
-                ->leftJoin('presents as b', function ($join) {
+                ->leftJoin('presents as b', function ($join) use ($ids) {
                     $join->on('a.id', '=', 'b.fkPresence_id');
-                    $join->where('b.fkSantri_id', 24);
+                    $join->where('b.fkSantri_id', $ids);
                 })
                 ->select('a.name', 'a.fkPresence_group_id', 'b.*')
-                // ->where('b.fkSantri_id', $ids)
                 ->where('a.event_date', 'like', '%' . $tb->ym . '%')
                 ->orderBy('a.event_date', 'ASC')
                 ->get();
-            // echo '<pre>' . var_export($presences, true) . '</pre>';
-            // exit;
             if ($presences != null) {
                 foreach ($presence_group as $pg) {
                     $datapg[$tb->ym][$pg->id]['kbm']     = 0;
@@ -127,27 +131,48 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
                         }
                         $datapg[$tb->ym][$pg->id]['hadir'] = $hadir;
                     }
-                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $ids AND a.status='approved' AND a.created_at LIKE '%$tb->ym%' AND b.fkPresence_group_id = $pg->id GROUP BY a.fkSantri_id");
+                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $ids AND a.status='approved' AND a.created_at LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
                     if ($permit != null) {
                         foreach ($permit as $p) {
-                            $ijin++;
+                            $ijin = $ijin + $p->approved;
                         }
-                        $datapg[$tb->ym][$pg->id]['ijin']    = $ijin;
+                        $datapg[$tb->ym][$pg->id]['ijin'] = $ijin;
                     }
                     $datapg[$tb->ym][$pg->id]['alpha'] = $datapg[$tb->ym][$pg->id]['kbm'] - ($datapg[$tb->ym][$pg->id]['hadir'] + $datapg[$tb->ym][$pg->id]['ijin']);
                 }
             }
         }
-        echo '<pre>' . var_export($datapg, true) . '</pre>';
-        exit;
 
         // get pelanggaran
-        $pelanggaran = Pelanggaran::where('fkSantri_id', $ids)->get();
+        $pelanggaran = Pelanggaran::where('fkSantri_id', $ids)->whereNotNull('keringanan_sp')->get();
 
         // get pencapaian materi
+        $materis = Materi::all();
+        $data_materi = '';
+        if ($santri != null) {
+            foreach ($materis as $materi) {
+                if ($materi->for == 'mubalegh' && !$santri->user->hasRole('mubalegh'))
+                    continue;
+                if ($materi->for != 'mubalegh' && $santri->user->hasRole('mubalegh'))
+                    continue;
+                $completedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'complete')->count();
+                $partiallyCompletedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'partial')->count();
+                $totalPages = $completedPages + ($partiallyCompletedPages / 2);
+                $data_materi = $data_materi . '
+            <tr class="text-sm">
+                <td class="p-0">' . ucfirst(strtolower($materi->name)) . '</td>
+                <td class="p-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</td>
+                <td class="p-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
+            </tr>';
+            }
+        }
 
         return view('report.all_report', [
+            'santri' => $santri,
+            'tahun_bulan' => $tahun_bulan,
+            'presence_group' => $presence_group,
             'datapg' => $datapg,
+            'data_materi' => $data_materi,
             'pelanggaran' => $pelanggaran
         ]);
     }

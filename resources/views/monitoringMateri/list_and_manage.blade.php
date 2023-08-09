@@ -210,17 +210,5 @@ function printMateriOptions($materis, $santri)
         ],
         pageLength: 25
     });
-
-    // $('.lorongs-list-item h6').click((e) => {
-    //     if ($(e.currentTarget).parent().parent().find('.santris-list').css('display') == 'none')
-    //         $(e.currentTarget).parent().parent().find('.santris-list').show();
-    //     else
-    //         $(e.currentTarget).parent().parent().find('.santris-list').hide();
-
-    //     if ($(e.currentTarget).find('.fa-caret-down').length > 0)
-    //         $(e.currentTarget).find('.fa-caret-down').removeClass('fa-caret-down').addClass('fa-caret-up');
-    //     else
-    //         $(e.currentTarget).find('.fa-caret-up').removeClass('fa-caret-up').addClass('fa-caret-down');
-    // })
 </script>
 @include('base.end')
