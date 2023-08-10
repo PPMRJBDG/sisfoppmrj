@@ -60,6 +60,7 @@
             <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
             <select name="reason_category" class="form-control" required>
               <option value="">Pilih kategori alasan</option>
+              <option value="Magang">Magang</option>
               <option value="Sakit (di PPM)">Sakit (di PPM)</option>
               <option value="Kontrol Sakit">Kontrol Sakit</option>
               <option value="Opname">Opname</option>

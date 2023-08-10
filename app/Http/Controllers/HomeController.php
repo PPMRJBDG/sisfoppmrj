@@ -38,6 +38,7 @@ class HomeController extends Controller
         if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+                ->where('event_date', '>=', $select_angkatan . '-09-01')
                 ->groupBy('ym')
                 ->get();
         } elseif (auth()->user()->hasRole('santri')) {
@@ -77,8 +78,6 @@ class HomeController extends Controller
                     }
                 }
             }
-            // echo '<pre>' . var_export($all_permit, true) . '<?pre>';
-            // exit;
         } elseif (auth()->user()->hasRole('santri')) {
             $presences = DB::table('presences as a')
                 ->leftJoin('presents as b', function ($join) {

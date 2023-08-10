@@ -98,6 +98,16 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
             ->groupBy('ym')
             ->get();
 
+        $tahun = DB::table('presences as a')
+            ->select(DB::raw('DATE_FORMAT(a.event_date, "%Y") as y'))
+            ->leftJoin('presents as b', function ($join) {
+                $join->on('a.id', '=', 'b.fkPresence_id');
+            })
+            ->where('b.fkSantri_id', $ids)
+            ->orderBy('y', 'DESC')
+            ->groupBy('y')
+            ->get();
+
         // loop presensi berdasarkan tahun bulan
         $presence_group = PresenceGroup::get();
         $datapg = array();
@@ -169,6 +179,7 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
 
         return view('report.all_report', [
             'santri' => $santri,
+            'tahun' => $tahun,
             'tahun_bulan' => $tahun_bulan,
             'presence_group' => $presence_group,
             'datapg' => $datapg,
