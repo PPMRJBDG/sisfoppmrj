@@ -101,7 +101,7 @@ class PelanggaranController extends Controller
     {
         $list_santri = DB::table('v_user_santri')->orderBy('fullname')->get();
         $list_jenis_pelanggaran = JenisPelanggaran::get();
-        $column = DB::getSchemaBuilder()->getColumnListing('pelanggarans');
+        $column = DB::getSchemaBuilder()->getColumnListing('pelanggarans') . ' order by ordinal_position';
 
         return view('pelanggaran.create', [
             'column' => $column,
@@ -115,7 +115,7 @@ class PelanggaranController extends Controller
         $list_santri = DB::table('v_user_santri')->orderBy('fullname')->get();
         $list_jenis_pelanggaran = JenisPelanggaran::get();
         $datax = Pelanggaran::find($id);
-        $column = DB::getSchemaBuilder()->getColumnListing('pelanggarans');
+        $column = DB::getSchemaBuilder()->getColumnListing('pelanggarans') . ' order by ordinal_position';
 
         return view('pelanggaran.create', [
             'id' => $id,

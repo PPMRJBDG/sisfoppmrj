@@ -65,7 +65,7 @@
               <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Edit</a>
               @endcan
             </td>
-            <td data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo $user->santri->nohp_ortu; ?>','<?php echo $user->santri->id; ?>')" style="cursor:pointer;">
+            <td data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo $user->santri->ids; ?>')" style="cursor:pointer;">
               <div class="d-flex px-2 py-1">
                 <div>
                   <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
@@ -127,46 +127,7 @@
     </div>
   </div>
 </div>
-<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:600px !important;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <h6 class="modal-title" id="exampleModalLabel">Report</h6>
-          <h5 class="modal-title" id="exampleModalLabel"><span id="nm"></span></h5>
-        </div>
-      </div>
-      <div class="modal-body" id="contentReport" style="height:600px!important;">
-        <tr>
-          <td colspan="3">
-            <span class="text-center">
-              Loading...
-            </span>
-          </td>
-        </tr>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
-  function getReport(nohp, santri_id) {
-    $('#exampleModal').fadeIn();
-    $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
-    $('#exampleModal').css('z-index', '10000');
-    if (nohp == '') {
-      $('#contentReport').html('<h6>Nomor HP Orang Tua belum diinput</h6>');
-    } else {
-      $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + nohp + '/' + santri_id + '"  style="height:100%;width:100%;">< /iframe>');
-    }
-  }
-
-  $('#close').click(function() {
-    $('#exampleModal').fadeOut();
-    $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
-  });
   $('#table').DataTable({
     order: [
       // [1, 'desc']

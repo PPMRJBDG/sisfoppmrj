@@ -126,8 +126,8 @@
     <div class="card mb-2">
         <div class="card-body p-2">
             @foreach($tahun as $th)
-            <div id="toggle-th font-weight-builder" onclick="toggleTh('th{{$th->y}}')">
-                <button style="width:100%!important;" type="button" class="btn btn-outline-primary btn-small btn-block">Presensi Tahun {{ $th->y }}</button>
+            <div id="toggle-th font-weight-builder" class="mb-2">
+                <button onclick="toggleTh('th{{$th->y}}')" style="width:100%!important;" type="button" class="mb-0 btn btn-outline-primary btn-small btn-block">Klik Presensi Tahun {{ $th->y }}</button>
             </div>
             <div class="table-responsive p-0" id="th{{$th->y}}" style="display:none;">
                 <table id="recap-table" class="table align-items-center mb-0">

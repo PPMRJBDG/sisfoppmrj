@@ -263,7 +263,8 @@ class UserController extends Controller
                 'angkatan' => $request->input('angkatan'),
                 'fkLorong_id' => $request->input('fkLorong_id') ? $request->input('fkLorong_id') : null,
                 'join_at' => $request->input('join_at'),
-                'fkUser_id' => $inserted_user->id
+                'fkUser_id' => $inserted_user->id,
+                'ids' => uniqid()
             ]);
 
             if (!$inserted_santri)

@@ -11,3 +11,42 @@
         </div>
     </div>
 </footer>
+
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:600px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h6 class="modal-title" id="exampleModalLabel">Report</h6>
+                </div>
+                <div>
+                    <a style="cursor:pointer;" id="close"><i class="ni ni-fat-remove text-lg"></i></a>
+                </div>
+            </div>
+            <div class="modal-body" id="contentReport" style="height:600px!important;">
+                <tr>
+                    <td colspan="3">
+                        <span class="text-center">
+                            Loading...
+                        </span>
+                    </td>
+                </tr>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function getReport(ids) {
+        $('#exampleModal').fadeIn();
+        $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
+        $('#exampleModal').css('z-index', '10000');
+        $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + ids + '"  style="height:100%;width:100%;">< /iframe>');
+    }
+    $('#close').click(function() {
+        $('#exampleModal').fadeOut();
+        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
+    });
+</script>

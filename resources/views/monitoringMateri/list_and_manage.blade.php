@@ -76,7 +76,8 @@ function printMateriOptions($materis, $santri)
         @endif
     </div>
 </div>
-@endif
+
+@else
 
 <div class="row">
     <div class="col-md-6">
@@ -141,6 +142,8 @@ function printMateriOptions($materis, $santri)
         </div>
     </div>
 </div>
+
+@endif
 
 <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">

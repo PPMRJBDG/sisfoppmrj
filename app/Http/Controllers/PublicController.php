@@ -84,16 +84,17 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
         }
     }
 
-    public function report($nohp, $ids)
+    public function report($ids)
     {
-        $santri = Santri::where('id', $ids)->where('nohp_ortu', $nohp)->first();
+        $santri = Santri::where('ids', $ids)->first();
+        $santri_id = $santri->id;
         // get all tahun bulan
         $tahun_bulan = DB::table('presences as a')
             ->select(DB::raw('DATE_FORMAT(a.event_date, "%Y-%m") as ym'))
             ->leftJoin('presents as b', function ($join) {
                 $join->on('a.id', '=', 'b.fkPresence_id');
             })
-            ->where('b.fkSantri_id', $ids)
+            ->where('b.fkSantri_id', $santri_id)
             ->orderBy('ym', 'DESC')
             ->groupBy('ym')
             ->get();
@@ -103,7 +104,7 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
             ->leftJoin('presents as b', function ($join) {
                 $join->on('a.id', '=', 'b.fkPresence_id');
             })
-            ->where('b.fkSantri_id', $ids)
+            ->where('b.fkSantri_id', $santri_id)
             ->orderBy('y', 'DESC')
             ->groupBy('y')
             ->get();
@@ -113,9 +114,9 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
         $datapg = array();
         foreach ($tahun_bulan as $tb) {
             $presences = DB::table('presences as a')
-                ->leftJoin('presents as b', function ($join) use ($ids) {
+                ->leftJoin('presents as b', function ($join) use ($santri_id) {
                     $join->on('a.id', '=', 'b.fkPresence_id');
-                    $join->where('b.fkSantri_id', $ids);
+                    $join->where('b.fkSantri_id', $santri_id);
                 })
                 ->select('a.name', 'a.fkPresence_group_id', 'b.*')
                 ->where('a.event_date', 'like', '%' . $tb->ym . '%')
@@ -141,7 +142,7 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
                         }
                         $datapg[$tb->ym][$pg->id]['hadir'] = $hadir;
                     }
-                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $ids AND a.status='approved' AND a.created_at LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
+                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $santri_id AND a.status='approved' AND a.created_at LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
                     if ($permit != null) {
                         foreach ($permit as $p) {
                             $ijin = $ijin + $p->approved;
@@ -154,7 +155,7 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
         }
 
         // get pelanggaran
-        $pelanggaran = Pelanggaran::where('fkSantri_id', $ids)->whereNotNull('keringanan_sp')->get();
+        $pelanggaran = Pelanggaran::where('fkSantri_id', $santri_id)->whereNotNull('keringanan_sp')->get();
 
         // get pencapaian materi
         $materis = Materi::all();

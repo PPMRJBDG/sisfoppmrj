@@ -152,7 +152,7 @@ Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::
 
 // report
 Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
-Route::get('/report/{nohp}/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
+Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);
