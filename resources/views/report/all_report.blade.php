@@ -94,8 +94,8 @@
     $all_ijin = 0;
     $all_alpha = 0;
     ?>
-    @if($datapg!=null)
     <h4 class="text-white text-center mb-0">Presensi Kehadiran</h4>
+    @if($datapg!=null)
     <div class="card mb-2">
         <div class="card-body p-2 text-center">
             <table class=" table align-items-center mb-0">
@@ -216,6 +216,12 @@
             @endforeach
         </div>
     </div>
+    @else
+    <div class="card mb-2">
+        <div class="card-body p-2 text-center">
+            Belum dimulai KBM
+        </div>
+    </div>
     @endif
 
     <h4 class="text-white text-center mb-0">Pencapaian Materi</h4>
@@ -239,7 +245,10 @@
     </div>
 </div>
 <?php
-$all_percent = number_format(($all_hadir + $all_ijin) / $all_kbm * 100, 2);
+$all_percent = 0;
+if ($all_kbm > 0) {
+    $all_percent = number_format(($all_hadir + $all_ijin) / $all_kbm * 100, 2);
+}
 ?>
 <script>
     function toggleTh(idtoggleth) {

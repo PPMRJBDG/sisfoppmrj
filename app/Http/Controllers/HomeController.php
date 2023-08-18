@@ -29,6 +29,7 @@ class HomeController extends Controller
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
             ->whereNull('exit_at')
+            ->orderBy('angkatan', 'ASC')
             ->groupBy('angkatan')
             ->get();
         if ($select_angkatan == null) {
@@ -47,6 +48,9 @@ class HomeController extends Controller
                 ->where('event_date', '>=', auth()->user()->santri->join_at)
                 ->groupBy('ym')
                 ->get();
+            if ($tb == null) {
+                $tb = date('Y-m');
+            }
         } else {
             $tahun_bulan = null;
         }
@@ -54,10 +58,13 @@ class HomeController extends Controller
         $like_tb_a = " AND event_date LIKE '%$tb%'";
         $like_tb_b = " AND b.event_date LIKE '%$tb%'";
         $like_tb_c = " AND a.created_at LIKE '%$tb%'";
-        if ($tb == null) {
-            $like_tb_a = '';
-            $like_tb_b = '';
-            $like_tb_c = '';
+        if ($tb == null || $tb == '-') {
+            // $like_tb_a = '';
+            // $like_tb_b = '';
+            // $like_tb_c = '';
+            $like_tb_a = " AND event_date >= '$select_angkatan-09-01'";
+            $like_tb_b = " AND b.event_date >= '$select_angkatan-09-01'";
+            $like_tb_c = " AND a.created_at >= '$select_angkatan-09-01'";
         }
 
         $view_usantri = null;

@@ -10,13 +10,11 @@ class Pelanggaran extends Model
 {
     protected $fillable = [
         'fkSantri_id',
-        'kategori',
         'fkJenis_pelanggaran_id',
         'saksi',
         'tanggal_melanggar',
         'lokasi_melanggar',
         'alasan_melanggar',
-        'is_pemberitahuan_ortu',
         'kategori_sp_real',
         'keringanan_sp',
         'is_peringatan_keras',
@@ -42,20 +40,21 @@ class Pelanggaran extends Model
         'penasehat_atas_tgl',
         'info_ortu_atas',
         'is_st_dikembalikan',
-        'keterangan'
+        'keterangan',
+        'created_at',
+        'updated_at',
+        'is_archive'
     ];
 
     public static function attr()
     {
         return [
             'fkSantri_id',
-            'kategori',
             'fkJenis_pelanggaran_id',
             'saksi',
             'tanggal_melanggar',
             'lokasi_melanggar',
             'alasan_melanggar',
-            'is_pemberitahuan_ortu',
             'kategori_sp_real',
             'keringanan_sp',
             'is_peringatan_keras',
@@ -81,7 +80,10 @@ class Pelanggaran extends Model
             'penasehat_atas_tgl',
             'info_ortu_atas',
             'is_st_dikembalikan',
-            'keterangan'
+            'keterangan',
+            'created_at',
+            'updated_at',
+            'is_archive'
         ];
     }
 

@@ -1,4 +1,4 @@
-<footer class="footer pt-3">
+<footer class="footer pt-2 pb-2">
     <div class="container-fluid p-0">
         <div class="col-md-12">
             <div class="copyright text-center text-sm text-muted text-lg-start">
@@ -33,7 +33,7 @@
                 </tr>
             </div>
             <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="closeb" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -43,9 +43,13 @@
         $('#exampleModal').fadeIn();
         $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
         $('#exampleModal').css('z-index', '10000');
-        $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + ids + '"  style="height:100%;width:100%;">< /iframe>');
+        $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + ids + '"  style="height:100%;width:100%;"></iframe>');
     }
     $('#close').click(function() {
+        $('#exampleModal').fadeOut();
+        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
+    });
+    $('#closeb').click(function() {
         $('#exampleModal').fadeOut();
         $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
     });

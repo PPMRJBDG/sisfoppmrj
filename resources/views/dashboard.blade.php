@@ -1,117 +1,16 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
 
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('ku'))
 <div class="card shadow-lg">
     <div class="card-body">
         <h6 class="mb-0">Selamat datang, {{ auth()->user()->fullname }}!</h6>
     </div>
 </div>
+@endif
 
-@if(!auth()->user()->hasRole('ku'))
-<div class="card shadow-lg mt-4 mb-4">
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+<div class="card mt-2 mb-2">
     <div class="card-body">
-        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-        <!-- <div class="row mb-3">
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
-                                    <h5 class="font-weight-bolder">
-                                        $53,000
-                                    </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                        since yesterday
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
-                                    <h5 class="font-weight-bolder">
-                                        2,300
-                                    </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                        since last week
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
-                                    <h5 class="font-weight-bolder">
-                                        +3,462
-                                    </h5>
-                                    <p class="mb-0">
-                                        <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                                        since last quarter
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
-                                    <h5 class="font-weight-bolder">
-                                        $103,430
-                                    </h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        @endif
         <div class="p-0 d-flex">
             <select class="select_angkatan form-control" name="select_angkatan" id="select_angkatan">
                 <option value="-">Pilih Angkatan</option>
@@ -126,7 +25,6 @@
                 @endforeach
             </select>
         </div>
-        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
         <div class="table-responsive mt-2">
             <table id="table-hadir" class="table align-items-center mb-0">
                 <thead class="thead-light">
@@ -194,7 +92,9 @@
                         <td class="text-center">{{ $all_kbm }}</td>
                         <td class="text-center">
                             <?php
-                            $all_persantase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                            if ($all_kbm > 0) {
+                                $all_persantase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                            }
                             ?>
                             <span class="font-weight-bolder {{ ($all_persantase<80) ? 'text-danger' : ''}}">
                                 {{ number_format($all_persantase,2) }}%
@@ -205,60 +105,82 @@
                 </tbody>
             </table>
         </div>
-        @elseif(auth()->user()->hasRole('santri'))
-        <div class="row">
+    </div>
+</div>
+@elseif(auth()->user()->hasRole('santri'))
+<div class="row mt-2 mb-2">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body p-2" id="h-report" style="height:auto;">
+                <iframe src="{{ url("/") }}/report/{{auth()->user()->santri->ids}}" style="width:100%;min-height:1200px;"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="p-0 d-flex">
+            <select class="select_tb form-control" name="select_tb" id="select_tb">
+                <option value="-">Keseluruhan</option>
+                @foreach($tahun_bulan as $tbx)
+                <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="row mt-2">
             @foreach($presence_group as $pg)
-            <div class="col-sm">
-                <h6 class="mt-4 mb-0">
-                    {{$pg->name}}
-                    (<?php
-                        if ($datapg[$pg->id]['loopr'] != 0) {
-                            echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
-                        } else {
-                            echo "-";
-                        }
-                        ?>)
-                </h6>
-                <div class="table-responsive" style="background-color:#f9f9f9;border-radius:8px;">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Tanggal</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kehadiran</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Terlambat</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if(isset($presences))
-                            @foreach($presences as $prs)
-                            @if($pg->id==$prs->fkPresence_group_id)
-                            <tr class="text-sm">
-                                <td>
-                                    {{ date_format(date_create($prs->event_date), 'd') }}
-                                </td>
-                                <td>
-                                    @if($prs->fkSantri_id!="")
-                                    Hadir
-                                    @else
-                                    <span style="color:red;">-</span>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body p-2 text-center">
+                        <h6>
+                            {{$pg->name}}
+                            (<?php
+                                if ($datapg[$pg->id]['loopr'] != 0) {
+                                    echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
+                                } else {
+                                    echo "-";
+                                }
+                                ?>)
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">TGL</th>
+                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">STATUS</th>
+                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">TELAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(isset($presences))
+                                    @foreach($presences as $prs)
+                                    @if($pg->id==$prs->fkPresence_group_id)
+                                    <tr class="text-sm">
+                                        <td>
+                                            {{ date_format(date_create($prs->event_date), 'd') }}
+                                        </td>
+                                        <td>
+                                            @if($prs->fkSantri_id!="")
+                                            <i class="ni ni-check-bold text-info text-sm opacity-10"></i>
+                                            @else
+                                            <span style="color:red;">-</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($prs->fkSantri_id!="")
+                                            {{ ($prs->is_late) ? 'Ya' : 'Tidak' }}
+                                            @endif
+                                        </td>
+                                    </tr>
                                     @endif
-                                </td>
-                                <td>
-                                    @if($prs->fkSantri_id!="")
-                                    {{ ($prs->is_late) ? 'Ya' : 'Tidak' }}
+                                    @endforeach
                                     @endif
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
-        @endif
     </div>
 </div>
 @endif

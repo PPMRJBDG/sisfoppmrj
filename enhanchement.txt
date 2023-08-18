@@ -1,0 +1,16 @@
+- daftar mahasiswa / lainnya: tambahkan jumlah masing angkatan + L-P, dan uplaod foto
+- bulk whatsapp: view all contact, create grup
+- pelanggaran: jika ada yg baru/update, auto wa ke grup dewan guru
+
+cron daily: 
+- pemutihan sp, if tgl = 1 tahun then arsip
+- jika kbm alfa, send whatsapp
+- kasih perhatian doa dan semangat pada saat ijin sesuai kategori
+- 
+
+cron weekly:
+- laporan presensi mingguan
+
+cron monthly:
+- laporan all report
+- jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban

@@ -19,7 +19,8 @@ class Santri extends Model
         'fkLorong_id',
         'join_at',
         'exit_at',
-        'alasan_keluar'
+        'alasan_keluar',
+        'ids'
     ];
 
     public function monitoringMateris()
