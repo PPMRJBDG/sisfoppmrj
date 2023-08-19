@@ -171,6 +171,7 @@ class PelanggaranController extends Controller
             foreach ($column as $c) {
                 $store[$c] = $request->input($c);
             }
+            $store['is_archive'] = 0;
             $data = Pelanggaran::create($store);
             $message = 'Berhasil menambahkan data';
         }

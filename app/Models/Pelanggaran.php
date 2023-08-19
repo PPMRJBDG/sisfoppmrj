@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Pelanggaran extends Model
 {
@@ -41,8 +39,6 @@ class Pelanggaran extends Model
         'info_ortu_atas',
         'is_st_dikembalikan',
         'keterangan',
-        'created_at',
-        'updated_at',
         'is_archive'
     ];
 
@@ -81,8 +77,6 @@ class Pelanggaran extends Model
             'info_ortu_atas',
             'is_st_dikembalikan',
             'keterangan',
-            'created_at',
-            'updated_at',
             'is_archive'
         ];
     }
