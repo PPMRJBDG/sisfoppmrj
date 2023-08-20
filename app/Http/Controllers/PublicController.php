@@ -88,14 +88,10 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
     {
         $santri = Santri::where('ids', $ids)->first();
         $santri_id = $santri->id;
-        // get all tahun bulan
-        $tahun_bulan = DB::table('presences as a')
-            ->select(DB::raw('DATE_FORMAT(a.event_date, "%Y-%m") as ym'))
-            ->leftJoin('presents as b', function ($join) {
-                $join->on('a.id', '=', 'b.fkPresence_id');
-            })
-            ->where('b.fkSantri_id', $santri_id)
-            ->orderBy('ym', 'DESC')
+
+        $tahun_bulan = DB::table('presences')
+            ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+            ->where('event_date', '>=', $santri->angkatan . '-09-01')
             ->groupBy('ym')
             ->get();
 
@@ -142,6 +138,7 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
                         }
                         $datapg[$tb->ym][$pg->id]['hadir'] = $hadir;
                     }
+
                     $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $santri_id AND a.status='approved' AND a.created_at LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
                     if ($permit != null) {
                         foreach ($permit as $p) {
