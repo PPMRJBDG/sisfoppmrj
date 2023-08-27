@@ -1,5 +1,6 @@
 @include('base.start', ['path' => 'user/list/santri', 'title' => 'Daftar User', 'breadcrumbs' => ['Daftar User']])
 <div class="card">
+  <?php echo $count_dashboard; ?>
   <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
     <div class="p-2 d-flex">
       <select class="angkatan-list form-control ms-4" name="" id="angkatan-list">

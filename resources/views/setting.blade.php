@@ -190,11 +190,11 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             <div class="card shadow-lg">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-12">
                             <form action="{{ route('store settings') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Host URL
@@ -227,6 +227,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endif
                                             </select>
                                             <label class="form-control-label">
+                                                WA - Grup Dewan Guru
+                                            </label>
+                                            <select class="wa_dewanguru_group_id form-control" name="wa_dewanguru_group_id" id="wa_dewanguru_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_dewanguru_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                            <label class="form-control-label">
                                                 WA - Grup Ketertiban
                                             </label>
                                             <select class="wa_ketertiban_group_id form-control" name="wa_ketertiban_group_id" id="wa_ketertiban_group_id">
@@ -252,6 +265,10 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Type
                                             </label>
@@ -268,6 +285,14 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 WA - Max Delay
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_max_delay : '' }}" name="wa_max_delay" required>
+                                            <label class="form-control-label">
+                                                WA - Header
+                                            </label>
+                                            <textarea rows="3" class="form-control" name="wa_header" required>{{ ($list_setting) ? $list_setting->wa_header : '' }}</textarea>
+                                            <label class="form-control-label">
+                                                WA - Footer
+                                            </label>
+                                            <textarea rows="3" class="form-control" name="wa_footer" required>{{ ($list_setting) ? $list_setting->wa_footer : '' }}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">

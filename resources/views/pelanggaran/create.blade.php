@@ -57,7 +57,7 @@
                             @endif
                         </label>
                         @if($c=='fkSantri_id')
-                        <select class="form-control" {{ (isset($datax)) ? 'readonly' : '' }} name="{{$c}}">
+                        <select class="form-control" {{ (isset($datax)) ? 'readonly' : '' }} name="{{$c}}" required>
                             <option value="">Pilih Mahasiswa</option>
                             @foreach($list_santri as $mhs)
                             <option <?php if (isset($datax)) {
@@ -66,7 +66,7 @@
                             @endforeach
                         </select>
                         @elseif($c=='fkJenis_pelanggaran_id')
-                        <select class="form-control" name="{{$c}}">
+                        <select class="form-control" name="{{$c}}" required>
                             <option value="">Pilih Pelanggaran</option>
                             @foreach($list_jenis_pelanggaran as $pln)
                             <option <?php if (isset($datax)) {

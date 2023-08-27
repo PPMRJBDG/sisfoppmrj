@@ -13,11 +13,15 @@ use App\Models\PresenceGroup;
 use App\Models\Pelanggaran;
 use App\Models\Materi;
 use App\Models\Santri;
+use App\Models\JenisPelanggaran;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
-    public function report_schedule($time)
+    // 0 8 * * * https://sisfo.ppmrjbandung.com/schedule/daily
+    // 0 6 1 * * https://sisfo.ppmrjbandung.com/schedule/monthly
+
+    public function schedule($time)
     {
         $setting = Settings::find(1);
         $contact_id = $setting->wa_ortu_group_id;
@@ -28,6 +32,23 @@ class PublicController extends Controller
 
         // DAILY
         if ($time == 'daily') {
+            // update pemutihan
+            $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
+            foreach ($get_pelanggaran as $gp) {
+                $today = date("Y-m-d");
+                $first_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($gp->is_surat_peringatan)) . " + 1 year"));
+                if ($first_date == $today) {
+                    $set_archive = Pelanggaran::find($gp->id);
+                    $set_archive->is_archive = 1;
+                    if ($set_archive->save()) {
+                        $caption = 'Pemutihan SP ' . $gp->keringanan_sp . ' an. ' . $gp->santri->user->fullname;
+                        WaSchedules::save($caption, $caption, 'wa_dewanguru_group_id');
+                        echo json_encode(['status' => true, 'message' => $caption]);
+                    }
+                }
+            }
+
+            // bulk presensi harian ke wa group ortu
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
                 $list_angkatan = DB::table('santris')
@@ -47,17 +68,13 @@ class PublicController extends Controller
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
 
                 $caption = '
-*[SISFO PPMRJ]*
-
 Assalamualaikum Ayah Bunda, berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
 Silahkan klik link dibawah ini sesuai angkatannya:
 
-' . $angkatan_caption . '
-Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
-';
+' . $angkatan_caption;
 
                 if ($contact_id != '') {
-                    $insert = WaSchedules::report_schedule($contact_id, $name, $caption);
+                    $insert = WaSchedules::save($name, $caption, $contact_id);
                     if ($insert) {
                         echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
                     } else {
@@ -73,14 +90,88 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
 
         // WEEKLY
         elseif ($time == 'weekly') {
+            // laporan presensi mingguan
+            // bulk mahasiswa + ortu
+            // jika all_ijin > 1/3 KBM diberi peringatan
         }
 
         // MONTHLY
         elseif ($time == 'monthly') {
+            // daftar mahasiswa yang presensi < 80%
+            $last_month = strtotime('-1 month', strtotime(date("Y-m-d")));
+            $last_month = date('Y-m', $last_month);
+            $list_angkatan = DB::table('santris')
+                ->select('angkatan')
+                ->whereNull('exit_at')
+                ->groupBy('angkatan')
+                ->get();
+            foreach ($list_angkatan as $la) {
+                $result = (new HomeController)->dashboard($last_month, $la->angkatan, true);
+                $view_usantri = $result['view_usantri'];
+                $presence_group = $result['presence_group'];
+                $presences = $result['presences'];
+                $all_presences = $result['all_presences'];
+                $all_permit = $result['all_permit'];
+
+                foreach ($view_usantri as $vu) {
+                    $all_persentase = 0;
+                    $all_kbm = 0;
+                    $all_hadir = 0;
+                    $all_ijin = 0;
+                    foreach ($presence_group as $pg) {
+                        foreach ($presences[$pg->id] as $listcp) {
+                            if ($listcp->santri_id == $vu->santri_id) {
+                                $ijin = 0;
+                                if (isset($all_permit[$pg->id][$vu->santri_id])) {
+                                    $ijin = $all_permit[$pg->id][$vu->santri_id];
+                                }
+                                $all_kbm = $all_kbm + $all_presences[$pg->id][0]->c_all;
+                                $all_hadir = $all_hadir + $listcp->cp;
+                                $all_ijin = $all_ijin + $ijin;
+                            }
+                        }
+                    }
+
+                    if ($all_kbm > 0) {
+                        $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                        $all_persentase = number_format($all_persentase, 2);
+                        // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
+                        if ($all_persentase < 80) {
+                            $store['fkSantri_id'] = $vu->santri_id;
+                            $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
+                            $store['tanggal_melanggar'] = date("Y-m-d");
+                            $store['keterangan'] = 'Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
+                            $store['is_archive'] = 0;
+                            $data = Pelanggaran::create($store);
+                            if ($data) {
+                                $jenis_pelanggaran = JenisPelanggaran::find(14);
+                                $caption = 'Penambahan data pelanggaran dari Mahasiswa:
+- Nama: *' . $data->santri->user->fullname . '*
+- Angkatan: *' . $data->santri->angkatan . '*
+- Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
+- Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
+- Ket: *Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%*';
+                                $contact_id = 'wa_ketertiban_group_id';
+                                WaSchedules::save('Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, $caption, $contact_id);
+                            } else {
+                                $contact_id = 'wa_ketertiban_group_id';
+                                WaSchedules::save('[Gagal] Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, 'Gagal menambahkan data pelanggaran Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, $contact_id);
+                            }
+                        }
+                    }
+                }
+            }
+            echo json_encode(['status' => true, 'message' => 'success running scheduler']);
+
+            // kirim absensi bulanan
         }
 
         // ALL REPORT
         elseif ($time == 'all_report') {
+            // tentatif
+            // bulk ortu
+            $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
+            // create table report_scheduler
         }
     }
 
@@ -139,7 +230,7 @@ Alhamdulillah Jazakumullohu Khoiro 😇🙏🏻
                         $datapg[$tb->ym][$pg->id]['hadir'] = $hadir;
                     }
 
-                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $santri_id AND a.status='approved' AND a.created_at LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
+                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $santri_id AND a.status='approved' AND b.event_date LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
                     if ($permit != null) {
                         foreach ($permit as $p) {
                             $ijin = $ijin + $p->approved;

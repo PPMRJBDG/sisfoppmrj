@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Santri;
 use App\Models\Lorong;
 use App\Helpers\CommonHelpers;
+use App\Helpers\CountDashboard;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -55,6 +56,7 @@ class UserController extends Controller
      */
     public function list_and_manage($angkatan = null, $role = null)
     {
+        $count_dashboard = CountDashboard::index();
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
             ->whereNull('exit_at')
@@ -100,6 +102,7 @@ class UserController extends Controller
         }
 
         return view('user.list_and_manage', [
+            'count_dashboard' => $count_dashboard,
             'users' => $users,
             'select_angkatan' => $angkatan,
             'list_angkatan' => $list_angkatan,

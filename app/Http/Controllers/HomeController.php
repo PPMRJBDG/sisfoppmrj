@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\Permit;
 use App\Models\PresenceGroup;
+use App\Helpers\CountDashboard;
 
 class HomeController extends Controller
 {
@@ -23,8 +23,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function dashboard($tb = null, $select_angkatan = null)
+    public function dashboard($tb = null, $select_angkatan = null, $json = false)
     {
+        $tahun_bulan = [];
+        $count_dashboard = CountDashboard::index();
         $presence_group = PresenceGroup::get();
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
@@ -35,8 +37,16 @@ class HomeController extends Controller
         if ($select_angkatan == null) {
             $select_angkatan = $list_angkatan[0]->angkatan;
         }
+        $bfjkah = false;
+        if ($json) {
+            $bfjkah = true;
+        } else {
+            if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+                $bfjkah = true;
+            }
+        }
 
-        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+        if ($bfjkah) {
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
                 ->where('event_date', '>=', $select_angkatan . '-09-01')
@@ -51,20 +61,19 @@ class HomeController extends Controller
             if ($tb == null) {
                 $tb = date('Y-m');
             }
-        } else {
-            $tahun_bulan = null;
+        }
+
+        if (count($tahun_bulan) == 0) {
+            $tb = null;
         }
 
         $like_tb_a = " AND event_date LIKE '%$tb%'";
         $like_tb_b = " AND b.event_date LIKE '%$tb%'";
-        $like_tb_c = " AND a.created_at LIKE '%$tb%'";
+        $like_tb_c = " AND b.event_date LIKE '%$tb%'";
         if ($tb == null || $tb == '-') {
-            // $like_tb_a = '';
-            // $like_tb_b = '';
-            // $like_tb_c = '';
             $like_tb_a = " AND event_date >= '$select_angkatan-09-01'";
             $like_tb_b = " AND b.event_date >= '$select_angkatan-09-01'";
-            $like_tb_c = " AND a.created_at >= '$select_angkatan-09-01'";
+            $like_tb_c = " AND b.event_date >= '$select_angkatan-09-01'";
         }
 
         $view_usantri = null;
@@ -72,7 +81,8 @@ class HomeController extends Controller
         $all_presences = null;
         $permit = null;
         $all_permit = array();
-        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+
+        if ($bfjkah) {
             $view_usantri = DB::table('v_user_santri')->where('angkatan', $select_angkatan)->orderBy('fullname')->get();
             foreach ($presence_group as $pg) {
                 $all_presences[$pg->id] = DB::select("SELECT COUNT(*) as c_all FROM presences WHERE fkPresence_group_id=" . $pg->id . $like_tb_a);
@@ -116,17 +126,33 @@ class HomeController extends Controller
             $presences = null;
         }
 
-        return view('dashboard', [
-            'presences' => $presences,
-            'presence_group' => $presence_group,
-            'datapg' => $datapg,
-            'tahun_bulan' => $tahun_bulan,
-            'tb' => $tb,
-            'view_usantri' => $view_usantri,
-            'all_presences' => $all_presences,
-            'list_angkatan' => $list_angkatan,
-            'select_angkatan' => $select_angkatan,
-            'all_permit' => $all_permit
-        ]);
+        if ($json) {
+            return [
+                'presences' => $presences,
+                'presence_group' => $presence_group,
+                'datapg' => $datapg,
+                'tahun_bulan' => $tahun_bulan,
+                'tb' => $tb,
+                'view_usantri' => $view_usantri,
+                'all_presences' => $all_presences,
+                'list_angkatan' => $list_angkatan,
+                'select_angkatan' => $select_angkatan,
+                'all_permit' => $all_permit
+            ];
+        } else {
+            return view('dashboard', [
+                'count_dashboard' => $count_dashboard,
+                'presences' => $presences,
+                'presence_group' => $presence_group,
+                'datapg' => $datapg,
+                'tahun_bulan' => $tahun_bulan,
+                'tb' => $tb,
+                'view_usantri' => $view_usantri,
+                'all_presences' => $all_presences,
+                'list_angkatan' => $list_angkatan,
+                'select_angkatan' => $select_angkatan,
+                'all_permit' => $all_permit
+            ]);
+        }
     }
 }

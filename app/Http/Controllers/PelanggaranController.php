@@ -7,6 +7,7 @@ use App\Models\Santri;
 use App\Models\Pelanggaran;
 use App\Models\JenisPelanggaran;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\WaSchedules;
 
 class PelanggaranController extends Controller
 {
@@ -165,7 +166,11 @@ class PelanggaranController extends Controller
                     $data->$c = $request->input($c);
                 }
             }
-            $message = 'Berhasil mengubah data';
+            if ($data->save()) {
+                $message = 'Berhasil mengubah data';
+            } else {
+                $message = 'Data gagal disimpan';
+            }
         } else {
             $store = [];
             foreach ($column as $c) {
@@ -173,11 +178,22 @@ class PelanggaranController extends Controller
             }
             $store['is_archive'] = 0;
             $data = Pelanggaran::create($store);
-            $message = 'Berhasil menambahkan data';
-        }
+            if ($data) {
+                $message = 'Berhasil menambahkan data';
+            } else {
+                $message = 'Gagal menambahkan data';
+            }
 
-        if (!$data->save()) {
-            $message = 'Data gagal disimpan';
+            $jenis_pelanggaran = JenisPelanggaran::find($store['fkJenis_pelanggaran_id']);
+            $caption = 'Penambahan data pelanggaran dari Mahasiswa:
+- Nama: *' . $data->santri->user->fullname . '*
+- Angkatan: *' . $data->santri->angkatan . '*
+- Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
+- Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
+
+Nb: kemungkinan sedang dalam proses tabayyun.';
+            $contact_id = 'wa_dewanguru_group_id';
+            WaSchedules::save('Data Pelanggaran ' . $data->santri->user->fullname, $caption, $contact_id);
         }
 
         if ($update) {

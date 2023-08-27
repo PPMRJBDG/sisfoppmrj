@@ -70,6 +70,8 @@ class SettingController extends Controller
             'wa_max_delay' => 'required',
             'wa_ketertiban_group_id' => 'required',
             'wa_ortu_group_id' => 'required',
+            'wa_header' => 'required',
+            'wa_footer' => 'required',
         ]);
         $setting = Settings::find(1);
         if ($setting == null) {
@@ -83,6 +85,9 @@ class SettingController extends Controller
                 'wa_max_delay' => $request->input('wa_max_delay'),
                 'wa_ketertiban_group_id' => $request->input('wa_ketertiban_group_id'),
                 'wa_ortu_group_id' => $request->input('wa_ortu_group_id'),
+                'wa_dewanguru_group_id' => $request->input('wa_dewanguru_group_id'),
+                'wa_header' => $request->input('wa_header'),
+                'wa_footer' => $request->input('wa_footer'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -94,6 +99,9 @@ class SettingController extends Controller
             $setting->wa_max_delay = $request->input('wa_max_delay');
             $setting->wa_ketertiban_group_id = $request->input('wa_ketertiban_group_id');
             $setting->wa_ortu_group_id = $request->input('wa_ortu_group_id');
+            $setting->wa_dewanguru_group_id = $request->input('wa_dewanguru_group_id');
+            $setting->wa_header = $request->input('wa_header');
+            $setting->wa_footer = $request->input('wa_footer');
             $setting->save();
         }
 

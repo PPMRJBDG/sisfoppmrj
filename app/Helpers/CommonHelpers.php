@@ -5,6 +5,8 @@ namespace App\Helpers;
 use App\Models\SpWhatsappContacts;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\Settings;
+use App\Models\User;
+use App\Models\Santri;
 
 class CommonHelpers
 {
@@ -97,6 +99,80 @@ class CommonHelpers
                             'pid' => $contact_id->id,
                             'phone' => $data['nohp']
                         ]);
+                    }
+                }
+            }
+        }
+    }
+
+    public static function createBulk($name, $data, $field)
+    {
+        $team_id = Settings::find(1);
+        $contact_id = null;
+        $contact = SpWhatsappContacts::where('team_id', $team_id->wa_team_id)->where('name', $name)->get();
+        if (count($contact) == 0) {
+            $contact = SpWhatsappContacts::create([
+                'ids' => uniqid(),
+                'team_id' => $team_id->wa_team_id,
+                'name' => $name,
+                'status' => 1,
+                'changed' => time(),
+                'created' => time()
+            ]);
+            $contact_id = $contact->id;
+        } else {
+            $contact_id = $contact[0]->id;
+            $getdel = SpWhatsappPhoneNumbers::where('pid', $contact_id)->where('team_id', $team_id->wa_team_id)->get();
+            if ($getdel != null) {
+                foreach ($getdel as $gd) {
+                    $delete = SpWhatsappPhoneNumbers::find($gd->id);
+                    $delete->delete();
+                }
+            }
+        }
+        foreach ($data as $d) {
+            $nohp = $d->$field;
+            if ($nohp != '') {
+                if ($nohp[0] == '0') {
+                    $nohp = '62' . substr($nohp, 1);
+                }
+                SpWhatsappPhoneNumbers::create([
+                    'ids' => uniqid(),
+                    'team_id' => $team_id->wa_team_id,
+                    'pid' => $contact_id,
+                    'phone' => $nohp
+                ]);
+            }
+        }
+    }
+
+    public static function checkWaContact()
+    {
+        $setting = Settings::find(1);
+        $contact = SpWhatsappPhoneNumbers::where('team_id', $setting->wa_team_id)->get();
+        foreach ($contact as $c) {
+            $setnohp = $c->phone;
+            // kondisi nama adalah bukan dari grup
+            if (!str_contains($setnohp, '@g.us')) {
+                if ($c->phone[0] == '6' && $c->phone[1] == '2') {
+                    $setnohp = '0' . substr($c->phone, 2);
+                }
+                $user = User::where('nohp', $setnohp)->first();
+                if ($user == null) {
+                    $santri = Santri::where('nohp_ortu', $setnohp)->first();
+                    if ($santri == null) {
+                        $contact_pid = SpWhatsappContacts::find($c->pid);
+                        if ($contact_pid != null) {
+                            // dilarang hapus bulk testing
+                            if ($contact_pid->name != 'Bulk Testing') {
+                                // jangan hapus nama yg mengandung bulk
+                                if (!str_contains($contact_pid->name, 'Bulk')) {
+                                    $contact_pid->delete();
+                                }
+                                $contact = SpWhatsappPhoneNumbers::find($c->id);
+                                $contact->delete();
+                            }
+                        }
                     }
                 }
             }

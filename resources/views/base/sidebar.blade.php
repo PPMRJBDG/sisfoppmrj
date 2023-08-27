@@ -1,3 +1,9 @@
+<style>
+  .navbar-vertical.navbar-expand-xs .navbar-collapse {
+    height: 90% !important;
+  }
+</style>
+
 <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 shadow-lg" id="sidenav-main">
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -17,6 +23,7 @@
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
+
       @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('ku'))
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">PENGURUS</h6>
@@ -37,12 +44,6 @@
           <span class="nav-link-text ms-1">Database</span>
         </a>
         @endif
-        <a class="nav-link {{ $path == 'scheduler' ? 'active' : '' }}" href="{{ url('scheduler') }}">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-calendar-grid-58 text-info text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1">Scheduler</span>
-        </a>
         <a class="nav-link {{ $path == 'pelanggaran' ? 'active' : '' }}" href="{{ url('pelanggaran') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-umbrella-13 text-info text-sm opacity-10"></i>
@@ -59,7 +60,20 @@
         </a>
         @endif
       </li>
+
+      @if(!auth()->user()->hasRole('ku'))
+      <li class="nav-item mt-3">
+        <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Message Tools</h6>
+      </li>
+      <a class="nav-link {{ $path == 'msgtools/contact' ? 'active' : '' }}" href="{{ url('msgtools/contact') }}">
+        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+          <i class="ni ni-collection text-info text-sm opacity-10"></i>
+        </div>
+        <span class="nav-link-text ms-1">Contact & Bulk</span>
+      </a>
       @endif
+      @endif
+
       @can('view presences list')
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Presensi</h6>
@@ -119,7 +133,7 @@
         </a>
       </li>
       @endif
-      @if(auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/izin/list' ? 'active' : '' }}" href="{{ url('presensi/izin/list') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">

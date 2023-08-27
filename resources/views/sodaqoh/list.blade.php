@@ -18,7 +18,9 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 @endif
 <div class="card">
     <div class="card-body">
+        @if(count($datax)>0)
         <center><b>Periode {{ isset($periode) ? $periode.': Nominal Rp '.number_format($datax[0]->nominal,0).',- / Tahun' : '' }}</b></center>
+        @endif
         <div class="d-flex">
             <select class="select_angkatan form-control" name="" id="select_angkatan">
                 <option value="-">Filter Angkatan</option>

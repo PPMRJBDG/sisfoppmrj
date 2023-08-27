@@ -1,19 +1,20 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('ku'))
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
 <div class="card shadow-lg">
     <div class="card-body">
         <h6 class="mb-0">Selamat datang, {{ auth()->user()->fullname }}!</h6>
+        <?php echo $count_dashboard; ?>
     </div>
 </div>
 @endif
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
 <div class="card mt-2 mb-2">
     <div class="card-body">
         <div class="p-0 d-flex">
             <select class="select_angkatan form-control" name="select_angkatan" id="select_angkatan">
-                <option value="-">Pilih Angkatan</option>
+                <!-- <option value="-">Pilih Angkatan</option> -->
                 @foreach($list_angkatan as $la)
                 <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">{{$la->angkatan}}</option>
                 @endforeach
@@ -52,7 +53,7 @@
                             [{{ $vu->angkatan }}] {{ $vu->fullname }}
                         </td>
                         <?php
-                        $all_persantase = 0;
+                        $all_persentase = 0;
                         $all_kbm = 0;
                         $all_hadir = 0;
                         $all_alpha = 0;
@@ -93,11 +94,11 @@
                         <td class="text-center">
                             <?php
                             if ($all_kbm > 0) {
-                                $all_persantase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                                $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
                             }
                             ?>
-                            <span class="font-weight-bolder {{ ($all_persantase<80) ? 'text-danger' : ''}}">
-                                {{ number_format($all_persantase,2) }}%
+                            <span class="font-weight-bolder {{ ($all_persentase<80) ? 'text-danger' : ''}}">
+                                {{ number_format($all_persentase,2) }}%
                             </span>
                         </td>
                     </tr>

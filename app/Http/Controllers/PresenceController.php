@@ -980,9 +980,7 @@ Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason') . '
             
-Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
-            
-Alhamdulillah Jazakumullohu Khoiro';
+Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
 
             WaSchedules::insertToKetertiban($santri, $caption);
 
@@ -1103,9 +1101,7 @@ Alasan: ' . $request->input('reason') . '
 Dari: ' . $request->input('from_date') . '
 Sampai: ' . $request->input('to_date') . '
             
-NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo
-            
-Alhamdulillah Jazakumullohu Khoiro';
+NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo';
 
             WaSchedules::insertToKetertiban($santri, $caption);
 
@@ -1221,9 +1217,7 @@ Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason') . '
             
-Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
-            
-Alhamdulillah Jazakumullohu Khoiro';
+Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
 
             WaSchedules::insertToKetertiban($santri, $caption);
 

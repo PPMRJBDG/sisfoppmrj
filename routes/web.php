@@ -78,7 +78,6 @@ Route::get('/presensi/list/group/{id}/presensi/create', [App\Http\Controllers\Pr
 Route::post('/presensi/list/group/{id}/presensi/store', [App\Http\Controllers\PresenceController::class, 'store_in_group'])->name('store presence in group')->middleware('permission:create presences');
 Route::get('/permit/{ids}', [App\Http\Controllers\PublicController::class, 'view_permit'])->name('view permit');
 Route::get('/permit/reject/{ids}', [App\Http\Controllers\PublicController::class, 'reject_permit'])->name('reject permit');
-Route::get('/report_schedule/{time}', [App\Http\Controllers\PublicController::class, 'report_schedule']);
 
 // Lorongs
 Route::get('/lorong/saya', [App\Http\Controllers\LorongController::class, 'my_lorong'])->name('my lorong')->middleware('role:santri|koor lorong|superadmin');
@@ -151,8 +150,16 @@ Route::post('/setting/store_generate_sodaqoh', [App\Http\Controllers\SettingCont
 Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::class, 'store_settings'])->name('store settings')->middleware('role:superadmin');
 
 // report
+Route::get('/schedule/{time}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
 Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
 Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
+
+// msgtools
+Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');
+Route::get('/msgtools/generate_bulk', [App\Http\Controllers\MsgtoolsController::class, 'generate_bulk'])->name('msgtools generate bulk')->middleware('role:superadmin|rj1');
+Route::post('/msgtools/delete_contact', [App\Http\Controllers\MsgtoolsController::class, 'delete_contact'])->name('msgtools delete contact')->middleware('role:superadmin|rj1');
+Route::post('/msgtools/create_group', [App\Http\Controllers\MsgtoolsController::class, 'create_group'])->name('msgtools create group')->middleware('role:superadmin|rj1');
+Route::post('/msgtools/send_wa', [App\Http\Controllers\MsgtoolsController::class, 'send_wa'])->name('msgtools send wa')->middleware('role:superadmin|rj1');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);
