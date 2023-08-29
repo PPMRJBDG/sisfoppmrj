@@ -71,6 +71,12 @@
         </div>
         <span class="nav-link-text ms-1">Contact & Bulk</span>
       </a>
+      <a class="nav-link {{ $path == 'msgtools/report' ? 'active' : '' }}" href="{{ url('msgtools/report') }}">
+        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+          <i class="ni ni-collection text-info text-sm opacity-10"></i>
+        </div>
+        <span class="nav-link-text ms-1">Report Scheduler</span>
+      </a>
       @endif
       @endif
 

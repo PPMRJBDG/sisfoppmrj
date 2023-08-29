@@ -29,17 +29,17 @@
             <table id="table" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No HP</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                        <th class="text-uppercase text-xxs font-weight-bolder">Nama</th>
+                        <th class="text-uppercase text-xxs font-weight-bolder ps-2">Email</th>
+                        <th class="text-uppercase text-xxs font-weight-bolder ps-2">No HP</th>
+                        <th class="text-uppercase text-xxs font-weight-bolder ps-2">Role</th>
+                        <th class="text-center text-uppercase text-xxs font-weight-bolder">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($users as $user)
                     <tr>
-                        <td>
+                        <td class="text-sm">
                             <div class="d-flex px-2 py-1">
                                 <div>
                                     <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
@@ -49,13 +49,13 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td class="text-sm">
                             {{ $user->email }}
                         </td>
-                        <td>
+                        <td class="text-sm">
                             {{ $user->nohp }}
                         </td>
-                        <td>
+                        <td class="text-sm">
                             @foreach ($user->getRoleNames() as $role)
                             <span class="badge bg-gradient-success">{{ $role }}</span>
                             @endforeach

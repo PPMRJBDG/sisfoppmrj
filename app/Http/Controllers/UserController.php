@@ -61,6 +61,7 @@ class UserController extends Controller
             ->select('angkatan')
             ->whereNull('exit_at')
             ->groupBy('angkatan')
+            ->orderBy('angkatan', 'ASC')
             ->get();
         $list_role = DB::table('roles')
             ->select('id', 'name')
@@ -117,6 +118,7 @@ class UserController extends Controller
             ->select('angkatan')
             ->whereNotNull('exit_at')
             ->groupBy('angkatan')
+            ->orderBy('angkatan', 'ASC')
             ->get();
         if (isset($angkatan)) {
             $users = User::whereHas('santri', function ($query) {
@@ -138,6 +140,7 @@ class UserController extends Controller
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
             ->groupBy('angkatan')
+            ->orderBy('angkatan', 'ASC')
             ->get();
 
         if (isset($angkatan)) {

@@ -43,16 +43,16 @@
       <table id="table" class="table align-items-center mb-0">
         <thead class="thead-light" style="background-color:#f6f9fc;">
           <tr class="list">
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No HP</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kelamin</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tgl Lahir</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Angkatan</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Ortu</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No HP Ortu</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
-            <th class="text-uppercase sort text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Lorong</th>
+            <th class="text-center text-uppercase text-xxs font-weight-bolder">Action</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder">Nama</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">No HP</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Kelamin</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Tgl Lahir</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Angkatan</th>
+            <!-- <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Nama Ortu</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">No HP Ortu</th> -->
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Role</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Lorong</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@
               <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Edit</a>
               @endcan
             </td>
-            <td data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo $user->santri->ids; ?>')" style="cursor:pointer;">
+            <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo $user->santri->ids; ?>')" style="cursor:pointer;">
               <div class="d-flex px-2 py-1">
                 <div>
                   <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
@@ -88,10 +88,10 @@
                 </div>
               </div>
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->nohp }}
             </td>
-            <td>
+            <td class="text-sm">
               @if($user->gender == 'male')
               L
               @endif
@@ -99,26 +99,26 @@
               P
               @endif
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->birthdate }}
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->santri ? $user->santri->angkatan : 'Bukan santri' }}
             </td>
-            <td>
+            <!-- <td>
               {{ $user->santri->nama_ortu }}
             </td>
             <td>
               {{ $user->santri->nohp_ortu }}
-            </td>
-            <td>
+            </td> -->
+            <td class="text-sm">
               @foreach ($user->getRoleNames() as $role)
               @if($role!='santri' && $role!='mubalegh')
               <span class="badge {{ $role=='koor lorong' ? 'bg-gradient-primary' : 'bg-gradient-success' }}">{{ $role }}</span>
               @endif
               @endforeach
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->santri && $user->santri->lorong ? $user->santri->lorong->name : '' }}
             </td>
           </tr>

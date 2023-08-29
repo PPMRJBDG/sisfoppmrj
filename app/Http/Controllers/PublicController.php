@@ -14,6 +14,8 @@ use App\Models\Pelanggaran;
 use App\Models\Materi;
 use App\Models\Santri;
 use App\Models\JenisPelanggaran;
+use App\Models\ReportScheduler;
+use App\Models\SpWhatsappPhoneNumbers;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -161,22 +163,49 @@ Silahkan klik link dibawah ini sesuai angkatannya:
                     }
                 }
             }
-            echo json_encode(['status' => true, 'message' => 'success running scheduler']);
 
-            // kirim absensi bulanan
-        }
-
-        // ALL REPORT
-        elseif ($time == 'all_report') {
-            // tentatif
-            // bulk ortu
+            // kirim absensi bulanan - bulk ortu
             $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
-            // create table report_scheduler
+            $time_post = 1;
+            foreach ($view_usantri as $vs) {
+                $create_report = ReportScheduler::create([
+                    'fkSantri_id' => $vs->santri_id,
+                    'link_url' => $setting->host_url . '/report/' . $vs->ids,
+                    'month' => date("m"),
+                    'status' => 0,
+                    'scheduler' => 0,
+                    'ids' => $vs->ids
+                ]);
+                if ($create_report) {
+                    $nohp = $vs->nohp_ortu;
+                    if ($nohp != '') {
+                        if ($nohp[0] == '0') {
+                            $nohp = '62' . substr($nohp, 1);
+                        }
+                        $wa_phone = SpWhatsappPhoneNumbers::where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                        if ($wa_phone != null) {
+                            $caption = 'Berikut kami informasikan laporan mahasiswa an. ' . $vs->fullname . '
+            Silahkan klik link dibawah ini:
+            ' . $setting->host_url . '/report/' . $vs->ids;
+                            WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
+                        }
+                        $time_post++;
+                    }
+                }
+            }
+
+            echo json_encode(['status' => true, 'message' => 'success running scheduler']);
         }
     }
 
     public function report($ids)
     {
+        $rs = ReportScheduler::where('ids', $ids)->first();
+        if ($rs != null) {
+            $rs->status = 1;
+            $rs->save();
+        }
+
         $santri = Santri::where('ids', $ids)->first();
         $santri_id = $santri->id;
 

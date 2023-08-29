@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use App\Models\ReportScheduler;
 use App\Models\SpWhatsappContacts;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Helpers\CommonHelpers;
@@ -147,6 +148,15 @@ class MsgtoolsController extends Controller
             'contact_user' => $contact_user,
             'group_user' => $group_user,
             'bulk_user' => $bulk_user,
+        ]);
+    }
+
+    public function report()
+    {
+        $datax = ReportScheduler::where('status', 0)->get();
+
+        return view('msgtools.report', [
+            'datax' => $datax
         ]);
     }
 

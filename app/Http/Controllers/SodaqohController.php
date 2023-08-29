@@ -20,6 +20,7 @@ class SodaqohController extends Controller
             ->select('angkatan')
             ->whereNull('exit_at')
             ->groupBy('angkatan')
+            ->orderBy('angkatan', 'ASC')
             ->get();
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
 

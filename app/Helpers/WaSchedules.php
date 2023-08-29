@@ -9,7 +9,7 @@ use App\Models\SpWhatsappPhoneNumbers;
 
 class WaSchedules
 {
-    public static function save($name, $caption, $contact_id)
+    public static function save($name, $caption, $contact_id, $time_post = null)
     {
         $setting = Settings::find(1);
         if ($contact_id == 'wa_dewanguru_group_id') {
@@ -23,7 +23,11 @@ class WaSchedules
 ' . $caption . '
         
 ' . $setting->wa_footer;
-
+        if ($time_post == null) {
+            $time_post = strtotime('+0 minutes');
+        } else {
+            $time_post = strtotime('+' . $time_post . ' minutes');
+        }
         if ($setting != null) {
             $xsend = SpWhatsappSchedules::create([
                 'ids' => uniqid(),
@@ -32,7 +36,7 @@ class WaSchedules
                 'template' => $setting->wa_template,
                 'accounts' => '["' . $setting->wa_sender_account_id . '"]', // akun WA pengirim
                 'contact_id' => $contact_id, // nomor or group tujuan
-                'time_post' => strtotime('+1 minutes'),
+                'time_post' => $time_post,
                 'min_delay' => $setting->wa_min_delay,
                 'max_delay' => $setting->wa_max_delay,
                 'schedule_time' => '',

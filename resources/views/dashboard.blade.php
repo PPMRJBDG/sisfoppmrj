@@ -30,20 +30,20 @@
             <table id="table-hadir" class="table align-items-center mb-0">
                 <thead class="thead-light">
                     <tr style="background-color:#f6f9fc;">
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">NAMA</th>
+                        <th class="text-uppercase text-xs text-secondary font-weight-bolder ps-2">NAMA</th>
                         @foreach($presence_group as $pg)
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">
+                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">
                             {{$pg->name}}
                             <br>
                             H / I / A / T
                         </th>
                         @endforeach
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>HADIR</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>IJIN</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>ALPHA</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>KBM</th>
-                        <th class="text-uppercase text-center text-sm text-secondary font-weight-bolder">TOTAL<br>PERSENTASE</th>
+                        <th class="text-uppercase text-xs text-secondary font-weight-bolder ps-2"></th>
+                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>HADIR</th>
+                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>IJIN</th>
+                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>ALPHA</th>
+                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>KBM</th>
+                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>PERSENTASE</th>
                     </tr>
                 </thead>
                 <tbody>

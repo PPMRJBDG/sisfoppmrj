@@ -36,21 +36,21 @@
       <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No HP</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kelamin</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tgl Lahir</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Angkatan</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nama Ortu</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">No HP Ortu</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tanggal Keluar</th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+            <th class="text-uppercase text-xxs font-weight-bolder">Nama</th>
+            <th class="text-uppercase text-xxs font-weight-bolder ps-2">No HP</th>
+            <th class="text-uppercase text-xxs font-weight-bolder ps-2">Kelamin</th>
+            <th class="text-uppercase text-xxs font-weight-bolder ps-2">Tgl Lahir</th>
+            <th class="text-uppercase text-xxs font-weight-bolder ps-2">Angkatan</th>
+            <!-- <th class="text-uppercase text-xxs font-weight-bolder ps-2">Nama Ortu</th>
+            <th class="text-uppercase text-xxs font-weight-bolder ps-2">No HP Ortu</th> -->
+            <th class="text-uppercase text-xxs font-weight-bolder ps-2">Tanggal Keluar</th>
+            <th class="text-center text-uppercase text-xxs font-weight-bolder">Action</th>
           </tr>
         </thead>
         <tbody>
           @foreach($users as $user)
           <tr>
-            <td>
+            <td class="text-sm">
               <div class="d-flex px-2 py-1">
                 <div>
                   <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
@@ -60,10 +60,10 @@
                 </div>
               </div>
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->nohp }}
             </td>
-            <td>
+            <td class="text-sm">
               @if($user->gender == 'male')
               L
               @endif
@@ -71,19 +71,19 @@
               P
               @endif
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->birthdate }}
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->santri ? $user->santri->angkatan : 'Bukan santri' }}
             </td>
-            <td>
+            <!-- <td class="text-sm">
               {{ $user->santri->nama_ortu }}
             </td>
-            <td>
+            <td class="text-sm">
               {{ $user->santri->nohp_ortu }}
-            </td>
-            <td>
+            </td> -->
+            <td class="text-sm">
               {{ $user->santri ? $user->santri->exit_at : '' }}
             </td>
             <td class="align-middle text-center text-sm">
