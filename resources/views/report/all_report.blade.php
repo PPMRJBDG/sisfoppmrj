@@ -62,8 +62,8 @@
                                 <h6 class="mb-0">SP {{ $plg->keringanan_sp }}</h6>
                             </td>
                             <td class="text-center">
-                                @if($plg->tanggal_melanggar!='')
-                                <h6 class="mb-0">{{ date_format(date_create($plg->tanggal_melanggar),'d M Y') }}</h6>
+                                @if($plg->is_surat_peringatan!='')
+                                <h6 class="mb-0">{{ date_format(date_create($plg->is_surat_peringatan),'d M Y') }}</h6>
                                 @endif
                             </td>
                             <!-- <td class="text-center">
