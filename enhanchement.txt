@@ -1,5 +1,5 @@
 - bulk whatsapp: view all contact, create grup ✅
-- after create sodaqoh, send WA ke ortu
+- after create sodaqoh, send WA ke ortu ✅
 - report: catatan sodaqoh
 
 cron daily: 

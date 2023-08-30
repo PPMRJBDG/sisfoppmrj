@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sodaqoh;
+use App\Models\Settings;
+use App\Models\SpWhatsappPhoneNumbers;
+use App\Helpers\WaSchedules;
 use Illuminate\Support\Facades\DB;
 
 class SodaqohController extends Controller
@@ -15,7 +18,7 @@ class SodaqohController extends Controller
 
     public function list($periode = null, $angkatan = null)
     {
-        $datax = null;
+        $datax = [];
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
             ->whereNull('exit_at')
@@ -28,14 +31,8 @@ class SodaqohController extends Controller
             $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
                 $query->where('angkatan', $angkatan);
             })->where('periode', $periode)->get();
-        } elseif ($periode == '-' && $angkatan != '-') {
-            $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
-                $query->where('angkatan', $angkatan);
-            })->get();
-        } elseif ($periode != '-' && $angkatan == '-') {
-            $datax = Sodaqoh::where('periode', $periode)->get();
         } elseif ($periode == '-' && $angkatan == '-') {
-            $datax = null;
+            $datax = [];
             $periode = null;
             $angkatan = null;
         }
@@ -72,6 +69,30 @@ class SodaqohController extends Controller
                     $check->$bulan = intval($check->$bulan) + intval($request->input('jumlah'));
                 }
                 if ($check->save()) {
+                    $nohp = $check->santri->nohp_ortu;
+                    if ($nohp != '') {
+                        if ($nohp[0] == '0') {
+                            $nohp = '62' . substr($nohp, 1);
+                        }
+                        $setting = Settings::find(1);
+                        $wa_phone = SpWhatsappPhoneNumbers::where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                        if ($wa_phone != null) {
+                            $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
+                            $terbayar = 0;
+                            foreach ($bulan as $b) {
+                                $terbayar = $terbayar + $check->$b;
+                            }
+                            $nominal_kekurangan = $check->nominal - $terbayar;
+                            $text_kekurangan = '';
+                            $status_lunas = '*[LUNAS]*';
+                            if ($nominal_kekurangan > 0) {
+                                $text_kekurangan = 'Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
+                                $status_lunas = '*[BELUM LUNAS]*';
+                            }
+                            $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. ' . $check->santri->user->fullname . ' sudah dikonfirmasi. ' . $text_kekurangan;
+                            WaSchedules::save('Sodaqoh: ' . $check->santri->user->fullname . ' - ' . $check->santri->angkatan, $caption, $wa_phone->pid);
+                        }
+                    }
                     return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
                 } else {
                     return json_encode(array("status" => false, "message" => 'Gagal diinput'));

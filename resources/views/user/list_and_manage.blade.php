@@ -16,15 +16,15 @@
         @endforeach
       </select>
     </div>
-    <h6 class="mb-0">{{ count($users) }} Data Mahasiswa {{$select_angkatan}}</h6>
+    <h6 class="mb-0">Data Mahasiswa {{$select_angkatan}}</h6>
     @can('create users')
-    <a href="{{ route('create user') }}" class="btn btn-primary">
+    <a href="{{ route('create user') }}" class="btn btn-primary mb-0">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Buat user
     </a>
     @endcan
   </div>
-  <div class="card-body pt-4 p-3">
+  <div class="card-body p-3">
     @if (session('success'))
     <div class="alert alert-success text-white">
       {{ session('success') }}
@@ -79,12 +79,17 @@
                       $is_kl = true;
                     }
                   }
-                  $unkl = false;
+                  $unkl = '';
                   if ($user->santri->fkLorong_id == '' && !$is_kl) {
-                    $unkl = true;
+                    $unkl = 'text-warning';
+                  }
+                  foreach ($lorong as $l) {
+                    if ($l->fkSantri_leaderId == $user->santri->id) {
+                      $unkl = 'text-primary';
+                    }
                   }
                   ?>
-                  <h6 class="mb-0 text-sm {{ ($unkl) ? 'text-warning' : '' }}">{{ $user->fullname }}</h6>
+                  <h6 class="mb-0 text-sm {{ $unkl }}">{{ $user->fullname }}</h6>
                 </div>
               </div>
             </td>
@@ -119,7 +124,7 @@
               @endforeach
             </td>
             <td class="text-sm">
-              {{ $user->santri && $user->santri->lorong ? $user->santri->lorong->name : '' }}
+              {{ $user->santri && $user->santri->lorong ? str_replace('Lorong', '', $user->santri->lorong->name) : '' }}
             </td>
           </tr>
           @endforeach

@@ -83,12 +83,6 @@
       </div>
       <div class="row ms-4">
         <div class="row">
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Santri</label>
-              <input class="form-check-input" type="checkbox" id="role-santri" name="role-santri">
-            </div>
-          </div>
           <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Superadmin</label>
@@ -101,18 +95,24 @@
               <input class="form-check-input" type="checkbox" name="role-dewan-guru">
             </div>
           </div> -->
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">RJ1</label>
-              <input class="form-check-input" type="checkbox" name="role-rj1">
-            </div>
-          </div>
           <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Pengabsen</label>
               <input class="form-check-input" type="checkbox" name="role-pengabsen">
             </div>
           </div> -->
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Santri</label>
+              <input class="form-check-input" type="checkbox" id="role-santri" name="role-santri">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">RJ1</label>
+              <input class="form-check-input" type="checkbox" name="role-rj1">
+            </div>
+          </div>
           <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">WK</label>
@@ -123,6 +123,12 @@
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Sekretaris</label>
               <input class="form-check-input" type="checkbox" name="role-sekretaris">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Koor Lorong</label>
+              <input class="form-check-input" type="checkbox" name="role-koor-lorong">
             </div>
           </div>
           <div class="col-md-4">

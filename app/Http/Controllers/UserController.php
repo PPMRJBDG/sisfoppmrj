@@ -65,6 +65,7 @@ class UserController extends Controller
             ->get();
         $list_role = DB::table('roles')
             ->select('id', 'name')
+            ->whereNotIn('name', ['dewan guru', 'koor lorong', 'ku', 'pengabsen', 'santri', 'superadmin'])
             ->get();
 
         $is_all = true;
@@ -101,6 +102,7 @@ class UserController extends Controller
                 $query->whereNull('exit_at');
             })->orderBy('fullname', 'asc')->get();
         }
+        $lorong = Lorong::select('fkSantri_leaderId')->get();
 
         return view('user.list_and_manage', [
             'count_dashboard' => $count_dashboard,
@@ -108,6 +110,7 @@ class UserController extends Controller
             'select_angkatan' => $angkatan,
             'list_angkatan' => $list_angkatan,
             'select_role' => $role,
+            'lorong' => $lorong,
             'list_role' => $list_role
         ]);
     }

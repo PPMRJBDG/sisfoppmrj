@@ -113,7 +113,7 @@
                             SP {{ $data->kategori_sp_real }} -> SP {{ $data->keringanan_sp }}
                         </td>
                         <td>
-                            {{ $data->is_st }}
+                            {{ $data->is_surat_peringatan }}
                         </td>
                         <td>
                             {{ ($data->is_peringatan_keras==1) ? 'Ya' : 'Tidak' }}

@@ -44,7 +44,7 @@ class PelanggaranController extends Controller
             'Pelanggaran',
             'Tanggal Melangar',
             'SP',
-            'Tanggal Pemberian ST',
+            'Tanggal SP',
             'Peringatan Keras',
             'Keterangan'
         ];

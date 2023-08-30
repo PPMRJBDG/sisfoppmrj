@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
 use App\Models\Santri;
@@ -729,7 +730,7 @@ class PresenceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function permit_approval(Request $request)
+    public function permit_approval($tb = null)
     {
         $lastScheduleCheck = SystemMetaData::where('key', 'lastScheduleCheck')->first();
 
@@ -738,8 +739,6 @@ class PresenceController extends Controller
             PresenceGroupsChecker::checkPermitGenerators();
             SystemMetaData::updateOrCreate(['key' => 'lastScheduleCheck'], ['value' => date('Y-m-d')]);
         }
-
-        $page = $request->get('page') ? $request->get('page') : 1;
 
         // get current santri
         $santri = auth()->user()->santri;
@@ -766,6 +765,14 @@ class PresenceController extends Controller
             }
         }
 
+        $tahun_bulan = DB::table('presences')
+            ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+            ->groupBy('ym')
+            ->get();
+        if ($tb == null || $tb == '-') {
+            $tb = date('Y-m');
+        }
+
         // include all Koor lorongs if user has RJ1 role
         if (auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
             $permits->orWhereHas('santri', function ($query) {
@@ -776,10 +783,14 @@ class PresenceController extends Controller
                 });
             });
 
-        // $permits = $permits->orderBy('created_at', 'DESC')->paginate(10);
-        $permits = $permits->orderBy('created_at', 'DESC')->get();
+        // $permits = $permits->orderBy('created_at', 'DESC')->get();
+        // get current santri
+        $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+            ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+            ->orderBy('permits.created_at', 'DESC')
+            ->get();
 
-        return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'page' => $page]);
+        return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'tahun_bulan' => $tahun_bulan, 'tb' => $tb]);
     }
 
     /**
@@ -881,15 +892,22 @@ class PresenceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function permits_list(Request $request)
+    public function permits_list($tb = null)
     {
-        $page = $request->get('page') ? $request->get('page') : 1;
-
+        $tahun_bulan = DB::table('presences')
+            ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+            ->groupBy('ym')
+            ->get();
+        if ($tb == null || $tb == '-') {
+            $tb = date('Y-m');
+        }
         // get current santri
-        // $permits = Permit::query()->orderBy('created_at', 'DESC')->paginate(20);
-        $permits = Permit::query()->orderBy('created_at', 'DESC')->get();
+        $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+            ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+            ->orderBy('permits.created_at', 'DESC')
+            ->get();
 
-        return view('presence.permits_list', ['permits' => $permits, 'page' => $page]);
+        return view('presence.permits_list', ['permits' => $permits, 'tahun_bulan' => $tahun_bulan, 'tb' => $tb]);
     }
 
     /**
@@ -1316,23 +1334,24 @@ Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
     {
         $presenceId = $request->get('presenceId');
         $santriId = $request->get('santriId');
+        $tb = $request->get('tb');
 
         // get current santri
         $santri = Santri::find($santriId);
 
         if (!$santri)
-            return redirect()->route('presence permit approval')->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
+            return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
 
         $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santri->id);
 
         if (!$permit)
-            return redirect()->route('presence permit approval')->withErrors(['permit_not_found' => 'Izin tidak ditemukan.']);
+            return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['permit_not_found' => 'Izin tidak ditemukan.']);
 
         $deleted = $permit->delete();
 
         if (!$deleted)
-            return redirect()->route('presence permit approval')->withErrors(['failed_deleting_permit', 'Gagal menghapus izin.']);
+            return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['failed_deleting_permit', 'Gagal menghapus izin.']);
 
-        return redirect()->route('presence permit approval')->with('success', 'Berhasil menghapus izin');
+        return redirect()->route('presence permit approval', ['tb' => $tb])->with('success', 'Berhasil menghapus izin');
     }
 }

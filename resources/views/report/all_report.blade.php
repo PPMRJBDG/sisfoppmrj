@@ -46,36 +46,22 @@
                     <thead style="background-color:#f6f9fc;">
                         <tr>
                             <th class="text-uppercase ps-0 font-weight-bolder">Jenis</th>
-                            <th class="text-uppercase text-center font-weight-bolder">SP</th>
                             <th class="text-uppercase text-center font-weight-bolder">Tanggal</th>
-                            <!-- <th class="text-uppercase text-center font-weight-bolder">Status</th> -->
-                            <!-- <th class="text-uppercase text-center font-weight-bolder"></th> -->
+                            <!-- <th class="text-uppercase text-center font-weight-bolder">Ket</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pelanggaran as $plg)
                         <tr>
                             <td class="ps-0">
-                                <h6 class="mb-0">{{ $plg->jenis->jenis_pelanggaran }}</h6>
-                            </td>
-                            <td class="text-center">
-                                <h6 class="mb-0">SP {{ $plg->keringanan_sp }}</h6>
+                                <h6 class="mb-0">[SP {{ $plg->keringanan_sp }}] {{ $plg->jenis->jenis_pelanggaran }}</h6>
                             </td>
                             <td class="text-center">
                                 @if($plg->is_surat_peringatan!='')
                                 <h6 class="mb-0">{{ date_format(date_create($plg->is_surat_peringatan),'d M Y') }}</h6>
                                 @endif
                             </td>
-                            <!-- <td class="text-center">
-                                @if($plg->is_archive==1)
-                                <i class="ni ni-satisfied"></i>
-                                @else
-                                <i class="ni ni-notification-70 text-danger"></i>
-                                @endif
-                            </td> -->
-                            <!-- <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-primary mb-0">Detil</button>
-                            </td> -->
+                            <!-- <td>{{$plg->keterangan}}</td> -->
                         </tr>
                         @endforeach
                     </tbody>

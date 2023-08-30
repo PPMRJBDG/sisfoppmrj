@@ -1,5 +1,5 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
-
+{{ auth()->user()->hasRole('koor lorong') }}
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
 <div class="card shadow-lg">
     <div class="card-body">

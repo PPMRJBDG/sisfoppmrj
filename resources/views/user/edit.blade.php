@@ -100,12 +100,6 @@
       </div>
       <div class="row ms-4">
         <div class="row">
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Santri</label>
-              <input class="form-check-input" type="checkbox" name="role-santri" id="role-santri" value="santri" {{ $user->hasRole(['santri']) ? 'checked' : '' }}>
-            </div>
-          </div>
           <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Superadmin</label>
@@ -118,18 +112,24 @@
               <input class="form-check-input" type="checkbox" name="role-dewan-guru" {{ $user->hasRole(['dewan guru']) ? 'checked' : '' }}>
             </div>
           </div> -->
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">RJ1</label>
-              <input class="form-check-input" type="checkbox" name="role-rj1" {{ $user->hasRole(['rj1']) ? 'checked' : '' }}>
-            </div>
-          </div>
           <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Pengabsen</label>
               <input class="form-check-input" type="checkbox" name="role-pengabsen" {{ $user->hasRole(['pengabsen']) ? 'checked' : '' }}>
             </div>
           </div> -->
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Santri</label>
+              <input class="form-check-input" type="checkbox" name="role-santri" id="role-santri" value="santri" {{ $user->hasRole(['santri']) ? 'checked' : '' }}>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">RJ1</label>
+              <input class="form-check-input" type="checkbox" name="role-rj1" {{ $user->hasRole(['rj1']) ? 'checked' : '' }}>
+            </div>
+          </div>
           <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">WK</label>
@@ -140,6 +140,12 @@
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Sekretaris</label>
               <input class="form-check-input" type="checkbox" name="role-sekretaris" {{ $user->hasRole(['sekretaris']) ? 'checked' : '' }}>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Koor Lorong</label>
+              <input class="form-check-input" type="checkbox" name="role-koor-lorong" {{ $user->hasRole(['role-koor-lorong']) ? 'checked' : '' }}>
             </div>
           </div>
           <div class="col-md-4">

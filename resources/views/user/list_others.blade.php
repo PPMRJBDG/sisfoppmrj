@@ -4,7 +4,7 @@
         <div class="p-2 d-flex">
         </div>
         @can('create users')
-        <a href="{{ route('create user') }}" class="btn btn-primary">
+        <a href="{{ route('create user') }}" class="btn btn-primary mb-0">
             <i class="fas fa-plus" aria-hidden="true"></i>
             Buat user
         </a>
