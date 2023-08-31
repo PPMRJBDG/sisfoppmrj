@@ -17,9 +17,30 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 </div>
 @endif
 <div class="card">
-    <div class="card-body">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="text-primary">Sudah Lunas</h5>
+                        <h5>{{ $vlunas }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="text-danger">Belum Lunas</h5>
+                        <h5>{{ $xlunas }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body pt-0">
         @if(count($datax)>0)
-        <center><b>Periode {{ isset($periode) ? $periode.': Nominal Rp '.number_format($datax[0]->nominal,0).',- / Tahun' : '' }}</b></center>
+        <center><b>Periode {{ isset($periode) ? $periode.' : Nominal Rp '.number_format($datax[0]->nominal,0).',- / Tahun' : '' }}</b></center><br>
         @endif
         <div class="d-flex">
             <select class="select_angkatan form-control" name="" id="select_angkatan">
@@ -38,10 +59,11 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             </select>
         </div>
         <div class="table-responsive mt-2">
-            <table class="table align-items-center mb-0">
+            <table id="table" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Periode</th>
                         <?php for ($i = 1; $i <= 12; $i++) { ?>
                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">{{$i}}</th>
                         <?php } ?>
@@ -56,19 +78,22 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         <td>
                             <b>[{{ $data->santri->angkatan }}]</b> {{ $data->santri->user->fullname }}
                         </td>
+                        <td>
+                            {{ $data->periode }}
+                        </td>
                         <?php
                         $status_lunas = 0;
                         foreach ($bulan as $bl) {
                             $status_lunas = $status_lunas + intval($data->$bl);
                         ?>
                             <td>
-                                <a href="#" onclick="openSodaqoh({{$data->id}},'{{$periode}}','{{$bl}}',{{$data->fkSantri_id}})">{{ ($data->$bl!=null) ? number_format($data->$bl,0) : '0' }}</a>
+                                <a href="#" onclick="openSodaqoh({{$data->id}},'{{$data->periode}}','{{$bl}}',{{$data->fkSantri_id}})">{{ ($data->$bl!=null) ? number_format($data->$bl,0) : '0' }}</a>
                             </td>
                         <?php
                         }
                         $text_error = '';
-                        if (isset($periode)) {
-                            if ($status_lunas < $datax[0]->nominal) {
+                        if (isset($data->periode)) {
+                            if ($status_lunas < $data->nominal) {
                                 $text_error = 'text-warning';
                             }
                         }
@@ -77,7 +102,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <b>{{ number_format($status_lunas,0) }}</b>
                         </td>
                         <td>
-                            <a href="#" onclick="openSodaqoh({{$data->id}},'{{$periode}}','ket',{{$data->fkSantri_id}})">{{ ($data->keterangan!='') ? $data->keterangan : 'click' }}</a>
+                            <a href="#" onclick="openSodaqoh({{$data->id}},'{{$data->periode}}','ket',{{$data->fkSantri_id}})">{{ ($data->keterangan!='') ? $data->keterangan : 'click' }}</a>
                         </td>
                     </tr>
                     @endforeach
@@ -89,6 +114,10 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 </div>
 
 <script>
+    $('#table').DataTable({
+        order: [],
+        pageLength: 25
+    });
     $('.select_angkatan').change((e) => {
         var periode = $('#select_periode').val()
         window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/${$(e.currentTarget).val()}`)

@@ -15,3 +15,6 @@ cron weekly:
 cron monthly:
 - laporan all report ✅
 - jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban ✅
+
+LAIN 
+- keringanan biaya untuk mahasiswa MT, berapa persen dari nominal sodaqoh

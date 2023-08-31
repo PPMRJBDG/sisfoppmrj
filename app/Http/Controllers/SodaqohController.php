@@ -27,14 +27,23 @@ class SodaqohController extends Controller
             ->get();
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
 
-        if ($periode != '-' && $angkatan != '-') {
+        $vlunas = count(Sodaqoh::where('status_lunas', 1)->get());
+        $xlunas = count(Sodaqoh::whereNull('status_lunas')->get());
+
+        if (($periode == '-' && $angkatan == '-') || ($periode == null && $angkatan == null)) {
+            $datax = Sodaqoh::get();
+            $periode = null;
+            $angkatan = null;
+        } elseif ($periode != '-' && $angkatan != '-') {
             $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
                 $query->where('angkatan', $angkatan);
             })->where('periode', $periode)->get();
-        } elseif ($periode == '-' && $angkatan == '-') {
-            $datax = [];
-            $periode = null;
-            $angkatan = null;
+        } elseif ($angkatan != null && ($periode == null || $periode == '-')) {
+            $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                $query->where('angkatan', $angkatan);
+            })->get();
+        } elseif ($periode != null && ($angkatan == null || $angkatan == '-')) {
+            $datax = Sodaqoh::where('periode', $periode)->get();
         }
 
         return view('sodaqoh.list', [
@@ -43,6 +52,8 @@ class SodaqohController extends Controller
             'list_periode' => $list_periode,
             'list_angkatan' => $list_angkatan,
             'periode' => $periode,
+            'vlunas' => $vlunas,
+            'xlunas' => $xlunas,
         ]);
     }
 
@@ -90,9 +101,12 @@ class SodaqohController extends Controller
                             if ($nominal_kekurangan > 0) {
                                 $text_kekurangan = 'Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
                                 $status_lunas = '*[BELUM LUNAS]*';
+                            } else {
+                                $check->status_lunas = 1;
+                                $check->save();
                             }
                             $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. ' . $check->santri->user->fullname . ' sudah dikonfirmasi. ' . $text_kekurangan;
-                            WaSchedules::save('Sodaqoh: ' . $check->santri->user->fullname . ' - ' . $check->santri->angkatan, $caption, $wa_phone->pid);
+                            WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);
                         }
                     }
                     return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
