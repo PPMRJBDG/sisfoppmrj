@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SpWhatsappContacts;
 
 class SpWhatsappPhoneNumbers extends Model
 {
@@ -15,4 +16,9 @@ class SpWhatsappPhoneNumbers extends Model
         'pid',
         'phone',
     ];
+
+    public function contact()
+    {
+        return $this->belongsTo(SpWhatsappContacts::class, 'pid', 'id');
+    }
 }

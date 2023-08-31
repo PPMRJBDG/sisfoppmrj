@@ -45,7 +45,7 @@
                             <a class="btn btn-secondary btn-xs mb-0">{{ count($bu['data']) }}</a>
                         </td>
                         <td class="align-middle text-center text-sm">
-                            <a class="btn btn-primary btn-xs mb-0" onclick="changeBulk('<?php echo $bu['bulk_id']; ?>','<?php echo $bu['bulk_name']; ?>')">Kirim Pesan</a>
+                            <a class="btn btn-primary btn-xs mb-0" onclick="changeBulk('<?php echo $bu['bulk_id']; ?>','<?php echo $bu['bulk_name']; ?>','Bulk')">Kirim Pesan</a>
                         </td>
                     </tr>
                     @endforeach
@@ -87,7 +87,7 @@
                             {{ $gu['phone'] }}
                         </td>
                         <td class="align-middle text-center text-sm">
-                            <a class="btn btn-primary btn-xs mb-0" onclick="changeBulk('<?php echo $gu['group_id']; ?>','<?php echo $gu['group_name']; ?>')">Kirim Pesan</a>
+                            <a class="btn btn-primary btn-xs mb-0" onclick="changeBulk('<?php echo $gu['group_id']; ?>','<?php echo $gu['group_name']; ?>','<?php echo $gu['phone']; ?>')">Kirim Pesan</a>
                             <a class="btn btn-danger btn-xs mb-0" onclick="deleteContact('<?php echo $gu['group_id']; ?>')">Hapus</a>
                         </td>
                     </tr>
@@ -104,8 +104,10 @@
             <table id="table-contact" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ID</th>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama Pribadi</th>
                         <th class="text-uppercase text-sm text-secondary align-middle font-weight-bolder">Nohp Pribadi</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ID</th>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama Ortu</th>
                         <th class="text-uppercase text-sm text-secondary align-middle font-weight-bolder">Nohp Ortu</th>
                     </tr>
@@ -114,16 +116,22 @@
                     @foreach($contact_user as $gu)
                     <tr class="text-sm">
                         <td>
+                            {{ $gu['pribadi_id'] }}
+                        </td>
+                        <td>
                             {{ $gu['nama_pribadi'] }}
                         </td>
                         <td>
-                            <a onclick="changeBulk('<?php echo $gu['pribadi_id']; ?>','<?php echo $gu['nama_pribadi']; ?>')" class="btn btn-primary btn-sm mb-0">{{ $gu['nohp_pribadi'] }}</a>
+                            <a onclick="changeBulk('<?php echo $gu['pribadi_id']; ?>','<?php echo $gu['nama_pribadi']; ?>','<?php echo $gu['nohp_pribadi']; ?>')" class="btn btn-primary btn-sm mb-0">{{ $gu['nohp_pribadi'] }}</a>
+                        </td>
+                        <td>
+                            {{ $gu['ortu_id'] }}
                         </td>
                         <td>
                             {{ $gu['nama_ortu'] }}
                         </td>
                         <td>
-                            <a onclick="changeBulk('<?php echo $gu['ortu_id']; ?>','<?php echo $gu['nama_ortu']; ?>')" class="btn btn-primary btn-sm mb-0">{{ $gu['nohp_ortu'] }}</a>
+                            <a onclick="changeBulk('<?php echo $gu['ortu_id']; ?>','<?php echo $gu['nama_ortu']; ?>','<?php echo $gu['nohp_ortu']; ?>')" class="btn btn-primary btn-sm mb-0">{{ $gu['nohp_ortu'] }}</a>
                         </td>
                     </tr>
                     @endforeach
@@ -148,6 +156,9 @@
                     <label class="form-control-label">Nama Contact</label>
                     <input class="form-control" readonly type="hidden" id="bulk_id" name="bulk_id" value="">
                     <input class="form-control" readonly type="text" id="bulk_name" name="bulk_name" value="">
+
+                    <label class="form-control-label">Nomor Kontak</label>
+                    <input class="form-control" readonly type="text" id="bulk_contact" name="bulk_contact" value="">
 
                     <label class="form-control-label">Subject Pesan</label>
                     <input class="form-control" type="text" id="bulk_subject" name="bulk_subject" value="">
@@ -183,19 +194,20 @@
             </div>
             <div class="modal-footer">
                 <a type="button" href="" id="close-group" class="btn btn-secondary" data-dismiss="modal">Close</a>
-                <a type="button" id="send-group" class="btn btn-primary">Kirim</a>
+                <a type="button" id="add-group" class="btn btn-primary">Kirim</a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function changeBulk(id, name) {
+    function changeBulk(id, name, contact) {
         $('#exampleModal').fadeIn();
         $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
         $('#exampleModal').css('z-index', '10000');
         $('#bulk_id').val(id);
-        $('#bulk_name').val(name);
+        $('#bulk_contact').val(contact);
+        $('#bulk_name').val('[' + id + '] ' + name);
     }
 
     function deleteContact(id) {
@@ -252,7 +264,7 @@
         $('#exampleModal-group').css('z-index', '10000');
     });
 
-    $('#send-group').click(function() {
+    $('#add-group').click(function() {
         if ($('#group_name').val() == '') {
             alert('Nama group harus diisi');
             return false;

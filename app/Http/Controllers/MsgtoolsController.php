@@ -64,13 +64,13 @@ class MsgtoolsController extends Controller
                 if ($nohp[0] == '0') {
                     $nohp = '62' . substr($nohp, 1);
                 }
-                $getsp = SpWhatsappPhoneNumbers::where('phone', $nohp)->where('team_id', $setting->wa_team_id)->first();
-                if ($getsp == null) {
+                $getspa = SpWhatsappPhoneNumbers::where('phone', $nohp)->where('team_id', $setting->wa_team_id)->first();
+                if ($getspa == null) {
                     $contact_user[$u->id]['nohp_pribadi'] = '0';
                     $contact_user[$u->id]['pribadi_id'] = '0';
                 } else {
-                    $contact_user[$u->id]['nohp_pribadi'] = $getsp->phone;
-                    $contact_user[$u->id]['pribadi_id'] = $getsp->pid;
+                    $contact_user[$u->id]['nohp_pribadi'] = $getspa->phone;
+                    $contact_user[$u->id]['pribadi_id'] = $getspa->pid;
                 }
             } else {
                 $contact_user[$u->id]['nohp_pribadi'] = '0';
@@ -83,15 +83,16 @@ class MsgtoolsController extends Controller
                 if ($nohp_ortu[0] == '0') {
                     $nohp_ortu = '62' . substr($nohp_ortu, 1);
                 }
-                $getsp = SpWhatsappPhoneNumbers::where('phone', $nohp_ortu)->where('team_id', $setting->wa_team_id)->first();
-                if ($getsp == null) {
+                $getspb = SpWhatsappPhoneNumbers::where('phone', $nohp_ortu)->where('team_id', $setting->wa_team_id)->first();
+                if ($getspb == null) {
                     $contact_user[$u->id]['nohp_ortu'] = '0';
                     $contact_user[$u->id]['ortu_id'] = '0';
+                    $contact_user[$u->id]['nama_ortu'] = '[' . $u->angkatan . '] Ortu ' . $u->fullname;
                 } else {
-                    $contact_user[$u->id]['nohp_ortu'] = $getsp->phone;
-                    $contact_user[$u->id]['ortu_id'] = $getsp->pid;
+                    $contact_user[$u->id]['nohp_ortu'] = $getspb->phone;
+                    $contact_user[$u->id]['ortu_id'] = $getspb->pid;
+                    $contact_user[$u->id]['nama_ortu'] = '[' . $u->angkatan . '] ' . $getspb->contact->name;
                 }
-                $contact_user[$u->id]['nama_ortu'] = $u->nama_ortu;
             } else {
                 $contact_user[$u->id]['ortu_id'] = '0';
                 $contact_user[$u->id]['nohp_ortu'] = '0';
