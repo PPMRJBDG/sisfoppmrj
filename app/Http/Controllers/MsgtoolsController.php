@@ -60,43 +60,54 @@ class MsgtoolsController extends Controller
         $contact_user = array();
         foreach ($getuser as $u) {
             $nohp = $u->nohp;
-            if ($nohp != '') {
+            $set_a = false;
+            if ($nohp != '' && $nohp != '0') {
                 if ($nohp[0] == '0') {
                     $nohp = '62' . substr($nohp, 1);
                 }
-                $getspa = SpWhatsappPhoneNumbers::where('phone', $nohp)->where('team_id', $setting->wa_team_id)->first();
-                if ($getspa == null) {
-                    $contact_user[$u->id]['nohp_pribadi'] = '0';
-                    $contact_user[$u->id]['pribadi_id'] = '0';
-                } else {
+                $getspa = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('phone', $nohp)->where('team_id', $setting->wa_team_id)->first();
+                if ($getspa != null) {
                     $contact_user[$u->id]['nohp_pribadi'] = $getspa->phone;
                     $contact_user[$u->id]['pribadi_id'] = $getspa->pid;
+                    $contact_user[$u->id]['nama_pribadi'] = '[' . $u->angkatan . '] ' . $getspa->contact->name;
+                } else {
+                    $set_a = true;
                 }
             } else {
+                $set_a = true;
+            }
+            if ($set_a) {
                 $contact_user[$u->id]['nohp_pribadi'] = '0';
                 $contact_user[$u->id]['pribadi_id'] = '0';
+                $contact_user[$u->id]['nama_pribadi'] = '[' . $u->angkatan . '] X ' . $u->fullname;
             }
-            $contact_user[$u->id]['nama_pribadi'] = '[' . $u->angkatan . '] ' . $u->fullname;
 
             $nohp_ortu = $u->nohp_ortu;
+            $set_b = false;
             if ($nohp_ortu != '') {
                 if ($nohp_ortu[0] == '0') {
                     $nohp_ortu = '62' . substr($nohp_ortu, 1);
                 }
-                $getspb = SpWhatsappPhoneNumbers::where('phone', $nohp_ortu)->where('team_id', $setting->wa_team_id)->first();
-                if ($getspb == null) {
-                    $contact_user[$u->id]['nohp_ortu'] = '0';
-                    $contact_user[$u->id]['ortu_id'] = '0';
-                    $contact_user[$u->id]['nama_ortu'] = '[' . $u->angkatan . '] Ortu ' . $u->fullname;
-                } else {
+                $getspb = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('phone', $nohp_ortu)->where('team_id', $setting->wa_team_id)->first();
+                if ($getspb != null) {
                     $contact_user[$u->id]['nohp_ortu'] = $getspb->phone;
                     $contact_user[$u->id]['ortu_id'] = $getspb->pid;
                     $contact_user[$u->id]['nama_ortu'] = '[' . $u->angkatan . '] ' . $getspb->contact->name;
+                } else {
+                    $set_b = true;
                 }
             } else {
+                $set_b = true;
+            }
+
+            if ($set_b) {
                 $contact_user[$u->id]['ortu_id'] = '0';
                 $contact_user[$u->id]['nohp_ortu'] = '0';
-                $contact_user[$u->id]['nama_ortu'] = NULL;
+                $contact_user[$u->id]['nama_ortu'] = '[' . $u->angkatan . '] OrtuX ' . $u->fullname;
             }
         }
 

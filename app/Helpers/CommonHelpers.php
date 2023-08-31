@@ -81,7 +81,9 @@ class CommonHelpers
             }
             if (count($nomor_hp) > 0) {
                 foreach ($nomor_hp as $data) {
-                    $check_number = SpWhatsappPhoneNumbers::where('team_id', $team_id->wa_team_id)->where('phone', $data['nohp'])->get();
+                    $check_number = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                    })->where('team_id', $team_id->wa_team_id)->where('phone', $data['nohp'])->get();
 
                     if (count($check_number) == 0) {
                         $contact_id = SpWhatsappContacts::create([
@@ -99,6 +101,12 @@ class CommonHelpers
                             'pid' => $contact_id->id,
                             'phone' => $data['nohp']
                         ]);
+                    } else {
+                        foreach ($check_number as $cn) {
+                            $update = SpWhatsappContacts::find($cn->pid);
+                            $update->name = $data['name'];
+                            $update->save();
+                        }
                     }
                 }
             }
@@ -169,8 +177,8 @@ class CommonHelpers
                                 if (!str_contains($contact_pid->name, 'Bulk')) {
                                     $contact_pid->delete();
                                 }
-                                $contact = SpWhatsappPhoneNumbers::find($c->id);
-                                $contact->delete();
+                                $del_contact = SpWhatsappPhoneNumbers::find($c->id);
+                                $del_contact->delete();
                             }
                         }
                     }
