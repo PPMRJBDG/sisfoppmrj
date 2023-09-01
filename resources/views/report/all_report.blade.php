@@ -37,7 +37,7 @@
         </div>
     </div>
     @if(count($pelanggaran)>0)
-    <h4 class="text-white text-center mb-0">Riwayat Pelanggaran</h4>
+    <!-- <h4 class="text-white text-center mb-0">Riwayat Pelanggaran</h4>
     <div class="card mb-2">
         <div class="card-body p-2">
             <h6>Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
@@ -46,9 +46,9 @@
                     <thead style="background-color:#f6f9fc;">
                         <tr>
                             <th class="text-uppercase ps-0 font-weight-bolder">Jenis</th>
-                            <th class="text-uppercase text-center font-weight-bolder">Tanggal</th>
+                            <th class="text-uppercase text-center font-weight-bolder">Tanggal</th> -->
                             <!-- <th class="text-uppercase text-center font-weight-bolder">Ket</th> -->
-                        </tr>
+                        <!-- </tr>
                     </thead>
                     <tbody>
                         @foreach($pelanggaran as $plg)
@@ -60,18 +60,18 @@
                                 @if($plg->is_surat_peringatan!='')
                                 <h6 class="mb-0">{{ date_format(date_create($plg->is_surat_peringatan),'d M Y') }}</h6>
                                 @endif
-                            </td>
+                            </td> -->
                             <!-- <td>{{$plg->keterangan}}</td> -->
-                        </tr>
+                        <!-- </tr>
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+            </div> -->
             <!-- <i class="ni ni-satisfied"></i>: Pemutihan, namun tetap harus dikontrol dan selalu dinasehati
             <br>
             <i class="ni ni-notification-70 text-danger"></i>: Harus dikontrol dan selalu dinasehati agar tidak terulang lagi -->
-        </div>
-    </div>
+        <!-- </div>
+    </div> -->
     @endif
 
     <?php
