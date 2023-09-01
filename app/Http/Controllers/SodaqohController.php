@@ -80,33 +80,35 @@ class SodaqohController extends Controller
                     $check->$bulan = intval($check->$bulan) + intval($request->input('jumlah'));
                 }
                 if ($check->save()) {
-                    $nohp = $check->santri->nohp_ortu;
-                    if ($nohp != '') {
-                        if ($nohp[0] == '0') {
-                            $nohp = '62' . substr($nohp, 1);
-                        }
-                        $setting = Settings::find(1);
-                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                        if ($wa_phone != null) {
-                            $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
-                            $terbayar = 0;
-                            foreach ($bulan as $b) {
-                                $terbayar = $terbayar + $check->$b;
+                    if ($bulan != 'ket') {
+                        $nohp = $check->santri->nohp_ortu;
+                        if ($nohp != '') {
+                            if ($nohp[0] == '0') {
+                                $nohp = '62' . substr($nohp, 1);
                             }
-                            $nominal_kekurangan = $check->nominal - $terbayar;
-                            $text_kekurangan = '';
-                            $status_lunas = '*[LUNAS]*';
-                            if ($nominal_kekurangan > 0) {
-                                $text_kekurangan = 'Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
-                                $status_lunas = '*[BELUM LUNAS]*';
-                            } else {
-                                $check->status_lunas = 1;
-                                $check->save();
+                            $setting = Settings::find(1);
+                            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                $query->where('name', 'NOT LIKE', '%Bulk%');
+                            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                            if ($wa_phone != null) {
+                                $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
+                                $terbayar = 0;
+                                foreach ($bulan as $b) {
+                                    $terbayar = $terbayar + $check->$b;
+                                }
+                                $nominal_kekurangan = $check->nominal - $terbayar;
+                                $text_kekurangan = '';
+                                $status_lunas = '*[LUNAS]*';
+                                if ($nominal_kekurangan > 0) {
+                                    $text_kekurangan = 'Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
+                                    $status_lunas = '*[BELUM LUNAS]*';
+                                } else {
+                                    $check->status_lunas = 1;
+                                    $check->save();
+                                }
+                                $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. ' . $check->santri->user->fullname . ' sudah dikonfirmasi. ' . $text_kekurangan;
+                                WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);
                             }
-                            $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. ' . $check->santri->user->fullname . ' sudah dikonfirmasi. ' . $text_kekurangan;
-                            WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);
                         }
                     }
                     return json_encode(array("status" => true, "message" => 'Berhasil diinput'));

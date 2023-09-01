@@ -1,6 +1,11 @@
 - bulk whatsapp: view all contact, create grup ✅
 - after create sodaqoh, send WA ke ortu ✅
-- report: catatan sodaqoh
+
+
+all report: 
+- catatan sodaqoh
+- penyesuaian materi
+- tampilkan ijin
 
 cron daily: 
 - pemutihan sp, if tgl = 1 tahun then arsip ✅

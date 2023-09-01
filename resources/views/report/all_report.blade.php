@@ -36,7 +36,7 @@
             </center>
         </div>
     </div>
-    @if(count($pelanggaran)>0)
+    <!-- @if(count($pelanggaran)>0)
     <h4 class="text-white text-center mb-0">Riwayat Pelanggaran</h4>
     <div class="card mb-2">
         <div class="card-body p-2">
@@ -47,7 +47,6 @@
                         <tr>
                             <th class="text-uppercase ps-0 font-weight-bolder">Jenis</th>
                             <th class="text-uppercase text-center font-weight-bolder">Tanggal</th>
-                            <!-- <th class="text-uppercase text-center font-weight-bolder">Ket</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -61,18 +60,14 @@
                                 <h6 class="mb-0">{{ date_format(date_create($plg->is_surat_peringatan),'d M Y') }}</h6>
                                 @endif
                             </td>
-                            <!-- <td>{{$plg->keterangan}}</td> -->
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-            <!-- <i class="ni ni-satisfied"></i>: Pemutihan, namun tetap harus dikontrol dan selalu dinasehati
-            <br>
-            <i class="ni ni-notification-70 text-danger"></i>: Harus dikontrol dan selalu dinasehati agar tidak terulang lagi -->
         </div>
     </div>
-    @endif
+    @endif -->
 
     <?php
     $all_kbm = 0;
@@ -113,7 +108,7 @@
         <div class="card-body p-2">
             @foreach($tahun as $th)
             <div id="toggle-th font-weight-builder" class="mb-2">
-                <button onclick="toggleTh('th{{$th->y}}')" style="width:100%!important;" type="button" class="mb-0 btn btn-outline-primary btn-small btn-block">Klik Presensi Tahun {{ $th->y }}</button>
+                <button onclick="toggleTh('th{{$th->y}}')" style="width:100%!important;" type="button" class="mb-0 btn btn-outline-primary btn-small btn-block">Silahkan Klik Presensi Tahun {{ $th->y }}</button>
             </div>
             <div class="table-responsive p-0" id="th{{$th->y}}" style="display:none;">
                 <table id="recap-table" class="table align-items-center mb-0">

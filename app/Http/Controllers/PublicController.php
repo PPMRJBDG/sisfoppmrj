@@ -187,8 +187,8 @@ Silahkan klik link dibawah ini sesuai angkatannya:
                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                         if ($wa_phone != null) {
                             $caption = 'Berikut kami informasikan laporan mahasiswa an. ' . $vs->fullname . '
-            Silahkan klik link dibawah ini:
-            ' . $setting->host_url . '/report/' . $vs->ids;
+Silahkan klik link dibawah ini:
+' . $setting->host_url . '/report/' . $vs->ids;
                             WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
                         }
                         $time_post++;
@@ -288,12 +288,14 @@ Silahkan klik link dibawah ini sesuai angkatannya:
                 $completedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'complete')->count();
                 $partiallyCompletedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'partial')->count();
                 $totalPages = $completedPages + ($partiallyCompletedPages / 2);
-                $data_materi = $data_materi . '
-            <tr class="text-sm">
-                <td class="p-0">' . ucfirst(strtolower($materi->name)) . '</td>
-                <td class="p-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</td>
-                <td class="p-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
-            </tr>';
+                if ($totalPages > 0) {
+                    $data_materi = $data_materi . '
+                    <tr class="text-sm">
+                        <td class="p-0">' . ucfirst(strtolower($materi->name)) . '</td>
+                        <td class="p-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</td>
+                        <td class="p-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
+                    </tr>';
+                }
             }
         }
 
