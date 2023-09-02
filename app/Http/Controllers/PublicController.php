@@ -11,6 +11,7 @@ use App\Models\Settings;
 use App\Models\Liburan;
 use App\Models\PresenceGroup;
 use App\Models\Pelanggaran;
+use App\Models\Sodaqoh;
 use App\Models\Materi;
 use App\Models\Santri;
 use App\Models\JenisPelanggaran;
@@ -187,8 +188,8 @@ Silahkan klik link dibawah ini sesuai angkatannya:
                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                         if ($wa_phone != null) {
                             $caption = 'Berikut kami informasikan laporan mahasiswa an. ' . $vs->fullname . '
-            Silahkan klik link dibawah ini:
-            ' . $setting->host_url . '/report/' . $vs->ids;
+Silahkan klik link dibawah ini:
+' . $setting->host_url . '/report/' . $vs->ids;
                             WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
                         }
                         $time_post++;
@@ -275,6 +276,7 @@ Silahkan klik link dibawah ini sesuai angkatannya:
 
         // get pelanggaran
         $pelanggaran = Pelanggaran::where('fkSantri_id', $santri_id)->whereNotNull('keringanan_sp')->get();
+        $sodaqoh = Sodaqoh::where('fkSantri_id', $santri_id)->get();
 
         // get pencapaian materi
         $materis = Materi::all();
@@ -288,12 +290,14 @@ Silahkan klik link dibawah ini sesuai angkatannya:
                 $completedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'complete')->count();
                 $partiallyCompletedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'partial')->count();
                 $totalPages = $completedPages + ($partiallyCompletedPages / 2);
-                $data_materi = $data_materi . '
-            <tr class="text-sm">
-                <td class="p-0">' . ucfirst(strtolower($materi->name)) . '</td>
-                <td class="p-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</td>
-                <td class="p-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
-            </tr>';
+                if ($totalPages > 0) {
+                    $data_materi = $data_materi . '
+                    <tr class="text-sm">
+                        <td class="p-0"><h6 class="mb-0">' . ucfirst(strtolower($materi->name)) . '</h6></td>
+                        <td class="p-0"><h6 class="mb-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</h6></td>
+                        <td class="p-0"><h6 class="mb-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</h6></td>
+                    </tr>';
+                }
             }
         }
 
@@ -304,7 +308,8 @@ Silahkan klik link dibawah ini sesuai angkatannya:
             'presence_group' => $presence_group,
             'datapg' => $datapg,
             'data_materi' => $data_materi,
-            'pelanggaran' => $pelanggaran
+            'pelanggaran' => $pelanggaran,
+            'sodaqoh' => $sodaqoh
         ]);
     }
 
