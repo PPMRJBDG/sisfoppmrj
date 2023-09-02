@@ -11,6 +11,7 @@ use App\Models\Settings;
 use App\Models\Liburan;
 use App\Models\PresenceGroup;
 use App\Models\Pelanggaran;
+use App\Models\Sodaqoh;
 use App\Models\Materi;
 use App\Models\Santri;
 use App\Models\JenisPelanggaran;
@@ -275,6 +276,7 @@ Silahkan klik link dibawah ini:
 
         // get pelanggaran
         $pelanggaran = Pelanggaran::where('fkSantri_id', $santri_id)->whereNotNull('keringanan_sp')->get();
+        $sodaqoh = Sodaqoh::where('fkSantri_id', $santri_id)->get();
 
         // get pencapaian materi
         $materis = Materi::all();
@@ -291,9 +293,9 @@ Silahkan klik link dibawah ini:
                 if ($totalPages > 0) {
                     $data_materi = $data_materi . '
                     <tr class="text-sm">
-                        <td class="p-0">' . ucfirst(strtolower($materi->name)) . '</td>
-                        <td class="p-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</td>
-                        <td class="p-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
+                        <td class="p-0"><h6 class="mb-0">' . ucfirst(strtolower($materi->name)) . '</h6></td>
+                        <td class="p-0"><h6 class="mb-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</h6></td>
+                        <td class="p-0"><h6 class="mb-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</h6></td>
                     </tr>';
                 }
             }
@@ -306,7 +308,8 @@ Silahkan klik link dibawah ini:
             'presence_group' => $presence_group,
             'datapg' => $datapg,
             'data_materi' => $data_materi,
-            'pelanggaran' => $pelanggaran
+            'pelanggaran' => $pelanggaran,
+            'sodaqoh' => $sodaqoh
         ]);
     }
 
