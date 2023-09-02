@@ -1,5 +1,7 @@
 - bulk whatsapp: view all contact, create grup ✅
 - after create sodaqoh, send WA ke ortu ✅
+- user, after exit_at send wa ke mahasiswa -> ucapan dan left group
+- report scheduler -> count read link
 
 
 all report: 

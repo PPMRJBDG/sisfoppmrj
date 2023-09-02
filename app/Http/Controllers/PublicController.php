@@ -169,14 +169,21 @@ Silahkan klik link dibawah ini sesuai angkatannya:
             $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
             $time_post = 1;
             foreach ($view_usantri as $vs) {
-                $create_report = ReportScheduler::create([
-                    'fkSantri_id' => $vs->santri_id,
-                    'link_url' => $setting->host_url . '/report/' . $vs->ids,
-                    'month' => date("m"),
-                    'status' => 0,
-                    'scheduler' => 0,
-                    'ids' => $vs->ids
-                ]);
+                $check_report = ReportScheduler::where('fkSantri_id', $vs->santri_id)->first();
+                if ($check_report == null) {
+                    $create_report = ReportScheduler::create([
+                        'fkSantri_id' => $vs->santri_id,
+                        'link_url' => $setting->host_url . '/report/' . $vs->ids,
+                        'month' => date("m"),
+                        'status' => 0,
+                        'scheduler' => 0,
+                        'ids' => $vs->ids
+                    ]);
+                } else {
+                    $check_report->month = date("m");
+                    $check_report->status = 0;
+                    $create_report = $check_report->save();
+                }
                 if ($create_report) {
                     $nohp = $vs->nohp_ortu;
                     if ($nohp != '') {
@@ -205,6 +212,11 @@ Silahkan klik link dibawah ini:
     {
         $rs = ReportScheduler::where('ids', $ids)->first();
         if ($rs != null) {
+            $last_update = date_format(date_create($rs->updated_at), "Y-m-d");
+            $today = date('Y-m-d');
+            if ($last_update != $today) {
+                $rs->count = $rs->count + 1;
+            }
             $rs->status = 1;
             $rs->save();
         }

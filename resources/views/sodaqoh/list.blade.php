@@ -64,11 +64,14 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                     <tr>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama</th>
                         <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Periode</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nominal</th>
                         <?php for ($i = 1; $i <= 12; $i++) { ?>
                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">{{$i}}</th>
                         <?php } ?>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Total</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Ket</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Terbayar</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kekurangan</th>
+                        <!-- <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Ket</th> -->
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,8 +84,14 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         <td>
                             {{ $data->periode }}
                         </td>
+                        <td>
+                            <a href="#" onclick="openSodaqoh({{$data->id}},'{{$data->periode}}','nominal',{{$data->fkSantri_id}})">
+                                {{ number_format($data->nominal,0) }}
+                            </a>
+                        </td>
                         <?php
                         $status_lunas = 0;
+                        $kekurangan = 0;
                         foreach ($bulan as $bl) {
                             $status_lunas = $status_lunas + intval($data->$bl);
                         ?>
@@ -91,6 +100,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </td>
                         <?php
                         }
+                        $kekurangan = $data->nominal - $status_lunas;
                         $text_error = '';
                         if (isset($data->periode)) {
                             if ($status_lunas < $data->nominal) {
@@ -99,10 +109,16 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         }
                         ?>
                         <td class="{{ $text_error }}">
-                            <b>{{ number_format($status_lunas,0) }}</b>
+                            <b>{{ $text_error == '' ? 'Lunas' : number_format($status_lunas,0) }}</b>
                         </td>
-                        <td>
+                        <td class="{{ $text_error }}">
+                            <b>{{ number_format($kekurangan,0) }}</b>
+                        </td>
+                        <!-- <td>
                             <a href="#" onclick="openSodaqoh({{$data->id}},'{{$data->periode}}','ket',{{$data->fkSantri_id}})">{{ ($data->keterangan!='') ? $data->keterangan : 'click' }}</a>
+                        </td> -->
+                        <td>
+                            <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                         </td>
                     </tr>
                     @endforeach
@@ -130,15 +146,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     function openSodaqoh(id, periode, bulan, idSantri) {
         if (bulan == 'ket') {
             var value = prompt("Masukkan keterangan sodaqoh!");
+        } else if (bulan == 'nominal') {
+            var value = prompt("Masukkan nominal sodaqoh!");
         } else {
             var value = prompt("Masukkan jumlah sodaqoh!");
         }
 
         if (value != null && value != "") {
-            if (bulan != 'ket') {
+            if (bulan != 'ket' && bulan != 'nominal') {
                 value = parseInt(value);
             }
-            if (Number.isInteger(value) || bulan == 'ket') {
+            if (Number.isInteger(value) || bulan == 'ket' || bulan == 'nominal') {
                 $.post("{{ route('store sodaqoh') }}", {
                         id: id,
                         periode: periode,

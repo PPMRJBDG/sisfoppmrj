@@ -165,7 +165,7 @@ class MsgtoolsController extends Controller
 
     public function report()
     {
-        $datax = ReportScheduler::where('status', 0)->get();
+        $datax = ReportScheduler::get();
 
         return view('msgtools.report', [
             'datax' => $datax

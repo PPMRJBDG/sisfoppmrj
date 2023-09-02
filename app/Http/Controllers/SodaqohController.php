@@ -32,8 +32,8 @@ class SodaqohController extends Controller
 
         if (($periode == '-' && $angkatan == '-') || ($periode == null && $angkatan == null)) {
             $datax = Sodaqoh::get();
-            $periode = null;
-            $angkatan = null;
+            $periode = '-';
+            $angkatan = '-';
         } elseif ($periode != '-' && $angkatan != '-') {
             $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
                 $query->where('angkatan', $angkatan);
@@ -73,6 +73,8 @@ class SodaqohController extends Controller
                 $bulan = $request->input('bulan');
                 if ($bulan == 'ket') {
                     $check->keterangan = $request->input('jumlah');
+                } elseif ($bulan == 'nominal') {
+                    $check->nominal = $request->input('jumlah');
                 } else {
                     if ($check->$bulan == null || $check->$bulan == "") {
                         $check->$bulan = 0;
@@ -80,7 +82,7 @@ class SodaqohController extends Controller
                     $check->$bulan = intval($check->$bulan) + intval($request->input('jumlah'));
                 }
                 if ($check->save()) {
-                    if ($bulan != 'ket') {
+                    if ($bulan != 'ket' && $bulan != 'nominal') {
                         $nohp = $check->santri->nohp_ortu;
                         if ($nohp != '') {
                             if ($nohp[0] == '0') {
@@ -121,5 +123,14 @@ class SodaqohController extends Controller
         } else {
             return json_encode(array("status" => false, "message" => 'Data tidak ditemukan'));
         }
+    }
+
+    public function delete($id, $periode, $angkatan)
+    {
+        $data = Sodaqoh::find($id);
+        if (!$data)
+            return redirect()->route('list periode sodaqoh', [$periode, $angkatan])->withErrors(['periode_not_found' => 'Sodaqoh tidak ditemukan.']);
+        $data->delete();
+        return redirect()->route('list periode sodaqoh', [$periode, $angkatan])->with('success', 'Berhasil menghapus sodaqoh');
     }
 }

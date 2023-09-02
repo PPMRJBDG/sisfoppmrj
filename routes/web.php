@@ -136,6 +136,7 @@ Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranControl
 
 // sodaqoh
 Route::get('/sodaqoh/list', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list sodaqoh')->middleware('role:ku|superadmin');
+Route::get('/sodaqoh/delete/{id}/{periode}/{angkatan}', [App\Http\Controllers\SodaqohController::class, 'delete'])->name('delete sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/sodaqoh/list/{periode}', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/sodaqoh/list/{periode}/{angkatan}', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::post('/sodaqoh/list/store', [App\Http\Controllers\SodaqohController::class, 'store'])->name('store sodaqoh')->middleware('role:ku|superadmin');
