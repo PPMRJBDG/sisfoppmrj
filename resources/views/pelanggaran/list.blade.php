@@ -97,7 +97,7 @@
                     @if(isset($list_pelanggaran))
                     @foreach($list_pelanggaran as $data)
                     <tr class="text-sm">
-                        <td onclick="getReport('<?php echo $data->santri->ids; ?>')" style="cursor:pointer;">
+                        <td onclick="getReport('<?php echo base64_encode($data->santri->id); ?>')" style="cursor:pointer;">
                             {{ $data->santri->user->fullname }}
                         </td>
                         <td>

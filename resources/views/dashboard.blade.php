@@ -113,7 +113,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-body p-2" id="h-report" style="height:auto;">
-                <iframe src="{{ url("/") }}/report/{{auth()->user()->santri->ids}}" style="width:100%;min-height:1200px;"></iframe>
+                <iframe src="{{ url("/") }}/report/{{base64_encode(auth()->user()->santri->id)}}" style="width:100%;min-height:1200px;"></iframe>
             </div>
         </div>
     </div>

@@ -66,7 +66,7 @@
               <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Edit</a>
               @endcan
             </td>
-            <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo $user->santri->ids; ?>')" style="cursor:pointer;">
+            <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')" style="cursor:pointer;">
               <div class="d-flex px-2 py-1">
                 <div>
                   <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
