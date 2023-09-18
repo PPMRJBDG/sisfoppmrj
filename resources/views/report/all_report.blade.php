@@ -374,7 +374,7 @@ if ($all_kbm > 0) {
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">ClKeluarose</button>
             </div>
         </div>
     </div>

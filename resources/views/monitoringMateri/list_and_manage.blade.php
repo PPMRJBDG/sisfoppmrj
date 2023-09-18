@@ -175,7 +175,7 @@ function printMateriOptions($materis, $santri)
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
             </div>
         </div>
     </div>

@@ -24,7 +24,7 @@ class WaSchedules
         
 ' . $setting->wa_footer;
         if ($time_post == null) {
-            $time_post = strtotime('+0 minutes');
+            $time_post = strtotime('+1 minutes');
         } else {
             $time_post = strtotime('+' . $time_post . ' minutes');
         }

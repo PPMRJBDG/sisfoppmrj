@@ -419,6 +419,7 @@ class UserController extends Controller
                         'fkLorong_id' => $request->input('fkLorong_id') ? $request->input('fkLorong_id') : null,
                         'join_at' => $request->input('join_at'),
                         'exit_at' => $request->input('exit_at') ? $request->input('exit_at') : null,
+                        'alasan_keluar' => $request->input('alasan_keluar'),
                     ]
                 );
 
@@ -466,7 +467,11 @@ class UserController extends Controller
                     }
                 }
             }
-            // exit;
+        }
+
+        // ucapan selamat dan arahan sesuai mekanisme
+        // cek sodaqoh, membawa barang, pamitan, SS, left group
+        if ($request->input('alasan_keluar') == 'Sudah Lulus') {
         }
 
         if ($request->input('role-santri'))

@@ -165,7 +165,9 @@ class MsgtoolsController extends Controller
 
     public function report()
     {
-        $datax = ReportScheduler::get();
+        $datax = ReportScheduler::whereHas('santri', function ($query) {
+            $query->whereNull('exit_at');
+        })->get();
 
         return view('msgtools.report', [
             'datax' => $datax

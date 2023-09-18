@@ -23,9 +23,21 @@ class Sodaqoh extends Model
         'okt',
         'nov',
         'des',
+        'jan_date',
+        'feb_date',
+        'mar_date',
+        'apr_date',
+        'mei_date',
+        'jun_date',
+        'jul_date',
+        'ags_date',
+        'sep_date',
+        'okt_date',
+        'nov_date',
+        'des_date',
         'status_lunas',
-        'status_rukhso',
-        'keterangan'
+        'keterangan',
+        'status_rukhso'
     ];
 
     public function santri()

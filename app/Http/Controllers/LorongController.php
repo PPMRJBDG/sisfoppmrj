@@ -56,8 +56,8 @@ class LorongController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:100',
-            'fkSantri_leaderId' => 'required|max:100|integer|exists:santris,id',
+            'name' => 'required',
+            'fkSantri_leaderId' => 'required|integer|exists:santris,id',
         ]);
 
         $santri = Santri::find($request->input('fkSantri_leaderId'));

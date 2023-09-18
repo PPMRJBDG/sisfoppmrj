@@ -168,7 +168,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Keluar</a>
                 <a type="button" id="send" class="btn btn-primary">Kirim</a>
             </div>
         </div>
@@ -193,7 +193,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a type="button" href="" id="close-group" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a type="button" href="" id="close-group" class="btn btn-secondary" data-dismiss="modal">Keluar</a>
                 <a type="button" id="add-group" class="btn btn-primary">Kirim</a>
             </div>
         </div>

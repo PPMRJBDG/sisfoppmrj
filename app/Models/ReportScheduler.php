@@ -12,7 +12,7 @@ class ReportScheduler extends Model
         'link_url',
         'month',
         'status',
-        'scheduler',
+        'count',
         'created_at',
         'updated_at',
         'ids'

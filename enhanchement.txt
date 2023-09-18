@@ -1,7 +1,16 @@
 - bulk whatsapp: view all contact, create grup ✅
 - after create sodaqoh, send WA ke ortu ✅
 - user, after exit_at send wa ke mahasiswa -> ucapan dan left group
-- report scheduler -> count read link
+- report scheduler -> count read link ✅
+- keuangan OP + payment
+- dibedakan link all report ✅
+- sodaqoh tambah field tanggal, ubah tampilan input
+- ngirim laporan kbm harian via japri sesuai angkatan, biar ngga bingung
+- registrasi camaba
+- mahasiswa yg perlu diperhatikan, dilihat dari ijin, kehadiran, materi
+- cek group, undefined, enregistered
+- field mahasiswa is_liburan
+- buat kbm liburan (bagi msh yg masih di ppm)
 
 
 all report: 
@@ -17,11 +26,102 @@ cron daily:
 
 cron weekly:
 - laporan presensi mingguan
-- jika all_ijin > 1/3 KBM diberi peringatan 
+- jika all_ijin > 1/3 KBM diberi peringatan -> kecuali magang / sakit lama
 
 cron monthly:
 - laporan all report ✅
 - jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban ✅
 
-LAIN 
-- keringanan biaya untuk mahasiswa MT, berapa persen dari nominal sodaqoh
+
+
+
+BELI PUTUS
+Website ✅
+Inventory ✅
+Purchasing ✅
+Sales ✅
+Accounting ✅
+POS ✅
+Employee & Payroll ❌ (70jt)
+e-Commerce ❌ (120jt)
+Integrasi Marketplace ❌ (15jt)
+
+a. Rp360.000.000,-
+b. Kustomisasi, Penyesuaian Selama Bispro 8 Bulan (4 Bulan Custom, 4 Bulan Garansi / Bug Fixing)
+c. Belum Termasuk Penyediaan Server 
+d. Free Training max 7 hari
+e. Kekurangan:
+- Belum Termasuk Penyediaan Server 
+- Jika ada bug / penambahan fitur setelah kontrak habis, akan menganggu dalam pencatatan sistem
+- Server tidak ter-manage (Semakin banyak dan bertambahnya transaksi, server harus dilakukan maintenance, backup data serta penjagaan dari serangan cracker/hacker)
+- Jika dilanjutkan developer lain, belum tentu memahami sistem existing
+f. (Opsional) Support Maintenance
+- (Apps) Developer Rp7.000.000,- / month
+- (Server) Security Engineer Rp9.000.000,- / month
+- Minor Bugs untuk modul existing
+- Diluar penambahan fitur baru
+
+============================
+
+BELI & SHARING PROFIT
+Website ✅
+Inventory ✅
+Purchasing ✅
+Sales ✅
+Accounting ✅
+POS ✅
+Employee & Payroll ✅
+e-Commerce ✅
+Integrasi Marketplace ✅ (sedang maintenance)
+
+- Rp90.000.000,-
+- Sharing Profit 3.500 / Transaksi (setelah launching)
+- Kustomisasi, Penyesuaian Bispro Selama 4 Bulan
+- Minimal Kontrak 3 Tahun
+- Penyediaan dan Perawatan Server Cloud Computing (Sys Admin, Backup Data)
+- Full Maintenance [Support & Service] (Penambahan fitur baru, reporting, data analytics dan pengelolaan yang linnya)
+
+=============================
+
+Info Server:
+a. Cloud Computing -> 
+- harga lebih terjangkau
+- sesuai kebutuhan
+b. Server on premise -> 
+- mahal (kisaran diatas 50juta, speks harus sedang keatas)
+- harus membeli sendiri semua infrastruktur server
+- tempat yang minim gempa dan listrik stabil
+
+Produk Lainnya, Escredia Studio (Marketing Platform For Social Network): Rp1.299.000,- / month
+- Whatsapp Bulk
+- (Instagram/Tiktok/Twitter) Schedule Posts
+- (Instagram/Tiktok/Twitter) Bulk Post
+
+
+PENAMBAHAN WK4:
+a. pendataan diikuti oleh wilayah timur secara offline, dan wilayah barat secara online
+b. sejarah dalam sejarah, diikutkan dalam pendataan untuk wk4
+c. isinya:
+- bismillahirrohmanirrohim
+- untuk membantu bp i dlm meramut jm, maka bp i akan menambah wk4, prosesnya minta pendapat, saran, masukan kepada 
+pinisepuh dan 4 pondok pusat
+- ini merupakan dasar hukum dari bp i, yg ditetapkan bp i, betul2 murni pendataan, mengerucut kepada beberapa 
+nama (bp im bisa saja punya hak menunjuk)
+- penunjukan kali ini dengan cara pendataan, dari pondok kediri, pondok gading, pondok kertosono, pondok gede
+- jika ada yg terpilih jangan ada yg ngomong: 
+"waaa itu cocok, sesuai pilihan saya"
+"waaa, itu udah pantes saja jadi wk4"
+"kenapa saya yg tidak terpilih"
+"jangan ada muka yg cemberut"
+- tidak ada imam dan wakil yang senior dan junior, semua amalsholih dan tanggungjawabnya sama
+- yang ditunjuk dan ada sk dari bp i:
+1. bp h jerry -> bp h abdul salam -> bp h nur hasan
+2. bp h hafiludin -> kida klaten
+3. bp h ahmad fawaz -> im pst -> bp h nur hasan
+4. bp h sabela rosyada -> bp h abdul salam -> bp h nur hasan
+
+REVO:
+- barangkali ada yg belum mendapatkan revo
+
+MUSYA PERSINAS:
+- 11 Sept 2023, 19:30 di BE

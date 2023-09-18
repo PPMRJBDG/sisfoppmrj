@@ -219,9 +219,14 @@ Silahkan klik link dibawah ini:
             }
             $rs->status = 1;
             $rs->save();
+
+            $santri = Santri::where('ids', $ids)->first();
+        } else {
+            $ids = base64_decode($ids);
+
+            $santri = Santri::find($ids);
         }
 
-        $santri = Santri::where('ids', $ids)->first();
         $santri_id = $santri->id;
 
         $tahun_bulan = DB::table('presences')

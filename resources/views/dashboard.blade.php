@@ -48,7 +48,7 @@
                 </thead>
                 <tbody>
                     @foreach($view_usantri as $vu)
-                    <tr data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" class="text-sm" onclick="getReport('<?php echo $vu->ids; ?>')" style="cursor:pointer;">
+                    <tr data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" class="text-sm" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')" style="cursor:pointer;">
                         <td>
                             [{{ $vu->angkatan }}] {{ $vu->fullname }}
                         </td>

@@ -278,12 +278,12 @@
               <label for="example-text-input" class="form-control-label">Alasan Keluar</label>
               <select class="form-control" name="alasan_keluar" id="alasan_keluar">
                 <option {{ isset($user->santri) && $user->santri->alasan_keluar=='0' ? 'selected' : '' }} value="0"></option>
-                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='1' ? 'selected' : '' }} value="1">Dikeluarkan Dengan Cara Hormat</option>
-                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='2' ? 'selected' : '' }} value="2">Dikeluarkan Karena SP3</option>
-                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='3' ? 'selected' : '' }} value="3">Pindah KPM</option>
-                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='4' ? 'selected' : '' }} value="4">Sudah Lulus</option>
-                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='5' ? 'selected' : '' }} value="5">Meninggal Dunia</option>
-                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='6' ? 'selected' : '' }} value="6">Lain-lain</option>
+                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Dikeluarkan Dengan Cara Hormat' ? 'selected' : '' }} value="Dikeluarkan Dengan Cara Hormat">Dikeluarkan Dengan Cara Hormat</option>
+                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Dikeluarkan Karena SP3' ? 'selected' : '' }} value="Dikeluarkan Karena SP3">Dikeluarkan Karena SP3</option>
+                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Pindah KPM' ? 'selected' : '' }} value="Pindah KPM">Pindah KPM</option>
+                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Sudah Lulus' ? 'selected' : '' }} value="Sudah Lulus">Sudah Lulus</option>
+                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Meninggal Dunia' ? 'selected' : '' }} value="Meninggal Dunia">Meninggal Dunia</option>
+                <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Lain-lain' ? 'selected' : '' }} value="Lain-lain">Lain-lain</option>
               </select>
             </div>
           </div>

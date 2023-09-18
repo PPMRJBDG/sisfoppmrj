@@ -203,7 +203,7 @@ function build_calendar($month, $year, $presences, $today)
         <a id="presence-modal-permit" href="" class="btn btn-outline-primary mt-3">Izin</a>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Keluar</button>
       </div>
     </div>
   </div>

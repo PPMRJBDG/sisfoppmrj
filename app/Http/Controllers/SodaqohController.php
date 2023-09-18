@@ -59,30 +59,25 @@ class SodaqohController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'periode' => 'required',
-            'bulan' => 'required',
-            'santri_id' => 'required',
-            'jumlah' => 'required',
-        ]);
-
         $check = Sodaqoh::find($request->input('id'));
+        $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
         if ($check) {
             // crosscheck
-            if ($check->fkSantri_id == $request->input('santri_id')) {
-                $bulan = $request->input('bulan');
-                if ($bulan == 'ket') {
-                    $check->keterangan = $request->input('jumlah');
-                } elseif ($bulan == 'nominal') {
-                    $check->nominal = $request->input('jumlah');
-                } else {
-                    if ($check->$bulan == null || $check->$bulan == "") {
-                        $check->$bulan = 0;
+            if ($check->fkSantri_id == $request->input('fkSantri_id')) {
+                $check->nominal = $request->input('nominal');
+                $check->keterangan = $request->input('keterangan');
+                foreach ($bulan as $b) {
+                    $c = $b . '_date';
+                    if ($request->input($b) != null) {
+                        $check->$b = $request->input($b);
                     }
-                    $check->$bulan = intval($check->$bulan) + intval($request->input('jumlah'));
+                    if ($request->input($c) != null) {
+                        $check->$c = $request->input($c);
+                    }
                 }
                 if ($check->save()) {
-                    if ($bulan != 'ket' && $bulan != 'nominal') {
+                    // kirim wa
+                    if ($request->input('info-wa') == "true") {
                         $nohp = $check->santri->nohp_ortu;
                         if ($nohp != '') {
                             if ($nohp[0] == '0') {
@@ -93,7 +88,6 @@ class SodaqohController extends Controller
                                 $query->where('name', 'NOT LIKE', '%Bulk%');
                             })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                             if ($wa_phone != null) {
-                                $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
                                 $terbayar = 0;
                                 foreach ($bulan as $b) {
                                     $terbayar = $terbayar + $check->$b;
@@ -113,6 +107,7 @@ class SodaqohController extends Controller
                             }
                         }
                     }
+                    // end kirim wa
                     return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
                 } else {
                     return json_encode(array("status" => false, "message" => 'Gagal diinput'));
