@@ -66,20 +66,20 @@ class WaSchedules
         WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id');
 
         // kirim ke koor lorong
-        $koor_lorong = Lorong::find($santri->fkLorong_id);
-        if ($koor_lorong != null && $setting != null) {
-            $nohp = $koor_lorong->leader->user->nohp;
-            if ($nohp != '') {
-                if ($nohp[0] == '0') {
-                    $nohp = '62' . substr($nohp, 1);
-                }
-                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                    $query->where('name', 'NOT LIKE', '%Bulk%');
-                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                if ($wa_phone != null) {
-                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $wa_phone->pid);
-                }
-            }
-        }
+        // $koor_lorong = Lorong::find($santri->fkLorong_id);
+        // if ($koor_lorong != null && $setting != null) {
+        //     $nohp = $koor_lorong->leader->user->nohp;
+        //     if ($nohp != '') {
+        //         if ($nohp[0] == '0') {
+        //             $nohp = '62' . substr($nohp, 1);
+        //         }
+        //         $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+        //             $query->where('name', 'NOT LIKE', '%Bulk%');
+        //         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+        //         if ($wa_phone != null) {
+        //             WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $wa_phone->pid, 2);
+        //         }
+        //     }
+        // }
     }
 }
