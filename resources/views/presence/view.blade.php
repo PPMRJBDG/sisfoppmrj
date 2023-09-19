@@ -114,7 +114,7 @@ foreach ($permits as $permit) {
     array_push($femalePermits, $permit);
 }
 ?>
-<div class="card mt-4">
+<!-- <div class="card mt-4">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
     <h6>Daftar hadir untuk WhatsApp</h6>
   </div>
@@ -143,5 +143,5 @@ foreach ($permits as $permit) {
 {{ sizeof($femalePermits) == 0 ? 'Tidak ada' : ''}}
       </textarea>
   </div>
-</div>
+</div> -->
 @include('base.end')
