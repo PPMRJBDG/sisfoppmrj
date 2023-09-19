@@ -60,7 +60,7 @@ class SodaqohController extends Controller
     public function store(Request $request)
     {
         $check = Sodaqoh::find($request->input('id'));
-        $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
+        $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sept', 'okt', 'nov', 'des'];
         if ($check) {
             // crosscheck
             if ($check->fkSantri_id == $request->input('fkSantri_id')) {
