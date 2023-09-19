@@ -220,14 +220,22 @@ class PresenceController extends Controller
         $presence = Presence::find($id);
 
         $presents = $presence->presents()
+            ->select('presents.*')
             ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
             ->join('users', 'users.id', '=', 'santris.fkUser_id')
             ->orderBy('users.fullname')
             ->get();
 
+        $update = true;
+        $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
+        $selisih = $selisih / 60 / 60 / 24;
+        if ($selisih > 3) {
+            $update = false;
+        }
+
         $permits = Permit::where('fkPresence_id', $id)->where('status', 'approved')->get();
 
-        return view('presence.view', ['presence' => $presence, 'permits' => $permits, 'presents' => $presents]);
+        return view('presence.view', ['presence' => $presence, 'permits' => $permits, 'presents' => $presents, 'update' => $update]);
     }
 
 

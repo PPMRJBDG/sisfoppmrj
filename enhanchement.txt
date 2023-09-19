@@ -11,6 +11,8 @@
 - cek group, undefined, enregistered
 - field mahasiswa is_liburan
 - buat kbm liburan (bagi msh yg masih di ppm)
+- create link presensi -> wa group ketertiban ⭐
+- bikin input presensi ngga bisa absen beberapa hari yg lalu ⭐
 
 
 all report: 

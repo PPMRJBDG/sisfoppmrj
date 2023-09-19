@@ -24,12 +24,14 @@
 <div class="card mt-4">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
     <h6>Daftar hadir</h6>
+    @if($update)
     @can('create presents')
     <a href="{{ route('create present', $presence->id) }}" class="btn btn-primary">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Tambah kehadiran
     </a>
     @endcan
+    @endif
   </div>
   <div class="card-body px-0 pt-0 pb-2">
     @if (session('successes'))
