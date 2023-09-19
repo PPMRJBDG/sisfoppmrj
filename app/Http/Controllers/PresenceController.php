@@ -744,51 +744,35 @@ class PresenceController extends Controller
         $santri = auth()->user()->santri;
         $lorong = null;
         $permits = Permit::query();
-
-        if ($santri) {
-            // get current user's lorong id
-            if (auth()->user()->hasRole('koor lorong'))
-                $lorong = Lorong::where('fkSantri_leaderId', $santri->id)->first();
-
-            // if pengabsen
-            if (auth()->user()->hasRole('pengabsen')) {
-                if ($santri->fkLorong_id != '') {
-                    $lorong = Lorong::where('fkSantri_leaderId', $santri->lorong->leader->id)->first();
-                }
-            }
-
-            if ($lorong) {
-                if (auth()->user()->hasRole('koor lorong'))
-                    $permits->whereHas('santri', function ($query) use ($lorong, $santri) {
-                        $query->where('fkLorong_id', '=', $lorong->id);
-                    });
-            }
-        }
-
         $tahun_bulan = DB::table('presences')
             ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
             ->groupBy('ym')
+            ->orderBy('ym', 'DESC')
             ->get();
         if ($tb == null || $tb == '-') {
             $tb = date('Y-m');
         }
 
-        // include all Koor lorongs if user has RJ1 role
-        if (auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
-            $permits->orWhereHas('santri', function ($query) {
-                $query->whereHas('user', function ($query2) {
-                    $query2->whereHas('roles', function ($query3) {
-                        $query3->where('name', '=', 'koor lorong');
-                    });
-                });
-            });
+        if ($santri) {
+            // get current user's lorong id
+            if (auth()->user()->hasRole('koor lorong'))
+                $lorong = Lorong::where('fkSantri_leaderId', $santri->id)->first();
+        }
 
-        // $permits = $permits->orderBy('created_at', 'DESC')->get();
         // get current santri
         $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
             ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
             ->orderBy('permits.created_at', 'DESC')
             ->get();
+        if ($lorong) {
+            if (auth()->user()->hasRole('koor lorong'))
+                $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                    ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
+                    ->where('santris.fkLorong_id', $lorong->id)
+                    ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+                    ->orderBy('permits.created_at', 'DESC')
+                    ->get();
+        }
 
         return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'tahun_bulan' => $tahun_bulan, 'tb' => $tb]);
     }
@@ -1168,12 +1152,21 @@ NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo';
             $usersWithSantri = User::whereHas('santri', function ($query) {
                 $query->whereNull('exit_at');
             })->orderBy('fullname')->get();
+        } elseif (auth()->user()->hasRole('koor lorong')) {
+            $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
+            if ($lorong) {
+                $usersWithSantri = User::whereHas('santri', function ($query) use ($lorong) {
+                    $query->whereNull('exit_at');
+                    $query->where('fkLorong_id', '=', $lorong->id);
+                })->orderBy('fullname')->get();
+            }
         } else {
             $usersWithSantri = User::whereHas('santri', function ($query) {
                 $query->where('id', '!=', auth()->user()->santri->id);
                 $query->whereNull('exit_at');
             })->orderBy('fullname')->get();
         }
+
         // $usersWithSantri = User::whereHas('santri', function($query) {
         //     $query->whereNull('exit_at');
         // })->orderBy('fullname')->get();

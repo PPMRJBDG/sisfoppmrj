@@ -4,7 +4,7 @@
 - report scheduler -> count read link ✅
 - keuangan OP + payment
 - dibedakan link all report ✅
-- sodaqoh tambah field tanggal, ubah tampilan input
+- sodaqoh tambah field tanggal, ubah tampilan input ✅
 - ngirim laporan kbm harian via japri sesuai angkatan, biar ngga bingung
 - registrasi camaba
 - mahasiswa yg perlu diperhatikan, dilihat dari ijin, kehadiran, materi
