@@ -31,8 +31,10 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
+            @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
             <label for="example-text-input" class="form-control-label">Pilih santri</label>
             <input type="text" id="search-fullname" class="form-control" placeholder="Cari nama...">
+            @endif
             <input type="hidden" id="santri-ids" name="santri-ids" class="form-control">
             <input type="hidden" id="late-santri-ids" name="late-santri-ids" class="form-control">
             <div id="santris-list" class="list-group mt-2">
@@ -50,6 +52,7 @@
               @endforeach
               <a current-user-lorong-member="true" santri-id="{{ $santri->id }}" class="unselected santris-list-item list-group-item list-group-item-action {{ $exist ? ($isLate ? 'list-group-item-warning' : 'list-group-item-success') : 'list-group-item-primary' }}" style="{{ $exist ? 'pointer-events: none' : '' }}">{{ $santri->user->fullname }} {{ $exist ? '(Sudah presensi)' : '' }}</a>
               @endforeach
+              <a current-user-lorong-member="true" santri-id="{{ auth()->user()->santri->id }}" class="unselected santris-list-item list-group-item list-group-item-action {{ $exist ? ($isLate ? 'list-group-item-warning' : 'list-group-item-success') : 'list-group-item-primary' }}" style="{{ $exist ? 'pointer-events: none' : '' }}">{{ auth()->user()->fullname }} {{ $exist ? '(Sudah presensi)' : '' }}</a>
               @endif
               @endif
 
