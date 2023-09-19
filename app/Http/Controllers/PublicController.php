@@ -58,6 +58,7 @@ class PublicController extends Controller
                     ->select('angkatan')
                     ->whereNull('exit_at')
                     ->groupBy('angkatan')
+                    ->orderBy('angkatan', 'ASC')
                     ->get();
 
                 $angkatan_caption = '';
@@ -71,7 +72,7 @@ class PublicController extends Controller
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
 
                 $caption = '
-Assalamualaikum Ayah Bunda, berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
+Berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
 Silahkan klik link dibawah ini sesuai angkatannya:
 
 ' . $angkatan_caption;
