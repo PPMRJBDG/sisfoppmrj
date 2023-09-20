@@ -1052,7 +1052,14 @@ Alasan: ' . $request->input('reason') . '
             
 Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
 
-            WaSchedules::insertToKetertiban($santri, $caption);
+            $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
+
+' . $lorong . '
+Presensi: ' . $presence->name . '
+Kategori: ' . $request->input('reason_category') . '
+Alasan: ' . $request->input('reason');
+
+            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
 
             return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {
@@ -1173,7 +1180,7 @@ Sampai: ' . $request->input('to_date') . '
             
 NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo';
 
-            WaSchedules::insertToKetertiban($santri, $caption);
+            WaSchedules::insertToKetertiban($santri, $caption, null);
 
             return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {

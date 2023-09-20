@@ -66,16 +66,18 @@ class WaSchedules
         WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id');
 
         // kirim ke ortu
-        $nohp_ortu = $santri->nohp_ortu;
-        if ($nohp_ortu != '') {
-            if ($nohp_ortu[0] == '0') {
-                $nohp_ortu = '62' . substr($nohp_ortu, 1);
-            }
-            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                $query->where('name', 'NOT LIKE', '%Bulk%');
-            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-            if ($wa_phone != null) {
-                WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption_ortu, $wa_phone->pid, 5);
+        if ($caption_ortu != null) {
+            $nohp_ortu = $santri->nohp_ortu;
+            if ($nohp_ortu != '') {
+                if ($nohp_ortu[0] == '0') {
+                    $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                }
+                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                if ($wa_phone != null) {
+                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption_ortu, $wa_phone->pid, 5);
+                }
             }
         }
 
