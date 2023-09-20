@@ -71,8 +71,7 @@ class PublicController extends Controller
                 }
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
 
-                $caption = '
-Berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
+                $caption = 'Berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
 Silahkan klik link dibawah ini sesuai angkatannya:
 
 ' . $angkatan_caption;

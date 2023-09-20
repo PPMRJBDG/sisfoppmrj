@@ -219,12 +219,26 @@ class PresenceController extends Controller
     {
         $presence = Presence::find($id);
 
-        $presents = $presence->presents()
-            ->select('presents.*')
-            ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
-            ->join('users', 'users.id', '=', 'santris.fkUser_id')
-            ->orderBy('users.fullname')
-            ->get();
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+            $presents = $presence->presents()
+                ->select('presents.*')
+                ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
+                ->join('users', 'users.id', '=', 'santris.fkUser_id')
+                ->orderBy('users.fullname')
+                ->get();
+        } else {
+            $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
+            $presents = null;
+            if ($lorong != null) {
+                $presents = $presence->presents()
+                    ->select('presents.*')
+                    ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
+                    ->join('users', 'users.id', '=', 'santris.fkUser_id')
+                    ->where('fkLorong_id', $lorong->id)
+                    ->orderBy('users.fullname')
+                    ->get();
+            }
+        }
 
         $update = true;
         $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);

@@ -144,12 +144,6 @@
           </div>
           <div class="col-md-4">
             <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Koor Lorong</label>
-              <input class="form-check-input" type="checkbox" name="role-koor-lorong" {{ $user->hasRole(['role-koor-lorong']) ? 'checked' : '' }}>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Divisi IT</label>
               <input class="form-check-input" type="checkbox" name="role-divisi-it" {{ $user->hasRole(['divisi it']) ? 'checked' : '' }}>
             </div>

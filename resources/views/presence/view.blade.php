@@ -23,7 +23,7 @@
 </div>
 <div class="card mt-4">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-    <h6>Daftar hadir</h6>
+    <h6>Daftar hadir: {{count($presents)}}</h6>
     @if($update)
     @can('create presents')
     <a href="{{ route('create present', $presence->id) }}" class="btn btn-primary">
@@ -71,10 +71,10 @@
                 </div>
               </div>
             </td>
-            <td>
+            <td class="text-sm">
               {{ $present->created_at }}
             </td>
-            <td>
+            <td class="text-sm">
               {{ $present->is_late ? 'Telat' : 'Tidak telat' }}
             </td>
             <td class="align-middle text-center text-sm">
@@ -116,34 +116,4 @@ foreach ($permits as $permit) {
     array_push($femalePermits, $permit);
 }
 ?>
-<!-- <div class="card mt-4">
-  <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-    <h6>Daftar hadir untuk WhatsApp</h6>
-  </div>
-  <div class="card-body pt-4 p-3 d-flex">
-    <textarea style="width:100%; min-height: 500px">
-*Laki-laki*
-@foreach($males as $male)
-{{ $male->santri->user->fullname }} {{ $male->is_late ? '(Telat)' : '' }}       
-@endforeach
-{{ sizeof($males) == 0 ? 'Tidak ada' : ''}}
-*Perempuan*
-@foreach($females as $female)
-{{ $female->santri->user->fullname }} {{ $female->is_late ? '(Telat)' : '' }}     
-@endforeach
-{{ sizeof($females) == 0 ? 'Tidak ada' : ''}}
---------------------
-*IZIN Laki-laki*
-@foreach($malePermits as $permit)
-{{ $permit->santri->user->fullname }} ({{ $permit->reason_category == 'dll' ? $permit->reason : $permit->reason_category }})        
-@endforeach
-{{ sizeof($malePermits) == 0 ? 'Tidak ada' : ''}}
-*IZIN Perempuan*
-@foreach($femalePermits as $permit)
-{{ $permit->santri->user->fullname }} ({{ $permit->reason_category == 'dll' ? $permit->reason : $permit->reason_category }})        
-@endforeach
-{{ sizeof($femalePermits) == 0 ? 'Tidak ada' : ''}}
-      </textarea>
-  </div>
-</div> -->
 @include('base.end')

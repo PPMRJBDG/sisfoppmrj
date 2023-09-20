@@ -65,7 +65,7 @@ class UserController extends Controller
             ->get();
         $list_role = DB::table('roles')
             ->select('id', 'name')
-            ->whereNotIn('name', ['dewan guru', 'koor lorong', 'ku', 'pengabsen', 'santri', 'superadmin'])
+            ->whereNotIn('name', ['dewan guru', 'ku', 'pengabsen', 'santri', 'superadmin'])
             ->get();
 
         $is_all = true;
@@ -401,13 +401,12 @@ class UserController extends Controller
         // handling role changes, only authorized are able to update
         if (auth()->user()->can('update users')) {
             if ($request->input('role-santri')) {
-                if ($user->santri && $request->input('fkLorong_id')) {
-                    // validate that picked santri is not a leader
-                    $lorongsUnderLead = Lorong::where('fkSantri_leaderId', $user->santri->id)->get();
-
-                    if (sizeof($lorongsUnderLead) >= 1)
-                        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['santri_already_a_leader' => 'Santri sudah menjadi koor lorong, tidak bisa menjadi anggota.']);
-                }
+                // if ($user->santri && $request->input('fkLorong_id')) {
+                // validate that picked santri is not a leader
+                // $lorongsUnderLead = Lorong::where('fkSantri_leaderId', $user->santri->id)->get();
+                // if (sizeof($lorongsUnderLead) >= 1)
+                //     return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['santri_already_a_leader' => 'Santri sudah menjadi koor lorong, tidak bisa menjadi anggota.']);
+                // }
 
                 $updated_santri = Santri::updateOrCreate(
                     ['fkUser_id' => $userIdToUpdate],
@@ -453,7 +452,7 @@ class UserController extends Controller
 
             $all_role = Role::get();
             foreach ($all_role as $vrl) {
-                if ($vrl->name != 'santri') {
+                if ($vrl->name != 'santri' && $vrl->name != 'koor lorong') {
                     $checkRole = Role::findByName($vrl->name);
                     if (!$checkRole)
                         return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['failed_giving_role' => 'User dan data santri berhasil diubah namun gagal menambah/menghapus role ' . $vrl->name . ' (Role ' . $vrl->name . ' tidak ditemukan). Ini fatal, harap hilangkan role ' . $vrl->name . ' dan tambahkan kembali atau hubungi developer.']);
@@ -467,6 +466,7 @@ class UserController extends Controller
                     }
                 }
             }
+            // exit;
         }
 
         // ucapan selamat dan arahan sesuai mekanisme
