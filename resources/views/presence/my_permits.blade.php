@@ -26,18 +26,18 @@
     <table id="table-izin" class="table align-items-center mb-0">
       <thead style="background-color:#f6f9fc;">
         <tr>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Presensi</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kategori Alasan</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" style="width:20%;">Alasan</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Pengajuan</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
-          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Presensi</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Kategori Alasan</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2" style="width:20%;">Alasan</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Waktu Pengajuan</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Status</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
         </tr>
       </thead>
       <tbody>
         @foreach($myPermits as $myPermit)
-        <tr>
+        <tr class="text-sm">
           <td>
             <div class="d-flex px-2 py-1">
               <div>
@@ -65,9 +65,9 @@
           </td>
           <td class="align-middle text-center text-sm">
             @if($myPermit->status=='approved')
-            <a href="{{ route('edit presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-primary btn-sm mb-0">Edit</a>
+            <a href="{{ route('edit presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-primary btn-xs mb-0">Edit</a>
             @endif
-            <a href="{{ route('delete my presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+            <a href="{{ route('delete my presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
           </td>
         </tr>
         @endforeach
@@ -102,19 +102,19 @@
     <table id="table-generator" class="table align-items-center mb-0">
       <thead style="background-color:#f6f9fc;">
         <tr>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Presensi</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Alasan</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Kategori Alasan</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Dari Tanggal</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sampai Tanggal</th>
-          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Presensi</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Alasan</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Kategori Alasan</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Dari Tanggal</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Sampai Tanggal</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
         </tr>
       </thead>
       <tbody>
         @isset($myRangedPermits)
         @foreach($myRangedPermits as $myRangedPermit)
-        <tr>
+        <tr class="text-sm">
           <td>
             <div class="d-flex px-2 py-1">
               <div>

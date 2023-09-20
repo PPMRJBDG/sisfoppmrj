@@ -65,6 +65,8 @@ Route::get('/presensi/{id}', [App\Http\Controllers\PresenceController::class, 'c
 Route::post('/presensi/{id}/store/me', [App\Http\Controllers\PresenceController::class, 'store_my_present'])->name('store my present')->middleware('role:santri');
 Route::post('/presensi/{id}/store', [App\Http\Controllers\PresenceController::class, 'store_present'])->name('store present')->middleware('permission:create presents');
 Route::get('/presensi/{id}/delete/{santriId}', [App\Http\Controllers\PresenceController::class, 'delete_present'])->name('delete present')->middleware('permission:delete presents');
+Route::get('/presensi/{id}/late/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_late'])->name('is late');
+Route::get('/presensi/{id}/notlate/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_not_late'])->name('is not late');
 
 // presence groups
 Route::get('/presensi/list/group/check-schedules', [App\Http\Controllers\PresenceController::class, 'check_schedules'])->name('check presence schedules');
@@ -154,6 +156,7 @@ Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::
 
 // report
 Route::get('/schedule/{time}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
+Route::get('/schedule/{time}/{presence_id}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
 Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
 Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
 

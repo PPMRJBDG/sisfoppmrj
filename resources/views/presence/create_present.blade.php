@@ -52,7 +52,6 @@
               @endforeach
               <a current-user-lorong-member="true" santri-id="{{ $santri->id }}" class="unselected santris-list-item list-group-item list-group-item-action {{ $exist ? ($isLate ? 'list-group-item-warning' : 'list-group-item-success') : 'list-group-item-primary' }}" style="{{ $exist ? 'pointer-events: none' : '' }}">{{ $santri->user->fullname }} {{ $exist ? '(Sudah presensi)' : '' }}</a>
               @endforeach
-              <a current-user-lorong-member="true" santri-id="{{ auth()->user()->santri->id }}" class="unselected santris-list-item list-group-item list-group-item-action {{ $exist ? ($isLate ? 'list-group-item-warning' : 'list-group-item-success') : 'list-group-item-primary' }}" style="{{ $exist ? 'pointer-events: none' : '' }}">{{ auth()->user()->fullname }} {{ $exist ? '(Sudah presensi)' : '' }}</a>
               @endif
               @endif
 

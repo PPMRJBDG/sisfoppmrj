@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WaSchedules;
 use App\Helpers\CommonHelpers;
+use App\Helpers\PresenceGroupsChecker;
 use App\Models\Presence;
+use App\Models\Present;
 use App\Models\Permit;
 use App\Models\User;
 use App\Models\Settings;
@@ -24,7 +26,7 @@ class PublicController extends Controller
     // 0 8 * * * https://sisfo.ppmrjbandung.com/schedule/daily
     // 0 6 1 * * https://sisfo.ppmrjbandung.com/schedule/monthly
 
-    public function schedule($time)
+    public function schedule($time, $presence_id = null)
     {
         $setting = Settings::find(1);
         $contact_id = $setting->wa_ortu_group_id;
@@ -205,6 +207,33 @@ Silahkan klik link dibawah ini:
             }
 
             echo json_encode(['status' => true, 'message' => 'success running scheduler']);
+        }
+
+        // LINK PRESENSI
+        elseif ($time == 'presence') {
+            PresenceGroupsChecker::checkPresenceGroups();
+            $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->first();
+            if ($get_presence_today != null) {
+                $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
+                foreach ($view_usantri as $mhs) {
+                    $permit = Permit::where('fkPresence_id', $get_presence_today->id)->where('fkSantri_id', $mhs->santri_id)->where('status', 'approved')->first();
+                    if (!$permit) {
+                        $existingPresent = Present::where('fkPresence_id', '=', $get_presence_today->id, 'and')->where('fkSantri_id', '=', $mhs->santri_id)->first();
+                        if (!$existingPresent) {
+                            $inserted = Present::create([
+                                'fkSantri_id' => $mhs->santri_id,
+                                'fkPresence_id' => $get_presence_today->id,
+                                'is_late' => 0
+                            ]);
+                        }
+                    }
+                }
+
+                $contact_id = 'wa_ketertiban_group_id';
+                $caption = 'Link Presensi ' . $get_presence_today->name . ':
+' . $setting->host_url . '/presensi/list/' . $get_presence_today->id;
+                WaSchedules::save('Link Presensi', $caption, $contact_id);
+            }
         }
     }
 

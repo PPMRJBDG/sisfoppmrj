@@ -26,7 +26,7 @@
     <h6>Daftar hadir: {{count($presents)}}</h6>
     @if($update)
     @can('create presents')
-    <a href="{{ route('create present', $presence->id) }}" class="btn btn-primary">
+    <a href="{{ route('create present', $presence->id) }}" class="btn btn-primary mb-0">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Tambah kehadiran
     </a>
@@ -48,37 +48,29 @@
       </div>
     </div>
     @endif
-    <div class="table-responsive p-0">
-      <table class="table align-items-center mb-0">
+    <div class="table-responsive p-2">
+      <table id="table" class="table align-items-center mb-0">
         <thead>
           <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Waktu Presensi</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
           </tr>
         </thead>
         <tbody>
           @foreach($presents as $present)
           <tr>
-            <td>
-              <div class="d-flex px-2 py-1">
-                <div>
-                  <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
-                </div>
-                <div class="d-flex flex-column justify-content-center">
-                  <h6 class="mb-0 text-sm">{{ $present->santri->user->fullname }}</h6>
-                </div>
-              </div>
-            </td>
             <td class="text-sm">
-              {{ $present->created_at }}
-            </td>
-            <td class="text-sm">
-              {{ $present->is_late ? 'Telat' : 'Tidak telat' }}
+              <b>{{ $present->santri->user->fullname }}</b>
+              <br>
+              <small>{{ $present->created_at }} | <b>{{ $present->is_late ? 'Telat' : 'Tidak telat' }}</b></small>
             </td>
             <td class="align-middle text-center text-sm">
-              <a class="btn btn-danger btn-sm" href="{{ route('delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+              <a class="btn btn-danger btn-xs mb-0" href="{{ route('delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin menghapus?')">Alpha</a>
+              @if($present->is_late)
+              <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a>
+              @else
+              <a class="btn btn-warning btn-xs mb-0" href="{{ route('is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a>
+              @endif
             </td>
           </tr>
           @endforeach
@@ -87,6 +79,40 @@
     </div>
   </div>
 </div>
+@if(count($permits)>0)
+<div class="card mt-2">
+  <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+    <h6>Daftar ijin: {{count($permits)}}</h6>
+  </div>
+
+  <div class="table-responsive p-2">
+    <table class="table align-items-center mb-0">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach($permits as $permit)
+        <tr>
+          <td class="text-sm">
+            <b>{{ $permit->santri->user->fullname }}</b>
+          </td>
+          <td class="align-middle text-center text-sm">
+            @if($permit->status=='approved')
+            <a class="btn btn-primary btn-xs mb-0" href="#">{{ $permit->status }}</a>
+            @else
+            <a class="btn btn-danger btn-xs mb-0" href="#">{{ $permit->status }}</a>
+            @endif
+          </td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
+  </div>
+</div>
+@endif
 @else
 <div class="card">
   <div class="card-body pt-4 p-3">
@@ -95,25 +121,11 @@
 </div>
 @endif
 
-<?php
-$males = [];
-$females = [];
-
-foreach ($presents as $present) {
-  if ($present->santri->user->gender == 'male')
-    array_push($males, $present);
-  else
-    array_push($females, $present);
-}
-
-$malePermits = [];
-$femalePermits = [];
-
-foreach ($permits as $permit) {
-  if ($permit->santri->user->gender == 'male')
-    array_push($malePermits, $permit);
-  else
-    array_push($femalePermits, $permit);
-}
-?>
+<script>
+  $('#table').DataTable({
+    order: [
+      // [1, 'desc']
+    ]
+  });
+</script>
 @include('base.end')

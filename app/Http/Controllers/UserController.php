@@ -415,7 +415,7 @@ class UserController extends Controller
                         'nohp_ortu' => $request->input('nohp_ortu'),
                         'angkatan' => $request->input('angkatan'),
                         'nis' => $request->input('nis'),
-                        'fkLorong_id' => $request->input('fkLorong_id') ? $request->input('fkLorong_id') : null,
+                        'fkLorong_id' => $request->input('exit_at') ? null : $request->input('fkLorong_id'),
                         'join_at' => $request->input('join_at'),
                         'exit_at' => $request->input('exit_at') ? $request->input('exit_at') : null,
                         'alasan_keluar' => $request->input('alasan_keluar'),

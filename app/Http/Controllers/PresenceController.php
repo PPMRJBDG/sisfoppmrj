@@ -240,14 +240,25 @@ class PresenceController extends Controller
             }
         }
 
+        // ijin berdasarkan lorong masing2
+        $arr_santri = [];
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+            $permits = Permit::where('fkPresence_id', $id)->get();
+        } elseif (auth()->user()->santri != '') {
+            if (auth()->user()->santri->lorongUnderLead) {
+                foreach (auth()->user()->santri->lorongUnderLead->members as $santri) {
+                    $arr_santri[] = $santri->id;
+                }
+            }
+            $permits = Permit::where('fkPresence_id', $id)->whereIn('fkSantri_id', $arr_santri)->get();
+        }
+
         $update = true;
         $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
         $selisih = $selisih / 60 / 60 / 24;
         if ($selisih > 3) {
             $update = false;
         }
-
-        $permits = Permit::where('fkPresence_id', $id)->where('status', 'approved')->get();
 
         return view('presence.view', ['presence' => $presence, 'permits' => $permits, 'presents' => $presents, 'update' => $update]);
     }
@@ -744,6 +755,38 @@ class PresenceController extends Controller
         return redirect()->route('view presence', $id)->with('success', 'Berhasil menghapus presensi');
     }
 
+    public function is_late($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+
+        if ($present) {
+            $present->delete();
+            Present::create([
+                'fkSantri_id' => $santriId,
+                'fkPresence_id' => $id,
+                'is_late' => 1
+            ]);
+        }
+
+        return redirect()->route('view presence', $id)->with('success', 'Berhasil mengubah telat');
+    }
+
+    public function is_not_late($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+
+        if ($present) {
+            $present->delete();
+            Present::create([
+                'fkSantri_id' => $santriId,
+                'fkPresence_id' => $id,
+                'is_late' => 0
+            ]);
+        }
+
+        return redirect()->route('view presence', $id)->with('success', 'Berhasil mengubah telat');
+    }
+
 
     // ============ PERMIT ============
 
@@ -976,8 +1019,11 @@ class PresenceController extends Controller
         // check whether the person is present at that presence
         $existingPresent = Present::where('fkPresence_id', $request->input('fkPresence_id'))->where('fkSantri_id', $santri->id)->first();
 
-        if (isset($existingPresent))
-            return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
+        if (isset($existingPresent)) {
+            $del = Present::where('fkPresence_id', $request->input('fkPresence_id'))->where('fkSantri_id', $santri->id);
+            $del->delete();
+            // return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
+        }
 
         $ids = uniqid();
         $inserted = false;
@@ -1222,8 +1268,11 @@ NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo';
         // check whether the person is present at that presence
         $existingPresent = Present::where('fkPresence_id', $request->input('fkPresence_id'))->where('fkSantri_id', $santriId)->first();
 
-        if (isset($existingPresent))
-            return redirect()->route('create presence permit')->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
+        if (isset($existingPresent)) {
+            $del = Present::where('fkPresence_id', $request->input('fkPresence_id'))->where('fkSantri_id', $santriId);
+            $del->delete();
+            // return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
+        }
 
         $ids = uniqid();
         $inserted = Permit::create([
@@ -1252,7 +1301,14 @@ Alasan: ' . $request->input('reason') . '
             
 Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
 
-            WaSchedules::insertToKetertiban($santri, $caption);
+            $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
+
+' . $lorong . '
+Presensi: ' . $presence->name . '
+Kategori: ' . $request->input('reason_category') . '
+Alasan: ' . $request->input('reason');
+
+            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
 
             return redirect()->route('presence permit approval')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {
