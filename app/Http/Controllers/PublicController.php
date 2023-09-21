@@ -109,11 +109,11 @@ Alpha: ' . count($mhs_alpha) . '
 ';
                             }
                         }
-                        $caption = $caption . '
-NB:
-- Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus';
                     }
                 }
+                $caption = $caption . '
+NB:
+- Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus';
 
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
                 if ($contact_id != '') {
@@ -278,7 +278,7 @@ Besok pukul 14:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
         } elseif ($time == 'jam-malam') {
             $contact_id = 'wa_ketertiban_group_id';
             $caption = '*Waktu sudah menunjukan pukul 22:50*, waktunya mengingatkan:
-            
+
 - Kepada rekan-rekan yang masih berada di luar lingkungan PPM untuk bisa segera kembali ke PPM
 - Segera istirahat, tidak ada keributan yang mengganggu tetangga sebelah
 - Piket jaga malam sesuai tugas amalsholihnya
