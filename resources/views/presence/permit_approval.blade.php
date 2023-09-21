@@ -3,13 +3,13 @@
 <div class="card">
   <div class="card-header p-2 align-items-center" style="background-color:#f6f9fc;">
     @role('koor lorong|superadmin')
-    <a href="{{ route('create presence permit') }}" class="btn btn-primary m-2" style="float:right;">
+    <a href="{{ route('create presence permit') }}" class="btn btn-primary m-2 mb-0" style="float:right;">
       <i class="fas fa-plus" aria-hidden="true"></i> Buat izin
     </a>
     @endrole
     <div class="row">
-      <div class="col-3">
-        Pilih Tahun-Bulan
+      <div class="col-sm-6 col-md-3 ps-0">
+        <small>Pilih Tahun-Bulan</small>
         <select class="select_tb form-control mb-3" name="select_tb" id="select_tb">
           <option value="-">Silahkan Pilih</option>
           @foreach($tahun_bulan as $tbx)
@@ -44,10 +44,8 @@
       <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Alasan</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Alasan</th>
           </tr>
         </thead>
         <tbody>
@@ -55,28 +53,22 @@
           @foreach($permits as $permit)
           <tr class="text-sm">
             <td>
-              <div class=" d-flex px-2 py-1">
-                <div>
-                  <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-xs me-3" alt="user1">
-                </div>
-                <div class="d-flex flex-column justify-content-center font-weight-bolder">
-                  {{ $permit->santri->user->fullname }}
-                </div>
-              </div>
-            </td>
-            <td>
-              <i><b>{{ $permit->presence->name }}</b></i>
+              <b>{{ $permit->santri->user->fullname }}</b>
               <br>
-              <span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span> {{ $permit->reason }}
-            </td>
-            <td>
-              {{ $permit->updated_at }}
+              <span class="text-xxs">{{ $permit->updated_at }}</span>
               <br>
               <span class="badge {{ $permit->status == 'pending' ? 'bg-gradient-secondary' : ($permit->status == 'approved' ? 'bg-gradient-success' : ($permit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($permit->status) }}</span>
             </td>
-            <td class="align-middle text-center">
+            <td class="text-xs">
+              <i><b>{{ $permit->presence->name }}</b></i>
+              <br>
+              <div class="mt-1 mb-1"><span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span> {{ $permit->reason }}</div>
+
+              @if($permit->status=='rejected' || $permit->status=='pending')
               <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a>
+              @elseif($permit->status=='approved')
               <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a>
+              @endif
               <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a>
             </td>
             @endforeach

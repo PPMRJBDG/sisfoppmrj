@@ -157,6 +157,7 @@ function build_calendar($month, $year)
               <option value="Kontrol Sakit">Kontrol Sakit</option>
               <option value="Opname">Opname</option>
               <option value="Tugas">Tugas</option>
+              <option value="Musyawarah">Musyawarah</option>
               <option value="Kuliah Malam">Kuliah Malam</option>
               <option value="Praktikum Malam">Praktikum Malam</option>
               <option value="Jaga Malam">Jaga Malam</option>

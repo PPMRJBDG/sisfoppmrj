@@ -4,6 +4,10 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\ModelHasRole;
+use App\Models\Presence;
+use App\Models\Permit;
+use App\Models\Present;
+use App\Models\Lorong;
 
 class CountDashboard
 {
@@ -92,5 +96,112 @@ class CountDashboard
                     </div>';
 
         return $content_body;
+    }
+
+    public static function total_mhs($for)
+    {
+        if ($for == 'all') {
+            $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
+        } elseif ($for == 'lorong') {
+            if (auth()->user()->santri->lorongUnderLead) {
+                $view_usantri = auth()->user()->santri->lorongUnderLead->members;
+            }
+        }
+        return count($view_usantri);
+    }
+
+    public static function mhs_hadir($presence_id, $for)
+    {
+        $presence = Presence::find($presence_id);
+        $presents = null;
+
+        if ($for == 'all') {
+            if ($presence != null) {
+                $presents = $presence->presents()
+                    ->select('presents.*')
+                    ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
+                    ->join('users', 'users.id', '=', 'santris.fkUser_id')
+                    ->orderBy('users.fullname')
+                    ->get();
+            }
+        } elseif ($for == 'lorong') {
+            $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
+            if ($lorong != null) {
+                $presents = $presence->presents()
+                    ->select('presents.*')
+                    ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
+                    ->join('users', 'users.id', '=', 'santris.fkUser_id')
+                    ->where('fkLorong_id', $lorong->id)
+                    ->orderBy('users.fullname')
+                    ->get();
+            }
+        }
+
+        return $presents;
+    }
+
+    public static function mhs_ijin($presence_id, $for)
+    {
+        $arr_santri = [];
+        if ($for == 'all') {
+            $permits = Permit::where('fkPresence_id', $presence_id)->where('status', 'approved')->get();
+        } elseif ($for == 'lorong') {
+            if (auth()->user()->santri->lorongUnderLead) {
+                foreach (auth()->user()->santri->lorongUnderLead->members as $santri) {
+                    $arr_santri[] = $santri->id;
+                }
+            }
+            $permits = Permit::where('fkPresence_id', $presence_id)->where('status', 'approved')->whereIn('fkSantri_id', $arr_santri)->get();
+        }
+
+        return $permits;
+    }
+
+    public static function mhs_alpha($presence_id, $for)
+    {
+        $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
+
+        $mhs_alpha = array();
+        if ($for == 'all') {
+            foreach ($view_usantri as $mhs) {
+                $check_alpha = Present::where('fkPresence_id', $presence_id)
+                    ->where('fkSantri_id', $mhs->santri_id)
+                    ->first();
+                if ($check_alpha == null) {
+                    $check_permit = Permit::where('fkPresence_id', $presence_id)
+                        ->where('status', 'approved')
+                        ->where('fkSantri_id', $mhs->santri_id)->first();
+                    if ($check_permit == null) {
+                        $mhs_alpha[$mhs->santri_id]['presence_id'] = $presence_id;
+                        $mhs_alpha[$mhs->santri_id]['santri_id'] = $mhs->santri_id;
+                        $mhs_alpha[$mhs->santri_id]['name'] = $mhs->fullname;
+                        $mhs_alpha[$mhs->santri_id]['angkatan'] = $mhs->angkatan;
+                        $mhs_alpha[$mhs->santri_id]['nohp_ortu'] = $mhs->nohp_ortu;
+                    }
+                }
+            }
+        } elseif ($for == 'lorong') {
+            if (auth()->user()->santri->lorongUnderLead) {
+                foreach (auth()->user()->santri->lorongUnderLead->members as $mhs) {
+                    $check_alpha = Present::where('fkPresence_id', $presence_id)
+                        ->where('fkSantri_id', $mhs->id)
+                        ->first();
+                    if ($check_alpha == null) {
+                        $check_permit = Permit::where('fkPresence_id', $presence_id)
+                            ->where('status', 'approved')
+                            ->where('fkSantri_id', $mhs->id)->first();
+                        if ($check_permit == null) {
+                            $mhs_alpha[$mhs->id]['presence_id'] = $presence_id;
+                            $mhs_alpha[$mhs->id]['santri_id'] = $mhs->id;
+                            $mhs_alpha[$mhs->id]['name'] = $mhs->user->fullname;
+                            $mhs_alpha[$mhs->id]['angkatan'] = $mhs->angkatan;
+                            $mhs_alpha[$mhs->id]['nohp_ortu'] = $mhs->nohp_ortu;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $mhs_alpha;
     }
 }

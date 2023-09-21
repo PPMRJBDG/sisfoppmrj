@@ -1,28 +1,32 @@
 @include('base.start', ['path' => 'user/list/santri', 'title' => 'Daftar User', 'breadcrumbs' => ['Daftar User']])
 <div class="card">
   <?php echo $count_dashboard; ?>
-  <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
-    <div class="p-2 d-flex">
-      <select class="angkatan-list form-control ms-4" name="" id="angkatan-list">
-        <option value="-">Filter angkatan</option>
-        @foreach($list_angkatan as $angkatan)
-        <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
-        @endforeach
-      </select>
-      <select class="role-list form-control ms-4" name="" id="role-list">
-        <option value="-">Filter role</option>
-        @foreach($list_role as $vrole)
-        <option {{ ($select_role == $vrole->id) ? 'selected' : '' }} value="{{$vrole->id}}">{{$vrole->name}}</option>
-        @endforeach
-      </select>
-    </div>
-    <h6 class="mb-0">Data Mahasiswa {{$select_angkatan}}</h6>
+  <div class="card-header pb-0 p-3">
     @can('create users')
-    <a href="{{ route('create user') }}" class="btn btn-primary mb-0">
+    <a href="{{ route('create user') }}" class="btn btn-primary form-control mb-2">
       <i class="fas fa-plus" aria-hidden="true"></i>
-      Buat user
+      Buat User
     </a>
     @endcan
+    <h6 class="mt-1 mb-2 text-center text-sm">Data Mahasiswa {{$select_angkatan}}</h6>
+    <div class="row">
+      <div class="col-6 col-sm-6">
+        <select class="angkatan-list form-control" name="" id="angkatan-list">
+          <option value="-">Filter angkatan</option>
+          @foreach($list_angkatan as $angkatan)
+          <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="col-6 col-sm-6">
+        <select class="role-list form-control" name="" id="role-list">
+          <option value="-">Filter role</option>
+          @foreach($list_role as $vrole)
+          <option {{ ($select_role == $vrole->id) ? 'selected' : '' }} value="{{$vrole->id}}">{{$vrole->name}}</option>
+          @endforeach
+        </select>
+      </div>
+    </div>
   </div>
   <div class="card-body p-3">
     @if (session('success'))

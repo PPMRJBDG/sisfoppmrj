@@ -1,5 +1,5 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
-{{ auth()->user()->hasRole('koor lorong') }}
+
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
 <div class="card shadow-lg">
     <div class="card-body">
@@ -110,14 +110,10 @@
 </div>
 @elseif(auth()->user()->hasRole('santri'))
 <div class="row mt-2 mb-2">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body p-2" id="h-report" style="height:auto;">
-                <iframe src="{{ url("/") }}/report/{{base64_encode(auth()->user()->santri->id)}}" style="width:100%;min-height:1200px;"></iframe>
-            </div>
-        </div>
+    <div class="col-12">
+        <a href="#" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" class="btn btn-warning form-control">Lihat Report</a>
     </div>
-    <div class="col-md-8">
+    <div class="col-12">
         <div class="p-0 d-flex">
             <select class="select_tb form-control" name="select_tb" id="select_tb">
                 <option value="-">Keseluruhan</option>
@@ -128,10 +124,10 @@
         </div>
         <div class="row mt-2">
             @foreach($presence_group as $pg)
-            <div class="col-md-4">
-                <div class="card">
+            <div class="col-12 mb-2">
+                <div class="card shadow-lg">
                     <div class="card-body p-2 text-center">
-                        <h6>
+                        <h6 class="text-sm font-weight-bolder">
                             {{$pg->name}}
                             (<?php
                                 if ($datapg[$pg->id]['loopr'] != 0) {
@@ -144,10 +140,10 @@
                         <div class="table-responsive">
                             <table class="table align-items-center mb-0">
                                 <thead>
-                                    <tr>
-                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">TGL</th>
-                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">STATUS</th>
-                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">TELAT</th>
+                                    <tr class="text-xs">
+                                        <th class="text-uppercase text-secondary font-weight-bolder">TGL</th>
+                                        <th class="text-uppercase text-secondary font-weight-bolder">STATUS</th>
+                                        <th class="text-uppercase text-secondary font-weight-bolder">TELAT</th>
                                     </tr>
                                 </thead>
                                 <tbody>

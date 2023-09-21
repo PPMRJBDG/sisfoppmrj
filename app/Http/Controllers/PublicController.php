@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WaSchedules;
 use App\Helpers\CommonHelpers;
+use App\Helpers\CountDashboard;
 use App\Helpers\PresenceGroupsChecker;
 use App\Models\Presence;
 use App\Models\Present;
@@ -56,28 +57,65 @@ class PublicController extends Controller
             // bulk presensi harian ke wa group ortu
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
-                $list_angkatan = DB::table('santris')
-                    ->select('angkatan')
-                    ->whereNull('exit_at')
-                    ->groupBy('angkatan')
-                    ->orderBy('angkatan', 'ASC')
-                    ->get();
+                //                 $list_angkatan = DB::table('santris')
+                //                     ->select('angkatan')
+                //                     ->whereNull('exit_at')
+                //                     ->groupBy('angkatan')
+                //                     ->orderBy('angkatan', 'ASC')
+                //                     ->get();
 
-                $angkatan_caption = '';
-                foreach ($list_angkatan as $la) {
-                    $angkatan_caption = $angkatan_caption . '*Angkatan ' . $la->angkatan . '*
-';
-                    $angkatan_caption = $angkatan_caption . CommonHelpers::settings()->host_url . '/daily/' . date_format(date_create($yesterday), "Y/m/d") . '/' . $la->angkatan . '
+                //                 $angkatan_caption = '';
+                //                 foreach ($list_angkatan as $la) {
+                //                     $angkatan_caption = $angkatan_caption . '*Angkatan ' . $la->angkatan . '*
+                // ';
+                //                     $angkatan_caption = $angkatan_caption . CommonHelpers::settings()->host_url . '/daily/' . date_format(date_create($yesterday), "Y/m/d") . '/' . $la->angkatan . '
+
+                // ';
+                //                 }
+
+                //                 $caption = 'Berikut kami informasikan daftar kehadiran pada hari *' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '*.
+                // Silahkan klik link dibawah ini sesuai angkatannya:
+
+                // ' . $angkatan_caption;
+
+                $caption = 'Berikut kami informasikan daftar kehadiran pada hari *' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '*.
+
+*Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
+                $get_presence = Presence::where('event_date', $yesterday)->get();
+                if (count($get_presence) > 0) {
+                    foreach ($get_presence as $presence) {
+                        // hadir
+                        $presents = CountDashboard::mhs_hadir($presence->id, 'all');
+
+                        // ijin berdasarkan lorong masing2
+                        $permits = CountDashboard::mhs_ijin($presence->id, 'all');
+
+                        // alpha
+                        $mhs_alpha = CountDashboard::mhs_alpha($presence->id, 'all');
+
+                        $caption = $caption . '
+________________________
+*_' . $presence->name . '_*
+Hadir: ' . count($presents) . '
+Ijin: ' . count($permits) . '
+Alpha: ' . count($mhs_alpha) . '
 
 ';
+                        if (count($mhs_alpha) > 0) {
+                            $caption = $caption . '*Daftar Mahasiswa Alpha*
+';
+                            foreach ($mhs_alpha as $d) {
+                                $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
+';
+                            }
+                        }
+                        $caption = $caption . '
+NB:
+- Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus';
+                    }
                 }
+
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
-
-                $caption = 'Berikut kami informasikan daftar kehadiran pada hari ' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '.
-Silahkan klik link dibawah ini sesuai angkatannya:
-
-' . $angkatan_caption;
-
                 if ($contact_id != '') {
                     $insert = WaSchedules::save($name, $caption, $contact_id);
                     if ($insert) {
@@ -230,10 +268,25 @@ Silahkan klik link dibawah ini:
                 }
 
                 $contact_id = 'wa_ketertiban_group_id';
-                $caption = 'Link Presensi ' . $get_presence_today->name . ':
-' . $setting->host_url . '/presensi/list/' . $get_presence_today->id;
+                $caption = 'Link Presensi *' . $get_presence_today->name . '*:
+' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
+
+Amalsholih dicek kembali, yang *Tidak Hadir* diubah jadi alpha.
+Besok pukul 14:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
                 WaSchedules::save('Link Presensi', $caption, $contact_id);
             }
+        } elseif ($time == 'jam-malam') {
+            $contact_id = 'wa_ketertiban_group_id';
+            $caption = '*Waktu sudah menunjukan pukul 22:50*, waktunya mengingatkan:
+            
+- Kepada rekan-rekan yang masih berada di luar lingkungan PPM untuk bisa segera kembali ke PPM
+- Segera istirahat, tidak ada keributan yang mengganggu tetangga sebelah
+- Piket jaga malam sesuai tugas amalsholihnya
+- Mematikan Wifi
+- Mematikan listrik yang tidak digunakan
+- Mengecek gerbang
+- *Evaluasi diri agar besok menjadi pribadi yang lebih baik dan faham lagi :)*';
+            WaSchedules::save('Jam Malam ' . date('d-m-Y'), $caption, $contact_id);
         }
     }
 

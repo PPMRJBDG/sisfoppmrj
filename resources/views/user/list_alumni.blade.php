@@ -2,14 +2,14 @@
 <div class="card">
   <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
     <div class="p-2">
-      <select class="angkatan-list form-control ms-4" name="" id="">
+      <select class="angkatan-list form-control" name="" id="">
         <option value="">Filter angkatan</option>
         @foreach($list_angkatan as $angkatan)
         <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
         @endforeach
       </select>
     </div>
-    <h6 class="mb-0">{{ count($users) }} Data Alumni {{ $select_angkatan }}</h6>
+    <h6 class="mb-0 text-sm">{{ count($users) }} Data Alumni {{ $select_angkatan }}</h6>
     <!-- @can('create users')
     <a href="{{ route('create user') }}" class="btn btn-primary">
       <i class="fas fa-plus" aria-hidden="true"></i>

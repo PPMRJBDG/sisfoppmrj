@@ -2,7 +2,7 @@
 <div class="card">
   <div class="card-header pb-1 align-items-center" style="background-color:#f6f9fc;">
     <div class="row">
-      <div class="col-3">
+      <div class="col-md-3 col-sm-6">
         Pilih Tahun-Bulan
         <select class="select_tb form-control mb-3" name="select_tb" id="select_tb">
           <option value="-">Silahkan Pilih</option>
@@ -27,19 +27,14 @@
           @foreach($permits as $permit)
           <tr class="text-sm">
             <td>
-              <div class="d-flex px-2 py-1">
-                <div>
-                  <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-xs me-3" alt="user1">
-                </div>
-                <div class="d-flex flex-column justify-content-center font-weight-bolder">
-                  {{ ($permit->santri) ? $permit->santri->user->fullname : '-' }}
-                </div>
-              </div>
+              <b>{{ ($permit->santri) ? $permit->santri->user->fullname : '-' }}</b>
+              <br>
+              {{ $permit->presence->name }}
             </td>
             <td>
-              <i><b>{{ $permit->presence->name }}</b></i>
+              <span class="text-primary text-xs font-weight-bolder">[{{ ucfirst($permit->reason_category) }}]</span>
               <br>
-              <span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span> {{ $permit->reason }}
+              {{ $permit->reason }}
             </td>
             <td>
               {{ $permit->updated_at }}

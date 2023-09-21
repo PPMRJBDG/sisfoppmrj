@@ -4,20 +4,20 @@
     <nav aria-label="breadcrumb" class="d-flex gap-1 align-items-center">
       @if(isset($backRoute))
       <a href="{{ $backRoute }}">
-        <i class="fa fa-arrow-left text-white"></i>
+        <i class="fa fa-arrow-left text-white text-lg"></i>
       </a>
       @endif
       <div>
         <ol class="breadcrumb bg-transparent m-0 p-0 font-weight-bolder">
           <li class="breadcrumb-item text-sm text-white active" aria-current="page">
             <!-- <a href="{{ route('presence report') }}" class="text-white">Home</a> -->
-            <a href="{{ route('dashboard') }}" class="text-white">Home</a>
+            <!-- <a href="{{ route('dashboard') }}" class="text-white">Home</a> -->
           </li>
-          @foreach($breadcrumbs as $breadcrumb)
+          <!-- @foreach($breadcrumbs as $breadcrumb)
           <li class="breadcrumb-item text-sm text-white active" aria-current="page">
             {{ ucfirst($breadcrumb) }}
           </li>
-          @endforeach
+          @endforeach -->
         </ol>
         <!-- <h6 class="text-white font-weight-bolder ms-2">{{ $title }}</h6> -->
       </div>

@@ -106,7 +106,7 @@ class PresenceGroupsChecker
                     'fkPresence_id' => $presence->id,
                     'reason' => $rangedPermitGenerator->reason,
                     'reason_category' => $rangedPermitGenerator->reason_category,
-                    'status' => 'pending'
+                    'status' => 'approved'
                 ]);
             }
         }

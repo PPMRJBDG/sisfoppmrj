@@ -18,6 +18,7 @@ use App\Helpers\PresenceGroupsChecker;
 use App\Helpers\WaSchedules;
 use App\Models\SystemMetaData;
 use App\Helpers\CommonHelpers;
+use App\Helpers\CountDashboard;
 
 use Carbon\Carbon;
 
@@ -219,48 +220,41 @@ class PresenceController extends Controller
     {
         $presence = Presence::find($id);
 
+        $for = '';
         if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
-            $presents = $presence->presents()
-                ->select('presents.*')
-                ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
-                ->join('users', 'users.id', '=', 'santris.fkUser_id')
-                ->orderBy('users.fullname')
-                ->get();
-        } else {
-            $lorong = Lorong::where('fkSantri_leaderId', auth()->user()->santri->id)->first();
-            $presents = null;
-            if ($lorong != null) {
-                $presents = $presence->presents()
-                    ->select('presents.*')
-                    ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
-                    ->join('users', 'users.id', '=', 'santris.fkUser_id')
-                    ->where('fkLorong_id', $lorong->id)
-                    ->orderBy('users.fullname')
-                    ->get();
-            }
+            $for = 'all';
+        } elseif (auth()->user()->santri != '') {
+            $for = 'lorong';
         }
+        // jumlah mhs / anggota lorong
+        $jumlah_mhs = CountDashboard::total_mhs($for);
+
+        // hadir
+        $presents = CountDashboard::mhs_hadir($id, $for);
 
         // ijin berdasarkan lorong masing2
-        $arr_santri = [];
-        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
-            $permits = Permit::where('fkPresence_id', $id)->get();
-        } elseif (auth()->user()->santri != '') {
-            if (auth()->user()->santri->lorongUnderLead) {
-                foreach (auth()->user()->santri->lorongUnderLead->members as $santri) {
-                    $arr_santri[] = $santri->id;
-                }
-            }
-            $permits = Permit::where('fkPresence_id', $id)->whereIn('fkSantri_id', $arr_santri)->get();
-        }
+        $permits = CountDashboard::mhs_ijin($id, $for);
+
+        // alpha
+        $mhs_alpha = CountDashboard::mhs_alpha($id, $for);
 
         $update = true;
-        $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
-        $selisih = $selisih / 60 / 60 / 24;
-        if ($selisih > 3) {
-            $update = false;
+        if ($presence != null) {
+            $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
+            $selisih = $selisih / 60 / 60 / 24;
+            if ($selisih > 3) {
+                $update = false;
+            }
         }
 
-        return view('presence.view', ['presence' => $presence, 'permits' => $permits, 'presents' => $presents, 'update' => $update]);
+        return view('presence.view', [
+            'presence' => $presence,
+            'jumlah_mhs' => $jumlah_mhs,
+            'mhs_alpha' => $mhs_alpha,
+            'permits' => $permits,
+            'presents' => $presents,
+            'update' => $update
+        ]);
     }
 
 
@@ -755,6 +749,21 @@ class PresenceController extends Controller
         return redirect()->route('view presence', $id)->with('success', 'Berhasil menghapus presensi');
     }
 
+    public function is_present($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
+
+        if ($present == null) {
+            Present::create([
+                'fkSantri_id' => $santriId,
+                'fkPresence_id' => $id,
+                'is_late' => 0
+            ]);
+        }
+
+        return redirect()->route('view presence', $id)->with('success', 'Berhasil mengubah telat');
+    }
+
     public function is_late($id, $santriId)
     {
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
@@ -946,6 +955,7 @@ class PresenceController extends Controller
         $tahun_bulan = DB::table('presences')
             ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
             ->groupBy('ym')
+            ->orderBy('ym', 'DESC')
             ->get();
         if ($tb == null || $tb == '-') {
             $tb = date('Y-m');

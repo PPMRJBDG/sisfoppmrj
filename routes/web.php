@@ -65,6 +65,7 @@ Route::get('/presensi/{id}', [App\Http\Controllers\PresenceController::class, 'c
 Route::post('/presensi/{id}/store/me', [App\Http\Controllers\PresenceController::class, 'store_my_present'])->name('store my present')->middleware('role:santri');
 Route::post('/presensi/{id}/store', [App\Http\Controllers\PresenceController::class, 'store_present'])->name('store present')->middleware('permission:create presents');
 Route::get('/presensi/{id}/delete/{santriId}', [App\Http\Controllers\PresenceController::class, 'delete_present'])->name('delete present')->middleware('permission:delete presents');
+Route::get('/presensi/{id}/present/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_present'])->name('is present')->middleware('permission:delete presents');
 Route::get('/presensi/{id}/late/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_late'])->name('is late');
 Route::get('/presensi/{id}/notlate/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_not_late'])->name('is not late');
 

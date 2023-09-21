@@ -49,6 +49,7 @@
               <option value="Sakit (di PPM)">Sakit (di PPM)</option>
               <option value="Kontrol Sakit">Kontrol Sakit</option>
               <option value="Opname">Opname</option>
+              <option value="Musyawarah">Musyawarah</option>
               <option value="Tugas">Tugas</option>
               <option value="Kuliah Malam">Kuliah Malam</option>
               <option value="Praktikum Malam">Praktikum Malam</option>
