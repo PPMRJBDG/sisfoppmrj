@@ -76,7 +76,7 @@ class PresenceGroupsChecker
 
     public static function checkPermitGenerators()
     {
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-d') + 1;
 
         $rangedPermitGenerators = RangedPermitGenerator::whereDate('from_date', '<=', $currentDate)
             ->whereDate('to_date', '>=', $currentDate)
@@ -86,6 +86,7 @@ class PresenceGroupsChecker
             // now let's insert permits to existing presences.
             $createdPresences = Presence::whereDate('event_date', '>=', $rangedPermitGenerator->from_date)
                 ->whereDate('event_date', '<=', $rangedPermitGenerator->to_date)
+                ->where('fkPresence_group_id', $rangedPermitGenerator->fkPresenceGroup_id)
                 ->get();
 
             foreach ($createdPresences as $presence) {
@@ -106,7 +107,8 @@ class PresenceGroupsChecker
                     'fkPresence_id' => $presence->id,
                     'reason' => $rangedPermitGenerator->reason,
                     'reason_category' => $rangedPermitGenerator->reason_category,
-                    'status' => 'approved'
+                    'status' => 'approved',
+                    'approved_by' => 'system'
                 ]);
             }
         }

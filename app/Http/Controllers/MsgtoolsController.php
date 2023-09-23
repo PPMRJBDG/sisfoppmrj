@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use App\Models\Lorong;
 use App\Models\ReportScheduler;
 use App\Models\SpWhatsappContacts;
 use App\Models\SpWhatsappPhoneNumbers;
@@ -31,6 +32,10 @@ class MsgtoolsController extends Controller
             ->get();
         CommonHelpers::createBulk('Bulk Mahasiswa Aktif', $getuser, 'nohp');
         CommonHelpers::createBulk('Bulk Ortu Aktif', $getuser, 'nohp_ortu');
+
+        // create bulk lorong
+        $lorong = Lorong::get();
+        CommonHelpers::createBulk('Bulk Koor Lorong', $lorong, null);
 
         // create bulk angkatan
         $getangkatan = DB::table('v_user_santri')

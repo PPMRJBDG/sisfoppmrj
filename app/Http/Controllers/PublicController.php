@@ -95,7 +95,7 @@ class PublicController extends Controller
 
                         $caption = $caption . '
 ________________________
-*_' . $presence->name . '_*
+*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
 Hadir: ' . count($presents) . '
 Ijin: ' . count($permits) . '
 Alpha: ' . count($mhs_alpha) . '
@@ -272,8 +272,9 @@ Silahkan klik link dibawah ini:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
 
 Amalsholih dicek kembali, yang *Tidak Hadir* diubah jadi alpha.
-Besok pukul 14:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
-                WaSchedules::save('Link Presensi', $caption, $contact_id);
+Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
+                WaSchedules::save('Link Presensi', $caption, $contact_id, 1, true);
+                WaSchedules::save('Link Presensi', $caption, 'Bulk Koor Lorong', 2, true);
             }
         } elseif ($time == 'jam-malam') {
             $contact_id = 'wa_ketertiban_group_id';
@@ -285,8 +286,8 @@ Besok pukul 14:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
 - Mematikan Wifi
 - Mematikan listrik yang tidak digunakan
 - Mengecek gerbang
-- *Evaluasi diri agar besok menjadi pribadi yang lebih baik dan faham lagi :)*';
-            WaSchedules::save('Jam Malam ' . date('d-m-Y'), $caption, $contact_id);
+- *Evaluasi diri, mudah-mudahan Allah menjadikan kita kefahaman dan pribadi yang lebih baik lagi :)*';
+            WaSchedules::save('Jam Malam ' . date('d-m-Y'), $caption, $contact_id, 1, true);
         }
     }
 
@@ -476,6 +477,39 @@ Besok pukul 14:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
             if ($permit->status == 'approved') {
                 $permit->status = 'rejected';
                 if ($permit->save()) {
+                    $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
+                    // kirim ke yg ijin
+                    $nohp = $permit->santri->user->nohp;
+                    if ($nohp != '') {
+                        if ($nohp[0] == '0') {
+                            $nohp = '62' . substr($nohp, 1);
+                        }
+                        $setting = Settings::find(1);
+                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                            $query->where('name', 'NOT LIKE', '%Bulk%');
+                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                        if ($wa_phone != null) {
+                            $caption = 'Perijinan Anda di Tolak oleh Pengurus.';
+                            WaSchedules::save($name, $caption, $wa_phone->pid);
+                        }
+                    }
+
+                    // kirim ke orangtua
+                    $nohp_ortu = $permit->santri->nohp_ortu;
+                    if ($nohp_ortu != '') {
+                        if ($nohp_ortu[0] == '0') {
+                            $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                        }
+                        $setting = Settings::find(1);
+                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                            $query->where('name', 'NOT LIKE', '%Bulk%');
+                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                        if ($wa_phone != null) {
+                            $caption = 'Perijinan *' . $permit->santri->user->fullname . '* di Tolak oleh Pengurus.';
+                            WaSchedules::save($name, $caption, $wa_phone->pid, 2);
+                        }
+                    }
+
                     $message = 'Permintaan ijin berhasil ditolak.';
                 }
             } else {

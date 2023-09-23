@@ -33,3 +33,22 @@ cron weekly:
 cron monthly:
 - laporan all report ✅
 - jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban ✅
+
+START CRONTAB
+*/5 * * * * /usr/bin/node /usr/bin/pm2 restart 0
+* * * * * https://studio.escredia.id/post/cron
+0 12 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/daily
+0 06 1 * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/monthly
+
+# kbm doa malam
+44 03 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/presence/6
+# kbm shubuh
+59 05 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/presence/1
+# kbm malam
+14 20 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/presence/2
+#jam malam
+49 22 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/jam-malam
+END CRONTAB
+
+pass yafi
+$2y$10$zwEkRO6S6BZWxb4y8XvPR.rRWpDUMfnUEQX2yqrZ0t4CtaPWtWPEe

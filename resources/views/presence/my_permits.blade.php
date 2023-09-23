@@ -47,9 +47,9 @@
             {{ ucfirst(substr($myPermit->reason,0,30)) }}...
           </td>
           <td>
-            {{ $myPermit->updated_at }}
-            <br>
             <span class="badge {{ $myPermit->status == 'pending' ? 'bg-gradient-secondary' : ($myPermit->status == 'approved' ? 'bg-gradient-success' : ($myPermit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($myPermit->status) }}</span>
+            <br>
+            <small>{{ $myPermit->updated_at }}</small>
           </td>
           <td colspan=3>
             @if($myPermit->status=='approved')
@@ -109,12 +109,12 @@
           <td>
             <b><small>[{{ ucfirst($myRangedPermit->reason_category) }}]</small></b>
             <br>
-            {{ ucfirst(substr($myRangedPermit->reason,50)) }}
+            {{ $myRangedPermit->reason }}
           </td>
-          <td>
-            {{ $myRangedPermit->from_date }}<br> s.d<br>
-            {{ $myRangedPermit->to_date }}
-          </td>
+          <td><small>
+              {{ $myRangedPermit->from_date }}<br> s.d<br>
+              {{ $myRangedPermit->to_date }}
+            </small></td>
           <td class="align-middle text-center text-sm">
             <a href="{{ route('delete my ranged presence permit', $myRangedPermit->id) }}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
           </td>

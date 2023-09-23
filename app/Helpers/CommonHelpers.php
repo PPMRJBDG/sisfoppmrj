@@ -138,18 +138,35 @@ class CommonHelpers
                 }
             }
         }
-        foreach ($data as $d) {
-            $nohp = $d->$field;
-            if ($nohp != '') {
-                if ($nohp[0] == '0') {
-                    $nohp = '62' . substr($nohp, 1);
+        if ($name == 'Bulk Koor Lorong') {
+            foreach ($data as $d) {
+                $nohp = $d->leader->user->nohp;
+                if ($nohp != '') {
+                    if ($nohp[0] == '0') {
+                        $nohp = '62' . substr($nohp, 1);
+                    }
+                    SpWhatsappPhoneNumbers::create([
+                        'ids' => uniqid(),
+                        'team_id' => $team_id->wa_team_id,
+                        'pid' => $contact_id,
+                        'phone' => $nohp
+                    ]);
                 }
-                SpWhatsappPhoneNumbers::create([
-                    'ids' => uniqid(),
-                    'team_id' => $team_id->wa_team_id,
-                    'pid' => $contact_id,
-                    'phone' => $nohp
-                ]);
+            }
+        } else {
+            foreach ($data as $d) {
+                $nohp = $d->$field;
+                if ($nohp != '') {
+                    if ($nohp[0] == '0') {
+                        $nohp = '62' . substr($nohp, 1);
+                    }
+                    SpWhatsappPhoneNumbers::create([
+                        'ids' => uniqid(),
+                        'team_id' => $team_id->wa_team_id,
+                        'pid' => $contact_id,
+                        'phone' => $nohp
+                    ]);
+                }
             }
         }
     }

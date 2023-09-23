@@ -242,7 +242,7 @@ class PresenceController extends Controller
         if ($presence != null) {
             $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
             $selisih = $selisih / 60 / 60 / 24;
-            if ($selisih > 3) {
+            if ($selisih > 1 && $for != 'all') {
                 $update = false;
             }
         }
@@ -1097,100 +1097,114 @@ Alasan: ' . $request->input('reason');
             'reason_category' => 'required|string',
             'from_date' => 'required|date|before:to_date',
             'to_date' => 'required|date|after:from_date',
-            'fkPresenceGroup_id' => 'required|exists:presence_groups,id|integer',
+            'fkPresenceGroup_id' => 'required',
+            // 'fkPresenceGroup_id' => 'required|exists:presence_groups,id|integer',
         ]);
 
         // check whether another ranged permit already exists within similar range
-        $existingRangedPermit = RangedPermitGenerator::orWhere(function ($query) use ($request, $santri) {
-            $query->where('fkSantri_id', $santri->id);
-            $query->where('fkPresenceGroup_id', $request->input('fkPresenceGroup_id'));
-            $query->whereDate('from_date', '>=', $request->input('from_date'));
-            $query->whereDate('from_date', '<=', $request->input('to_date'));
-        })
-            ->orWhere(function ($query) use ($request, $santri) {
+        if ($request->input('fkPresenceGroup_id') == 'all-kbm') {
+            $all_presence = PresenceGroup::get();
+            $pres_name = 'KBM Shubuh, KBM Malam, Apel Malam';
+        } else {
+            $all_presence = PresenceGroup::where('id', $request->input('fkPresenceGroup_id'))->get();
+            $pres_name = $all_presence[0]->name;
+        }
+        foreach ($all_presence as $pres) {
+            $existingRangedPermit = RangedPermitGenerator::orWhere(function ($query) use ($request, $santri, $pres) {
                 $query->where('fkSantri_id', $santri->id);
-                $query->where('fkPresenceGroup_id', $request->input('fkPresenceGroup_id'));
-                $query->whereDate('to_date', '>=', $request->input('from_date'));
-                $query->whereDate('to_date', '<=', $request->input('to_date'));
-            })
-            ->orWhere(function ($query) use ($request, $santri) {
-                $query->where('fkSantri_id', $santri->id);
-                $query->where('fkPresenceGroup_id', $request->input('fkPresenceGroup_id'));
-                $query->whereDate('from_date', '<=', $request->input('from_date'));
-                $query->whereDate('to_date', '>=', $request->input('from_date'));
-            })
-            ->orWhere(function ($query) use ($request, $santri) {
-                $query->where('fkSantri_id', $santri->id);
-                $query->where('fkPresenceGroup_id', $request->input('fkPresenceGroup_id'));
+                $query->where('fkPresenceGroup_id', $pres->id);
+                $query->whereDate('from_date', '>=', $request->input('from_date'));
                 $query->whereDate('from_date', '<=', $request->input('to_date'));
-                $query->whereDate('to_date', '>=', $request->input('to_date'));
             })
-            ->first();
+                ->orWhere(function ($query) use ($request, $santri, $pres) {
+                    $query->where('fkSantri_id', $santri->id);
+                    $query->where('fkPresenceGroup_id', $pres->id);
+                    $query->whereDate('to_date', '>=', $request->input('from_date'));
+                    $query->whereDate('to_date', '<=', $request->input('to_date'));
+                })
+                ->orWhere(function ($query) use ($request, $santri, $pres) {
+                    $query->where('fkSantri_id', $santri->id);
+                    $query->where('fkPresenceGroup_id', $pres->id);
+                    $query->whereDate('from_date', '<=', $request->input('from_date'));
+                    $query->whereDate('to_date', '>=', $request->input('from_date'));
+                })
+                ->orWhere(function ($query) use ($request, $santri, $pres) {
+                    $query->where('fkSantri_id', $santri->id);
+                    $query->where('fkPresenceGroup_id', $pres->id);
+                    $query->whereDate('from_date', '<=', $request->input('to_date'));
+                    $query->whereDate('to_date', '>=', $request->input('to_date'));
+                })
+                ->first();
 
-        if (isset($existingRangedPermit))
-            return redirect()->route('ranged presence permit submission')->withErrors(['ranged_permit_already_exists' => 'Izin berjangka pada presensi tersebut dengan waktu yang sama sudah sudah ada.']);
+            if (isset($existingRangedPermit))
+                return redirect()->route('ranged presence permit submission')->withErrors(['ranged_permit_already_exists' => 'Izin berjangka pada presensi tersebut dengan waktu yang sama sudah sudah ada.']);
 
-        // we don't have to check for existing present as when the software tries to add permit to 
-        // presence where the user is present, it can't
 
-        // now let's insert permits to existing presences.
-        $createdPresences = Presence::whereDate('event_date', '>=', $request->input('from_date'))
-            ->whereDate('event_date', '<=', $request->input('to_date'))
-            ->get();
+            // now let's insert permits to existing presences.
+            $createdPresences = Presence::whereDate('event_date', '>=', $request->input('from_date'))
+                ->whereDate('event_date', '<=', $request->input('to_date'))
+                ->where('fkPresence_group_id', $pres->id)
+                ->get();
 
-        foreach ($createdPresences as $presence) {
-            // check whether permit already exists
-            $existingPermit = Permit::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri->id)->first();
+            foreach ($createdPresences as $presence) {
+                // check whether permit already exists
+                $existingPermit = Permit::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri->id)->first();
 
-            if (isset($existingPermit))
-                continue;
+                if (isset($existingPermit))
+                    continue;
 
-            // check whether the person is present at that presence
-            $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri->id)->first();
+                // check whether the person is present at that presence
+                $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri->id)->first();
 
-            if (isset($existingPresent))
-                continue;
+                if (isset($existingPresent))
+                    continue;
 
-            $ids = uniqid();
-            $inserted = Permit::create([
+                $statusx = 'pending';
+                $updated_by = '';
+                if ($presence->event_date == date('Y-m-d')) {
+                    $statusx = 'approved';
+                    $updated_by = 'system';
+                }
+                $ids = uniqid();
+                $inserted = Permit::create([
+                    'fkSantri_id' => $santri->id,
+                    'fkPresence_id' => $presence->id,
+                    'reason' => $request->input('reason'),
+                    'reason_category' => $request->input('reason_category'),
+                    'status' => $statusx,
+                    'approved_by' => $updated_by,
+                    'ids' => $ids
+                ]);
+            }
+
+            // create generator
+            $inserted = RangedPermitGenerator::create([
                 'fkSantri_id' => $santri->id,
-                'fkPresence_id' => $presence->id,
+                'fkPresenceGroup_id' => $pres->id,
                 'reason' => $request->input('reason'),
                 'reason_category' => $request->input('reason_category'),
-                'status' => 'approved',
-                'ids' => $ids
+                'from_date' => $request->input('from_date'),
+                'to_date' => $request->input('to_date'),
             ]);
         }
 
-        // create generator
-        $inserted = RangedPermitGenerator::create([
-            'fkSantri_id' => $santri->id,
-            'fkPresenceGroup_id' => $request->input('fkPresenceGroup_id'),
-            'reason' => $request->input('reason'),
-            'reason_category' => $request->input('reason_category'),
-            'from_date' => $request->input('from_date'),
-            'to_date' => $request->input('to_date'),
-        ]);
-
         if ($inserted) {
-            $presencex = PresenceGroup::find($request->input('fkPresenceGroup_id'));
             if ($santri->fkLorong_id == '') {
                 $lorong = '*Koor Lorong*';
             } else {
                 $lorong = '*' . $santri->lorong->name . '*';
             }
+
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 
 ' . $lorong . '
-Presensi: ' . $presencex->name . '
+Presensi: ' . $pres_name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason') . '
 Dari: ' . $request->input('from_date') . '
-Sampai: ' . $request->input('to_date') . '
-            
-NB: dikarenakan ijin berjangka, silahkan mengecek di sisfo';
+Sampai: ' . $request->input('to_date');
 
-            WaSchedules::insertToKetertiban($santri, $caption, null);
+            WaSchedules::insertToKetertiban($santri, $caption, $caption, $request);
 
             return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {

@@ -9,20 +9,35 @@ use App\Models\SpWhatsappPhoneNumbers;
 
 class WaSchedules
 {
-    public static function save($name, $caption, $contact_id, $time_post = null)
+    public static function save($name, $caption, $contact_id, $time_post = null, $without_header_footer = false)
     {
         $setting = Settings::find(1);
         if ($contact_id == 'wa_dewanguru_group_id') {
             $contact_id = $setting->wa_dewanguru_group_id;
         } elseif ($contact_id == 'wa_ketertiban_group_id') {
             $contact_id = $setting->wa_ketertiban_group_id;
+        } elseif ($contact_id == 'Bulk Koor Lorong') {
+            $contact = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) use ($contact_id) {
+                $query->where('name', $contact_id);
+            })->where('team_id', $setting->wa_team_id)->first();
+
+            if ($contact != null) {
+                $contact_id = $contact->pid;
+            } else {
+                $contact_id = 0;
+            }
         }
 
-        $caption_body = $setting->wa_header . '
+        if ($without_header_footer) {
+            $caption_body = $caption;
+        } else {
+            $caption_body = $setting->wa_header . '
 
 ' . $caption . '
         
 ' . $setting->wa_footer;
+        }
+
         if ($time_post == null) {
             $time_post = strtotime('+1 minutes');
         } else {
@@ -58,12 +73,34 @@ class WaSchedules
         }
     }
 
-    public static function insertToKetertiban($santri, $caption, $caption_ortu)
+    public static function insertToKetertiban($santri, $caption, $caption_ortu, $request = null)
     {
         $setting = Settings::first();
 
         // kirim ke group koor lorong
+        if (str_contains($request->input('reason_category'), 'Pulang -')) {
+            $caption = $caption . '
+            
+*NB: Pastikan yang ijin pulang ke luar wilayah Bandung Raya untuk meminta SS ke salah satu Dewan Guru*';
+        }
         WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id');
+
+        // wa ke yang ijin
+        if (str_contains($request->input('reason_category'), 'Pulang -')) {
+            $nohp = $santri->user->nohp;
+            if ($nohp != '') {
+                if ($nohp[0] == '0') {
+                    $nohp = '62' . substr($nohp, 1);
+                }
+                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                if ($wa_phone != null) {
+                    $caption = 'Bagi yang ijin pulang ke luar wilayah Bandung Raya, silahkan meminta SS ke salah satu Dewan Guru.';
+                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $wa_phone->pid, 3);
+                }
+            }
+        }
 
         // kirim ke ortu
         if ($caption_ortu != null) {

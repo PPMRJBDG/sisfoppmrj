@@ -117,7 +117,7 @@
       </div>
     </div>
     @endif
-    <div class="table-responsive p-0">
+    <div class="table-responsive p-2">
       <table id="table" class="table align-items-center mb-0">
         <thead>
           <tr>
@@ -157,7 +157,7 @@
     <h6>Daftar ijin: {{count($permits)}}</h6>
   </div>
 
-  <div class="table-responsive p-0">
+  <div class="table-responsive p-2">
     <table class="table align-items-center mb-0">
       <thead>
         <tr>
@@ -194,7 +194,7 @@
     <h6>Daftar alpha: {{count($mhs_alpha)}}</h6>
   </div>
 
-  <div class="table-responsive p-0">
+  <div class="table-responsive p-2">
     <table class="table align-items-center mb-0">
       <thead>
         <tr>
@@ -209,7 +209,9 @@
             <b>{{ $mhs['name'] }}</b>
           </td>
           <td class="text-sm">
+            @if($update)
             <a class="btn btn-primary btn-block btn-xs mb-0" href="{{ route('is present', ['id' => $mhs['presence_id'], 'santriId' => $mhs['santri_id']]) }}" onclick="return confirm('Yakin hadir?')">Hadir</a>
+            @endif
           </td>
         </tr>
         @endforeach

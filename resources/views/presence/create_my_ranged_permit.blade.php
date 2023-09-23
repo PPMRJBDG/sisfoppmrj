@@ -33,8 +33,9 @@
             <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
             <select name="fkPresenceGroup_id" class="form-control" required>
               <option selected disabled>Pilih presensi</option>
+              <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam)</option>
               @foreach($presenceGroups as $presenceGroup)
-              <option value="{{ $presenceGroup->id }}">{{ $presenceGroup->name }}</option>
+              <option value="{{ $presenceGroup->id }}">Hanya {{ $presenceGroup->name }} Saja</option>
               @endforeach
             </select>
           </div>
