@@ -72,6 +72,7 @@ class SettingController extends Controller
             'wa_ortu_group_id' => 'required',
             'wa_header' => 'required',
             'wa_footer' => 'required',
+            'wa_info_alpha_ortu' => 'required',
         ]);
         $setting = Settings::find(1);
         if ($setting == null) {
@@ -88,6 +89,7 @@ class SettingController extends Controller
                 'wa_dewanguru_group_id' => $request->input('wa_dewanguru_group_id'),
                 'wa_header' => $request->input('wa_header'),
                 'wa_footer' => $request->input('wa_footer'),
+                'wa_info_alpha_ortu' => $request->input('wa_info_alpha_ortu'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -102,6 +104,7 @@ class SettingController extends Controller
             $setting->wa_dewanguru_group_id = $request->input('wa_dewanguru_group_id');
             $setting->wa_header = $request->input('wa_header');
             $setting->wa_footer = $request->input('wa_footer');
+            $setting->wa_info_alpha_ortu = $request->input('wa_info_alpha_ortu');
             $setting->save();
         }
 

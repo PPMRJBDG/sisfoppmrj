@@ -33,7 +33,7 @@ class PublicController extends Controller
         $contact_id = $setting->wa_ortu_group_id;
         $name = '';
         $caption = '';
-        $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
+        $yesterday = strtotime('-2 day', strtotime(date("Y-m-d")));
         $yesterday = date('Y-m-d', $yesterday);
 
         // DAILY
@@ -104,9 +104,16 @@ Alpha: ' . count($mhs_alpha) . '
                         if (count($mhs_alpha) > 0) {
                             $caption = $caption . '*Daftar Mahasiswa Alpha*
 ';
+                            $time_post = 1;
                             foreach ($mhs_alpha as $d) {
                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
 ';
+                                // info ke ortu
+                                if ($setting->wa_info_alpha_ortu == 1) {
+                                    $caption_ortu = 'Assalamualaikum Wr Wb, menginformasikan bahwa ' . $d['name'] . ' tidak hadir tanpa ijin pada ' . $presence->name . ' .Ajzkh 🙏🏻';
+                                    WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, true);
+                                    $time_post++;
+                                }
                             }
                         }
                     }
@@ -116,7 +123,7 @@ NB:
 - Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus';
 
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
-                if ($contact_id != '') {
+                if ($contact_id != '' && count($get_presence) > 0) {
                     $insert = WaSchedules::save($name, $caption, $contact_id);
                     if ($insert) {
                         echo json_encode(['status' => true, 'message' => 'success insert scheduler']);

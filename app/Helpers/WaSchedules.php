@@ -73,6 +73,26 @@ class WaSchedules
         }
     }
 
+    public static function getContactId($nohp)
+    {
+        $setting = Settings::first();
+        if ($nohp != '') {
+            if ($nohp[0] == '0') {
+                $nohp = '62' . substr($nohp, 1);
+            }
+            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                $query->where('name', 'NOT LIKE', '%Bulk%');
+            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+            if ($wa_phone != null) {
+                return $wa_phone->pid;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
     public static function insertToKetertiban($santri, $caption, $caption_ortu, $request = null)
     {
         $setting = Settings::first();

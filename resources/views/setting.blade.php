@@ -265,6 +265,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                            <label class="form-control-label">
+                                                WA - Info Alpha ke Ortu
+                                            </label>
+                                            <select class="wa_info_alpha_ortu form-control" name="wa_info_alpha_ortu" id="wa_info_alpha_ortu">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
+                                                        } ?> value="0">Tidak</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
+                                                        } ?> value="1">Ya</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

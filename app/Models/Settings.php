@@ -21,5 +21,6 @@ class Settings extends Model
         'host_url',
         'wa_header',
         'wa_footer',
+        'wa_info_alpha_ortu'
     ];
 }
