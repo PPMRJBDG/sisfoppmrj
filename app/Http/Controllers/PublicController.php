@@ -33,7 +33,7 @@ class PublicController extends Controller
         $contact_id = $setting->wa_ortu_group_id;
         $name = '';
         $caption = '';
-        $yesterday = strtotime('-2 day', strtotime(date("Y-m-d")));
+        $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
         $yesterday = date('Y-m-d', $yesterday);
 
         // DAILY
