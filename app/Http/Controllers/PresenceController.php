@@ -14,6 +14,8 @@ use App\Models\Present;
 use App\Models\Permit;
 use App\Models\RangedPermitGenerator;
 use App\Models\Lorong;
+use App\Models\Settings;
+use App\Models\SpWhatsappPhoneNumbers;
 use App\Helpers\PresenceGroupsChecker;
 use App\Helpers\WaSchedules;
 use App\Models\SystemMetaData;
@@ -904,10 +906,43 @@ class PresenceController extends Controller
 
         $updated = $permit->save();
 
-        if (!$updated)
-            return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
+        if ($updated) {
+            $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
+            // kirim ke yg ijin
+            $nohp = $permit->santri->user->nohp;
+            if ($nohp != '') {
+                if ($nohp[0] == '0') {
+                    $nohp = '62' . substr($nohp, 1);
+                }
+                $setting = Settings::find(1);
+                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                if ($wa_phone != null) {
+                    $caption = 'Perijinan Anda di Tolak oleh Pengurus.';
+                    WaSchedules::save($name, $caption, $wa_phone->pid);
+                }
+            }
 
-        return redirect()->route('presence permit approval')->with('success', 'Izin berhasil ditolak.');
+            // kirim ke orangtua
+            $nohp_ortu = $permit->santri->nohp_ortu;
+            if ($nohp_ortu != '') {
+                if ($nohp_ortu[0] == '0') {
+                    $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                }
+                $setting = Settings::find(1);
+                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                if ($wa_phone != null) {
+                    $caption = 'Perijinan *' . $permit->santri->user->fullname . '* di Tolak oleh Pengurus.';
+                    WaSchedules::save($name, $caption, $wa_phone->pid, 2);
+                }
+            }
+            return redirect()->route('presence permit approval')->with('success', 'Izin berhasil ditolak.');
+        } else {
+            return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
+        }
     }
 
     /**
