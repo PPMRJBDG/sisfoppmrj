@@ -103,7 +103,7 @@ class WaSchedules
             
 *NB: Pastikan yang ijin pulang ke luar wilayah Bandung Raya untuk meminta SS ke salah satu Dewan Guru*';
         }
-        WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id');
+        WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id', null, true);
 
         // wa ke yang ijin
         if (str_contains($reason_category, 'Pulang -')) {

@@ -1091,12 +1091,9 @@ class PresenceController extends Controller
                 $lorong = '*' . $santri->lorong->name . '*';
             }
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
-
 ' . $lorong . '
 Presensi: ' . $presence->name . '
-Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason') . '
-            
+Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '        
 Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
 
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
@@ -1361,12 +1358,9 @@ Sampai: ' . $request->input('to_date');
                 $lorong = '*' . $santri->lorong->name . '*';
             }
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
-
 ' . $lorong . '
 Presensi: ' . $presence->name . '
-Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason') . '
-            
+Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
 
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*

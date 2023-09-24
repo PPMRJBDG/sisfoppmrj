@@ -170,6 +170,8 @@
         <tr>
           <td class="text-sm">
             <b>{{ $permit->santri->user->fullname }}</b>
+            <br>
+            <small>[{{ $permit->reason_category }}] - {{ $permit->reason }}</small>
           </td>
           <td class="align-middle text-center text-sm">
             @if($permit->status=='approved')
