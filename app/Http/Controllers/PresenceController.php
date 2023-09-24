@@ -837,6 +837,7 @@ class PresenceController extends Controller
 
         // get current santri
         $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+            ->select('permits.*', 'permits.updated_at')
             ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
             ->orderBy('permits.created_at', 'DESC')
             ->get();
@@ -844,6 +845,7 @@ class PresenceController extends Controller
             if (auth()->user()->hasRole('koor lorong'))
                 $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
                     ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
+                    ->select('permits.*', 'permits.updated_at')
                     ->where('santris.fkLorong_id', $lorong->id)
                     ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
                     ->orderBy('permits.created_at', 'DESC')
