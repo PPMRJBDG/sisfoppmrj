@@ -38,7 +38,8 @@ cron monthly:
 START CRONTAB
 */5 * * * * /usr/bin/node /usr/bin/pm2 restart 0
 * * * * * https://studio.escredia.id/post/cron
-0 12 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/daily
+59 11 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/daily
+59 08 * * 0 wget -q -O- https://sisfo.ppmrjbandung.com/schedule/weekly
 0 06 1 * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/monthly
 
 # kbm doa malam

@@ -120,7 +120,8 @@ Alpha: ' . count($mhs_alpha) . '
                 }
                 $caption = $caption . '
 NB:
-- Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus';
+- [Peringatan] Apabila kehadiran KBM dalam 3 bulan dibawah *80%*, sesuai peratuarn Pondok Pesantren Mahasiswa akan terdapat *Surat Peringatan 2*
+- Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus atau koor lorong';
 
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
                 if ($contact_id != '' && count($get_presence) > 0) {
