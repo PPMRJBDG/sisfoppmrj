@@ -14,11 +14,11 @@
 </div>
 @endif
 
-<div class="card bg-secondary opacity-9 p-2 mb-2">
+<div class="card p-2 mb-2">
     <div class="row">
         @foreach($count_pelanggaran as $cp)
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card mb-1 mt-1">
+            <div class="card mb-1 mt-1 shadow-sm">
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-8">
@@ -59,22 +59,22 @@
 </div>
 <div class="card">
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header p-2 d-flex justify-content-between align-items-center">
         <div class="d-flex text-primary font-weight-bold">
             Daftar Pelanggaran {{ ($is_archive) ? 'Arsip' : 'Aktif' }}
         </div>
         <div class="d-flex">
-            <a href="{{ route('create pelanggaran') }}" class="btn btn-primary">
+            <a href="{{ route('create pelanggaran') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Input Pelanggaran
             </a>
             @if($is_archive)
-            <a href="{{ route('pelanggaran tm') }}" class="btn btn-success">
+            <a href="{{ route('pelanggaran tm') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-view" aria-hidden="true"></i>
                 Pelanggaran Aktif
             </a>
             @else
-            <a href="{{ route('pelanggaran archive') }}" class="btn btn-success">
+            <a href="{{ route('pelanggaran archive') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-view" aria-hidden="true"></i>
                 Lihat Arsip
             </a>
@@ -82,15 +82,15 @@
         </div>
     </div>
     @endif
-    <div class="card-body pt-0">
+    <div class="card-body p-2 pt-0">
         <div class="table-responsive">
             <table id="table" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         @foreach($column as $c)
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">{{$c}}</th>
+                        <th class="text-uppercase text-sm font-weight-bolder ps-2">{{$c}}</th>
                         @endforeach
-                        <th class="text-uppercase text-sm text-secondary align-middle text-center font-weight-bolder ps-2">ACTION</th>
+                        <th class="text-uppercase text-sm align-middle text-center font-weight-bolder ps-2">ACTION</th>
                     </tr>
                 </thead>
                 <tbody>

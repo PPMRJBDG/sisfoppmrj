@@ -83,6 +83,7 @@ class PublicController extends Controller
 *Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
                 $get_presence = Presence::where('event_date', $yesterday)->get();
                 if (count($get_presence) > 0) {
+                    $time_post = 1;
                     foreach ($get_presence as $presence) {
                         // hadir
                         $presents = CountDashboard::mhs_hadir($presence->id, 'all');
@@ -104,7 +105,6 @@ Alpha: ' . count($mhs_alpha) . '
                         if (count($mhs_alpha) > 0) {
                             $caption = $caption . '*Daftar Mahasiswa Alpha*
 ';
-                            $time_post = 1;
                             foreach ($mhs_alpha as $d) {
                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
 ';
@@ -143,6 +143,57 @@ NB:
             // laporan presensi mingguan
             // bulk mahasiswa + ortu
             // jika all_ijin > 1/3 KBM diberi peringatan
+            // daftar mahasiswa yang presensi < 80%
+            $last_month = strtotime(date("Y-m-d"));
+            $last_month = date('Y-m', $last_month);
+            $list_angkatan = DB::table('santris')
+                ->select('angkatan')
+                ->whereNull('exit_at')
+                ->groupBy('angkatan')
+                ->get();
+            $data_presensi_weekly = '*Report Presensi KBM: ' . date("M Y") . '*';
+            foreach ($list_angkatan as $la) {
+                $result = (new HomeController)->dashboard($last_month, $la->angkatan, true);
+                $view_usantri = $result['view_usantri'];
+                $presence_group = $result['presence_group'];
+                $presences = $result['presences'];
+                $all_presences = $result['all_presences'];
+                $all_permit = $result['all_permit'];
+
+                foreach ($view_usantri as $vu) {
+                    $all_persentase = 0;
+                    $all_kbm = 0;
+                    $all_hadir = 0;
+                    $all_ijin = 0;
+                    foreach ($presence_group as $pg) {
+                        foreach ($presences[$pg->id] as $listcp) {
+                            if ($listcp->santri_id == $vu->santri_id) {
+                                $ijin = 0;
+                                if (isset($all_permit[$pg->id][$vu->santri_id])) {
+                                    $ijin = $all_permit[$pg->id][$vu->santri_id];
+                                }
+                                $all_kbm = $all_kbm + $all_presences[$pg->id][0]->c_all;
+                                $all_hadir = $all_hadir + $listcp->cp;
+                                $all_ijin = $all_ijin + $ijin;
+                            }
+                        }
+                    }
+
+                    if ($all_kbm > 0) {
+                        $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                        $all_persentase = number_format($all_persentase, 2);
+                        // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
+                        if ($all_persentase < 80) {
+                            $data_presensi_weekly = $data_presensi_weekly . '
+- [' . $vu->angkatan . '] ' . $vu->fullname . ': *' . $all_persentase . '%*';
+                        }
+                    }
+                }
+            }
+
+            WaSchedules::save('Weekly Report', $data_presensi_weekly, 'wa_ketertiban_group_id');
+
+            echo json_encode(['status' => true, 'message' => '[weekly] success running scheduler']);
         }
 
         // MONTHLY
@@ -200,7 +251,7 @@ NB:
 - Angkatan: *' . $data->santri->angkatan . '*
 - Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
 - Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
-- Ket: *Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%*';
+- Keterangan: *Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%*';
                                 $contact_id = 'wa_ketertiban_group_id';
                                 WaSchedules::save('Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, $caption, $contact_id);
                             } else {
@@ -251,7 +302,7 @@ Silahkan klik link dibawah ini:
                 }
             }
 
-            echo json_encode(['status' => true, 'message' => 'success running scheduler']);
+            echo json_encode(['status' => true, 'message' => '[monthly] success running scheduler']);
         }
 
         // LINK PRESENSI
