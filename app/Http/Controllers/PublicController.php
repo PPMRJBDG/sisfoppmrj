@@ -285,16 +285,7 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
             }
         } elseif ($time == 'jam-malam') {
             $contact_id = 'wa_ketertiban_group_id';
-            $caption = '*Waktu sudah menunjukan pukul 22:50*, waktunya mengingatkan:
-
-- Kepada rekan-rekan yang masih berada di luar lingkungan PPM untuk bisa segera kembali ke PPM
-- Segera istirahat, tidak ada keributan yang mengganggu tetangga sebelah
-- Piket jaga malam sesuai tugas amalsholihnya
-- Mematikan Wifi
-- Mematikan listrik yang tidak digunakan
-- Mengecek gerbang
-- *Evaluasi diri, mudah-mudahan Allah menjadikan kita kefahaman dan pribadi yang lebih baik lagi :)*';
-            WaSchedules::save('Jam Malam ' . date('d-m-Y'), $caption, $contact_id, 1, true);
+            WaSchedules::save('Jam Malam ' . date('d-m-Y'), $setting->wa_info_jaga_malam, $contact_id, 1, true);
         }
     }
 

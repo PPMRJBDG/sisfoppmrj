@@ -40,7 +40,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary form-control mb-0" type="submit" value="Tambah Periode">
+                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Periode">
                                         </div>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="btn btn-primary form-control mb-0" type="submit" value="Generate Sodaqoh Tahunan">
+                                    <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Generate Sodaqoh Tahunan">
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary form-control mb-0" type="submit" value="Tambah Liburan">
+                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Liburan">
                                         </div>
                                     </div>
                                 </div>
@@ -307,8 +307,18 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
                                     </div>
                                     <div class="col-md-12">
+                                        <label class="form-control-label">
+                                            WA - Info Jaga Malam
+                                        </label>
+                                        <textarea rows="6" class="form-control mb-2" name="wa_info_jaga_malam" required>{{ ($list_setting) ? $list_setting->wa_info_jaga_malam : '' }}</textarea>
+
+                                        <label class="form-control-label">
+                                            WA - Info Untuk Mahasiswa yang Sudah Lulus
+                                        </label>
+                                        <textarea rows="6" class="form-control mb-2" name="wa_info_lulus" required>{{ ($list_setting) ? $list_setting->wa_info_lulus : '' }}</textarea>
+
                                         <div class="form-group">
-                                            <input class="btn btn-primary form-control mb-0" type="submit" value="Update Setting">
+                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Update Setting">
                                         </div>
                                     </div>
                                 </div>
@@ -348,7 +358,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary form-control mb-0" type="submit" value="Tambah Jenis Pelanggaran">
+                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Pelanggaran">
                                         </div>
                                     </div>
                                 </div>
@@ -360,7 +370,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
-                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kategori</th>
+                                            <!-- <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kategori</th> -->
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
                                         </tr>
                                     </thead>
@@ -369,12 +379,9 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         @foreach($list_jenis_pelanggaran as $data)
                                         <tr class="text-sm">
                                             <td>
-                                                {{ $data->jenis_pelanggaran }}
+                                                <b>[{{ $data->kategori_pelanggaran }}]</b> {{ $data->jenis_pelanggaran }}
                                             </td>
-                                            <td>
-                                                {{ $data->kategori_pelanggaran }}
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
+                                            <td class="align-middle text-center text-xs">
                                                 <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                                             </td>
                                         </tr>

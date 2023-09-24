@@ -8,6 +8,7 @@ use App\Models\Santri;
 use App\Models\Lorong;
 use App\Helpers\CommonHelpers;
 use App\Helpers\CountDashboard;
+use App\Helpers\WaSchedules;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -472,6 +473,8 @@ class UserController extends Controller
         // ucapan selamat dan arahan sesuai mekanisme
         // cek sodaqoh, membawa barang, pamitan, SS, left group
         if ($request->input('alasan_keluar') == 'Sudah Lulus') {
+            $caption = CommonHelpers::settings()->wa_info_lulus;
+            WaSchedules::save($request->input('fullname') . ' Lulus', $caption, WaSchedules::getContactId($request->input('nohp')));
         }
 
         if ($request->input('role-santri'))

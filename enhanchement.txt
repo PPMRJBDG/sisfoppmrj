@@ -49,6 +49,3 @@ START CRONTAB
 #jam malam
 49 22 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/jam-malam
 END CRONTAB
-
-pass yafi
-$2y$10$zwEkRO6S6BZWxb4y8XvPR.rRWpDUMfnUEQX2yqrZ0t4CtaPWtWPEe

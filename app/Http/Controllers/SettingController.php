@@ -73,6 +73,8 @@ class SettingController extends Controller
             'wa_header' => 'required',
             'wa_footer' => 'required',
             'wa_info_alpha_ortu' => 'required',
+            'wa_info_jaga_malam' => 'required',
+            'wa_info_lulus' => 'required',
         ]);
         $setting = Settings::find(1);
         if ($setting == null) {
@@ -90,6 +92,8 @@ class SettingController extends Controller
                 'wa_header' => $request->input('wa_header'),
                 'wa_footer' => $request->input('wa_footer'),
                 'wa_info_alpha_ortu' => $request->input('wa_info_alpha_ortu'),
+                'wa_info_jaga_malam' => $request->input('wa_info_jaga_malam'),
+                'wa_info_lulus' => $request->input('wa_info_lulus'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -105,6 +109,8 @@ class SettingController extends Controller
             $setting->wa_header = $request->input('wa_header');
             $setting->wa_footer = $request->input('wa_footer');
             $setting->wa_info_alpha_ortu = $request->input('wa_info_alpha_ortu');
+            $setting->wa_info_jaga_malam = $request->input('wa_info_jaga_malam');
+            $setting->wa_info_lulus = $request->input('wa_info_lulus');
             $setting->save();
         }
 

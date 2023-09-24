@@ -51,12 +51,14 @@ class HomeController extends Controller
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
                 ->where('event_date', '>=', $select_angkatan . '-09-01')
                 ->groupBy('ym')
+                ->orderBy('ym', 'DESC')
                 ->get();
         } elseif (auth()->user()->hasRole('santri')) {
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
                 ->where('event_date', '>=', auth()->user()->santri->join_at)
                 ->groupBy('ym')
+                ->orderBy('ym', 'DESC')
                 ->get();
             if ($tb == null) {
                 $tb = date('Y-m');
