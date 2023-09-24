@@ -1104,7 +1104,7 @@ Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason');
 
-            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
+            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu, $request->input('reason_category'));
 
             return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {
@@ -1239,7 +1239,7 @@ Alasan: ' . $request->input('reason') . '
 Dari: ' . $request->input('from_date') . '
 Sampai: ' . $request->input('to_date');
 
-            WaSchedules::insertToKetertiban($santri, $caption, $caption, $request);
+            WaSchedules::insertToKetertiban($santri, $caption, $caption, $request->input('reason_category'));
 
             return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {
@@ -1374,7 +1374,7 @@ Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
 Alasan: ' . $request->input('reason');
 
-            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
+            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu, $request->input('reason_category'));
 
             return redirect()->route('presence permit approval')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {

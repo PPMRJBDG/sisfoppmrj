@@ -93,12 +93,12 @@ class WaSchedules
         }
     }
 
-    public static function insertToKetertiban($santri, $caption, $caption_ortu, $request = null)
+    public static function insertToKetertiban($santri, $caption, $caption_ortu, $reason_category = null)
     {
         $setting = Settings::first();
 
         // kirim ke group koor lorong
-        if (str_contains($request->input('reason_category'), 'Pulang -')) {
+        if (str_contains($reason_category, 'Pulang -')) {
             $caption = $caption . '
             
 *NB: Pastikan yang ijin pulang ke luar wilayah Bandung Raya untuk meminta SS ke salah satu Dewan Guru*';
@@ -106,7 +106,7 @@ class WaSchedules
         WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id');
 
         // wa ke yang ijin
-        if (str_contains($request->input('reason_category'), 'Pulang -')) {
+        if (str_contains($reason_category, 'Pulang -')) {
             $nohp = $santri->user->nohp;
             if ($nohp != '') {
                 if ($nohp[0] == '0') {
