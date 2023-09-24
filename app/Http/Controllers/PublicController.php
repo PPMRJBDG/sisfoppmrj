@@ -152,7 +152,8 @@ NB:
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-            $data_presensi_weekly = '*Report Presensi KBM: ' . date("M Y") . '*';
+            $data_presensi_weekly = '*Report Presensi KBM kurang dari 80%: ' . date("M Y") . '*';
+            $data_mhs = array();
             foreach ($list_angkatan as $la) {
                 $result = (new HomeController)->dashboard($last_month, $la->angkatan, true);
                 $view_usantri = $result['view_usantri'];
@@ -185,6 +186,7 @@ NB:
                         $all_persentase = number_format($all_persentase, 2);
                         // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
                         if ($all_persentase < 80) {
+                            $data_mhs[] = $vu->nohp_ortu;
                             $data_presensi_weekly = $data_presensi_weekly . '
 - [' . $vu->angkatan . '] ' . $vu->fullname . ': *' . $all_persentase . '%*';
                         }
@@ -192,7 +194,16 @@ NB:
                 }
             }
 
-            WaSchedules::save('Weekly Report', $data_presensi_weekly, 'wa_ketertiban_group_id');
+            if (count($data_mhs) > 0) {
+                WaSchedules::save('Weekly Report', $data_presensi_weekly, 'wa_ketertiban_group_id');
+
+                // kirim ke ortu
+                $time_post = 2;
+                foreach ($data_mhs as $dm) {
+                    WaSchedules::save('[Ortu] Weekly Report', $data_presensi_weekly, WaSchedules::getContactId($dm), $time_post);
+                    $time_post++;
+                }
+            }
 
             echo json_encode(['status' => true, 'message' => '[weekly] success running scheduler']);
         }
