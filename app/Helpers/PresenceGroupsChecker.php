@@ -76,7 +76,7 @@ class PresenceGroupsChecker
 
     public static function checkPermitGenerators()
     {
-        $currentDate = date('Y-m-d') + 1;
+        $currentDate = date('Y-m-d');
 
         $rangedPermitGenerators = RangedPermitGenerator::whereDate('from_date', '<=', $currentDate)
             ->whereDate('to_date', '>=', $currentDate)

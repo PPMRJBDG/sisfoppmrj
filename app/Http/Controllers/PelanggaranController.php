@@ -183,15 +183,16 @@ class PelanggaranController extends Controller
             } else {
                 $message = 'Gagal menambahkan data';
             }
+        }
 
-            $jenis_pelanggaran = JenisPelanggaran::find($store['fkJenis_pelanggaran_id']);
+        if ($request->input('is_wa') == 1) {
+            $jenis_pelanggaran = JenisPelanggaran::find($request->input('fkJenis_pelanggaran_id'));
             $caption = 'Penambahan data pelanggaran dari Mahasiswa:
 - Nama: *' . $data->santri->user->fullname . '*
 - Angkatan: *' . $data->santri->angkatan . '*
-- Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
 - Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
-
-Nb: kemungkinan sedang dalam proses tabayyun.';
+- Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
+- Keterangan: *' . $jenis_pelanggaran->keterangan . '*';
             $contact_id = 'wa_dewanguru_group_id';
             WaSchedules::save('Data Pelanggaran ' . $data->santri->user->fullname, $caption, $contact_id);
         }

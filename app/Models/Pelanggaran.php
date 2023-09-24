@@ -39,7 +39,8 @@ class Pelanggaran extends Model
         'info_ortu_atas',
         'is_st_dikembalikan',
         'keterangan',
-        'is_archive'
+        'is_archive',
+        'is_wa'
     ];
 
     public static function attr()
@@ -77,7 +78,8 @@ class Pelanggaran extends Model
             'info_ortu_atas',
             'is_st_dikembalikan',
             'keterangan',
-            'is_archive'
+            'is_archive',
+            'is_wa'
         ];
     }
 

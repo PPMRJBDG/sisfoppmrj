@@ -33,7 +33,7 @@
                 @endif
 
                 @foreach($column as $c)
-                @if($c!='id' && $c!='created_at' && $c!='updated_at' && $c!='is_archive')
+                @if($c!='id' && $c!='created_at' && $c!='updated_at' && $c!='is_archive' && $c!='is_wa')
                 @if($c == 'penasehat_1')
                 <div class="col-md-12 text-warning font-weight-bold">SECTION #2</div>
                 @endif
@@ -108,6 +108,19 @@
                 </div>
                 @endif
                 @endforeach
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="custom-control-label">INFO WA</label>
+                        <select class="form-control" name="is_wa">
+                            <option <?php if (isset($datax)) {
+                                        echo $datax->is_wa == 1 ? 'selected' : '';
+                                    } ?> value="1">Ya</option>
+                            <option <?php if (isset($datax)) {
+                                        echo $datax->is_wa == 0 ? 'selected' : '';
+                                    } ?> value="0">Tidak</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
             <div class="row">
