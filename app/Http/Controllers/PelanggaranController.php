@@ -192,6 +192,7 @@ class PelanggaranController extends Controller
 - Angkatan: *' . $data->santri->angkatan . '*
 - Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
 - Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
+- Waktu: *' . $data->tanggal_melanggar . '*
 - Keterangan: *' . $data->keterangan . '*';
             $contact_id = 'wa_dewanguru_group_id';
             WaSchedules::save('Data Pelanggaran ' . $data->santri->user->fullname, $caption, $contact_id);
