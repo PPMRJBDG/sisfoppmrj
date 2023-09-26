@@ -352,6 +352,12 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
         }
     }
 
+    public function generator()
+    {
+        PresenceGroupsChecker::checkPresenceGroups();
+        PresenceGroupsChecker::checkPermitGenerators();
+    }
+
     public function report($ids)
     {
         $rs = ReportScheduler::where('ids', $ids)->first();
