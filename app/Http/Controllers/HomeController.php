@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\PresenceGroup;
+use App\Models\Presence;
 use App\Helpers\CountDashboard;
 
 class HomeController extends Controller
@@ -28,6 +29,7 @@ class HomeController extends Controller
         $tahun_bulan = [];
         $count_dashboard = CountDashboard::index();
         $presence_group = PresenceGroup::get();
+        $get_presence_today = Presence::where('event_date', date("Y-m-d"))->get();
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
             ->whereNull('exit_at')
@@ -153,7 +155,8 @@ class HomeController extends Controller
                 'all_presences' => $all_presences,
                 'list_angkatan' => $list_angkatan,
                 'select_angkatan' => $select_angkatan,
-                'all_permit' => $all_permit
+                'all_permit' => $all_permit,
+                'get_presence_today' => $get_presence_today
             ]);
         }
     }

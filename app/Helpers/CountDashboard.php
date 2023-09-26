@@ -177,6 +177,12 @@ class CountDashboard
                         $mhs_alpha[$mhs->santri_id]['name'] = $mhs->fullname;
                         $mhs_alpha[$mhs->santri_id]['angkatan'] = $mhs->angkatan;
                         $mhs_alpha[$mhs->santri_id]['nohp_ortu'] = $mhs->nohp_ortu;
+                        $lorong = Lorong::find($mhs->fkLorong_id);
+                        if ($lorong == null) {
+                            $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
+                        } else {
+                            $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                        }
                     }
                 }
             }
@@ -196,6 +202,12 @@ class CountDashboard
                             $mhs_alpha[$mhs->id]['name'] = $mhs->user->fullname;
                             $mhs_alpha[$mhs->id]['angkatan'] = $mhs->angkatan;
                             $mhs_alpha[$mhs->id]['nohp_ortu'] = $mhs->nohp_ortu;
+                            $lorong = Lorong::find($mhs->fkLorong_id);
+                            if ($lorong == null) {
+                                $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
+                            } else {
+                                $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                            }
                         }
                     }
                 }

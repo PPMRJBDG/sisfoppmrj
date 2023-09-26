@@ -1,22 +1,43 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
-<div class="card shadow-lg">
-    <div class="card-body">
-        <h6 class="mb-0">Selamat datang, {{ auth()->user()->fullname }}!</h6>
-        <?php echo $count_dashboard; ?>
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+<div class="col-12 mb-2">
+    <div class="card shadow-lg p-3">
+        <label class="m-0 mb-2 text-sm">Shortcut Presensi Hari Ini</label>
+        @if(count($get_presence_today)>0)
+        @foreach($get_presence_today as $gpt)
+        <a href="{{ App\Helpers\CommonHelpers::settings()->host_url . '/presensi/list/' . $gpt->id }}" class="btn btn-primary btn-sm">
+            Presensi {{ $gpt->name }}
+        </a>
+        @endforeach
+        @endif
     </div>
 </div>
 @endif
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-<div class="card mt-2 mb-2">
-    <div class="card-body">
+<div class="card shadow-lg mb-2">
+    <div class="card-body p-3">
+        <p class="mb-2 text-sm font-weight-bolder">Selamat datang, {{ auth()->user()->fullname }}!</p>
+        <?php echo $count_dashboard; ?>
+    </div>
+</div>
+
+@if(!auth()->user()->hasRole('superadmin'))
+<div class="col-12 mb-2">
+    <div class="card shadow-lg p-3">
+        <a href="#" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" class="btn btn-warning form-control mb-0">Lihat Laporan Saya</a>
+    </div>
+</div>
+@endif
+
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+<div class="card mb-2">
+    <div class="card-body p-2">
         <div class="p-0 d-flex">
             <select class="select_angkatan form-control" name="select_angkatan" id="select_angkatan">
                 <!-- <option value="-">Pilih Angkatan</option> -->
                 @foreach($list_angkatan as $la)
-                <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">{{$la->angkatan}}</option>
+                <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">Angkatan {{$la->angkatan}}</option>
                 @endforeach
             </select>
             <select class="select_tb form-control" name="select_tb" id="select_tb">
@@ -30,20 +51,20 @@
             <table id="table-hadir" class="table align-items-center mb-0">
                 <thead class="thead-light">
                     <tr style="background-color:#f6f9fc;">
-                        <th class="text-uppercase text-xs text-secondary font-weight-bolder ps-2">NAMA</th>
+                        <th class="text-uppercase text-xs font-weight-bolder ps-2">NAMA</th>
                         @foreach($presence_group as $pg)
-                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">
+                        <th class="text-uppercase text-center text-xs font-weight-bolder">
                             {{$pg->name}}
                             <br>
                             H / I / A / T
                         </th>
                         @endforeach
-                        <th class="text-uppercase text-xs text-secondary font-weight-bolder ps-2"></th>
-                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>HADIR</th>
-                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>IJIN</th>
-                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>ALPHA</th>
-                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>KBM</th>
-                        <th class="text-uppercase text-center text-xs text-secondary font-weight-bolder">TOTAL<br>PERSENTASE</th>
+                        <th class="text-uppercase text-xs font-weight-bolder ps-2"></th>
+                        <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>HADIR</th>
+                        <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>IJIN</th>
+                        <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>ALPHA</th>
+                        <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>KBM</th>
+                        <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>PERSENTASE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,16 +132,16 @@
 @elseif(auth()->user()->hasRole('santri'))
 <div class="row mt-2 mb-2">
     <div class="col-12">
-        <a href="#" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" class="btn btn-warning form-control">Lihat Report</a>
-    </div>
-    <div class="col-12">
-        <div class="p-0 d-flex">
-            <select class="select_tb form-control" name="select_tb" id="select_tb">
-                <option value="-">Keseluruhan</option>
-                @foreach($tahun_bulan as $tbx)
-                <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
-                @endforeach
-            </select>
+        <div class="card shadow-lg p-3">
+            <label class="m-0 text-sm">Filter</label>
+            <div class="p-0 d-flex">
+                <select class="select_tb form-control" name="select_tb" id="select_tb">
+                    <option value="-">Keseluruhan</option>
+                    @foreach($tahun_bulan as $tbx)
+                    <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
         <div class="row mt-2">
             @foreach($presence_group as $pg)
@@ -141,9 +162,9 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                     <tr class="text-xs">
-                                        <th class="text-uppercase text-secondary font-weight-bolder">TGL</th>
-                                        <th class="text-uppercase text-secondary font-weight-bolder">STATUS</th>
-                                        <th class="text-uppercase text-secondary font-weight-bolder">TELAT</th>
+                                        <th class="text-uppercase font-weight-bolder">TGL</th>
+                                        <th class="text-uppercase font-weight-bolder">STATUS</th>
+                                        <th class="text-uppercase font-weight-bolder">TELAT</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -152,7 +173,7 @@
                                     @if($pg->id==$prs->fkPresence_group_id)
                                     <tr class="text-sm">
                                         <td>
-                                            {{ date_format(date_create($prs->event_date), 'd') }}
+                                            {{ date_format(date_create($prs->event_date), 'd M') }}
                                         </td>
                                         <td>
                                             @if($prs->fkSantri_id!="")
@@ -163,7 +184,9 @@
                                         </td>
                                         <td>
                                             @if($prs->fkSantri_id!="")
-                                            {{ ($prs->is_late) ? 'Ya' : 'Tidak' }}
+                                            @if($prs->is_late)
+                                            <i class="ni ni-check-bold text-warning text-xs opacity-10"></i>
+                                            @endif
                                             @endif
                                         </td>
                                     </tr>

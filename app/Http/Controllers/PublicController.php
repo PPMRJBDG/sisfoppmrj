@@ -83,7 +83,7 @@ class PublicController extends Controller
 *Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
                 $get_presence = Presence::where('event_date', $yesterday)->get();
                 if (count($get_presence) > 0) {
-                    $time_post = 1;
+                    $time_post = 3;
                     foreach ($get_presence as $presence) {
                         // hadir
                         $presents = CountDashboard::mhs_hadir($presence->id, 'all');
@@ -110,7 +110,12 @@ Alpha: ' . count($mhs_alpha) . '
 ';
                                 // info ke ortu
                                 if ($setting->wa_info_alpha_ortu == 1) {
-                                    $caption_ortu = 'Assalamualaikum Wr Wb, menginformasikan bahwa ' . $d['name'] . ' tidak hadir tanpa ijin pada ' . $presence->name . ' .Ajzkh 🙏🏻';
+                                    $caption_ortu = 'Assalamualaikum Wr Wb,
+Menginformasikan bahwa ' . $d['name'] . ' kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
+Jika ada kendala, silahkan menghubungi Pengurus Koor Lorong:
+' . $d['lorong'] . '.
+
+Ajzkh 🙏🏻';
                                     WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, true);
                                     $time_post++;
                                 }
@@ -120,7 +125,8 @@ Alpha: ' . count($mhs_alpha) . '
                 }
                 $caption = $caption . '
 NB:
-- [Peringatan] Apabila kehadiran KBM dalam 3 bulan dibawah *80%*, sesuai peratuarn Pondok Pesantren Mahasiswa akan terdapat *Surat Peringatan 2*
+- [Peringatan] Apabila kehadiran KBM dalam 3 bulan dibawah *80%*, sesuai peraturan Pondok Pesantren Mahasiswa akan terdapat *Surat Peringatan 2*
+- Jika ada keperluan, dapat melakukan input ijin melalui sisfo
 - Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus atau koor lorong';
 
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
