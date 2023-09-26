@@ -83,6 +83,7 @@ class PresenceGroupsChecker
             ->get();
 
         foreach ($rangedPermitGenerators as $rangedPermitGenerator) {
+
             // now let's insert permits to existing presences.
             $createdPresences = Presence::whereDate('event_date', '>=', $rangedPermitGenerator->from_date)
                 ->whereDate('event_date', '<=', $rangedPermitGenerator->to_date)
@@ -97,10 +98,10 @@ class PresenceGroupsChecker
                     continue;
 
                 // check whether the person is present at that presence
-                $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $rangedPermitGenerator->fkSantri_id)->first();
-
-                if (isset($existingPresent))
-                    continue;
+                $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $rangedPermitGenerator->fkSantri_id);
+                if (isset($existingPresent)) {
+                    $existingPresent->delete();
+                }
 
                 $inserted = Permit::create([
                     'fkSantri_id' => $rangedPermitGenerator->fkSantri_id,
@@ -108,7 +109,8 @@ class PresenceGroupsChecker
                     'reason' => $rangedPermitGenerator->reason,
                     'reason_category' => $rangedPermitGenerator->reason_category,
                     'status' => 'approved',
-                    'approved_by' => 'system'
+                    'approved_by' => 'system',
+                    'ids' => uniqid()
                 ]);
             }
         }
