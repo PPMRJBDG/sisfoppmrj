@@ -195,7 +195,10 @@ NB:
             }
 
             if (count($data_mhs) > 0) {
-                WaSchedules::save('Weekly Report', $data_presensi_weekly, 'wa_ketertiban_group_id');
+                $add_koor = '
+
+Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% diatas.';
+                WaSchedules::save('Weekly Report', $data_presensi_weekly . $add_koor, 'wa_ketertiban_group_id');
 
                 // kirim ke ortu
                 $time_post = 2;

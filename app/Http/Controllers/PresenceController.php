@@ -1230,7 +1230,6 @@ Alasan: ' . $request->input('reason');
             }
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
-
 ' . $lorong . '
 Presensi: ' . $pres_name . '
 Kategori: ' . $request->input('reason_category') . '
