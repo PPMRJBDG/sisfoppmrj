@@ -43,7 +43,7 @@ class HomeController extends Controller
         if ($json) {
             $bfjkah = true;
         } else {
-            if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+            if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong')) {
                 $bfjkah = true;
             }
         }
