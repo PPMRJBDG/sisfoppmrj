@@ -353,7 +353,7 @@ Silahkan klik link dibawah ini:
 Amalsholih dicek kembali, yang *Tidak Hadir* diubah jadi alpha.
 Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
                 WaSchedules::save('Link Presensi', $caption, $contact_id, 1, true);
-                WaSchedules::save('Link Presensi', $caption, 'Bulk Koor Lorong', 2, true);
+                WaSchedules::save('Link Presensi', $caption, 'Bulk Koor Lorong', 3, true);
             }
         } elseif ($time == 'jam-malam') {
             $contact_id = 'wa_ketertiban_group_id';

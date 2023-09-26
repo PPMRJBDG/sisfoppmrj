@@ -204,16 +204,15 @@ class CountDashboard
                             $mhs_alpha[$mhs->id]['nohp_ortu'] = $mhs->nohp_ortu;
                             $lorong = Lorong::find($mhs->fkLorong_id);
                             if ($lorong == null) {
-                                $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
+                                $mhs_alpha[$mhs->id]['lorong'] = '-';
                             } else {
-                                $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                                $mhs_alpha[$mhs->id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
                             }
                         }
                     }
                 }
             }
         }
-
         return $mhs_alpha;
     }
 }
