@@ -358,6 +358,25 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
         } elseif ($time == 'jam-malam') {
             $contact_id = 'wa_ketertiban_group_id';
             WaSchedules::save('Jam Malam ' . date('d-m-Y'), $setting->wa_info_jaga_malam, $contact_id, 1, true);
+        } elseif ($time == 'sodaqoh-xlunas') {
+            $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
+            $sodaqoh = Sodaqoh::whereNull('status_lunas')->get();
+            if (count($sodaqoh) > 0) {
+                $time_post = 2;
+                foreach ($sodaqoh as $sdq) {
+                    $kekurangan = 0;
+                    foreach ($bulan as $b) {
+                        $kekurangan = $kekurangan + $sdq->$b;
+                    }
+                    $contact_id = WaSchedules::getContactId($sdq->santri->nohp_ortu);
+                    $caption = '*[Sodaqoh Tahunan PPMRJ]* Sekedar mengingatkan kepada Bapak/Ibu sekalian terkait pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $sdq->periode . '. Bagi yang membayar per bulan atau per beberapa bulan sekali dipersilahkan untuk mempersiapkan pembayarannya.
+Saat ini kekurangan masih senilai: *Rp ' . number_format($kekurangan, 0) . ',-*
+
+Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluarkan untuk *Fisabilillah* semoga bermanfaat untuk Putra/i dan keluarga. Aamiin 🤲🏻';
+                    WaSchedules::save('Belum Lunas Sodaqoh PPM', $caption, $contact_id, $time_post);
+                    $time_post++;
+                }
+            }
         }
     }
 
