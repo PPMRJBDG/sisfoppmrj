@@ -365,9 +365,11 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
                 $time_post = 2;
                 foreach ($sodaqoh as $sdq) {
                     $kekurangan = 0;
+                    $sudah_bayar = 0;
                     foreach ($bulan as $b) {
-                        $kekurangan = $kekurangan + $sdq->$b;
+                        $sudah_bayar = $sudah_bayar + $sdq->$b;
                     }
+                    $kekurangan = $sdq->nominal - $sudah_bayar;
                     $contact_id = WaSchedules::getContactId($sdq->santri->nohp_ortu);
                     $caption = '*[Sodaqoh Tahunan PPMRJ]* Sekedar mengingatkan kepada Bapak/Ibu sekalian terkait pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $sdq->periode . '. Bagi yang membayar per bulan atau per beberapa bulan sekali dipersilahkan untuk mempersiapkan pembayarannya.
 Saat ini kekurangan masih senilai: *Rp ' . number_format($kekurangan, 0) . ',-*
