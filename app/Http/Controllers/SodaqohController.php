@@ -27,9 +27,6 @@ class SodaqohController extends Controller
             ->get();
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
 
-        $vlunas = count(Sodaqoh::where('status_lunas', 1)->get());
-        $xlunas = count(Sodaqoh::whereNull('status_lunas')->get());
-
         if (($periode == '-' && $angkatan == '-') || ($periode == null && $angkatan == null)) {
             $datax = Sodaqoh::get();
             $periode = '-';
@@ -51,16 +48,14 @@ class SodaqohController extends Controller
             'select_angkatan' => $angkatan,
             'list_periode' => $list_periode,
             'list_angkatan' => $list_angkatan,
-            'periode' => $periode,
-            'vlunas' => $vlunas,
-            'xlunas' => $xlunas,
+            'periode' => $periode
         ]);
     }
 
     public function store(Request $request)
     {
         $check = Sodaqoh::find($request->input('id'));
-        $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sept', 'okt', 'nov', 'des'];
+        $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
         if ($check) {
             // crosscheck
             if ($check->fkSantri_id == $request->input('fkSantri_id')) {

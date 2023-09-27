@@ -96,7 +96,7 @@
                     </thead>
                     <tbody>
                         <?php
-                        $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
+                        $bulan = ['sep', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
                         ?>
                         @foreach($sodaqoh as $sdq)
                         <?php
