@@ -19,70 +19,72 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 <div class="card shadow-lg">
     <div class="card-header">
         <div class="card shadow-lg">
-            <table class="table align-items-center mb-0">
-                <thead style="background-color:#f6f9fc;">
-                    <tr>
-                        <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Periode</th>
-                        <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Mahasiswa</th>
-                        <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Sudah Lunas</th>
-                        <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Belum Lunas</th>
-                        <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Penerimaan</th>
-                    </tr>
-                </thead>
-                <?php
-                $total_vlunas = 0;
-                $total_xlunas = 0;
-                $total_penerimaan = 0;
-                ?>
-                <tbody>
-                    @if(count($list_periode)>0)
-                    <?php
-                    foreach ($list_periode as $per) {
-                    ?>
-                        <tr class="text-center text-sm">
-                            <?php
-                            $v = App\Models\Sodaqoh::where('status_lunas', 1)->where('periode', $per->periode)->get();
-                            $x = App\Models\Sodaqoh::whereNull('status_lunas')->where('periode', $per->periode)->get();
-                            $total = 0;
-                            foreach ($v as $data_vlunas) {
-                                foreach ($bulan as $b) {
-                                    $total = $total + $data_vlunas->$b;
-                                }
-                            }
-                            foreach ($x as $data_xlunas) {
-                                foreach ($bulan as $b) {
-                                    $total = $total + $data_xlunas->$b;
-                                }
-                            }
-                            ?>
-                            <td>{{ $per->periode }}</td>
-                            <td>{{ count($v)+count($x) }}</td>
-                            <td>
-                                {{ count($v) }}
-                            </td>
-                            <td>
-                                {{ count($x) }}
-                            </td>
-                            <td class="font-weight-bolder text-right">
-                                {{ number_format($total, 0) }}
-                            </td>
+            <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                    <thead style="background-color:#f6f9fc;">
+                        <tr>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Periode</th>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Mahasiswa</th>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Sudah Lunas</th>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Belum Lunas</th>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Penerimaan</th>
                         </tr>
+                    </thead>
                     <?php
-                        $total_vlunas += count($v);
-                        $total_xlunas += count($x);
-                        $total_penerimaan = $total_penerimaan + $total;
-                    }
+                    $total_vlunas = 0;
+                    $total_xlunas = 0;
+                    $total_penerimaan = 0;
                     ?>
-                    @endif
-                    <tr>
-                        <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
-                        <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
-                        <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_vlunas }}</td>
-                        <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_xlunas }}</td>
-                        <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_penerimaan, 0) }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                    <tbody>
+                        @if(count($list_periode)>0)
+                        <?php
+                        foreach ($list_periode as $per) {
+                        ?>
+                            <tr class="text-center text-sm">
+                                <?php
+                                $v = App\Models\Sodaqoh::where('status_lunas', 1)->where('periode', $per->periode)->get();
+                                $x = App\Models\Sodaqoh::whereNull('status_lunas')->where('periode', $per->periode)->get();
+                                $total = 0;
+                                foreach ($v as $data_vlunas) {
+                                    foreach ($bulan as $b) {
+                                        $total = $total + $data_vlunas->$b;
+                                    }
+                                }
+                                foreach ($x as $data_xlunas) {
+                                    foreach ($bulan as $b) {
+                                        $total = $total + $data_xlunas->$b;
+                                    }
+                                }
+                                ?>
+                                <td>{{ $per->periode }}</td>
+                                <td>{{ count($v)+count($x) }}</td>
+                                <td>
+                                    {{ count($v) }}
+                                </td>
+                                <td>
+                                    {{ count($x) }}
+                                </td>
+                                <td class="font-weight-bolder text-right">
+                                    {{ number_format($total, 0) }}
+                                </td>
+                            </tr>
+                        <?php
+                            $total_vlunas += count($v);
+                            $total_xlunas += count($x);
+                            $total_penerimaan = $total_penerimaan + $total;
+                        }
+                        ?>
+                        @endif
+                        <tr>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_vlunas }}</td>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_xlunas }}</td>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_penerimaan, 0) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

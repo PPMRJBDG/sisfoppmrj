@@ -15,6 +15,11 @@ class CommonHelpers
         return Settings::find(1);
     }
 
+    public static function bulan()
+    {
+        return ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
+    }
+
     public static function hari_ini($hari)
     {
         switch ($hari) {

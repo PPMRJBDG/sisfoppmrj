@@ -17,7 +17,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->name
 // Route::get('/{tb}', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
-Route::get('/home/{tb}/{select_angkatan}', [App\Http\Controllers\HomeController::class, 'dashboard']);
+Route::get('/home/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'dashboard']);
 
 Route::get('/register', [App\Http\Controllers\RegisterController::class, 'register'])->name('register');
 Route::post('/register/store', [App\Http\Controllers\RegisterController::class, 'store_from_public'])->name('store user from public');
@@ -137,12 +137,17 @@ Route::get('/pelanggaran/edit/{id}', [App\Http\Controllers\PelanggaranController
 Route::get('/pelanggaran/delete/{id}', [App\Http\Controllers\PelanggaranController::class, 'delete'])->name('delete pelanggaran')->middleware('role:superadmin|rj1|wk');
 Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranController::class, 'archive'])->name('archive pelanggaran')->middleware('role:superadmin|rj1|wk');
 
-// sodaqoh
+// KEUANGAN
 Route::get('/sodaqoh/list', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/sodaqoh/delete/{id}/{periode}/{angkatan}', [App\Http\Controllers\SodaqohController::class, 'delete'])->name('delete sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/sodaqoh/list/{periode}', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/sodaqoh/list/{periode}/{angkatan}', [App\Http\Controllers\SodaqohController::class, 'list'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::post('/sodaqoh/list/store', [App\Http\Controllers\SodaqohController::class, 'store'])->name('store sodaqoh')->middleware('role:ku|superadmin');
+Route::get('/rab', [App\Http\Controllers\KeuanganController::class, 'rab'])->name('view rab')->middleware('role:superadmin|ku|rj1');
+Route::get('/rab/create-update', [App\Http\Controllers\KeuanganController::class, 'rab_create_update'])->name('create update rab')->middleware('role:superadmin|ku|rj1');
+Route::post('/rab/store', [App\Http\Controllers\KeuanganController::class, 'rab_store'])->name('store rab')->middleware('role:superadmin|ku|rj1');
+Route::get('/op/in-out', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
+Route::post('/op/in-out/store', [App\Http\Controllers\KeuanganController::class, 'store_inout'])->name('store inout')->middleware('role:superadmin|ku|rj1');
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');

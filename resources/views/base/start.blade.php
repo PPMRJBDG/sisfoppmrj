@@ -35,6 +35,63 @@
       padding-right: 8px;
     }
   }
+
+  @media only screen and (max-width: 600px) {
+
+    body,
+    h6 {
+      font-size: 0.8rem !important;
+    }
+  }
+
+  .py-4 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Style the tab */
+  .tab {
+    overflow: hidden;
+    background-color: #f6f9fc;
+    border-radius: 8px 8px 0 0;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px !important;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  .tablinks {
+    font-weight: bold !important;
+    font-size: 14px !important;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #e9eaeb;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #e9eaeb;
+    border-bottom: solid 4px #c93779;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    /* padding: 6px 12px; */
+    border-top: none;
+    background-color: #fff;
+    border-radius: 0 0 8px 8px;
+  }
 </style>
 
 <body class="g-sidenav-show bg-gray-100">

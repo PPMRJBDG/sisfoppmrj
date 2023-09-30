@@ -72,10 +72,10 @@ class CountDashboard
                             <thead class="thead-light">
                                 <tr style="background-color:#f6f9fc;">
                                     <th class="text-uppercase text-center text-sm font-weight-bolder">ANGKATAN</th>
-                                    <th class="text-uppercase text-center text-sm font-weight-bolder">MUBALLIGH (L)</th>
-                                    <th class="text-uppercase text-center text-sm font-weight-bolder">MUBALLIGH (P)</th>
-                                    <th class="text-uppercase text-center text-sm font-weight-bolder">REGULER (L)</th>
-                                    <th class="text-uppercase text-center text-sm font-weight-bolder">REGULER (P)</th>
+                                    <th class="text-uppercase text-center text-sm font-weight-bolder">MT (L)</th>
+                                    <th class="text-uppercase text-center text-sm font-weight-bolder">MT (P)</th>
+                                    <th class="text-uppercase text-center text-sm font-weight-bolder">REG (L)</th>
+                                    <th class="text-uppercase text-center text-sm font-weight-bolder">REG (P)</th>
                                     <th class="text-uppercase text-center text-sm font-weight-bolder">TOTAL</th>
                                 </tr>
                             </thead>
@@ -100,12 +100,15 @@ class CountDashboard
 
     public static function total_mhs($for)
     {
+        $view_usantri = array();
         if ($for == 'all') {
             $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
         } elseif ($for == 'lorong') {
             if (auth()->user()->santri->lorongUnderLead) {
                 $view_usantri = auth()->user()->santri->lorongUnderLead->members;
             }
+        } else {
+            $view_usantri = DB::table('v_user_santri')->where('angkatan', $for)->orderBy('fullname', 'ASC')->get();
         }
         return count($view_usantri);
     }
@@ -121,6 +124,7 @@ class CountDashboard
                     ->select('presents.*')
                     ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
                     ->join('users', 'users.id', '=', 'santris.fkUser_id')
+                    ->whereNull('santris.exit_at')
                     ->orderBy('users.fullname')
                     ->get();
             }
@@ -132,6 +136,17 @@ class CountDashboard
                     ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
                     ->join('users', 'users.id', '=', 'santris.fkUser_id')
                     ->where('fkLorong_id', $lorong->id)
+                    ->orderBy('users.fullname')
+                    ->get();
+            }
+        } else {
+            if ($presence != null) {
+                $presents = $presence->presents()
+                    ->select('presents.*')
+                    ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
+                    ->join('users', 'users.id', '=', 'santris.fkUser_id')
+                    ->where('santris.angkatan', $for)
+                    ->whereNull('santris.exit_at')
                     ->orderBy('users.fullname')
                     ->get();
             }
@@ -152,6 +167,12 @@ class CountDashboard
                 }
             }
             $permits = Permit::where('fkPresence_id', $presence_id)->where('status', 'approved')->whereIn('fkSantri_id', $arr_santri)->get();
+        } else {
+            $view_usantri = DB::table('v_user_santri')->where('angkatan', $for)->orderBy('fullname', 'ASC')->get();
+            foreach ($view_usantri as $santri) {
+                $arr_santri[] = $santri->id;
+            }
+            $permits = Permit::where('fkPresence_id', $presence_id)->where('status', 'approved')->whereIn('fkSantri_id', $arr_santri)->get();
         }
 
         return $permits;
@@ -159,10 +180,10 @@ class CountDashboard
 
     public static function mhs_alpha($presence_id, $for)
     {
-        $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
 
         $mhs_alpha = array();
         if ($for == 'all') {
+            $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
             foreach ($view_usantri as $mhs) {
                 $check_alpha = Present::where('fkPresence_id', $presence_id)
                     ->where('fkSantri_id', $mhs->santri_id)
@@ -208,6 +229,31 @@ class CountDashboard
                             } else {
                                 $mhs_alpha[$mhs->id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
                             }
+                        }
+                    }
+                }
+            }
+        } else {
+            $view_usantri = DB::table('v_user_santri')->where('angkatan', $for)->orderBy('fullname', 'ASC')->get();
+            foreach ($view_usantri as $mhs) {
+                $check_alpha = Present::where('fkPresence_id', $presence_id)
+                    ->where('fkSantri_id', $mhs->santri_id)
+                    ->first();
+                if ($check_alpha == null) {
+                    $check_permit = Permit::where('fkPresence_id', $presence_id)
+                        ->where('status', 'approved')
+                        ->where('fkSantri_id', $mhs->santri_id)->first();
+                    if ($check_permit == null) {
+                        $mhs_alpha[$mhs->santri_id]['presence_id'] = $presence_id;
+                        $mhs_alpha[$mhs->santri_id]['santri_id'] = $mhs->santri_id;
+                        $mhs_alpha[$mhs->santri_id]['name'] = $mhs->fullname;
+                        $mhs_alpha[$mhs->santri_id]['angkatan'] = $mhs->angkatan;
+                        $mhs_alpha[$mhs->santri_id]['nohp_ortu'] = $mhs->nohp_ortu;
+                        $lorong = Lorong::find($mhs->fkLorong_id);
+                        if ($lorong == null) {
+                            $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
+                        } else {
+                            $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
                         }
                     }
                 }

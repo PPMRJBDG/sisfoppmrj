@@ -158,10 +158,11 @@ NB:
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-            $data_presensi_weekly = '*Report Presensi KBM kurang dari 80%: ' . date("M Y") . '*';
+            $data_presensi_weekly = '*Report Presensi KBM kurang dari 80%: ' . date("M Y") . '*
+';
             $data_mhs = array();
             foreach ($list_angkatan as $la) {
-                $result = (new HomeController)->dashboard($last_month, $la->angkatan, true);
+                $result = (new HomeController)->dashboard($last_month, $la->angkatan, null, true);
                 $view_usantri = $result['view_usantri'];
                 $presence_group = $result['presence_group'];
                 $presences = $result['presences'];
@@ -174,16 +175,14 @@ NB:
                     $all_hadir = 0;
                     $all_ijin = 0;
                     foreach ($presence_group as $pg) {
-                        foreach ($presences[$pg->id] as $listcp) {
-                            if ($listcp->santri_id == $vu->santri_id) {
-                                $ijin = 0;
-                                if (isset($all_permit[$pg->id][$vu->santri_id])) {
-                                    $ijin = $all_permit[$pg->id][$vu->santri_id];
-                                }
-                                $all_kbm = $all_kbm + $all_presences[$pg->id][0]->c_all;
-                                $all_hadir = $all_hadir + $listcp->cp;
-                                $all_ijin = $all_ijin + $ijin;
+                        foreach ($presences[$vu->santri_id][$pg->id] as $listcp) {
+                            $ijin = 0;
+                            if (isset($all_permit[$vu->santri_id][$pg->id][$vu->santri_id])) {
+                                $ijin = $all_permit[$vu->santri_id][$pg->id][$vu->santri_id];
                             }
+                            $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
+                            $all_hadir = $all_hadir + $listcp->cp;
+                            $all_ijin = $all_ijin + $ijin;
                         }
                     }
 
@@ -228,7 +227,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                 ->groupBy('angkatan')
                 ->get();
             foreach ($list_angkatan as $la) {
-                $result = (new HomeController)->dashboard($last_month, $la->angkatan, true);
+                $result = (new HomeController)->dashboard($last_month, $la->angkatan, null, true);
                 $view_usantri = $result['view_usantri'];
                 $presence_group = $result['presence_group'];
                 $presences = $result['presences'];
@@ -364,19 +363,22 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
             if (count($sodaqoh) > 0) {
                 $time_post = 2;
                 foreach ($sodaqoh as $sdq) {
-                    $kekurangan = 0;
-                    $sudah_bayar = 0;
-                    foreach ($bulan as $b) {
-                        $sudah_bayar = $sudah_bayar + $sdq->$b;
-                    }
-                    $kekurangan = $sdq->nominal - $sudah_bayar;
-                    $contact_id = WaSchedules::getContactId($sdq->santri->nohp_ortu);
-                    $caption = '*[Sodaqoh Tahunan PPMRJ]* Sekedar mengingatkan kepada Bapak/Ibu sekalian terkait pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $sdq->periode . '. Bagi yang membayar per bulan atau per beberapa bulan sekali dipersilahkan untuk mempersiapkan pembayarannya.
+                    $view_usantri = DB::table('v_user_santri')->where('santri_id', $sdq->fkSantri_id)->first();
+                    if ($view_usantri == null) {
+                        $kekurangan = 0;
+                        $sudah_bayar = 0;
+                        foreach ($bulan as $b) {
+                            $sudah_bayar = $sudah_bayar + $sdq->$b;
+                        }
+                        $kekurangan = $sdq->nominal - $sudah_bayar;
+                        $contact_id = WaSchedules::getContactId($sdq->santri->nohp_ortu);
+                        $caption = '*[Sodaqoh Tahunan PPMRJ]* Sekedar mengingatkan kepada Bapak/Ibu sekalian terkait pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $sdq->periode . '. Bagi yang membayar per bulan atau per beberapa bulan sekali dipersilahkan untuk mempersiapkan pembayarannya.
 Saat ini kekurangan masih senilai: *Rp ' . number_format($kekurangan, 0) . ',-*
 
 Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluarkan untuk *Fisabilillah* semoga bermanfaat untuk Putra/i dan keluarga. Aamiin 🤲🏻';
-                    WaSchedules::save('Belum Lunas Sodaqoh PPM', $caption, $contact_id, $time_post);
-                    $time_post++;
+                        WaSchedules::save('Belum Lunas Sodaqoh PPM', $caption, $contact_id, $time_post);
+                        $time_post++;
+                    }
                 }
             }
         }

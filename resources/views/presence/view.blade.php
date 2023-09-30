@@ -4,64 +4,7 @@
 'breadcrumbs' => ['Daftar Presensi', 'Presensi ' . (isset($presence) ? $presence->name : '')],
 'backRoute' => isset($presence) ? ($presence->presenceGroup ? route('view presence group', $presence->presenceGroup->id) : route('presence tm')) : ''
 ])
-<style>
-  @media only screen and (max-width: 600px) {
 
-    body,
-    h6 {
-      font-size: 0.8rem !important;
-    }
-  }
-
-  .py-4 {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  /* Style the tab */
-  .tab {
-    overflow: hidden;
-    background-color: #f1f1f1;
-    border-radius: 8px 8px 0 0;
-  }
-
-  /* Style the buttons inside the tab */
-  .tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px !important;
-    transition: 0.3s;
-    font-size: 17px;
-  }
-
-  .tablinks {
-    font-weight: bold !important;
-    font-size: 14px !important;
-  }
-
-  /* Change background color of buttons on hover */
-  .tab button:hover {
-    background-color: #ddd;
-  }
-
-  /* Create an active/current tablink class */
-  .tab button.active {
-    background-color: #ccc;
-    border-bottom: solid 4px #c93779;
-  }
-
-  /* Style the tab content */
-  .tabcontent {
-    display: none;
-    /* padding: 6px 12px; */
-    border-top: none;
-    background-color: #fff;
-    border-radius: 0 0 8px 8px;
-  }
-</style>
 @if(isset($presence))
 <div class="card">
   <div class="card-body p-3 d-flex">
@@ -85,9 +28,9 @@
 </div>
 
 <div class="tab mt-2">
-  <button class="tablinks active" onclick="openPresensi(event, 'hadir')">Hadir {{count($presents)}}</button>
-  <button class="tablinks" onclick="openPresensi(event, 'ijin')">Ijin {{count($permits)}}</button>
-  <button class="tablinks" onclick="openPresensi(event, 'alpha')">Alpha {{count($mhs_alpha)}}</button>
+  <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir {{count($presents)}}</button>
+  <button class="tablinks" onclick="openTab(event, 'ijin')">Ijin {{count($permits)}}</button>
+  <button class="tablinks" onclick="openTab(event, 'alpha')">Alpha {{count($mhs_alpha)}}</button>
 </div>
 
 <div class="card tabcontent" id="hadir" style="display:block;">
@@ -239,19 +182,5 @@
       // [1, 'desc']
     ]
   });
-
-  function openPresensi(evt, tahun) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tahun).style.display = "block";
-    evt.currentTarget.className += " active";
-  }
 </script>
 @include('base.end')

@@ -39,6 +39,20 @@
     </div>
 </div>
 <script>
+    function openTab(evt, tahun) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tahun).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
     function getReport(ids) {
         $('#exampleModal').fadeIn();
         $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
