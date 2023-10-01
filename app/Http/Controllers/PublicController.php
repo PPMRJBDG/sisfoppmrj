@@ -8,6 +8,7 @@ use App\Helpers\CountDashboard;
 use App\Helpers\PresenceGroupsChecker;
 use App\Models\Presence;
 use App\Models\Present;
+use App\Models\Periode;
 use App\Models\Permit;
 use App\Models\User;
 use App\Models\Settings;
@@ -151,8 +152,11 @@ NB:
             // bulk mahasiswa + ortu
             // jika all_ijin > 1/3 KBM diberi peringatan
             // daftar mahasiswa yang presensi < 80%
-            $last_month = strtotime(date("Y-m-d"));
-            $last_month = date('Y-m', $last_month);
+
+            // $last_month = strtotime(date("Y-m-d"));
+            // $last_month = date('Y-m', $last_month);
+
+            $periode_tahun = Periode::latest('periode_tahun')->first();
             $list_angkatan = DB::table('santris')
                 ->select('angkatan')
                 ->whereNull('exit_at')
@@ -162,7 +166,7 @@ NB:
 ';
             $data_mhs = array();
             foreach ($list_angkatan as $la) {
-                $result = (new HomeController)->dashboard($last_month, $la->angkatan, null, true);
+                $result = (new HomeController)->dashboard(null, $la->angkatan, $periode_tahun->periode_tahun, true);
                 $view_usantri = $result['view_usantri'];
                 $presence_group = $result['presence_group'];
                 $presences = $result['presences'];
@@ -240,13 +244,13 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                     $all_hadir = 0;
                     $all_ijin = 0;
                     foreach ($presence_group as $pg) {
-                        foreach ($presences[$pg->id] as $listcp) {
+                        foreach ($presences[$vu->santri_id][$pg->id] as $listcp) {
                             if ($listcp->santri_id == $vu->santri_id) {
                                 $ijin = 0;
                                 if (isset($all_permit[$pg->id][$vu->santri_id])) {
                                     $ijin = $all_permit[$pg->id][$vu->santri_id];
                                 }
-                                $all_kbm = $all_kbm + $all_presences[$pg->id][0]->c_all;
+                                $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
                                 $all_hadir = $all_hadir + $listcp->cp;
                                 $all_ijin = $all_ijin + $ijin;
                             }
@@ -294,12 +298,13 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                         'link_url' => $setting->host_url . '/report/' . $vs->ids,
                         'month' => date("m"),
                         'status' => 0,
-                        'scheduler' => 0,
+                        'count' => 0,
                         'ids' => $vs->ids
                     ]);
                 } else {
                     $check_report->month = date("m");
                     $check_report->status = 0;
+                    $check_report->count = 0;
                     $create_report = $check_report->save();
                 }
                 if ($create_report) {

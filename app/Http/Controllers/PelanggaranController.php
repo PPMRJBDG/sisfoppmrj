@@ -16,11 +16,15 @@ class PelanggaranController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index($id = null)
     {
         $is_archive = 0;
         $count_pelanggaran = array(); //Pelanggaran::select(DB::raw('fkJenis_pelanggaran_id, COUNT(fkJenis_pelanggaran_id) as kategori'))->where('is_archive', $is_archive)->groupBy('fkJenis_pelanggaran_id')->get();
-        $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
+        if ($id == null) {
+            $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
+        } else {
+            $list_pelanggaran = Pelanggaran::where('fkJenis_pelanggaran_id', $id)->where('is_archive', $is_archive)->get();
+        }
 
         foreach ($list_pelanggaran as $lp) {
             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['kategori'] = $lp->jenis->kategori_pelanggaran;
@@ -40,16 +44,16 @@ class PelanggaranController extends Controller
 
         $column = [
             'Nama',
-            'Angkatan',
-            'Pelanggaran',
-            'Tanggal Melangar',
+            // 'Angkatan',
+            // 'Pelanggaran',
+            'Tanggal',
             'SP',
-            'Tanggal SP',
-            'Peringatan Keras',
+            // 'Peringatan Keras',
             'Keterangan'
         ];
 
         return view('pelanggaran.list', [
+            'id' => $id,
             'column' => $column,
             'is_archive' => $is_archive,
             'list_pelanggaran' => $list_pelanggaran,

@@ -15,8 +15,11 @@
 @endif
 
 <div class="card p-2 mb-2">
+    @if($id!=null)
+    <a href="{{ route('pelanggaran tm') }}" class="btn btn-primary btn-sm col-12 col-md-2 mb-1">Tampilkan Semua</a>
+    @endif
     <div class="row">
-        @foreach($count_pelanggaran as $cp)
+        @foreach($count_pelanggaran as $key=>$cp)
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
             <div class="card mb-1 mt-1 shadow-sm">
                 <div class="card-body p-3">
@@ -32,10 +35,12 @@
                                         $color = 'primary';
                                     }
                                     ?>
-                                    <span class="text-{{$color}} text-sm font-weight-bolder">
-                                        [{{ $cp['kategori'] }}]
-                                    </span>
-                                    {{ $cp['pelanggaran'] }}
+                                    <a href="/pelanggaran/{{$key}}">
+                                        <span class="text-{{$color}} text-sm font-weight-bolder">
+                                            [{{ $cp['kategori'] }}]
+                                        </span>
+                                        {{ $cp['pelanggaran'] }}
+                                    </a>
                                 </h5>
                                 <h6 class="font-weight-bolder mb-0">
                                     Sudah SP: {{$cp['fix']}}
@@ -98,25 +103,21 @@
                     @foreach($list_pelanggaran as $data)
                     <tr class="text-sm">
                         <td onclick="getReport('<?php echo base64_encode($data->santri->id); ?>')" style="cursor:pointer;">
-                            {{ $data->santri->user->fullname }}
-                        </td>
-                        <td>
-                            {{ $data->santri->angkatan }}
-                        </td>
-                        <td>
+                            <b>[{{ $data->santri->angkatan }}] {{ $data->santri->user->fullname }}</b>
+                            <br>
                             [{{ isset($data->jenis) ? $data->jenis->kategori_pelanggaran : '-' }}] {{ isset($data->jenis) ? $data->jenis->jenis_pelanggaran : '' }}
                         </td>
-                        <td>
-                            {{ $data->tanggal_melanggar }}
+                        <td class="text-xs">
+                            <b>Melanggar:</b> {{ date_format(date_create($data->tanggal_melanggar), 'd M Y') }}
+                            <br>
+                            <b>SP:</b> {{ date_format(date_create($data->is_surat_peringatan), 'd M Y') }}
                         </td>
                         <td>
-                            SP {{ $data->kategori_sp_real }} -> SP {{ $data->keringanan_sp }}
-                        </td>
-                        <td>
-                            {{ $data->is_surat_peringatan }}
-                        </td>
-                        <td>
-                            {{ ($data->is_peringatan_keras==1) ? 'Ya' : 'Tidak' }}
+                            <b>
+                                SP {{ $data->kategori_sp_real }} -> SP {{ $data->keringanan_sp }}
+                                <br>
+                                Peringatan Keras: {{ ($data->is_peringatan_keras==1) ? 'Ya' : 'Tidak' }}
+                            </b>
                         </td>
                         <td>
                             {{ $data->keterangan }}
