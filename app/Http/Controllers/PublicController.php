@@ -135,7 +135,8 @@ Ajzkh 🙏🏻';
                 }
                 $caption = $caption . '
 NB:
-- [Peringatan] Apabila kehadiran KBM dalam 3 bulan dibawah *80%*, sesuai peraturan Pondok Pesantren Mahasiswa akan terdapat *Surat Peringatan 2*
+- [Peringatan] Apabila kehadiran KBM dalam 3 bulan dibawah *80%*, sesuai mekanisme peraturan PPM akan diberikan *Surat Peringatan 1*
+- [Peringatan] Apabila kehadiran KBM dalam 2 bulan berturut-turut dibawah *50%*, sesuai mekanisme peraturan PPM akan diberikan *Surat Peringatan 1*
 - Jika ada keperluan, dapat melakukan input ijin melalui sisfo
 - Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus atau koor lorong';
 
@@ -318,8 +319,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                                 $jenis_pelanggaran = JenisPelanggaran::find(14);
                                 $caption = $caption . '
 
-- Nama: *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . '*
-- Jenis Pelanggaran: *[' . $jenis_pelanggaran->kategori_pelanggaran . '] ' . $jenis_pelanggaran->jenis_pelanggaran . '*';
+- Nama: *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . '*';
                                 if ($is_50) {
                                     $caption = $caption . '
 - Keterangan: *SUDAH 2 BULAN BERTURUT-TURUT KEHADIRAN < 50%, AMSHOL RJ/WK SEGERA MEMBERIKAN SP 1 SESUAI MEKANISME*';
