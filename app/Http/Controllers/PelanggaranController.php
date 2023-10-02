@@ -8,6 +8,7 @@ use App\Models\Pelanggaran;
 use App\Models\JenisPelanggaran;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\WaSchedules;
+use App\Helpers\CommonHelpers;
 
 class PelanggaranController extends Controller
 {
@@ -181,6 +182,7 @@ class PelanggaranController extends Controller
                 $store[$c] = $request->input($c);
             }
             $store['is_archive'] = 0;
+            $store['periode_tahun'] = CommonHelpers::periode();
             $data = Pelanggaran::create($store);
             if ($data) {
                 $message = 'Berhasil menambahkan data';
@@ -192,10 +194,8 @@ class PelanggaranController extends Controller
         if ($request->input('is_wa') == 1) {
             $jenis_pelanggaran = JenisPelanggaran::find($request->input('fkJenis_pelanggaran_id'));
             $caption = 'Penambahan data pelanggaran dari Mahasiswa:
-- Nama: *' . $data->santri->user->fullname . '*
-- Angkatan: *' . $data->santri->angkatan . '*
-- Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
-- Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
+- Nama: *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . '*
+- Jenis Pelanggaran: *[' . $jenis_pelanggaran->kategori_pelanggaran . '] ' . $jenis_pelanggaran->jenis_pelanggaran . '*
 - Waktu: *' . $data->tanggal_melanggar . '*
 - Keterangan: *' . $data->keterangan . '*';
             $contact_id = 'wa_dewanguru_group_id';

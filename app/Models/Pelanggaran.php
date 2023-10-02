@@ -40,7 +40,9 @@ class Pelanggaran extends Model
         'is_st_dikembalikan',
         'keterangan',
         'is_archive',
-        'is_wa'
+        'is_wa',
+        'peringatan_kbm',
+        'periode_tahun'
     ];
 
     public static function attr()

@@ -35,7 +35,7 @@
                                         $color = 'primary';
                                     }
                                     ?>
-                                    <a href="/pelanggaran/{{$key}}">
+                                    <a href="/pelanggaran/id/{{$key}}">
                                         <span class="text-{{$color}} text-sm font-weight-bolder">
                                             [{{ $cp['kategori'] }}]
                                         </span>

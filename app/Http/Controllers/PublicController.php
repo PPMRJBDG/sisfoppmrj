@@ -53,6 +53,14 @@ class PublicController extends Controller
                         echo json_encode(['status' => true, 'message' => $caption]);
                     }
                 }
+                // khusus KBM status masih dipantau
+                if ($gp->fkJenis_pelanggaran_id == 14) {
+                    if ($gp->periode_tahun != CommonHelpers::periode() && $gp->is_surat_peringatan == '') {
+                        $set_archive = Pelanggaran::find($gp->id);
+                        $set_archive->is_archive = 1;
+                        $set_archive->save();
+                    }
+                }
             }
 
             // bulk presensi harian ke wa group ortu
@@ -112,9 +120,10 @@ Alpha: ' . count($mhs_alpha) . '
                                 // info ke ortu
                                 if ($setting->wa_info_alpha_ortu == 1) {
                                     $caption_ortu = 'Assalamualaikum Wr Wb,
-Menginformasikan bahwa ' . $d['name'] . ' kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
-Jika ada kendala, silahkan menghubungi Pengurus Koor Lorong:
-' . $d['lorong'] . '.
+Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
+
+Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
+*' . $d['lorong'] . '*.
 
 Ajzkh 🙏🏻';
                                     WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, true);
@@ -222,6 +231,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
 
         // MONTHLY
         elseif ($time == 'monthly') {
+            $time_post = 1;
             // daftar mahasiswa yang presensi < 80%
             $last_month = strtotime('-1 month', strtotime(date("Y-m-d")));
             $last_month = date('Y-m', $last_month);
@@ -230,6 +240,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
+            $caption = '*Daftar Mahasiswa dengan Kehadiran < 80% [Bulan ' . $last_month . ']*';
             foreach ($list_angkatan as $la) {
                 $result = (new HomeController)->dashboard($last_month, $la->angkatan, null, true);
                 $view_usantri = $result['view_usantri'];
@@ -262,34 +273,74 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                         $all_persentase = number_format($all_persentase, 2);
                         // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
                         if ($all_persentase < 80) {
-                            $store['fkSantri_id'] = $vu->santri_id;
-                            $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
-                            $store['tanggal_melanggar'] = date("Y-m-d");
-                            $store['keterangan'] = 'Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
-                            $store['is_archive'] = 0;
-                            $data = Pelanggaran::create($store);
+                            $check_peringatan = Pelanggaran::where('fkSantri_id', $vu->santri_id)
+                                ->where('fkJenis_pelanggaran_id', 14)
+                                ->whereNull('kategori_sp_real')
+                                ->where('periode_tahun', CommonHelpers::periode())
+                                ->first();
+
+                            $is_50 = false;
+                            if ($check_peringatan == null) {
+                                $store['fkSantri_id'] = $vu->santri_id;
+                                $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
+                                $store['tanggal_melanggar'] = date("Y-m-d");
+                                if ($all_persentase < 50) {
+                                    $store['saksi'] = 'sisfo 50%';
+                                } else {
+                                    $store['saksi'] = 'sisfo 80%';
+                                }
+                                $store['keterangan'] = 'Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
+                                $store['is_archive'] = 0;
+                                $store['is_peringatan_keras'] = 0;
+                                $store['peringatan_kbm'] = 1;
+                                $store['periode_tahun'] = CommonHelpers::periode();
+                                $data = Pelanggaran::create($store);
+                            } else {
+                                $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
+                                if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
+                                    $check_peringatan->kategori_sp_real = '2';
+                                    $check_peringatan->keringanan_sp = '1';
+                                    $check_peringatan->is_peringatan_keras = 0;
+                                    if ($all_persentase < 50) {
+                                        $is_50 = true;
+                                        $check_peringatan->keterangan = 'Sudah 2 bulan berturut-turut kehadiran dibawah < 50%';
+                                    } else {
+                                        $check_peringatan->keterangan = 'Sudah 3 bulan kehadiran dibawah < 80%';
+                                    }
+                                } else {
+                                    $check_peringatan->saksi = 'sisfo 80%';
+                                }
+                                $check_peringatan->save();
+                                $data = Pelanggaran::find($check_peringatan->id);
+                            }
+
                             if ($data) {
                                 $jenis_pelanggaran = JenisPelanggaran::find(14);
-                                $caption = 'Penambahan data pelanggaran dari Mahasiswa:
-- Nama: *' . $data->santri->user->fullname . '*
-- Angkatan: *' . $data->santri->angkatan . '*
-- Jenis Pelanggaran: *' . $jenis_pelanggaran->jenis_pelanggaran . '*
-- Kategori: *' . $jenis_pelanggaran->kategori_pelanggaran . '*
-- Keterangan: *Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%*';
-                                $contact_id = 'wa_ketertiban_group_id';
-                                WaSchedules::save('Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, $caption, $contact_id);
-                            } else {
-                                $contact_id = 'wa_ketertiban_group_id';
-                                WaSchedules::save('[Gagal] Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, 'Gagal menambahkan data pelanggaran Amrin Jami Tanpa Ijin: ' . $data->santri->user->fullname, $contact_id);
+                                $caption = $caption . '
+
+- Nama: *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . '*
+- Jenis Pelanggaran: *[' . $jenis_pelanggaran->kategori_pelanggaran . '] ' . $jenis_pelanggaran->jenis_pelanggaran . '*';
+                                if ($is_50) {
+                                    $caption = $caption . '
+- Keterangan: *SUDAH 2 BULAN BERTURUT-TURUT KEHADIRAN < 50%, AMSHOL RJ/WK SEGERA MEMBERIKAN SP 1 SESUAI MEKANISME*';
+                                } elseif ($data->peringatan_kbm == 3) {
+                                    $caption = $caption . '
+- Keterangan: *SUDAH MENCAPAI 3 BULAN KEHADIRAN < 80%, AMSHOL RJ/WK SEGERA MEMBERIKAN SP 1 SESUAI MEKANISME*';
+                                } else {
+                                    $caption = $caption . '                                 
+- Keterangan: *Presensi kehadiran: ' . $all_persentase . '%*';
+                                }
                             }
                         }
                     }
                 }
             }
+            $contact_id = 'wa_ketertiban_group_id';
+            WaSchedules::save('Amrin Jami Tanpa Ijin Bulan ' . $last_month, $caption, $contact_id, $time_post);
+            $time_post++;
 
             // kirim absensi bulanan - bulk ortu
             $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
-            $time_post = 1;
             foreach ($view_usantri as $vs) {
                 $check_report = ReportScheduler::where('fkSantri_id', $vs->santri_id)->first();
                 if ($check_report == null) {
@@ -401,7 +452,7 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         if ($rs != null) {
             $last_update = date_format(date_create($rs->updated_at), "Y-m-d");
             $today = date('Y-m-d');
-            if ($last_update != $today) {
+            if ($last_update != $today || $rs->count == 0) {
                 $rs->count = $rs->count + 1;
             }
             $rs->status = 1;

@@ -130,7 +130,7 @@ Route::post('/materi/monitoring/materi_santri', [App\Http\Controllers\Monitoring
 
 // pelanggaran
 Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/id/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
 Route::get('/pelanggaran/archive', [App\Http\Controllers\PelanggaranController::class, 'list_archive'])->name('pelanggaran archive')->middleware('role:superadmin|rj1|wk');
 Route::get('/pelanggaran/create', [App\Http\Controllers\PelanggaranController::class, 'create'])->name('create pelanggaran')->middleware('role:superadmin|rj1|wk');
 Route::post('/pelanggaran/store', [App\Http\Controllers\PelanggaranController::class, 'store'])->name('store pelanggaran')->middleware('role:superadmin|rj1|wk');

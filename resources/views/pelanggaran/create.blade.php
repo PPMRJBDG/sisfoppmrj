@@ -113,11 +113,11 @@
                         <label class="custom-control-label">INFO WA</label>
                         <select class="form-control" name="is_wa">
                             <option <?php if (isset($datax)) {
-                                        echo $datax->is_wa == 1 ? 'selected' : '';
-                                    } ?> value="1">Ya</option>
-                            <option <?php if (isset($datax)) {
                                         echo $datax->is_wa == 0 ? 'selected' : '';
                                     } ?> value="0">Tidak</option>
+                            <option <?php if (isset($datax)) {
+                                        echo $datax->is_wa == 1 ? 'selected' : '';
+                                    } ?> value="1">Ya</option>
                         </select>
                     </div>
                 </div>

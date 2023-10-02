@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\SpWhatsappContacts;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\Settings;
+use App\Models\Periode;
 use App\Models\User;
 use App\Models\Santri;
 
@@ -13,6 +14,12 @@ class CommonHelpers
     public static function settings()
     {
         return Settings::find(1);
+    }
+
+    public static function periode()
+    {
+        $periode_tahun = Periode::latest('periode_tahun')->first();
+        return $periode_tahun->periode_tahun;
     }
 
     public static function bulan()

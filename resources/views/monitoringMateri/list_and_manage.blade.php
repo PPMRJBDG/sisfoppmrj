@@ -47,43 +47,12 @@ function printMateriOptions($materis, $santri)
     </div>
 </div>
 
-@if(auth()->user()->santri)
-<div class="card mb-3">
-    <div class="card-body pt-0 p-3">
-        @if (session('success'))
-        <div class="alert alert-success text-white">
-            {{ session('success') }}
-        </div>
-        @endif
-
-        @if(sizeof($lorongs) >= 0)
-        <div class="row">
-            <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI SAYA</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php printMateriOptions($materis, auth()->user()->santri) ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        @endif
-    </div>
-</div>
-
-@else
-
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum'))
 <div class="row">
     <div class="col-md-6">
         <div class="card">
             <div class="card-body p-3">
-                <h6 class="text-center text-primary">Kelas Reguler</h6>
+                <h6 class="text-center text-lg text-primary">Kelas Reguler</h6>
                 @can('view monitoring materis list')
                 <div class="table-responsive">
                     <table id="table-mhs-reg" class="table align-items-center mb-0">
@@ -113,7 +82,7 @@ function printMateriOptions($materis, $santri)
     <div class="col-md-6">
         <div class="card">
             <div class="card-body p-3">
-                <h6 class="text-center text-primary">Kelas MT</h6>
+                <h6 class="text-center text-lg text-primary">Kelas MT</h6>
                 <ul class="list-group">
                     @can('view monitoring materis list')
                     <div class="table-responsive">
@@ -142,7 +111,35 @@ function printMateriOptions($materis, $santri)
         </div>
     </div>
 </div>
+@else
+<div class="card mb-3">
+    <div class="card-body pt-0 p-3">
+        @if (session('success'))
+        <div class="alert alert-success text-white">
+            {{ session('success') }}
+        </div>
+        @endif
 
+        @if(sizeof($lorongs) >= 0)
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI SAYA</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php printMateriOptions($materis, auth()->user()->santri) ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
 @endif
 
 <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
