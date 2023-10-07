@@ -61,19 +61,9 @@
             <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
             <select name="reason_category" class="form-control" required>
               <option value="">Pilih kategori alasan</option>
-              <option value="Magang">Magang</option>
-              <option value="Sakit (di PPM)">Sakit (di PPM)</option>
-              <option value="Kontrol Sakit">Kontrol Sakit</option>
-              <option value="Opname">Opname</option>
-              <option value="Tugas">Tugas</option>
-              <option value="Musyawarah">Musyawarah</option>
-              <option value="Kuliah Malam">Kuliah Malam</option>
-              <option value="Praktikum Malam">Praktikum Malam</option>
-              <option value="Jaga Malam">Jaga Malam</option>
-              <option value="Pulang - Keluarga Meninggal">Pulang - Keluarga Meninggal</option>
-              <option value="Pulang - Undangan Pernikahan Keluarga">Pulang - Undangan Pernikahan Keluarga</option>
-              <option value="Pulang - Kontrol Sakit">Pulang - Kontrol Sakit</option>
-              <option value="Pulang - Permintaan Ortu">Pulang - Permintaan Ortu</option>
+              @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
+              <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
+              @endforeach
             </select>
           </div>
         </div>

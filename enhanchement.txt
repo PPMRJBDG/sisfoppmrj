@@ -12,6 +12,10 @@
 - buat kbm liburan (bagi msh yg masih di ppm)
 - create link presensi -> wa group ketertiban ✅
 - bikin input presensi ngga bisa absen beberapa hari yg lalu ✅
+- show / resend wa yg ngga terkirim
+- show yg suka telat
+- if malam jumat, jam malam tambah info apel malam
+- pilihan ijin: Kedatangan Orangtua
 
 
 all report: 
