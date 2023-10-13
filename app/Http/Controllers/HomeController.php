@@ -97,12 +97,25 @@ class HomeController extends Controller
 
         if ($bfjkah) {
             if ($tb != null) {
-                if ($select_angkatan == intval(explode("-", $tb)[0]) && intval(explode("-", $tb)[1] < 9)) {
-                    $view_usantri = null;
+                if ($select_angkatan == null) {
+                    $xtb = explode("-", $tb);
+                    if (intval($xtb[1]) < 9) {
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', '<', $xtb[0])
+                            ->orderBy('fullname')->get();
+                    } else {
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', '<=', $xtb[0])
+                            ->orderBy('fullname')->get();
+                    }
                 } else {
-                    $view_usantri = DB::table('v_user_santri')
-                        ->where('angkatan', $select_angkatan)
-                        ->orderBy('fullname')->get();
+                    if ($select_angkatan == intval(explode("-", $tb)[0]) && intval(explode("-", $tb)[1] < 9)) {
+                        $view_usantri = null;
+                    } else {
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', $select_angkatan)
+                            ->orderBy('fullname')->get();
+                    }
                 }
             } elseif ($select_periode != null) {
                 $split_periode = explode("-", $select_periode);
