@@ -15,7 +15,8 @@ class Presence extends Model
         'start_date_time',
         'end_date_time',
         'fkPresence_group_id',
-        'event_date'
+        'event_date',
+        'total_mhs'
     ];
 
     /**
@@ -41,7 +42,7 @@ class Presence extends Model
     {
         $santri = auth()->user()->santri;
 
-        if(!$santri)
+        if (!$santri)
             return null;
 
         return Present::where('fkPresence_id', $this->id)->where('fkSantri_id', $santri->id)->first();
@@ -54,7 +55,7 @@ class Presence extends Model
     {
         $santri = auth()->user()->santri;
 
-        if(!$santri)
+        if (!$santri)
             return null;
 
         return Permit::where('fkPresence_id', $this->id)->where('fkSantri_id', $santri->id)->first();
@@ -65,68 +66,60 @@ class Presence extends Model
      */
     public function summary()
     {
-        $malePresents = $this->presents()->get()->filter(function ($value, $key)
-        {
-            return $value->santri->user->gender == 'male' 
+        $malePresents = $this->presents()->get()->filter(function ($value, $key) {
+            return $value->santri->user->gender == 'male'
                 && $value->santri->join_at <= $this->event_date
                 && ($value->santri->exit_at >= $this->event_date
-                || $value->santri->exit_at == null);
+                    || $value->santri->exit_at == null);
         });
 
-        $malePermitsCount = Permit::whereHas('santri.user', function($query)
-        {
+        $malePermitsCount = Permit::whereHas('santri.user', function ($query) {
             $query->where('gender', 'male');
-
         })->where('fkPresence_id', $this->id)->where('status', 'approved')->count();
 
-        $femalePresents = $this->presents()->get()->filter(function ($value, $key) 
-        {
+        $femalePresents = $this->presents()->get()->filter(function ($value, $key) {
             return $value->santri->user->gender == 'female'
                 && $value->santri->join_at <= $this->event_date
                 && ($value->santri->exit_at >= $this->event_date
-                || $value->santri->exit_at == null);;
+                    || $value->santri->exit_at == null);;
         });
 
-        $femalePermitsCount = Permit::whereHas('santri.user', function($query)
-        {
+        $femalePermitsCount = Permit::whereHas('santri.user', function ($query) {
             $query->where('gender', 'female');
-
         })->where('fkPresence_id', $this->id)->where('status', 'approved')->count();
 
-        $totalSantris = Santri::where('join_at', '<=', $this->event_date)->where(function($query) {
+        $totalSantris = Santri::where('join_at', '<=', $this->event_date)->where(function ($query) {
             $query->where('exit_at', '>=', $this->event_date);
             $query->orWhere('exit_at', null);
         })->count();
 
-        $totalMaleSantris = Santri::where('join_at', '<=', $this->event_date)->where(function($query) {
+        $totalMaleSantris = Santri::where('join_at', '<=', $this->event_date)->where(function ($query) {
             $query->where('exit_at', '>=', $this->event_date);
             $query->orWhere('exit_at', null);
         })
-        ->whereHas('user', function($query)
-        {
-            $query->where('gender', '=', 'male');
-        })->count();
-        
-        $totalFemaleSantris = Santri::where('join_at', '<=', $this->event_date)->where(function($query) {
-            $query->where('exit_at', '>=', $this->event_date);
-            $query->orWhere('exit_at', null);
-        })
-        ->whereHas('user', function($query)
-        {
-            $query->where('gender', '=', 'female');
-        })->count();
+            ->whereHas('user', function ($query) {
+                $query->where('gender', '=', 'male');
+            })->count();
 
-        if($totalSantris > 0)
+        $totalFemaleSantris = Santri::where('join_at', '<=', $this->event_date)->where(function ($query) {
+            $query->where('exit_at', '>=', $this->event_date);
+            $query->orWhere('exit_at', null);
+        })
+            ->whereHas('user', function ($query) {
+                $query->where('gender', '=', 'female');
+            })->count();
+
+        if ($totalSantris > 0)
             $totalPercentage = (sizeof($malePresents) + sizeof($femalePresents) + $malePermitsCount + $femalePermitsCount) / $totalSantris * 100;
         else
             $totalPercentage = 0;
 
-        if($totalMaleSantris > 0)
+        if ($totalMaleSantris > 0)
             $totalMalePercentage = (sizeof($malePresents) + $malePermitsCount) / $totalMaleSantris * 100;
         else
             $totalMalePercentage = 0;
 
-        if($totalFemaleSantris > 0)
+        if ($totalFemaleSantris > 0)
             $totalFemalePercentage = (sizeof($femalePresents) + $femalePermitsCount) / $totalFemaleSantris * 100;
         else
             $totalFemalePercentage = 0;
@@ -140,6 +133,4 @@ class Presence extends Model
             'totalFemalePercentage' => $totalFemalePercentage
         ];
     }
-
 }
-

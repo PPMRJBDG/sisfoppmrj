@@ -45,7 +45,7 @@
         Presensi akan dibuat otomatis sesuai jadwal setiap harinya. Apabila tetap tidak terbuat,
         pastikan CRON JOB berjalan.
       </div> -->
-      @if(sizeof($presenceGroup->presences()->paginate(5)) <= 0) Tidak ada hasil. @endif @foreach($presenceGroup->presences()->orderBy('event_date', 'DESC')->paginate(5) as $presence)
+      @if(sizeof($presenceGroup->presences()->paginate(13)) <= 0) Tidak ada hasil. @endif @foreach($presenceGroup->presences()->orderBy('event_date', 'DESC')->paginate(13) as $presence)
         <li class="list-group-item border-0 p-3 mb-2 bg-gray-100 border-radius-lg shadow-sm">
           <div class="">
             <h6 class=" mb-0 text-sm">{{ $presence->name }}</h6>

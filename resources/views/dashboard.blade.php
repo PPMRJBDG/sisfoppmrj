@@ -431,8 +431,7 @@
 
     $('.select_tb').change((e) => {
         var angkatan = $('#select_angkatan').val();
-        var periode = '-'; //$('#select_periode').val();
-        window.location.replace(`{{ url("/") }}/home/${$(e.currentTarget).val()}/` + angkatan + `/` + periode)
+        window.location.replace(`{{ url("/") }}/home/${$(e.currentTarget).val()}/` + angkatan + `/-`)
     })
 
     $('.select_angkatan').change((e) => {
@@ -442,8 +441,8 @@
     })
 
     $('.select_periode').change((e) => {
-        var tb = $('#select_tb').val();
-        window.location.replace(`{{ url("/") }}/home/` + tb + `/-/${$(e.currentTarget).val()}`)
+        var angkatan = $('#select_angkatan').val();
+        window.location.replace(`{{ url("/") }}/home/-/` + angkatan + `/${$(e.currentTarget).val()}`)
     })
 </script>
 @include('base.end')

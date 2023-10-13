@@ -15,7 +15,7 @@
 - show / resend wa yg ngga terkirim
 - show yg suka telat
 - if malam jumat, jam malam tambah info apel malam
-- pilihan ijin: Kedatangan Orangtua
+- pilihan ijin: Kepanitiaan/UKM -> tidak diperbolehkan
 
 
 all report: 

@@ -48,6 +48,12 @@ class HomeController extends Controller
         if ($select_angkatan == '-') {
             $select_angkatan = null;
         }
+        if ($select_periode == '-') {
+            $select_periode = null;
+        }
+        if ($tb == '-') {
+            $tb = null;
+        }
 
         $bfjkah = false;
         if ($json) {
@@ -82,7 +88,7 @@ class HomeController extends Controller
             $tb = null;
         }
 
-        $view_usantri = null;
+        $view_usantri = DB::table('v_user_santri')->get();
         $datapg = null;
         $all_presences = null;
         $presences = null;
@@ -90,52 +96,64 @@ class HomeController extends Controller
         $all_permit = array();
 
         if ($bfjkah) {
-            if ($select_periode != null || $select_periode != '-') {
+            if ($tb != null) {
+                if ($select_angkatan == intval(explode("-", $tb)[0]) && intval(explode("-", $tb)[1] < 9)) {
+                    $view_usantri = null;
+                } else {
+                    $view_usantri = DB::table('v_user_santri')
+                        ->where('angkatan', $select_angkatan)
+                        ->orderBy('fullname')->get();
+                }
+            } elseif ($select_periode != null) {
                 $split_periode = explode("-", $select_periode);
-                $view_usantri = DB::table('v_user_santri')
-                    ->where('angkatan', '<=', $split_periode[0])
-                    ->orderBy('fullname')->get();
-            } elseif ($select_angkatan == null) {
-                $view_usantri = DB::table('v_user_santri')->orderBy('fullname')->get();
-            } else {
-                $view_usantri = DB::table('v_user_santri')->where('angkatan', $select_angkatan)->orderBy('fullname')->get();
+                if ($select_angkatan == null) {
+                    $view_usantri = DB::table('v_user_santri')
+                        ->where('angkatan', '<=', $split_periode[0])
+                        ->orderBy('fullname')->get();
+                } else {
+                    $view_usantri = DB::table('v_user_santri')
+                        ->where('angkatan', '<=', $split_periode[0])
+                        ->where('angkatan', $select_angkatan)
+                        ->orderBy('fullname')->get();
+                }
             }
-            foreach ($view_usantri as $vu) {
-                foreach ($presence_group as $pg) {
-                    $like_tb_a = " AND event_date LIKE '%$tb%'";
-                    $like_tb_b = " AND b.event_date LIKE '%$tb%'";
-                    $like_tb_c = " AND b.event_date LIKE '%$tb%'";
-                    $q_angkatan = $select_angkatan;
-                    if ($select_angkatan == null) {
-                        $q_angkatan = $vu->angkatan;
-                    }
-                    if ($tb == null || $tb == '-') {
-                        if ($select_periode != null || $select_periode != '-') {
-                            $split_periode = explode("-", $select_periode);
-                            $like_tb_a = " AND event_date >= '$split_periode[0]-09-01' AND event_date <= '$split_periode[1]-08-31'";
-                            $like_tb_b = " AND b.event_date >= '$split_periode[0]-09-01' AND b.event_date <= '$split_periode[1]-08-31'";
-                            $like_tb_c = $like_tb_b;
-                        } else {
-                            if ($select_angkatan == null) {
-                                $like_tb_a = " AND event_date >= '$vu->angkatan-09-01'";
-                                $like_tb_b = " AND b.event_date >= '$vu->angkatan-09-01'";
+            if ($view_usantri != null) {
+                foreach ($view_usantri as $vu) {
+                    foreach ($presence_group as $pg) {
+                        $like_tb_a = " AND event_date LIKE '%$tb%'";
+                        $like_tb_b = " AND b.event_date LIKE '%$tb%'";
+                        $like_tb_c = " AND b.event_date LIKE '%$tb%'";
+                        $q_angkatan = $select_angkatan;
+                        if ($select_angkatan == null) {
+                            $q_angkatan = $vu->angkatan;
+                        }
+                        if ($tb == null) {
+                            if ($select_periode != null) {
+                                $split_periode = explode("-", $select_periode);
+                                $like_tb_a = " AND event_date >= '$split_periode[0]-09-01' AND event_date <= '$split_periode[1]-08-31'";
+                                $like_tb_b = " AND b.event_date >= '$split_periode[0]-09-01' AND b.event_date <= '$split_periode[1]-08-31'";
                                 $like_tb_c = $like_tb_b;
                             } else {
-                                $like_tb_a = " AND event_date >= '$select_angkatan-09-01'";
-                                $like_tb_b = " AND b.event_date >= '$select_angkatan-09-01'";
-                                $like_tb_c = $like_tb_b;
+                                if ($select_angkatan == null) {
+                                    $like_tb_a = " AND event_date >= '$vu->angkatan-09-01'";
+                                    $like_tb_b = " AND b.event_date >= '$vu->angkatan-09-01'";
+                                    $like_tb_c = $like_tb_b;
+                                } else {
+                                    $like_tb_a = " AND event_date >= '$select_angkatan-09-01'";
+                                    $like_tb_b = " AND b.event_date >= '$select_angkatan-09-01'";
+                                    $like_tb_c = $like_tb_b;
+                                }
                             }
                         }
-                    }
 
-                    $all_presences[$vu->santri_id][$pg->id] = DB::select(
-                        "SELECT COUNT(*) as c_all 
+                        $all_presences[$vu->santri_id][$pg->id] = DB::select(
+                            "SELECT COUNT(*) as c_all 
                             FROM presences
                             WHERE fkPresence_group_id=" . $pg->id . $like_tb_a
-                    );
+                        );
 
-                    $presences[$vu->santri_id][$pg->id] = DB::select(
-                        "SELECT a.santri_id, a.fullname, COUNT(b.fkSantri_id) as cp 
+                        $presences[$vu->santri_id][$pg->id] = DB::select(
+                            "SELECT a.santri_id, a.fullname, COUNT(b.fkSantri_id) as cp 
                             FROM v_user_santri a 
                             LEFT JOIN v_presensi b ON a.santri_id=b.fkSantri_id " . $like_tb_b . " 
                             AND b.fkPresence_group_id=" . $pg->id . " 
@@ -143,21 +161,22 @@ class HomeController extends Controller
                             AND a.santri_id = " . $vu->santri_id . " 
                             GROUP BY a.santri_id 
                             ORDER BY a.fullname"
-                    );
+                        );
 
-                    $permit = DB::select(
-                        "SELECT a.fkSantri_id, count(a.fkSantri_id) as approved 
+                        $permit = DB::select(
+                            "SELECT a.fkSantri_id, count(a.fkSantri_id) as approved 
                             FROM `permits` a 
                             JOIN `presences` b ON a.fkPresence_id=b.id 
                             WHERE a.status='approved' " . $like_tb_c . " 
                             AND b.fkPresence_group_id = " . $pg->id . " 
                             AND a.fkSantri_id = " . $vu->santri_id . " 
                             GROUP BY a.fkSantri_id"
-                    );
+                        );
 
-                    if ($permit != null) {
-                        foreach ($permit as $p) {
-                            $all_permit[$pg->id][$p->fkSantri_id] = $p->approved;
+                        if ($permit != null) {
+                            foreach ($permit as $p) {
+                                $all_permit[$pg->id][$p->fkSantri_id] = $p->approved;
+                            }
                         }
                     }
                 }
@@ -210,7 +229,7 @@ class HomeController extends Controller
                 //         ->where('fkPresence_group_id', $pg->id)
                 //         ->orderBy('event_date', 'ASC')
                 //         ->get();
-                // } elseif ($tb == null || $tb == '-') {
+                // } elseif ($tb == null) {
                 //     $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
                 //         ->where('fkPresence_group_id', $pg->id)
                 //         ->orderBy('event_date', 'ASC')
@@ -288,6 +307,9 @@ class HomeController extends Controller
         if ($select_angkatan == '-') {
             $select_angkatan = null;
         }
+        if ($tb == '-') {
+            $tb = null;
+        }
         $presence_group = PresenceGroup::get();
         $tahun_bulan = DB::table('presences')
             ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
@@ -310,7 +332,7 @@ class HomeController extends Controller
                     ->where('fkPresence_group_id', $pg->id)
                     ->orderBy('event_date', 'ASC')
                     ->get();
-            } elseif ($tb == null || $tb == '-') {
+            } elseif ($tb == null) {
                 $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
                     ->where('fkPresence_group_id', $pg->id)
                     ->orderBy('event_date', 'ASC')

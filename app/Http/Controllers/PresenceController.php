@@ -238,7 +238,7 @@ class PresenceController extends Controller
         $permits = CountDashboard::mhs_ijin($id, $for);
 
         // alpha
-        $mhs_alpha = CountDashboard::mhs_alpha($id, $for);
+        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date);
 
         $update = true;
         if ($presence != null) {

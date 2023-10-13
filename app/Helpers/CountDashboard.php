@@ -178,12 +178,22 @@ class CountDashboard
         return $permits;
     }
 
-    public static function mhs_alpha($presence_id, $for)
+    public static function mhs_alpha($presence_id, $for, $event_date)
     {
 
         $mhs_alpha = array();
         if ($for == 'all') {
-            $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
+            $event_angkatan = explode("-", $event_date);
+            if (intval($event_angkatan[1]) < 9) {
+                $view_usantri = DB::table('v_user_santri')
+                    ->where('angkatan', '<', $event_angkatan[0])
+                    ->orderBy('fullname', 'ASC')->get();
+            } else {
+                $view_usantri = DB::table('v_user_santri')
+                    ->where('angkatan', '<=', $event_angkatan[0])
+                    ->orderBy('fullname', 'ASC')->get();
+            }
+
             foreach ($view_usantri as $mhs) {
                 $check_alpha = Present::where('fkPresence_id', $presence_id)
                     ->where('fkSantri_id', $mhs->santri_id)

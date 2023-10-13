@@ -8,6 +8,7 @@ use App\Models\RangedPermitGenerator;
 use App\Models\Permit;
 use App\Models\Present;
 use App\Models\Liburan;
+use App\Helpers\CountDashboard;
 
 class PresenceGroupsChecker
 {
@@ -54,6 +55,7 @@ class PresenceGroupsChecker
                     'fkPresence_group_id' => $presenceGroup->id,
                     'name' => $presenceName,
                     'event_date' => $currentDate,
+                    'total_mhs' => CountDashboard::total_mhs('all'),
                     'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
                     'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour))
                 ]);
