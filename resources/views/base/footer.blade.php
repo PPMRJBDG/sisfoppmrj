@@ -51,6 +51,19 @@
         }
         document.getElementById(tahun).style.display = "block";
         evt.currentTarget.className += " active";
+
+        if (tahun == 'tabtable' || tahun == 'tabgrafik') {
+            var angkatan = $('#select_angkatan').val();
+            var tb = $('#select_tb').val();
+            var periode = $('#select_periode').val();
+
+            $.get(`{{ url("/") }}/tabgraf/` + tb + `/` + angkatan + `/` + periode,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    console.log(return_data);
+                }
+            );
+        }
     }
 
     function getReport(ids) {

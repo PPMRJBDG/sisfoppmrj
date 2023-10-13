@@ -163,8 +163,8 @@ NB:
             // jika all_ijin > 1/3 KBM diberi peringatan
             // daftar mahasiswa yang presensi < 80%
 
-            // $last_month = strtotime(date("Y-m-d"));
-            // $last_month = date('Y-m', $last_month);
+            $last_month = strtotime(date("Y-m-d"));
+            $last_month = date('Y-m', $last_month);
 
             $periode_tahun = Periode::latest('periode_tahun')->first();
             $list_angkatan = DB::table('santris')
@@ -172,11 +172,11 @@ NB:
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-            $data_presensi_weekly = '*Report Presensi KBM kurang dari 80%: ' . date("M Y") . '*
+            $data_presensi_weekly = '*Presensi KBM ' . $last_month . ' kurang dari 80%: ' . date("M Y") . '*
 ';
             $data_mhs = array();
             foreach ($list_angkatan as $la) {
-                $result = (new HomeController)->dashboard(null, $la->angkatan, $periode_tahun->periode_tahun, true);
+                $result = (new HomeController)->dashboard($last_month, $la->angkatan, '-', true);
                 $view_usantri = $result['view_usantri'];
                 $presence_group = $result['presence_group'];
                 $presences = $result['presences'];
@@ -191,8 +191,8 @@ NB:
                     foreach ($presence_group as $pg) {
                         foreach ($presences[$vu->santri_id][$pg->id] as $listcp) {
                             $ijin = 0;
-                            if (isset($all_permit[$vu->santri_id][$pg->id][$vu->santri_id])) {
-                                $ijin = $all_permit[$vu->santri_id][$pg->id][$vu->santri_id];
+                            if (isset($all_permit[$pg->id][$vu->santri_id])) {
+                                $ijin = $all_permit[$pg->id][$vu->santri_id];
                             }
                             $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
                             $all_hadir = $all_hadir + $listcp->cp;
@@ -202,9 +202,9 @@ NB:
 
                     if ($all_kbm > 0) {
                         $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
-                        $all_persentase = number_format($all_persentase, 2);
                         // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
                         if ($all_persentase < 80) {
+                            $all_persentase = number_format($all_persentase, 2);
                             $data_mhs[] = $vu->nohp_ortu;
                             $data_presensi_weekly = $data_presensi_weekly . '
 - [' . $vu->angkatan . '] ' . $vu->fullname . ': *' . $all_persentase . '%*';

@@ -418,7 +418,9 @@
     })
 
     $('#table-hadir').DataTable({
-        order: [],
+        order: [
+            [9, 'asc']
+        ],
         pageLength: 15
     });
 

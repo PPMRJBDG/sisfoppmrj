@@ -62,7 +62,7 @@ class HomeController extends Controller
             $count_dashboard = CountDashboard::index();
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
-                ->where('event_date', '>=', $select_angkatan . '-09-01')
+                // ->where('event_date', '>=', $select_angkatan . '-09-01')
                 ->groupBy('ym')
                 ->orderBy('ym', 'DESC')
                 ->get();
@@ -90,7 +90,12 @@ class HomeController extends Controller
         $all_permit = array();
 
         if ($bfjkah) {
-            if ($select_angkatan == null) {
+            if ($select_periode != null || $select_periode != '-') {
+                $split_periode = explode("-", $select_periode);
+                $view_usantri = DB::table('v_user_santri')
+                    ->where('angkatan', '<=', $split_periode[0])
+                    ->orderBy('fullname')->get();
+            } elseif ($select_angkatan == null) {
                 $view_usantri = DB::table('v_user_santri')->orderBy('fullname')->get();
             } else {
                 $view_usantri = DB::table('v_user_santri')->where('angkatan', $select_angkatan)->orderBy('fullname')->get();
@@ -198,46 +203,45 @@ class HomeController extends Controller
                 $q_angkatan = 'all';
             }
             foreach ($presence_group as $pg) {
-                if ($select_periode != null && $select_periode != '-') {
-                    $split_periode = explode("-", $select_periode);
-                    $get_presence = Presence::where('event_date', '>=', $split_periode[0] . '-09-01')
-                        ->where('event_date', '<=', $split_periode[1] . '-08-31')
-                        ->where('fkPresence_group_id', $pg->id)
-                        ->orderBy('event_date', 'ASC')
-                        ->get();
-                } elseif ($tb == null || $tb == '-') {
-                    $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
-                        ->where('fkPresence_group_id', $pg->id)
-                        ->orderBy('event_date', 'ASC')
-                        ->get();
-                } else {
-                    $get_presence = Presence::where('event_date', '>=', $tb . '-01')
-                        ->where('fkPresence_group_id', $pg->id)
-                        ->orderBy('event_date', 'ASC')
-                        ->get();
-                }
-                if (count($get_presence) > 0) {
-                    foreach ($get_presence as $presence) {
-                        $tanggal_presensi[$pg->id][] = $presence->event_date;
-                        $hadir = CountDashboard::mhs_hadir($presence->id, $q_angkatan);
-                        $ijin = CountDashboard::mhs_ijin($presence->id, $q_angkatan);
-                        $alpha = CountDashboard::mhs_alpha($presence->id, $q_angkatan);
+                // if ($select_periode != null && $select_periode != '-') {
+                //     $split_periode = explode("-", $select_periode);
+                //     $get_presence = Presence::where('event_date', '>=', $split_periode[0] . '-09-01')
+                //         ->where('event_date', '<=', $split_periode[1] . '-08-31')
+                //         ->where('fkPresence_group_id', $pg->id)
+                //         ->orderBy('event_date', 'ASC')
+                //         ->get();
+                // } elseif ($tb == null || $tb == '-') {
+                //     $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
+                //         ->where('fkPresence_group_id', $pg->id)
+                //         ->orderBy('event_date', 'ASC')
+                //         ->get();
+                // } else {
+                //     $get_presence = Presence::where('event_date', '>=', $tb . '-01')
+                //         ->where('fkPresence_group_id', $pg->id)
+                //         ->orderBy('event_date', 'ASC')
+                //         ->get();
+                // }
+                // if (count($get_presence) > 0) {
+                //     foreach ($get_presence as $presence) {
+                //         $tanggal_presensi[$pg->id][] = $presence->event_date;
+                //         $hadir = CountDashboard::mhs_hadir($presence->id, $q_angkatan);
+                //         $ijin = CountDashboard::mhs_ijin($presence->id, $q_angkatan);
+                //         $alpha = CountDashboard::mhs_alpha($presence->id, $q_angkatan);
 
-                        $total_presensi[$pg->id]['hadir'][] = count($hadir);
-                        $total_presensi[$pg->id]['ijin'][] = count($ijin);
-                        $total_presensi[$pg->id]['alpha'][] = count($alpha);
+                //         $total_presensi[$pg->id]['hadir'][] = count($hadir);
+                //         $total_presensi[$pg->id]['ijin'][] = count($ijin);
+                //         $total_presensi[$pg->id]['alpha'][] = count($alpha);
 
-                        $detil_presensi[$presence->event_date][$pg->id]['id'] = $presence->id;
-                        $detil_presensi[$presence->event_date][$pg->id]['hadir'] = count($hadir);
-                        $detil_presensi[$presence->event_date][$pg->id]['ijin'] = count($ijin);
-                        $detil_presensi[$presence->event_date][$pg->id]['alpha'] = count($alpha);
-                    }
-                }
+                //         $detil_presensi[$presence->event_date][$pg->id]['id'] = $presence->id;
+                //         $detil_presensi[$presence->event_date][$pg->id]['hadir'] = count($hadir);
+                //         $detil_presensi[$presence->event_date][$pg->id]['ijin'] = count($ijin);
+                //         $detil_presensi[$presence->event_date][$pg->id]['alpha'] = count($alpha);
+                //     }
+                // }
             }
             $data_presensi = ['total_presensi' => $total_presensi, 'tanggal_presensi' => $tanggal_presensi, 'detil_presensi' => $detil_presensi];
         }
-        // echo var_export($data_presensi, true);
-        // exit;
+
         if ($json) {
             return [
                 'presences' => $presences,
@@ -271,5 +275,74 @@ class HomeController extends Controller
                 'get_presence_today' => $get_presence_today
             ]);
         }
+    }
+
+    public function tabgraf($tb = null, $select_angkatan = null, $select_periode = null, $json = false)
+    {
+        if ($tb == null && $select_angkatan == null && $select_periode == null) {
+            $periode_tahun = Periode::latest('periode_tahun')->first();
+            $tb = null;
+            $select_angkatan = null;
+            $select_periode = $periode_tahun->periode_tahun;
+        }
+        if ($select_angkatan == '-') {
+            $select_angkatan = null;
+        }
+        $presence_group = PresenceGroup::get();
+        $tahun_bulan = DB::table('presences')
+            ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+            ->groupBy('ym')
+            ->orderBy('ym', 'DESC')
+            ->get();
+        $data_presensi = array();
+        $total_presensi = array();
+        $tanggal_presensi = array();
+        $detil_presensi = array();
+        $q_angkatan = $select_angkatan;
+        if ($select_angkatan == null) {
+            $q_angkatan = 'all';
+        }
+        foreach ($presence_group as $pg) {
+            if ($select_periode != null && $select_periode != '-') {
+                $split_periode = explode("-", $select_periode);
+                $get_presence = Presence::where('event_date', '>=', $split_periode[0] . '-09-01')
+                    ->where('event_date', '<=', $split_periode[1] . '-08-31')
+                    ->where('fkPresence_group_id', $pg->id)
+                    ->orderBy('event_date', 'ASC')
+                    ->get();
+            } elseif ($tb == null || $tb == '-') {
+                $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
+                    ->where('fkPresence_group_id', $pg->id)
+                    ->orderBy('event_date', 'ASC')
+                    ->get();
+            } else {
+                $get_presence = Presence::where('event_date', '>=', $tb . '-01')
+                    ->where('fkPresence_group_id', $pg->id)
+                    ->orderBy('event_date', 'ASC')
+                    ->get();
+            }
+            if (count($get_presence) > 0) {
+                foreach ($get_presence as $presence) {
+                    $tanggal_presensi[$pg->id][] = $presence->event_date;
+                    $hadir = CountDashboard::mhs_hadir($presence->id, $q_angkatan);
+                    $ijin = CountDashboard::mhs_ijin($presence->id, $q_angkatan);
+                    $alpha = CountDashboard::mhs_alpha($presence->id, $q_angkatan);
+
+                    $total_presensi[$pg->id]['hadir'][] = count($hadir);
+                    $total_presensi[$pg->id]['ijin'][] = count($ijin);
+                    $total_presensi[$pg->id]['alpha'][] = count($alpha);
+
+                    $detil_presensi[$presence->event_date][$pg->id]['id'] = $presence->id;
+                    $detil_presensi[$presence->event_date][$pg->id]['hadir'] = count($hadir);
+                    $detil_presensi[$presence->event_date][$pg->id]['ijin'] = count($ijin);
+                    $detil_presensi[$presence->event_date][$pg->id]['alpha'] = count($alpha);
+                }
+            }
+        }
+        $data_presensi = ['total_presensi' => $total_presensi, 'tanggal_presensi' => $tanggal_presensi, 'detil_presensi' => $detil_presensi];
+
+        return [
+            'data_presensi' => $data_presensi
+        ];
     }
 }

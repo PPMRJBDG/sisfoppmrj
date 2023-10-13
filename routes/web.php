@@ -18,6 +18,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->name
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/home/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'dashboard']);
+Route::get('/tabgraf/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'tabgraf']);
 
 Route::get('/register', [App\Http\Controllers\RegisterController::class, 'register'])->name('register');
 Route::post('/register/store', [App\Http\Controllers\RegisterController::class, 'store_from_public'])->name('store user from public');
