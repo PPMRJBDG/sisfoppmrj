@@ -361,7 +361,7 @@ class HomeController extends Controller
                     $tanggal_presensi[$pg->id][] = $presence->event_date;
                     $hadir = CountDashboard::mhs_hadir($presence->id, $q_angkatan);
                     $ijin = CountDashboard::mhs_ijin($presence->id, $q_angkatan);
-                    $alpha = CountDashboard::mhs_alpha($presence->id, $q_angkatan);
+                    $alpha = CountDashboard::mhs_alpha($presence->id, $q_angkatan, $presence->event_date);
 
                     $total_presensi[$pg->id]['hadir'][] = count($hadir);
                     $total_presensi[$pg->id]['ijin'][] = count($ijin);

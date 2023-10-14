@@ -101,7 +101,8 @@ class PublicController extends Controller
                         $permits = CountDashboard::mhs_ijin($presence->id, 'all');
 
                         // alpha
-                        $mhs_alpha = CountDashboard::mhs_alpha($presence->id, 'all');
+                        $get_presence = Presence::where('event_date', $yesterday)->get();
+                        $mhs_alpha = CountDashboard::mhs_alpha($presence->id, 'all', $presence->event_date);
 
                         $caption = $caption . '
 ________________________
