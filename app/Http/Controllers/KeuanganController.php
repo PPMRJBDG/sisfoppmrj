@@ -15,6 +15,20 @@ class KeuanganController extends Controller
         $this->middleware('auth');
     }
 
+    public function receipt($periode = null)
+    {
+        if ($periode == null) {
+            $rabs = [];
+        } else {
+            $rabs = Rabs::where('periode_tahunan', $periode)->get();
+        }
+
+        return view('keuangan.receipt', [
+            'rabs' => $rabs,
+            'periode' => $periode,
+        ]);
+    }
+
     public function rab($periode = null)
     {
         if ($periode == null) {
@@ -59,7 +73,6 @@ class KeuanganController extends Controller
 
     public function inout($periode = null)
     {
-
 
         return view('keuangan.inout', []);
     }

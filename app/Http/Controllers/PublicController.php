@@ -21,13 +21,11 @@ use App\Models\Santri;
 use App\Models\JenisPelanggaran;
 use App\Models\ReportScheduler;
 use App\Models\SpWhatsappPhoneNumbers;
+use App\Models\SpWhatsappContacts;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
-    // 0 8 * * * https://sisfo.ppmrjbandung.com/schedule/daily
-    // 0 6 1 * * https://sisfo.ppmrjbandung.com/schedule/monthly
-
     public function schedule($time, $presence_id = null)
     {
         $setting = Settings::find(1);
@@ -39,6 +37,7 @@ class PublicController extends Controller
 
         // DAILY
         if ($time == 'daily') {
+            $time_post = 1;
             // update pemutihan
             $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
             foreach ($get_pelanggaran as $gp) {
@@ -49,8 +48,8 @@ class PublicController extends Controller
                     $set_archive->is_archive = 1;
                     if ($set_archive->save()) {
                         $caption = 'Pemutihan SP ' . $gp->keringanan_sp . ' an. ' . $gp->santri->user->fullname;
-                        WaSchedules::save($caption, $caption, 'wa_dewanguru_group_id');
-                        echo json_encode(['status' => true, 'message' => $caption]);
+                        WaSchedules::save($caption, $caption, 'wa_dewanguru_group_id', $time_post, true);
+                        $time_post++;
                     }
                 }
                 // khusus KBM status masih dipantau
@@ -66,33 +65,11 @@ class PublicController extends Controller
             // bulk presensi harian ke wa group ortu
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
-                //                 $list_angkatan = DB::table('santris')
-                //                     ->select('angkatan')
-                //                     ->whereNull('exit_at')
-                //                     ->groupBy('angkatan')
-                //                     ->orderBy('angkatan', 'ASC')
-                //                     ->get();
-
-                //                 $angkatan_caption = '';
-                //                 foreach ($list_angkatan as $la) {
-                //                     $angkatan_caption = $angkatan_caption . '*Angkatan ' . $la->angkatan . '*
-                // ';
-                //                     $angkatan_caption = $angkatan_caption . CommonHelpers::settings()->host_url . '/daily/' . date_format(date_create($yesterday), "Y/m/d") . '/' . $la->angkatan . '
-
-                // ';
-                //                 }
-
-                //                 $caption = 'Berikut kami informasikan daftar kehadiran pada hari *' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '*.
-                // Silahkan klik link dibawah ini sesuai angkatannya:
-
-                // ' . $angkatan_caption;
-
                 $caption = 'Berikut kami informasikan daftar kehadiran pada hari *' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '*.
 
 *Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
                 $get_presence = Presence::where('event_date', $yesterday)->get();
                 if (count($get_presence) > 0) {
-                    $time_post = 3;
                     foreach ($get_presence as $presence) {
                         // hadir
                         $presents = CountDashboard::mhs_hadir($presence->id, 'all');
@@ -341,43 +318,43 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
             $time_post++;
 
             // kirim absensi bulanan - bulk ortu
-            $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
-            foreach ($view_usantri as $vs) {
-                $check_report = ReportScheduler::where('fkSantri_id', $vs->santri_id)->first();
-                if ($check_report == null) {
-                    $create_report = ReportScheduler::create([
-                        'fkSantri_id' => $vs->santri_id,
-                        'link_url' => $setting->host_url . '/report/' . $vs->ids,
-                        'month' => date("m"),
-                        'status' => 0,
-                        'count' => 0,
-                        'ids' => $vs->ids
-                    ]);
-                } else {
-                    $check_report->month = date("m");
-                    $check_report->status = 0;
-                    $check_report->count = 0;
-                    $create_report = $check_report->save();
-                }
-                if ($create_report) {
-                    $nohp = $vs->nohp_ortu;
-                    if ($nohp != '') {
-                        if ($nohp[0] == '0') {
-                            $nohp = '62' . substr($nohp, 1);
-                        }
-                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                        if ($wa_phone != null) {
-                            $caption = 'Berikut kami informasikan laporan mahasiswa an. ' . $vs->fullname . '
-Silahkan klik link dibawah ini:
-' . $setting->host_url . '/report/' . $vs->ids;
-                            WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
-                        }
-                        $time_post++;
-                    }
-                }
-            }
+            //             $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
+            //             foreach ($view_usantri as $vs) {
+            //                 $check_report = ReportScheduler::where('fkSantri_id', $vs->santri_id)->first();
+            //                 if ($check_report == null) {
+            //                     $create_report = ReportScheduler::create([
+            //                         'fkSantri_id' => $vs->santri_id,
+            //                         'link_url' => $setting->host_url . '/report/' . $vs->ids,
+            //                         'month' => date("m"),
+            //                         'status' => 0,
+            //                         'count' => 0,
+            //                         'ids' => $vs->ids
+            //                     ]);
+            //                 } else {
+            //                     $check_report->month = date("m");
+            //                     $check_report->status = 0;
+            //                     $check_report->count = 0;
+            //                     $create_report = $check_report->save();
+            //                 }
+            //                 if ($create_report) {
+            //                     $nohp = $vs->nohp_ortu;
+            //                     if ($nohp != '') {
+            //                         if ($nohp[0] == '0') {
+            //                             $nohp = '62' . substr($nohp, 1);
+            //                         }
+            //                         $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+            //                             $query->where('name', 'NOT LIKE', '%Bulk%');
+            //                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+            //                         if ($wa_phone != null) {
+            //                             $caption = 'Berikut kami informasikan laporan mahasiswa an. ' . $vs->fullname . '
+            // Silahkan klik link dibawah ini:
+            // ' . $setting->host_url . '/report/' . $vs->ids;
+            //                             WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
+            //                         }
+            //                         $time_post++;
+            //                     }
+            //                 }
+            //             }
 
             echo json_encode(['status' => true, 'message' => '[monthly] success running scheduler']);
         }
@@ -411,9 +388,16 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
                 WaSchedules::save('Link Presensi', $caption, $contact_id, 1, true);
                 WaSchedules::save('Link Presensi', $caption, 'Bulk Koor Lorong', 3, true);
             }
+
+            echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
         } elseif ($time == 'jam-malam') {
-            $contact_id = 'wa_ketertiban_group_id';
-            WaSchedules::save('Jam Malam ' . date('d-m-Y'), $setting->wa_info_jaga_malam, $contact_id, 1, true);
+            // $contact_id = 'wa_ketertiban_group_id';
+            $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
+            if ($contact_id != null) {
+                WaSchedules::save('Jam Malam ' . date('d-m-Y'), $setting->wa_info_jaga_malam, $contact_id->id, 1, true);
+            }
+
+            echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
         } elseif ($time == 'sodaqoh-xlunas') {
             $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
             $sodaqoh = Sodaqoh::whereNull('status_lunas')->get();
@@ -438,6 +422,8 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
                     }
                 }
             }
+
+            echo json_encode(['status' => true, 'message' => '[sodaqoh-xlunas] success running scheduler']);
         }
     }
 

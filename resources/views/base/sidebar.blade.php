@@ -57,6 +57,12 @@
           </div>
           <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
         </a>
+        <a class="nav-link {{ $path == 'receipt' ? 'active' : '' }}" href="{{ url('receipt') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Input Penerimaan</span>
+        </a>
         <a class="nav-link {{ $path == 'rab' ? 'active' : '' }}" href="{{ url('rab') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>

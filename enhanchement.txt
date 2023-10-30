@@ -57,3 +57,12 @@ START CRONTAB
 #jam malam
 49 22 * * * wget -q -O- https://sisfo.ppmrjbandung.com/schedule/jam-malam
 END CRONTAB
+
+Lapor,
+
+Kami pegawai dari PT Immobi Solusi Prima, berkedudukan di Gedung Grha 37A, Jalan Wijaya I No.37, Jakarta Selatan-12710.
+
+Mohon ijin melaporkan beberapa bulan ini kami sering terlambat dalam penggajian, dan pada saat gaji sudah cair, perusahaan tidak menyertakan denda atas keterlambatan tersebut berdasarkan pasal 88A ayat (6) UU 113/2003.
+
+Mohon ditindaklanjuti agar kedepan tidak terulang lagi.
+Demikian yang bisa kami sampaikan, atas perhatiannya kami ucapkan terimakasih.

@@ -180,37 +180,56 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                     <input class="form-control" readonly type="hidden" id="sodaqoh_id" name="sodaqoh_id" value="">
                     <input class="form-control" readonly type="hidden" id="periode" name="periode" value="">
                     <input class="form-control" readonly type="hidden" id="santri_id" name="santri_id" value="">
-                    <label class="form-control-label">Sodaqoh / Tahun</label>
-                    <input class="form-control" type="number" id="nominal" name="nominal" value="">
+
+                    <label class="form-control-label">Default Sodaqoh / Tahun</label>
+                    <input class="form-control" <?php if (!auth()->user()->hasRole('superadmin')) {
+                                                    echo 'disabled';
+                                                } ?> type="number" id="nominal" name="nominal" value="">
+                    <hr>
+
+                    <label class="custom-control-label m-0">Periode Bulan</label>
+                    <select class="form-control" name="periode_bulan" id="periode_bulan">
+                        <?php foreach ($bulan as $bl) { ?>
+                            <option value="{{$bl}}">{{ucfirst($bl)}}</option>
+                        <?php } ?>
+                    </select>
+
+                    <label class="custom-control-label m-0">Tanggal</label>
+                    <input class="form-control" type="date" id="date" name="date">
+
+                    <label class="custom-control-label m-0">Nominal</label>
+                    <input class="form-control" type="number" id="nominal_bayar" name="nominal_bayar" placeholder="0">
+
+                    <label class="form-control-label">Keterangan</label>
+                    <input class="form-control" type="text" id="ket" name="ket" value="">
+
+                    <br>
+                    <label class="form-control-label">*Jika terdapat pembayaran lebih dari 1x dalam 1 bulan, harap yang diinput adalah total dari jumlah pembayaran tersebut</label>
+                    <label class="form-control-label">**Jika terdapat perubahan, dapat memilih bulan sesuai yang akan diubah</label>
                 </div>
 
                 <table class="table align-items-center mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">BULAN</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">TANGGAL</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NOMINAL</th>
-                        </tr>
-                    </thead>
                     <tbody>
-                        <?php foreach ($bulan as $bl) { ?>
-                            <tr class="text-sm">
-                                <td class="p-0" style="border-bottom-width:0!important;">{{ucwords($bl)}}</td>
+                        <tr>
+                            <td class="text-sm font-weight-bolder ps-0" colspan="2" style="border:none!important;">Riwayat Pembayaran</td>
+                        </tr>
+                        <?php foreach ($bulan as $bl) {
+                        ?>
+                            <tr class="text-sm" id="idx{{$bl}}">
                                 <td class="p-0" style="border-bottom-width:0!important;">
-                                    <label class="custom-control-label m-0">Tanggal</label>
-                                    <input class="form-control" type="date" id="{{$bl}}_date" name="{{$bl}}_date">
+                                    <input class="form-control" disabled type="text" value="{{$bl}}">
                                 </td>
                                 <td class="p-0" style="border-bottom-width:0!important;">
-                                    <label class="custom-control-label m-0">Nominal</label>
-                                    <input class="form-control" type="number" id="{{$bl}}" name="{{$bl}}" placeholder="0">
+                                    <input class="form-control" disabled type="date" id="{{$bl}}_date" name="{{$bl}}_date">
+                                </td>
+                                <td class="p-0" style="border-bottom-width:0!important;">
+                                    <input class="form-control" disabled type="text" id="{{$bl}}" name="{{$bl}}" placeholder="0">
                                 </td>
                             </tr>
-                        <?php } ?>
+                        <?php }
+                        ?>
                     </tbody>
                 </table>
-
-                <label class="form-control-label">Keterangan</label>
-                <input class="form-control" type="text" id="ket" name="ket" value="">
                 <hr>
                 <div class="form-group form-check">
                     <label class="custom-control-label">Info via WA</label>
@@ -251,8 +270,15 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $('#nm').text(nm + ' | ' + data.periode);
 
         bulan.forEach(function(item, b) {
-            $('#' + item).val(data[item]);
-            $('#' + item + '_date').val(data[item + '_date']);
+            document.getElementById('idx' + item).setAttribute('style', 'display:none;');
+            if (data[item] > 0) {
+                $('#' + item).val(new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR"
+                }).format(parseInt(data[item])));
+                $('#' + item + '_date').val(data[item + '_date']);
+                document.getElementById('idx' + item).setAttribute('style', 'display:block;');
+            }
         })
     }
 
@@ -263,17 +289,13 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         datax['fkSantri_id'] = $('#santri_id').val();
         datax['keterangan'] = $('#ket').val();
         datax['info-wa'] = false;
+        datax['periode_bulan'] = $("#periode_bulan").val();
+        datax['date'] = $('#date').val();
+        datax['nominal_bayar'] = $('#nominal_bayar').val();
         var checkBox = document.getElementById("info-wa");
         if (checkBox.checked == true) {
             datax['info-wa'] = true;
         }
-
-        var bulan = <?php echo json_encode($bulan); ?>;
-        bulan.forEach(function(item, b) {
-            datax[item] = $('#' + item).val();
-            datax[item + '_date'] = $('#' + item + '_date').val();
-        })
-        // console.log(datax);
 
         $.post("{{ route('store sodaqoh') }}", datax,
             function(data, status) {
