@@ -276,6 +276,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
                                                         } ?> value="1">Ya</option>
                                             </select>
+                                            <label class="form-control-label">
+                                                Status Perijinan 30%
+                                            </label>
+                                            <select class="status_perijinan form-control" name="status_perijinan" id="status_perijinan">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->status_perijinan) ? 'selected' : '';
+                                                        } ?> value="0">Tidak Diaktifkan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->status_perijinan) ? 'selected' : '';
+                                                        } ?> value="1">Diaktifkan</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

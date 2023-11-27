@@ -276,6 +276,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                                 $data = Pelanggaran::create($store);
                             } else {
                                 $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
+                                $check_peringatan->keterangan = 'Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
                                 if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
                                     $check_peringatan->kategori_sp_real = '2';
                                     $check_peringatan->keringanan_sp = '1';

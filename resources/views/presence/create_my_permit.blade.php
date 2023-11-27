@@ -135,6 +135,22 @@ function build_calendar($month, $year)
             7. Ijin ini akan dikirim otomatis via WA ke Koor Lorong
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group" style="border:solid 1px #ddd;padding:5px 8px;border-radius:4px;">
+            Estimasi Jumlah KBM bulan ini: <b>{{ $data_kbm_ijin['kbm'] }}</b>
+            <br>
+            Jumlah kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100),0) }} (30% dari total KBM)</b>
+            <br>
+            Jumlah ijin saat ini: <b>{{ $data_kbm_ijin['ijin'] }}</b>
+            <br>
+            Sisa kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100) - $data_kbm_ijin['ijin'],0) }}</b>
+          </div>
+        </div>
+      </div>
+      @if($data_kbm_ijin['status'])
+      <div class="row">
         <div class="col-md-12">
           <div class="form-group">
             <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
@@ -175,6 +191,15 @@ function build_calendar($month, $year)
           </div>
         </div>
       </div>
+      @else
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <b class="text-danger">Mohon maaf, Kuota ijin Anda sudah habis :(</b>
+          </div>
+        </div>
+      </div>
+      @endif
     </form>
   </div>
 </div>

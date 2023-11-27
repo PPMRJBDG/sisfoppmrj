@@ -31,7 +31,7 @@ class PresenceGroupsChecker
 
         $check_liburan = Liburan::where('liburan_from', '<', $currentDate)->where('liburan_to', '>', $currentDate)->get();
 
-        if (count($check_liburan) == 0) {
+        if (count($check_liburan) == 0 && $currentDay != 'sunday') {
             // load all presence groups that the 'days' attribute contains current day AND are ACTIVE
             $presenceGroups = PresenceGroup::where('days', 'LIKE', '%' . $currentDay . '%')->where('status', 'active')->get();
 
