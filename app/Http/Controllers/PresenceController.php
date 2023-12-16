@@ -824,7 +824,7 @@ class PresenceController extends Controller
         $tahun_bulan = DB::table('presences')
             ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
             ->groupBy('ym')
-            ->orderBy('id', 'DESC')
+            ->orderBy('ym', 'DESC')
             ->get();
         if ($tb == null || $tb == '-') {
             $tb = date('Y-m');
