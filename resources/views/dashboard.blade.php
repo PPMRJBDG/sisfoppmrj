@@ -7,6 +7,9 @@
 <div class="col-12 mb-2">
     <div class="card shadow-lg p-3">
         <p class="m-0 mb-2 text-sm font-weight-bolder">Shortcut Presensi Hari Ini</p>
+        <a href="{{ url('presensi/izin/persetujuan') }}" class="btn btn-warning btn-sm">
+            Terim / Tolak Ijin
+        </a>
         @foreach($get_presence_today as $gpt)
         <a href="{{ App\Helpers\CommonHelpers::settings()->host_url . '/presensi/list/' . $gpt->id }}" class="btn btn-primary btn-sm">
             Presensi {{ $gpt->name }}

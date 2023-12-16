@@ -65,7 +65,9 @@
               <div class="mt-1 mb-1"><span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span> {{ $permit->reason }}</div>
 
               @if($permit->status=='rejected' || $permit->status=='pending')
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
               <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a>
+              @endif
               @elseif($permit->status=='approved')
               <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a>
               @endif
