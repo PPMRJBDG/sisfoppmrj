@@ -69,30 +69,33 @@
           <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label fs-6" for="customCheck1"><span class="badge bg-gradient-secondary">Pending</span></label>
-              <input class="form-check-input" type="radio" name="status" value="pending">
+              <input class="form-check-input" type="radio" checked name="status" value="pending">
             </div>
           </div>
+          @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
           <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label fs-6" for="customCheck1"><span class="badge bg-gradient-success">Approved</span></label>
               <input class="form-check-input" type="radio" name="status" value="approved">
             </div>
           </div>
-          <div class="col-md-4">
+          @endif
+          <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label fs-6" for="customCheck1"><span class="badge bg-gradient-danger">Rejected</span></label>
               <input class="form-check-input" type="radio" name="status" value="rejected">
             </div>
+          </div> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="custom-control-label">Perijinan akan di Approve oleh Ketua / RJ / Wk</label>
+          <div class="form-group">
+            <input class="btn btn-primary form-control" type="submit" value="Ajukan">
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <input class="btn btn-primary form-control" type="submit" value="Ajukan">
-            </div>
-          </div>
-        </div>
+      </div>
     </form>
   </div>
-</div>
-@include('base.end')
+  @include('base.end')

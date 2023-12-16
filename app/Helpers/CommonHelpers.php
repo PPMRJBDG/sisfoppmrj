@@ -218,7 +218,7 @@ class CommonHelpers
         }
     }
 
-    public static function statusPerijinan()
+    public static function statusPerijinan($santri_id = null)
     {
         // $periode_tahun = Periode::latest('periode_tahun')->first();
         // $split_periode = explode("-", $periode_tahun->periode_tahun);
@@ -226,12 +226,15 @@ class CommonHelpers
         // $get_total_permit = Permit::where('created_at', '>=', $split_periode[0] . '-09-01')->where('fkSantri_id', auth()->user()->santri->id)->get();
         // $persentase = count($get_total_kbm) * 30 / 100;
 
+        if ($santri_id == null) {
+            $santri_id = auth()->user()->santri->id;
+        }
         $get_total_kbm = (cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) - 4) * 2;
-        $get_total_permit = Permit::where('created_at', 'LIKE', '%' . date('Y-m') . '%')->where('fkSantri_id', auth()->user()->santri->id)->get();
-        $persentase = $get_total_kbm * 30 / 100;
+        $get_total_permit = Permit::where('created_at', 'LIKE', '%' . date('Y-m') . '%')->where('fkSantri_id', $santri_id)->where('status', 'approved')->get();
+        $kuota = number_format($get_total_kbm * 30 / 100, 0);
 
         $status_ijin = true;
-        if (count($get_total_permit) > $persentase) {
+        if (count($get_total_permit) == $kuota) {
             $status_ijin = false;
         }
 
@@ -240,7 +243,7 @@ class CommonHelpers
             $status_ijin = true;
         }
 
-        $data_kbm_ijin = ['kbm' => $get_total_kbm, 'ijin' => count($get_total_permit), 'status' => $status_ijin];
+        $data_kbm_ijin = ['kbm' => $get_total_kbm, 'ijin' => count($get_total_permit), 'status' => $status_ijin, 'kuota' => $kuota];
         return $data_kbm_ijin;
     }
 }

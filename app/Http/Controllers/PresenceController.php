@@ -1100,14 +1100,16 @@ class PresenceController extends Controller
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '        
-Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
+Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
 
                 $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason');
+Alasan: ' . $request->input('reason') . '
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
 
                 WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu, $request->input('reason_category'));
                 return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
@@ -1287,9 +1289,9 @@ Sampai: ' . $request->input('to_date');
     {
         $dayname = date('D', strtotime(today()));
         if ($dayname == "Fri") {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(15)->get();
+            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(5)->get();
         } else {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(14)->get();
+            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(4)->get();
         }
 
         if (auth()->user()->hasRole('superadmin')) {
@@ -1361,6 +1363,7 @@ Sampai: ' . $request->input('to_date');
         ]);
 
         if ($inserted) {
+            $data_kbm_ijin = CommonHelpers::statusPerijinan($santriId);
             $santri = Santri::find($santriId);
             $presence = Presence::find($request->input('fkPresence_id'));
             if ($santri->fkLorong_id == '') {
@@ -1368,18 +1371,29 @@ Sampai: ' . $request->input('to_date');
             } else {
                 $lorong = '*' . $santri->lorong->name . '*';
             }
-            $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
+            if ($request->input('status') == 'pending') {
+                $sttijn = 'Status: *Pending (Perlu persetujuan, amshol cek di sisfo)*';
+            } else {
+                $sttijn = 'Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
+            }
+            $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
+
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
+' . $sttijn . '
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
 
-            $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
+            $caption_ortu = null;
+            if ($request->input('status') == 'approved') {
+                $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason');
+Alasan: ' . $request->input('reason') . '
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
+            }
 
             WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu, $request->input('reason_category'));
 

@@ -141,7 +141,7 @@ function build_calendar($month, $year)
           <div class="form-group" style="border:solid 1px #ddd;padding:5px 8px;border-radius:4px;">
             Estimasi Jumlah KBM bulan ini: <b>{{ $data_kbm_ijin['kbm'] }}</b>
             <br>
-            Jumlah kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100),0) }} (30% dari total KBM)</b>
+            Jumlah kuota ijin: <b>{{ $data_kbm_ijin['kuota'] }} (30% dari total KBM)</b>
             <br>
             Jumlah ijin saat ini: <b>{{ $data_kbm_ijin['ijin'] }}</b>
             <br>
