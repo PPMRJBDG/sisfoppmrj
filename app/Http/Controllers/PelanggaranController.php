@@ -17,14 +17,35 @@ class PelanggaranController extends Controller
         $this->middleware('auth');
     }
 
-    public function index($id = null)
+    public function index($is_archive = 0, $value = null, $id = null)
     {
-        $is_archive = 0;
         $count_pelanggaran = array(); //Pelanggaran::select(DB::raw('fkJenis_pelanggaran_id, COUNT(fkJenis_pelanggaran_id) as kategori'))->where('is_archive', $is_archive)->groupBy('fkJenis_pelanggaran_id')->get();
-        if ($id == null) {
-            $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
+        if ($value == null) {
+            $value = 'all';
+        }
+
+        if ($value == 'all') {
+            if ($id == null) {
+                $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
+            } else {
+                $list_pelanggaran = Pelanggaran::where('fkJenis_pelanggaran_id', $id)->where('is_archive', $is_archive)->get();
+            }
         } else {
-            $list_pelanggaran = Pelanggaran::where('fkJenis_pelanggaran_id', $id)->where('is_archive', $is_archive)->get();
+            if ($value == 'sp') {
+                if ($id == null) {
+                    $list_pelanggaran = Pelanggaran::whereNotNull('kategori_sp_real')->where('is_archive', $is_archive)->get();
+                } else {
+                    $list_pelanggaran = Pelanggaran::where('fkJenis_pelanggaran_id', $id)->whereNotNull('kategori_sp_real')->where('is_archive', $is_archive)->get();
+                }
+            } else if ($value == 'pantau') {
+                if ($id == null) {
+                    $list_pelanggaran = Pelanggaran::whereNull('kategori_sp_real')->where('is_archive', $is_archive)->get();
+                } else {
+                    $list_pelanggaran = Pelanggaran::where('fkJenis_pelanggaran_id', $id)->whereNull('kategori_sp_real')->where('is_archive', $is_archive)->get();
+                }
+            } else {
+                $list_pelanggaran = Pelanggaran::where('fkJenis_pelanggaran_id', $id)->where('is_archive', $is_archive)->get();
+            }
         }
 
         foreach ($list_pelanggaran as $lp) {
@@ -55,6 +76,7 @@ class PelanggaranController extends Controller
 
         return view('pelanggaran.list', [
             'id' => $id,
+            'value' => $value,
             'column' => $column,
             'is_archive' => $is_archive,
             'list_pelanggaran' => $list_pelanggaran,
@@ -62,46 +84,47 @@ class PelanggaranController extends Controller
         ]);
     }
 
-    public function list_archive()
-    {
-        $is_archive = 1;
-        $count_pelanggaran = array(); //Pelanggaran::select(DB::raw('fkJenis_pelanggaran_id, COUNT(fkJenis_pelanggaran_id) as kategori'))->where('is_archive', $is_archive)->groupBy('fkJenis_pelanggaran_id')->get();
-        $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
+    // public function list_archive()
+    // {
+    //     $is_archive = 1;
+    //     $count_pelanggaran = array(); //Pelanggaran::select(DB::raw('fkJenis_pelanggaran_id, COUNT(fkJenis_pelanggaran_id) as kategori'))->where('is_archive', $is_archive)->groupBy('fkJenis_pelanggaran_id')->get();
+    //     $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
 
-        foreach ($list_pelanggaran as $lp) {
-            $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['kategori'] = $lp->jenis->kategori_pelanggaran;
-            $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pelanggaran'] = $lp->jenis->jenis_pelanggaran;
-            if (!isset($count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan'])) {
-                $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan'] = 0;
-            }
-            if (!isset($count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix'])) {
-                $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix'] = 0;
-            }
-            if ($lp->keringanan_sp == '') {
-                $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan']++;
-            } else {
-                $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix']++;
-            }
-        }
+    //     foreach ($list_pelanggaran as $lp) {
+    //         $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['kategori'] = $lp->jenis->kategori_pelanggaran;
+    //         $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pelanggaran'] = $lp->jenis->jenis_pelanggaran;
+    //         if (!isset($count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan'])) {
+    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan'] = 0;
+    //         }
+    //         if (!isset($count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix'])) {
+    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix'] = 0;
+    //         }
+    //         if ($lp->keringanan_sp == '') {
+    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan']++;
+    //         } else {
+    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix']++;
+    //         }
+    //     }
 
-        $column = [
-            'Nama',
-            'Angkatan',
-            'Pelanggaran',
-            'Tanggal Melangar',
-            'SP',
-            'Tanggal Pemberian ST',
-            'Peringatan Keras',
-            'Keterangan'
-        ];
+    //     $column = [
+    //         'Nama',
+    //         'Angkatan',
+    //         'Pelanggaran',
+    //         'Tanggal Melangar',
+    //         'SP',
+    //         'Tanggal Pemberian ST',
+    //         'Peringatan Keras',
+    //         'Keterangan'
+    //     ];
 
-        return view('pelanggaran.list', [
-            'column' => $column,
-            'is_archive' => $is_archive,
-            'list_pelanggaran' => $list_pelanggaran,
-            'count_pelanggaran' => $count_pelanggaran
-        ]);
-    }
+    //     return view('pelanggaran.list', [
+    //         'id' => null,
+    //         'column' => $column,
+    //         'is_archive' => $is_archive,
+    //         'list_pelanggaran' => $list_pelanggaran,
+    //         'count_pelanggaran' => $count_pelanggaran
+    //     ]);
+    // }
 
     public function create()
     {
@@ -152,7 +175,8 @@ class PelanggaranController extends Controller
             $message = 'Data berhasil dihapus';
         }
 
-        return redirect()->route('pelanggaran tm')->with('success', $message);
+        // return redirect()->route('pelanggaran tm')->with('success', $message);
+        return redirect()->back()->with('success', $message);
     }
 
     public function store(Request $request)

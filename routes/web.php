@@ -131,8 +131,10 @@ Route::post('/materi/monitoring/materi_santri', [App\Http\Controllers\Monitoring
 
 // pelanggaran
 Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/id/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/archive', [App\Http\Controllers\PelanggaranController::class, 'list_archive'])->name('pelanggaran archive')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/{is_archive}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/{is_archive}/param/{value}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/{is_archive}/param/{value}/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran id')->middleware('role:superadmin|rj1|wk');
+// Route::get('/pelanggaran/archive', [App\Http\Controllers\PelanggaranController::class, 'list_archive'])->name('pelanggaran archive')->middleware('role:superadmin|rj1|wk');
 Route::get('/pelanggaran/create', [App\Http\Controllers\PelanggaranController::class, 'create'])->name('create pelanggaran')->middleware('role:superadmin|rj1|wk');
 Route::post('/pelanggaran/store', [App\Http\Controllers\PelanggaranController::class, 'store'])->name('store pelanggaran')->middleware('role:superadmin|rj1|wk');
 Route::get('/pelanggaran/edit/{id}', [App\Http\Controllers\PelanggaranController::class, 'edit'])->name('edit pelanggaran')->middleware('role:superadmin|rj1|wk');
@@ -171,6 +173,12 @@ Route::get('/schedule/{time}/{presence_id}', [App\Http\Controllers\PublicControl
 Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
 Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
 Route::get('/generator', [App\Http\Controllers\PublicController::class, 'generator']);
+
+Route::get('/dwngr/{id}/delete/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_delete_present'])->name('dwngr delete present');
+Route::get('/dwngr/{id}/present/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_present'])->name('dwngr is present');
+Route::get('/dwngr/{id}/late/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_late'])->name('dwngr is late');
+Route::get('/dwngr/{id}/notlate/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_not_late'])->name('dwngr is not late');
+Route::get('/dwngr/list/{id}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
 
 // msgtools
 Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');

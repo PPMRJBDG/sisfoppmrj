@@ -35,8 +35,61 @@ class PublicController extends Controller
         $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
         $yesterday = date('Y-m-d', $yesterday);
 
-        // DAILY
-        if ($time == 'daily') {
+        // PREVIEW + DAILY
+        if ($time == 'preview-daily') {
+            $contact_id = $setting->wa_ketertiban_group_id;
+            $time_post = 1;
+            $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
+            if (count($check_liburan) == 0) {
+                $caption = '*[Preview] Amshol Cek Daftar Kehadiran Kemarin:*';
+
+                $get_presence = Presence::where('event_date', $yesterday)->get();
+                if (count($get_presence) > 0) {
+                    foreach ($get_presence as $presence) {
+                        // hadir
+                        $presents = CountDashboard::mhs_hadir($presence->id, 'all');
+
+                        // ijin berdasarkan lorong masing2
+                        $permits = CountDashboard::mhs_ijin($presence->id, 'all');
+
+                        // alpha
+                        $mhs_alpha = CountDashboard::mhs_alpha($presence->id, 'all', $presence->event_date);
+
+                        $caption = $caption . '
+________________________
+*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
+Hadir: ' . count($presents) . '
+Ijin: ' . count($permits) . '
+Alpha: ' . count($mhs_alpha) . '
+Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
+
+';
+                        if (count($mhs_alpha) > 0) {
+                            $caption = $caption . '*Daftar Mahasiswa Alpha*
+';
+                            foreach ($mhs_alpha as $d) {
+                                $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
+';
+                            }
+                        }
+                    }
+                }
+
+                $name = '[Preview] Daily Report ' . date_format(date_create($yesterday), "d M Y");
+                if ($contact_id != '' && count($get_presence) > 0) {
+                    $insert = WaSchedules::save($name, $caption, $contact_id, 1, true);
+                    if ($insert) {
+                        echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
+                    } else {
+                        echo json_encode(['status' => false, 'message' => 'failed insert scheduler']);
+                    }
+                } else {
+                    echo json_encode(['status' => false, 'message' => 'group id not found']);
+                }
+            } else {
+                echo json_encode(['status' => false, 'message' => 'holiday']);
+            }
+        } else if ($time == 'daily') {
             $time_post = 1;
             // update pemutihan
             $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
@@ -78,7 +131,6 @@ class PublicController extends Controller
                         $permits = CountDashboard::mhs_ijin($presence->id, 'all');
 
                         // alpha
-                        $get_presence = Presence::where('event_date', $yesterday)->get();
                         $mhs_alpha = CountDashboard::mhs_alpha($presence->id, 'all', $presence->event_date);
 
                         $caption = $caption . '
@@ -381,13 +433,19 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                 }
 
                 $contact_id = 'wa_ketertiban_group_id';
-                $caption = 'Link Presensi *' . $get_presence_today->name . '*:
+                $caption = 'Link Presensi*' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
 
 Amalsholih dicek kembali, yang *Tidak Hadir* diubah jadi alpha.
 Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
-                WaSchedules::save('Link Presensi', $caption, $contact_id, 1, true);
-                WaSchedules::save('Link Presensi', $caption, 'Bulk Koor Lorong', 3, true);
+                WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
+
+                $contact_id = 'wa_dewanguru_group_id';
+                $caption = 'Link Presensi*' . $get_presence_today->name . '*:
+' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id;
+                WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
+
+                WaSchedules::save('Link Presensi Koor Lorong', $caption, 'Bulk Koor Lorong', 3, true);
             }
 
             echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
@@ -663,5 +721,103 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         }
 
         return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+    }
+
+    // PRESENCE
+    public function presence_view($id)
+    {
+        $presence = Presence::find($id);
+
+        $for = 'all';
+        // jumlah mhs / anggota lorong
+        $jumlah_mhs = CountDashboard::total_mhs($for);
+
+        // hadir
+        $presents = CountDashboard::mhs_hadir($id, $for);
+
+        // ijin berdasarkan lorong masing2
+        $permits = CountDashboard::mhs_ijin($id, $for);
+
+        // alpha
+        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date);
+
+        $update = true;
+        if ($presence != null) {
+            $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
+            $selisih = $selisih / 60 / 60 / 24;
+            if ($selisih > 1 && $for != 'all') {
+                $update = false;
+            }
+        }
+
+        return view('presence.view_public', [
+            'presence' => $presence,
+            'jumlah_mhs' => $jumlah_mhs,
+            'mhs_alpha' => $mhs_alpha,
+            'permits' => $permits,
+            'presents' => $presents == null ? [] : $presents,
+            'update' => $update
+        ]);
+    }
+
+    public function presence_delete_present($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+
+        if ($present) {
+            $deleted = $present->delete();
+
+            if (!$deleted)
+                return redirect()->route('dwngr view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
+        }
+
+        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil menghapus presensi');
+    }
+
+    public function presence_is_present($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
+
+        if ($present == null) {
+            Present::create([
+                'fkSantri_id' => $santriId,
+                'fkPresence_id' => $id,
+                'is_late' => 0
+            ]);
+        }
+
+        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil mengubah telat');
+    }
+
+    public function presence_is_late($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+
+        if ($present) {
+            $present->delete();
+            Present::create([
+                'fkSantri_id' => $santriId,
+                'fkPresence_id' => $id,
+                'is_late' => 1
+            ]);
+        }
+
+        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil mengubah telat');
+    }
+
+    public function presence_is_not_late($id, $santriId)
+    {
+        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+
+        if ($present) {
+            $present->delete();
+            Present::create([
+                'fkSantri_id' => $santriId,
+                'fkPresence_id' => $id,
+                'is_late' => 0
+            ]);
+        }
+
+        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil mengubah telat');
     }
 }
