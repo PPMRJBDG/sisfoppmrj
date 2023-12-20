@@ -445,7 +445,7 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
 ' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id;
                 WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
 
-                WaSchedules::save('Link Presensi Koor Lorong', $caption, 'Bulk Koor Lorong', 3, true);
+                // WaSchedules::save('Link Presensi Koor Lorong', $caption, 'Bulk Koor Lorong', 3, true);
             }
 
             echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
