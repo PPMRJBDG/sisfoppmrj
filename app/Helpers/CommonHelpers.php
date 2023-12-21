@@ -8,7 +8,7 @@ use App\Models\Settings;
 use App\Models\Periode;
 use App\Models\User;
 use App\Models\Santri;
-use App\Models\Presence;
+use App\Models\Lorong;
 use App\Models\Permit;
 
 class CommonHelpers
@@ -24,10 +24,14 @@ class CommonHelpers
         return $periode_tahun->periode_tahun;
     }
 
-    public static function lorong($santri_id)
+    public static function lorong($id)
     {
-        $get = Santri::find($santri_id);
-        return $get->user->fullname;
+        if ($id == null) {
+            return '-';
+        } else {
+            $get = Lorong::find($id);
+            return $get->leader->user->fullname;
+        }
     }
 
     public static function bulan()
