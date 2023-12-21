@@ -3,7 +3,7 @@
 <div class="card">
   <div class="card-header p-2 align-items-center" style="background-color:#f6f9fc;">
     @role('superadmin|rj1|wk|koor lorong')
-    <a href="{{ route('create presence permit') }}" class="btn btn-primary m-2 mb-0" style="float:right;">
+    <a href="{{ route('create presence permit') }}" class="btn btn-primary btn-xs m-2 mb-0" style="float:right;">
       <i class="fas fa-plus" aria-hidden="true"></i> Buat izin
     </a>
     @endrole

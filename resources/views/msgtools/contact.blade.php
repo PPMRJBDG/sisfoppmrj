@@ -17,12 +17,12 @@
 <div class="card mb-2">
     <div class="card-body">
         <div class="d-flex">
-            <a href="{{ route('msgtools generate bulk') }}" id="generate-contact" class="btn btn-primary">
+            <a href="{{ route('msgtools generate bulk') }}" id="generate-contact" class="btn btn-primary mb-0">
                 <i class="ni ni-curved-next" aria-hidden="true"></i>
                 Generate Contact
             </a>
         </div>
-        <div class="table-responsive">
+        <!-- <div class="table-responsive">
             <table id="table-bulk" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
@@ -51,7 +51,7 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 

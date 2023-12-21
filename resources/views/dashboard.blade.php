@@ -3,7 +3,7 @@
 <p class="mb-2 text-sm font-weight-bolder text-white">Selamat datang, {{ auth()->user()->fullname }}!</p>
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
-@if(count($get_presence_today)>0)
+<!-- @if(count($get_presence_today)>0) -->
 <div class="col-12 mb-2">
     <div class="card shadow-lg p-3">
         <p class="m-0 mb-2 text-sm font-weight-bolder">Shortcut Presensi Hari Ini</p>
@@ -11,13 +11,13 @@
             Terima / Tolak Ijin
         </a>
         @foreach($get_presence_today as $gpt)
-        <a href="{{ App\Helpers\CommonHelpers::settings()->host_url . '/presensi/list/' . $gpt->id }}" class="btn btn-primary btn-sm">
+        <a href="/presensi/list/{{ $gpt->id }}" class="btn btn-primary btn-sm">
             Presensi {{ $gpt->name }}
         </a>
         @endforeach
     </div>
 </div>
-@endif
+<!-- @endif -->
 @endif
 
 @if(!auth()->user()->hasRole('superadmin'))

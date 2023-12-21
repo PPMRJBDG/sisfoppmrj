@@ -95,9 +95,13 @@
 </div>
 
 <div class="card tabcontent" id="ijin" style="display:none;">
-  @if(count($permits)>0)
-  <div class="card-header p-2 d-flex justify-content-between align-items-center">
-    <h6>Daftar ijin: {{count($permits)}}</h6>
+  @if(count($permits)>0 || count($need_approval)>0)
+  <div class="card-header p-3">
+    <h6>
+      Disetujui: {{count($permits)}}
+      <br>
+      Perlu persetujuan: {{count($need_approval)}}
+    </h6>
   </div>
 
   <div class="table-responsive p-2">
@@ -109,6 +113,22 @@
         </tr>
       </thead>
       <tbody>
+        <!-- need approval -->
+        @foreach($need_approval as $na)
+        <tr>
+          <td class="text-sm">
+            <b>{{ $na->santri->user->fullname }}</b>
+            <br>
+            <small>[{{ $na->reason_category }}] - {{ $na->reason }}</small>
+          </td>
+          <td class="align-middle text-center text-sm">
+            <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
+            <br>
+            <a class="btn btn-primary btn-xs mb-0" href="{{ route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id]) }}" onclick="return confirm('Yakin disetujui?')">Setujui ?</a>
+          </td>
+        </tr>
+        @endforeach
+
         @foreach($permits as $permit)
         <tr>
           <td class="text-sm">
@@ -117,11 +137,9 @@
             <small>[{{ $permit->reason_category }}] - {{ $permit->reason }}</small>
           </td>
           <td class="align-middle text-center text-sm">
-            @if($permit->status=='approved')
             <span class="text-primary font-weight-bolder">{{ $permit->status }}</span>
-            @else
-            <span class="text-danger font-weight-bolder">{{ $permit->status }}</span>
-            @endif
+            <br>
+            <a class="btn btn-warning btn-xs mb-0" href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" onclick="return confirm('Yakin ditolak?')">Tolak ?</a>
           </td>
         </tr>
         @endforeach

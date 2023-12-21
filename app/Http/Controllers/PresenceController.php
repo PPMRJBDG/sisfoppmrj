@@ -237,6 +237,8 @@ class PresenceController extends Controller
 
         // ijin berdasarkan lorong masing2
         $permits = CountDashboard::mhs_ijin($id, $for);
+        // need approval
+        $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
 
         // alpha
         $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date);
@@ -255,6 +257,7 @@ class PresenceController extends Controller
             'jumlah_mhs' => $jumlah_mhs,
             'mhs_alpha' => $mhs_alpha,
             'permits' => $permits,
+            'need_approval' => $need_approval,
             'presents' => $presents == null ? [] : $presents,
             'update' => $update
         ]);
@@ -886,7 +889,8 @@ class PresenceController extends Controller
         if (!$updated)
             return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
 
-        return redirect()->route('presence permit approval', ['page' => $page])->with('success', 'Izin berhasil disetujui.');
+        // return redirect()->route('presence permit approval', ['page' => $page])->with('success', 'Izin berhasil disetujui.');
+        return redirect()->back()->with('success', 'Izin berhasil disetujui.');
     }
 
     /**
@@ -942,7 +946,8 @@ class PresenceController extends Controller
                     WaSchedules::save($name, $caption, $wa_phone->pid, 2);
                 }
             }
-            return redirect()->route('presence permit approval')->with('success', 'Izin berhasil ditolak.');
+            // return redirect()->route('presence permit approval')->with('success', 'Izin berhasil ditolak.');
+            return redirect()->back()->with('success', 'Izin berhasil ditolak.');
         } else {
             return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
         }
