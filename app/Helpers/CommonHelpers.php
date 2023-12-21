@@ -24,6 +24,12 @@ class CommonHelpers
         return $periode_tahun->periode_tahun;
     }
 
+    public static function lorong($santri_id)
+    {
+        $get = Santri::find($santri_id);
+        return $get->user->fullname;
+    }
+
     public static function bulan()
     {
         return ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];

@@ -94,7 +94,7 @@
                 <tbody>
                     @if($view_usantri!=null)
                     @foreach($view_usantri as $vu)
-                    <tr data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" class="text-sm" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')" style="cursor:pointer;">
+                    <tr data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report | koor lorong : {{ App\Helpers\CommonHelpers::lorong($vu->santri_id) }}" class="text-sm" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')" style="cursor:pointer;">
                         <td>
                             [{{ $vu->angkatan }}] {{ $vu->fullname }}
                         </td>
