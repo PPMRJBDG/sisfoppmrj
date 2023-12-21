@@ -120,7 +120,7 @@
                         <td class="text-xs">
                             <b>Melanggar:</b> {{ date_format(date_create($data->tanggal_melanggar), 'd M Y') }}
                             <br>
-                            <b>SP:</b> {{ date_format(date_create($data->is_surat_peringatan), 'd M Y') }}
+                            <b>SP:</b> {{ $data->is_surat_peringatan!=null ? date_format(date_create($data->is_surat_peringatan), 'd M Y') : '-' }}
                         </td>
                         <td>
                             <b>
