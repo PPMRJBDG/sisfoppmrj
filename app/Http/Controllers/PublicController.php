@@ -737,6 +737,8 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
 
         // ijin berdasarkan lorong masing2
         $permits = CountDashboard::mhs_ijin($id, $for);
+        // need approval
+        $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
 
         // alpha
         $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date);
@@ -755,6 +757,7 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             'jumlah_mhs' => $jumlah_mhs,
             'mhs_alpha' => $mhs_alpha,
             'permits' => $permits,
+            'need_approval' => $need_approval,
             'presents' => $presents == null ? [] : $presents,
             'update' => $update
         ]);

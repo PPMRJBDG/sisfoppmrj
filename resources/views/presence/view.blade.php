@@ -35,7 +35,7 @@
 
 <div class="card tabcontent" id="hadir" style="display:block;">
   <div class="card-header p-2 d-flex justify-content-between align-items-center">
-    <h6>Daftar hadir: {{count($presents)}}</h6>
+    <!-- <h6>Daftar hadir: {{count($presents)}}</h6> -->
     @if($update)
     @can('create presents')
     <!-- <a href="{{ route('create present', $presence->id) }}" class="btn btn-primary mb-0">
@@ -98,9 +98,9 @@
   @if(count($permits)>0 || count($need_approval)>0)
   <div class="card-header p-3">
     <h6>
-      Disetujui: {{count($permits)}}
-      <br>
-      Perlu persetujuan: {{count($need_approval)}}
+      <!-- Disetujui: {{count($permits)}}
+      <br> -->
+      Perlu persetujuan/ditolak: {{count($need_approval)}}
     </h6>
   </div>
 
@@ -123,8 +123,10 @@
           </td>
           <td class="align-middle text-center text-sm">
             <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
+            @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
             <br>
             <a class="btn btn-primary btn-xs mb-0" href="{{ route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id]) }}" onclick="return confirm('Yakin disetujui?')">Setujui ?</a>
+            @endif
           </td>
         </tr>
         @endforeach
@@ -154,7 +156,7 @@
 <div class="card tabcontent" id="alpha" style="display:none;">
   @if(count($mhs_alpha)>0)
   <div class="card-header p-2 d-flex justify-content-between align-items-center">
-    <h6>Daftar alpha: {{count($mhs_alpha)}}</h6>
+    <!-- <h6>Daftar alpha: {{count($mhs_alpha)}}</h6> -->
   </div>
 
   <div class="table-responsive p-2">
