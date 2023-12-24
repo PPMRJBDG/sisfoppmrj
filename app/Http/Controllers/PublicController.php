@@ -433,7 +433,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                 }
 
                 $contact_id = 'wa_ketertiban_group_id';
-                $caption = 'Link Presensi*' . $get_presence_today->name . '*:
+                $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
 
 Amalsholih dicek kembali, yang *Tidak Hadir* diubah jadi alpha.
@@ -441,7 +441,7 @@ Besok pukul 12:00 WIB sistem akan mengirim laporan presensi ke group orangtua.';
                 WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
 
                 $contact_id = 'wa_dewanguru_group_id';
-                $caption = 'Link Presensi*' . $get_presence_today->name . '*:
+                $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id;
                 WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
 
