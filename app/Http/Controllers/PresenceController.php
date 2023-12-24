@@ -433,6 +433,7 @@ class PresenceController extends Controller
             'start_date_time' => $request->input('start_date_time') ? $request->input('start_date_time') : null,
             'end_date_time' => $request->input('end_date_time') ? $request->input('end_date_time') : null,
             'fkPresence_group_id' => $request->route('id'),
+            'total_mhs' => CountDashboard::total_mhs('all'),
             'event_date' => $request->input('event_date')
         ]);
 
