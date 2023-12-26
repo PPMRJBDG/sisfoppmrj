@@ -76,6 +76,7 @@ class SettingController extends Controller
             'wa_info_jaga_malam' => 'required',
             'wa_info_lulus' => 'required',
             'status_perijinan' => 'required',
+            'wa_link_presensi_koor' => 'required',
         ]);
         $setting = Settings::find(1);
         if ($setting == null) {
@@ -96,6 +97,7 @@ class SettingController extends Controller
                 'wa_info_jaga_malam' => $request->input('wa_info_jaga_malam'),
                 'wa_info_lulus' => $request->input('wa_info_lulus'),
                 'status_perijinan' => $request->input('status_perijinan'),
+                'wa_link_presensi_koor' => $request->input('wa_link_presensi_koor'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -114,6 +116,7 @@ class SettingController extends Controller
             $setting->wa_info_jaga_malam = $request->input('wa_info_jaga_malam');
             $setting->wa_info_lulus = $request->input('wa_info_lulus');
             $setting->status_perijinan = $request->input('status_perijinan');
+            $setting->wa_link_presensi_koor = $request->input('wa_link_presensi_koor');
             $setting->save();
         }
 

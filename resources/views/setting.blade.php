@@ -277,6 +277,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                         } ?> value="1">Ya</option>
                                             </select>
                                             <label class="form-control-label">
+                                                WA - Link Presensi ke Koor Lorong
+                                            </label>
+                                            <select class="wa_link_presensi_koor form-control" name="wa_link_presensi_koor" id="wa_link_presensi_koor">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
+                                                        } ?> value="0">Tidak</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
+                                                        } ?> value="1">Ya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">
                                                 Status Perijinan 30%
                                             </label>
                                             <select class="status_perijinan form-control" name="status_perijinan" id="status_perijinan">
@@ -287,10 +302,6 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->status_perijinan) ? 'selected' : '';
                                                         } ?> value="1">Diaktifkan</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Type
                                             </label>
