@@ -915,7 +915,7 @@ class PresenceController extends Controller
         $updated = $permit->save();
 
         if ($updated) {
-            $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
+            $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
             // kirim ke yg ijin
             $nohp = $permit->santri->user->nohp;
             if ($nohp != '') {
@@ -927,11 +927,12 @@ class PresenceController extends Controller
                     $query->where('name', 'NOT LIKE', '%Bulk%');
                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                 if ($wa_phone != null) {
-                    $caption = 'Perijinan Anda di Tolak oleh Pengurus.';
+                    $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus.';
                     WaSchedules::save($name, $caption, $wa_phone->pid);
                 }
             }
 
+            $name = '[Rejected-Ortu] Perijinan Dari ' . $permit->santri->user->fullname;
             // kirim ke orangtua
             $nohp_ortu = $permit->santri->nohp_ortu;
             if ($nohp_ortu != '') {
@@ -943,7 +944,7 @@ class PresenceController extends Controller
                     $query->where('name', 'NOT LIKE', '%Bulk%');
                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                 if ($wa_phone != null) {
-                    $caption = 'Perijinan *' . $permit->santri->user->fullname . '* di Tolak oleh Pengurus.';
+                    $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus.';
                     WaSchedules::save($name, $caption, $wa_phone->pid, 2);
                 }
             }

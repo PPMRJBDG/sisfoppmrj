@@ -1,5 +1,5 @@
 @include('base.start', ['path' => 'presensi/izin/persetujuan', 'title' => 'Tolak / Terima Daftar Izin ' . (isset($lorong) ? $lorong->name : ''), 'breadcrumbs' => ['Daftar Izin', 'Daftar Izin ' . (isset($lorong) ? $lorong->name : '')]])
-@if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
+@if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
 <div class="card">
   <div class="card-header p-2 align-items-center" style="background-color:#f6f9fc;">
     @role('superadmin|rj1|wk|koor lorong')
