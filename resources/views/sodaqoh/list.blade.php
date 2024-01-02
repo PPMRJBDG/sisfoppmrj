@@ -107,6 +107,13 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 @endforeach
                 @endif
             </select>
+            <select class="select_lunas form-control" name="select_lunas" id="select_lunas">
+                <option {{ ($select_lunas == 2) ? 'selected' : '' }} value="2">Semua</option>
+                <option {{ ($select_lunas == 1) ? 'selected' : '' }} value="1">Sudah Lunas</option>
+                <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="0">Belum Lunas</option>
+                <!-- <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="3">Sudah Nyicil</option>
+                <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="4">Belum Nyicil</option> -->
+            </select>
         </div>
         <div class="table-responsive mt-2">
             <table id="table" class="table align-items-center mb-0">
@@ -156,6 +163,9 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                         <td>
                             <a onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($bulan)}})" class="btn btn-primary btn-xs mb-0">Bayar</a>
                             <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                            @if($data->status_lunas=='')
+                            <a onclick="reminderSodaqoh({{$data}})" class="btn btn-warning btn-xs mb-0">Ingatkan</a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -246,16 +256,25 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 
 <script>
     $('#table').DataTable({
-        order: [],
+        order: [
+            [4, 'desc']
+        ],
         pageLength: 25
     });
     $('.select_angkatan').change((e) => {
         var periode = $('#select_periode').val()
-        window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/${$(e.currentTarget).val()}`)
+        var lunas = $('#select_lunas').val()
+        window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/${$(e.currentTarget).val()}/` + lunas)
     })
     $('.select_periode').change((e) => {
         var angkatan = $('#select_angkatan').val()
-        window.location.replace(`{{ url("/") }}/sodaqoh/list/${$(e.currentTarget).val()}/` + angkatan)
+        var lunas = $('#select_lunas').val()
+        window.location.replace(`{{ url("/") }}/sodaqoh/list/${$(e.currentTarget).val()}/` + angkatan + `/` + lunas)
+    })
+    $('.select_lunas').change((e) => {
+        var angkatan = $('#select_angkatan').val()
+        var periode = $('#select_periode').val()
+        window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/` + angkatan + `/${$(e.currentTarget).val()}`)
     })
 
     function openSodaqoh(data, nm, bulan) {
@@ -280,6 +299,19 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 document.getElementById('idx' + item).setAttribute('style', 'display:block;');
             }
         })
+    }
+
+    function reminderSodaqoh(data) {
+        if (confirm("Ingatkan sekarang ?")) {
+            var datax = {};
+            datax['id'] = data.id;
+            $.post("{{ route('reminder sodaqoh') }}", datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    alert(return_data.message);
+                }
+            );
+        }
     }
 
     $('#save').click(function() {

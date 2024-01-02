@@ -16,8 +16,11 @@ class SodaqohController extends Controller
         $this->middleware('auth');
     }
 
-    public function list($periode = null, $angkatan = null)
+    public function list($periode = null, $angkatan = null, $status = 2)
     {
+        if ($status == 0) {
+            $status = null;
+        }
         $datax = [];
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
@@ -28,19 +31,39 @@ class SodaqohController extends Controller
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
 
         if (($periode == '-' && $angkatan == '-') || ($periode == null && $angkatan == null)) {
-            $datax = Sodaqoh::get();
+            if ($status == 2) {
+                $datax = Sodaqoh::get();
+            } else {
+                $datax = Sodaqoh::where('status_lunas', $status)->get();
+            }
             $periode = '-';
             $angkatan = '-';
         } elseif ($periode != '-' && $angkatan != '-') {
-            $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
-                $query->where('angkatan', $angkatan);
-            })->where('periode', $periode)->get();
+            if ($status == 2) {
+                $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                    $query->where('angkatan', $angkatan);
+                })->where('periode', $periode)->get();
+            } else {
+                $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                    $query->where('angkatan', $angkatan);
+                })->where('periode', $periode)->where('status_lunas', $status)->get();
+            }
         } elseif ($angkatan != null && ($periode == null || $periode == '-')) {
-            $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
-                $query->where('angkatan', $angkatan);
-            })->get();
+            if ($status == 2) {
+                $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                    $query->where('angkatan', $angkatan);
+                })->get();
+            } else {
+                $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
+                    $query->where('angkatan', $angkatan);
+                })->where('status_lunas', $status)->get();
+            }
         } elseif ($periode != null && ($angkatan == null || $angkatan == '-')) {
-            $datax = Sodaqoh::where('periode', $periode)->get();
+            if ($status == 2) {
+                $datax = Sodaqoh::where('periode', $periode)->get();
+            } else {
+                $datax = Sodaqoh::where('periode', $periode)->where('status_lunas', $status)->get();
+            }
         }
 
         return view('sodaqoh.list', [
@@ -48,6 +71,7 @@ class SodaqohController extends Controller
             'select_angkatan' => $angkatan,
             'list_periode' => $list_periode,
             'list_angkatan' => $list_angkatan,
+            'select_lunas' => $status == null ? '0' : $status,
             'periode' => $periode
         ]);
     }
@@ -118,5 +142,47 @@ class SodaqohController extends Controller
             return redirect()->route('list periode sodaqoh', [$periode, $angkatan])->withErrors(['periode_not_found' => 'Sodaqoh tidak ditemukan.']);
         $data->delete();
         return redirect()->route('list periode sodaqoh', [$periode, $angkatan])->with('success', 'Berhasil menghapus sodaqoh');
+    }
+
+    public function reminder_sodaqoh(Request $request)
+    {
+        $id = $request->input('id');
+        $check = Sodaqoh::find($id);
+        $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
+        if ($check) {
+            $terbayar = 0;
+            foreach ($bulan as $b) {
+                $terbayar = $terbayar + $check->$b;
+            }
+            $nominal_kekurangan = $check->nominal - $terbayar;
+            $text_kekurangan = '';
+            $status_lunas = '*[LUNAS]*';
+            if ($nominal_kekurangan > 0) {
+                $text_kekurangan = 'Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
+                $status_lunas = '*[BELUM LUNAS]*';
+            } else {
+                $check->status_lunas = 1;
+                $check->save();
+            }
+            // kirim wa
+            $nohp = $check->santri->nohp_ortu;
+            if ($nohp != '') {
+                if ($nohp[0] == '0') {
+                    $nohp = '62' . substr($nohp, 1);
+                }
+                $setting = Settings::find(1);
+                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                if ($wa_phone != null) {
+                    $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. ' . $check->santri->user->fullname . ' sudah dikonfirmasi. ' . $text_kekurangan;
+                    WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);
+                }
+            }
+            // end kirim wa
+            return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
+        } else {
+            return json_encode(array("status" => false, "message" => 'ID tidak ditemukan'));
+        }
     }
 }
