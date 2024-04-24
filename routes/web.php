@@ -23,7 +23,7 @@ Route::get('/tabgraf/{tb}/{select_angkatan}/{select_periode}', [App\Http\Control
 // Route::get('/register', [App\Http\Controllers\RegisterController::class, 'register'])->name('register');
 // Route::post('/register/store', [App\Http\Controllers\RegisterController::class, 'store_from_public'])->name('store user from public');
 
-// Auth::routes(['register' => false]);
+Auth::routes(['register' => false]);
 
 Route::get('/profil', [App\Http\Controllers\UserController::class, 'my_profile'])->name('my profile');
 Route::get('/profil/edit', [App\Http\Controllers\UserController::class, 'edit_my_profile'])->name('edit my profile');
