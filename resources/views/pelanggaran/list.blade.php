@@ -16,7 +16,7 @@
 
 <div class="card p-2 mb-2">
     @if($id!=null)
-    <a href="/pelanggaran/{{$is_archive}}/param/all" class="btn btn-primary btn-sm col-12 col-md-2 mb-1">Tampilkan Semua</a>
+    <a href="/pelanggaran/s/{{$is_archive}}/param/all" class="btn btn-primary btn-sm col-12 col-md-2 mb-1">Tampilkan Semua</a>
     @endif
     <div class="row">
         @foreach($count_pelanggaran as $key=>$cp)
@@ -35,7 +35,7 @@
                                         $color = 'primary';
                                     }
                                     ?>
-                                    <a href="/pelanggaran/{{$is_archive}}/param/{{$value}}/{{$key}}">
+                                    <a href="/pelanggaran/s/{{$is_archive}}/param/{{$value}}/{{$key}}">
                                         <span class="text-{{$color}} text-sm font-weight-bolder">
                                             [{{ $cp['kategori'] }}]
                                         </span>
@@ -63,10 +63,10 @@
     </div>
     <div class="row">
         <div class="col-12 mt-1">
-            <a href="{{ $id==null ? '/pelanggaran/'.$is_archive.'/param/sp' : '/pelanggaran/'.$is_archive.'/param/sp/'.$id }}" class="btn btn-primary btn-sm mb-0">
+            <a href="{{ $id==null ? '/pelanggaran/s/'.$is_archive.'/param/sp' : '/pelanggaran/s/'.$is_archive.'/param/sp/'.$id }}" class="btn btn-primary btn-sm mb-0">
                 Sudah SP
             </a>
-            <a href="{{ $id==null ? '/pelanggaran/'.$is_archive.'/param/pantau' : '/pelanggaran/'.$is_archive.'/param/pantau/'.$id }}" class="btn btn-warning btn-sm mb-0">
+            <a href="{{ $id==null ? '/pelanggaran/s/'.$is_archive.'/param/pantau' : '/pelanggaran/s/'.$is_archive.'/param/pantau/'.$id }}" class="btn btn-warning btn-sm mb-0">
                 Dipantau
             </a>
         </div>
@@ -84,12 +84,12 @@
                 Input Pelanggaran
             </a>
             @if($is_archive)
-            <a href="/pelanggaran/0/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
+            <a href="/pelanggaran/s/0/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
                 <i class="fas fa-view" aria-hidden="true"></i>
                 Pelanggaran Aktif
             </a>
             @else
-            <a href="/pelanggaran/1/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
+            <a href="/pelanggaran/s/1/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
                 <i class="fas fa-view" aria-hidden="true"></i>
                 Lihat Arsip
             </a>

@@ -130,10 +130,10 @@ Route::get('/materi/monitoring/matching', [App\Http\Controllers\MonitoringMateri
 Route::post('/materi/monitoring/materi_santri', [App\Http\Controllers\MonitoringMateriController::class, 'materi_santri'])->name('materi santri');
 
 // pelanggaran
-Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/{is_archive}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/{is_archive}/param/{value}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/{is_archive}/param/{value}/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran id')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm1')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/s/{is_archive}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm2')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/s/{is_archive}/param/{value}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran/s/{is_archive}/param/{value}/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran id')->middleware('role:superadmin|rj1|wk');
 // Route::get('/pelanggaran/archive', [App\Http\Controllers\PelanggaranController::class, 'list_archive'])->name('pelanggaran archive')->middleware('role:superadmin|rj1|wk');
 Route::get('/pelanggaran/create', [App\Http\Controllers\PelanggaranController::class, 'create'])->name('create pelanggaran')->middleware('role:superadmin|rj1|wk');
 Route::post('/pelanggaran/store', [App\Http\Controllers\PelanggaranController::class, 'store'])->name('store pelanggaran')->middleware('role:superadmin|rj1|wk');

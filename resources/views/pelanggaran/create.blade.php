@@ -1,4 +1,4 @@
-@include('base.start', ['path' => 'pelanggaran/create', 'title' => 'Input Pelanggaran', 'breadcrumbs' => ['Input Pelanggaran'], 'backRoute' => route('pelanggaran tm')
+@include('base.start', ['path' => 'pelanggaran/create', 'title' => 'Input Pelanggaran', 'breadcrumbs' => ['Input Pelanggaran'], 'backRoute' => route('pelanggaran tm1')
 ])
 @if ($errors->any())
 <div class="alert alert-danger text-white">
