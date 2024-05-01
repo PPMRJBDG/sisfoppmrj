@@ -1,28 +1,36 @@
 @include('base.start', ['path' => 'presensi/izin/saya', 'title' => 'Daftar Izin Saya', 'breadcrumbs' => ['Daftar Izin Saya']])
-<div class="card">
+
+
+<div class="card-body px-0 pt-0 pb-2">
+  @if (session('success'))
+  <div class="p-4">
+    <div class="alert alert-success text-white">
+      {{ session('success') }}
+    </div>
+  </div>
+  @endif
+  @if(sizeof($myPermits) <= 0) <div class="p-3">
+    Belum ada data.
+</div>
+@endif
+
+<div class="tab mt-2">
+  <button class="tablinks active" onclick="openTab(event, 'harian')">Harian</button>
+  <button class="tablinks" onclick="openTab(event, 'berjangka')">Berjangka</button>
+</div>
+
+<div class="card tabcontent" id="harian" style="display:block;">
   <div class="card-header pb-0 align-items-center">
     <h6>Daftar izin saya</h6>
     <div class="col-md-12">
       <div class="form-group">
-        <a href="{{ route('presence permit submission') }}" class="btn btn-primary form-control mb-0">
+        <a href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('presence permit submission') }}" class="btn btn-primary form-control mb-0">
           <i class="fas fa-plus" aria-hidden="true"></i>
           Buat izin
         </a>
       </div>
     </div>
   </div>
-  <div class="card-body px-0 pt-0 pb-2">
-    @if (session('success'))
-    <div class="p-4">
-      <div class="alert alert-success text-white">
-        {{ session('success') }}
-      </div>
-    </div>
-    @endif
-    @if(sizeof($myPermits) <= 0) <div class="p-3">
-      Belum ada data.
-  </div>
-  @endif
 
   <div class="table-responsive p-2">
     <table id="table-izin" class="table align-items-center mb-0">
@@ -63,31 +71,19 @@
     </table>
   </div>
 </div>
-</div>
-<div class="card mt-4">
+
+<div class="card tabcontent" id="berjangka" style="display:none;">
   <div class="card-header pb-0 justify-content-between align-items-center">
     <h6>Daftar izin Generator</h6>
     <div class="col-md-12">
       <div class="form-group">
-        <a href="{{ route('ranged presence permit submission') }}" class="btn btn-outline-primary form-control mb-0">
+        <a href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('ranged presence permit submission') }}" class="btn btn-outline-primary form-control mb-0">
           <i class="fas fa-plus" aria-hidden="true"></i>
           Buat izin berjangka
         </a>
       </div>
     </div>
   </div>
-  <div class="card-body px-0 pt-0 pb-2">
-    @if (session('success'))
-    <div class="p-4">
-      <div class="alert alert-success text-white">
-        {{ session('success') }}
-      </div>
-    </div>
-    @endif
-    @if(sizeof($myPermits) <= 0) <div class="p-3">
-      Belum ada data.
-  </div>
-  @endif
   <div class="table-responsive p-2">
     <table id="table-generator" class="table align-items-center mb-0">
       <thead style="background-color:#f6f9fc;">
@@ -125,7 +121,7 @@
     </table>
   </div>
 </div>
-</div>
+
 <script>
   $('#table-izin').DataTable({
     order: [

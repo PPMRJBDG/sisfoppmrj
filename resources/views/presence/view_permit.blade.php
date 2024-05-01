@@ -3,7 +3,7 @@
 @if($permit)
 <div class="card m-2">
     <div class="card-body">
-        <h6 class="font-weight-bold mb-0 text-center">Perijinan dari {{ $permit->santri->user->fullname}}</h6>
+        <h6 class="font-weight-bold mb-0 text-center text-bold">Perijinan dari {{ $permit->santri->user->fullname}}</h6>
     </div>
 </div>
 

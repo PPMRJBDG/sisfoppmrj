@@ -137,7 +137,7 @@
         </a>
       </li>
       @endif
-      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('pengabsen'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/izin/persetujuan' ? 'active' : '' }}" href="{{ url('presensi/izin/persetujuan') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -157,7 +157,7 @@
         </a>
       </li>
       @endif
-      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
       <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/izin/list' ? 'active' : '' }}" href="{{ url('presensi/izin/list') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">

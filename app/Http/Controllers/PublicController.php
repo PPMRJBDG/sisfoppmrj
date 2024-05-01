@@ -677,6 +677,14 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             if ($permit->status == 'approved') {
                 $permit->status = 'rejected';
                 if ($permit->save()) {
+                    try {
+                        $approved_by = auth()->user()->fullname;
+                    } catch (Exception  $err) {
+                        $approved_by = $_SERVER['HTTP_USER_AGENT'];
+                    }
+                    $caption = '*' . $approved_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name;
+                    WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
+
                     $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
                     // kirim ke yg ijin
                     $nohp = $permit->santri->user->nohp;
