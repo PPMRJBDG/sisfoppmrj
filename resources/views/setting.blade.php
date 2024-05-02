@@ -287,6 +287,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
                                                         } ?> value="1">Ya</option>
                                             </select>
+                                            <label class="form-control-label">
+                                                Auto Generate Hadir
+                                            </label>
+                                            <select class="auto_generate_hadir form-control" name="auto_generate_hadir" id="auto_generate_hadir">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->auto_generate_hadir) ? 'selected' : '';
+                                                        } ?> value="0">Tidak</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->auto_generate_hadir) ? 'selected' : '';
+                                                        } ?> value="1">Ya</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

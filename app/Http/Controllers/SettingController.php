@@ -77,6 +77,7 @@ class SettingController extends Controller
             'wa_info_lulus' => 'required',
             'status_perijinan' => 'required',
             'wa_link_presensi_koor' => 'required',
+            'auto_generate_hadir' => 'required',
         ]);
         $setting = Settings::find(1);
         if ($setting == null) {
@@ -98,6 +99,7 @@ class SettingController extends Controller
                 'wa_info_lulus' => $request->input('wa_info_lulus'),
                 'status_perijinan' => $request->input('status_perijinan'),
                 'wa_link_presensi_koor' => $request->input('wa_link_presensi_koor'),
+                'auto_generate_hadir' => $request->input('auto_generate_hadir'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -117,6 +119,7 @@ class SettingController extends Controller
             $setting->wa_info_lulus = $request->input('wa_info_lulus');
             $setting->status_perijinan = $request->input('status_perijinan');
             $setting->wa_link_presensi_koor = $request->input('wa_link_presensi_koor');
+            $setting->auto_generate_hadir = $request->input('auto_generate_hadir');
             $setting->save();
         }
 

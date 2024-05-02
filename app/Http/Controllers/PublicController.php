@@ -193,8 +193,8 @@ NB:
             // jika all_ijin > 1/3 KBM diberi peringatan
             // daftar mahasiswa yang presensi < 80%
 
-            $last_month = strtotime(date("Y-m-d"));
-            $last_month = date('Y-m', $last_month);
+            $lm = strtotime(date("Y-m-d"));
+            $last_month = date('Y-m', $lm);
 
             $periode_tahun = Periode::latest('periode_tahun')->first();
             $list_angkatan = DB::table('santris')
@@ -202,7 +202,7 @@ NB:
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-            $data_presensi_weekly = '*Presensi KBM ' . $last_month . ' kurang dari 80%: ' . date("M Y") . '*
+            $data_presensi_weekly = '*[Laporan Mingguan] Presensi KBM kurang dari 80%: ' . date("M Y") . '*
 ';
             $data_mhs = array();
             foreach ($list_angkatan as $la) {
@@ -246,7 +246,7 @@ NB:
             if (count($data_mhs) > 0) {
                 $add_koor = '
 
-Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% diatas.';
+Amalsholih koor lorong menggambungi anggotanya yang kehadirannya kurang dari 80%.';
                 WaSchedules::save('Weekly Report', $data_presensi_weekly . $add_koor, 'wa_ketertiban_group_id');
 
                 // kirim ke ortu
@@ -263,15 +263,16 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
         // MONTHLY
         elseif ($time == 'monthly') {
             $time_post = 1;
+            $no = 1;
             // daftar mahasiswa yang presensi < 80%
-            $last_month = strtotime('-1 month', strtotime(date("Y-m-d")));
-            $last_month = date('Y-m', $last_month);
+            $lm = strtotime('-1 month', strtotime(date("Y-m-d")));
+            $last_month = date('Y-m', $lm);
             $list_angkatan = DB::table('santris')
                 ->select('angkatan')
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-            $caption = '*Daftar Mahasiswa dengan Kehadiran < 80% [Bulan ' . $last_month . ']*';
+            $caption = '*[Laporan Bulanan] Daftar Mahasiswa dengan Kehadiran < 80% [Bulan ' . date('M Y', $lm) . ']*';
             foreach ($list_angkatan as $la) {
                 $result = (new HomeController)->dashboard($last_month, $la->angkatan, null, true);
                 $view_usantri = $result['view_usantri'];
@@ -320,7 +321,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                                 } else {
                                     $store['saksi'] = 'sisfo 80%';
                                 }
-                                $store['keterangan'] = 'Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
+                                $store['keterangan'] = '[Laporan Bulanan] Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
                                 $store['is_archive'] = 0;
                                 $store['is_peringatan_keras'] = 0;
                                 $store['peringatan_kbm'] = 1;
@@ -328,7 +329,7 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                                 $data = Pelanggaran::create($store);
                             } else {
                                 $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
-                                $check_peringatan->keterangan = 'Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
+                                $check_peringatan->keterangan = '[Laporan Bulanan] Presensi kehadiran ' . $last_month . ': ' . $all_persentase . '%';
                                 if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
                                     $check_peringatan->kategori_sp_real = '2';
                                     $check_peringatan->keringanan_sp = '1';
@@ -349,18 +350,13 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                             if ($data) {
                                 $jenis_pelanggaran = JenisPelanggaran::find(14);
                                 $caption = $caption . '
-
-- Nama: *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . '*';
+' . $no . '. *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . ' (' . $all_persentase . '%)*';
                                 if ($is_50) {
-                                    $caption = $caption . '
-- Keterangan: *SUDAH 2 BULAN BERTURUT-TURUT KEHADIRAN < 50%, AMSHOL RJ/WK SEGERA MEMBERIKAN SP 1 SESUAI MEKANISME*';
+                                    $caption = $caption . ' - Keterangan: Sudah 2 bulan berturut-turut kehadiran < 50%, Amashol RJ/WK segera memberikan SP 1 sesuai mekanisme';
                                 } elseif ($data->peringatan_kbm == 3) {
-                                    $caption = $caption . '
-- Keterangan: *SUDAH MENCAPAI 3 BULAN KEHADIRAN < 80%, AMSHOL RJ/WK SEGERA MEMBERIKAN SP 1 SESUAI MEKANISME*';
-                                } else {
-                                    $caption = $caption . '                                 
-- Keterangan: *Presensi kehadiran: ' . $all_persentase . '%*';
+                                    $caption = $caption . ' - Keterangan: Sudah mencapai 3 bulan kehadiran < 80%, Amashol RJ/WK segera memberikan SP 1 sesuai mekanisme';
                                 }
+                                $no++;
                             }
                         }
                     }
@@ -423,18 +419,21 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadiran kurang dari 80% di
                     if (!$permit) {
                         $existingPresent = Present::where('fkPresence_id', '=', $get_presence_today->id, 'and')->where('fkSantri_id', '=', $mhs->santri_id)->first();
                         if (!$existingPresent) {
-                            $inserted = Present::create([
-                                'fkSantri_id' => $mhs->santri_id,
-                                'fkPresence_id' => $get_presence_today->id,
-                                'is_late' => 0
-                            ]);
+                            if ($setting->auto_generate_hadir) {
+                                $inserted = Present::create([
+                                    'fkSantri_id' => $mhs->santri_id,
+                                    'fkPresence_id' => $get_presence_today->id,
+                                    'is_late' => 0
+                                ]);
+                            }
                         }
                     }
                 }
 
                 $contact_id = 'wa_ketertiban_group_id';
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
-' . $setting->host_url . '/presensi/list/' . $get_presence_today->id;
+' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
+Amalsholih segera disesuaikan sesuai kehadiran masing2.';
                 WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
 
                 $contact_id = 'wa_dewanguru_group_id';
