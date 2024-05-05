@@ -31,8 +31,10 @@
 @if($count_dashboard!='')
 <div class="card shadow-lg mb-2">
     <div class="card-body p-3">
-        <p class="mb-2 text-sm font-weight-bolder">Cacah Jiwa</p>
-        <?php echo $count_dashboard; ?>
+        <p class="mb-2 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Cacah Jiwa</p>
+        <div id="toggle-cacahjiwa" style="display:none;">
+            <?php echo $count_dashboard; ?>
+        </div>
     </div>
 </div>
 @endif
@@ -230,60 +232,30 @@
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
     <div class="card-body p-0 pt-2 tabcontent" id="tabtable">
         <div class="table-responsive mt-2">
-            <table id="table-grafik" class="table align-items-center mb-0">
-                <thead class="thead-light">
-                    <tr style="background-color:#f6f9fc;">
-                        <th class="text-uppercase text-center text-xs font-weight-bolder">NO</th>
-                        <th class="text-uppercase text-center text-xs font-weight-bolder">TANGGAL</th>
-                        @foreach($presence_group as $pg)
-                        <th class="text-uppercase text-center text-xs font-weight-bolder">
-                            {{$pg->name}}
-                            <br>
-                            H | I | A
-                        </th>
-                        @endforeach
-                        <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>PERSENTASE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1; ?>
-                    @foreach($data_presensi['detil_presensi'] as $key=>$detpres)
-                    <tr class="text-sm">
-                        <td class="text-center">
-                            <?php
-                            echo $no;
-                            $no++;
-                            ?>
-                        </td>
-                        <td class="text-center font-weight-bolder">
-                            {{ App\Helpers\CommonHelpers::hari_ini(date_format(date_create($key), "D")) }}, {{ date_format(date_create($key),"d M Y") }}
-                        </td>
-                        <?php
-                        $persentase = 0;
-                        $hadir = 0;
-                        $alpha = 0;
-                        ?>
-                        @foreach($presence_group as $pg)
-                        <td class="text-center">
-                            @if(isset($detpres[$pg->id]))
-                            {{ $detpres[$pg->id]['hadir'] }} |
-                            {{ $detpres[$pg->id]['ijin'] }} |
-                            {{ $detpres[$pg->id]['alpha'] }}
-                            <?php
-                            $hadir = $hadir + ($detpres[$pg->id]['hadir'] + $detpres[$pg->id]['ijin']);
-                            $alpha = $alpha + $detpres[$pg->id]['alpha'];
-                            ?>
-                            @endif
-                        </td>
-                        @endforeach
-                        <?php
-                        $persentase = $hadir / ($hadir + $alpha) * 100;
-                        ?>
-                        <td class="text-center font-weight-bolder">{{ number_format($persentase,2) }}%</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="card-body bg-primary text-white" id="loading-table" style="border-radius:4px;">
+                <center>Loading...</center>
+            </div>
+            <div class="card-table" id="card-table" style="display:none;">
+                <table id="tab-table" class="table align-items-center mb-0">
+                    <thead class="thead-light">
+                        <tr style="background-color:#f6f9fc;">
+                            <th class="text-uppercase text-center text-xs font-weight-bolder">NO</th>
+                            <th class="text-uppercase text-center text-xs font-weight-bolder">TANGGAL</th>
+                            @foreach($presence_group as $pg)
+                            <th class="text-uppercase text-center text-xs font-weight-bolder">
+                                {{$pg->name}}
+                                <br>
+                                H | I | A
+                            </th>
+                            @endforeach
+                            <th class="text-uppercase text-center text-xs font-weight-bolder">TOTAL<br>PERSENTASE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="card-body p-0 pt-2 tabcontent" id="tabgrafik">
@@ -308,6 +280,10 @@
 <script src="{{ asset('js/plugins/Chart.extension.js') }}"></script>
 
 <script>
+    function showHideCacah() {
+        $("#toggle-cacahjiwa").toggle();
+    }
+
     var presence_group = <?php echo json_encode($presence_group); ?>;
     var data_presensi = <?php echo json_encode($data_presensi); ?>;
 
@@ -427,10 +403,10 @@
         pageLength: 15
     });
 
-    $('#table-grafik').DataTable({
-        order: [],
-        pageLength: 15
-    });
+    // $('#tab-table').DataTable({
+    //     order: [],
+    //     pageLength: 15
+    // });
 
     $('.select_tb').change((e) => {
         var angkatan = $('#select_angkatan').val();

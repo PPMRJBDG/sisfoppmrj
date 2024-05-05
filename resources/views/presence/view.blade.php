@@ -14,10 +14,10 @@
     </div>
     <div class="ms-auto text-end">
       @can('delete presences')
-      <!-- <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a> -->
+      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
       @endcan
       @can('update presences')
-      <!-- <a class="btn btn-link text-dark px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Ubah</a> -->
+      <a class="btn btn-link text-dark px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Ubah</a>
       @endcan
     </div>
   </div>
@@ -74,16 +74,17 @@
             <td class="text-sm">
               <b>{{ $present->santri->user->fullname }}</b>
               <br>
-              <small>{{ $present->created_at }} | <b>{{ $present->is_late ? 'Telat' : 'Tidak telat' }}</b></small>
+              <small>{{ $present->created_at }}</small>
+              <!-- | <b>{{ $present->is_late ? 'Telat' : 'Tidak telat' }}</b> -->
             </td>
             <td class="align-middle text-center text-sm">
               @if($update)
               <a class="btn btn-danger btn-block btn-xs mb-0" href="{{ route('delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak hadir?')">Alpha</a>
-              @if($present->is_late)
-              <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a>
-              @else
-              <a class="btn btn-warning btn-xs mb-0" href="{{ route('is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a>
-              @endif
+              <!-- @if($present->is_late) -->
+              <!-- <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
+              <!-- @else -->
+              <!-- <a class="btn btn-warning btn-xs mb-0" href="{{ route('is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a> -->
+              <!-- @endif -->
               @endif
             </td>
           </tr>
@@ -197,10 +198,10 @@
 @endif
 
 <script>
-  $('#table').DataTable({
-    order: [
-      // [1, 'desc']
-    ]
-  });
+  // $('#table').DataTable({
+  //   order: [
+  // [1, 'desc']
+  //   ]
+  // });
 </script>
 @include('base.end')

@@ -41,6 +41,7 @@
 <script>
     function openTab(evt, tahun) {
         var i, tabcontent, tablinks;
+
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
@@ -59,10 +60,70 @@
 
             $.get(`{{ url("/") }}/tabgraf/` + tb + `/` + angkatan + `/` + periode,
                 function(data, status) {
-                    var return_data = JSON.parse(data);
-                    console.log(return_data);
+                    $('#loading-table').css('display', 'none');
+                    $('#card-table').css('display', 'block');
+
+                    var no = 1;
+                    var data_body = '';
+                    var presence_group = <?php echo App\Models\PresenceGroup::get(); ?>;
+                    var datax = data['data_presensi']['detil_presensi'];
+                    console.log(datax)
+                    Object.keys(datax).forEach(function(index) {
+                        data_body = data_body + '<tr class="text-sm">' +
+                            '<td class="text-center">' + no + '</td>' +
+                            '<td class="text-center font-weight-bolder">' + hari_ini(new Date(index).getDay()) + ', ' + index + '</td>';
+                        var persentase = 0;
+                        var hadir = 0;
+                        var alpha = 0;
+                        presence_group.forEach(function(pg_key) {
+                            data_body = data_body + '<td class="text-center">';
+                            if (datax[index][pg_key['id']] != undefined) {
+                                data_body = data_body + datax[index][pg_key['id']]['hadir'] + '|' + datax[index][pg_key['id']]['ijin'] + '|' + datax[index][pg_key['id']]['alpha'];
+                                hadir = hadir + (datax[index][pg_key['id']]['hadir'] + datax[index][pg_key['id']]['ijin']);
+                                alpha = alpha + datax[index][pg_key['id']]['alpha'];
+                            }
+                            data_body = data_body + '</td>';
+                        });
+                        persentase = hadir / (hadir + alpha) * 100;
+                        data_body = data_body + '<td class="text-center font-weight-bolder">' + persentase.toFixed(2) + '%</td></tr>';
+                        no++;
+                    });
+
+                    $('#data-table').html(data_body);
                 }
             );
+        }
+    }
+
+    function hari_ini(hari) {
+        switch (hari) {
+            case 0:
+                return "Minggu";
+                break;
+
+            case 1:
+                return "Senin";
+                break;
+
+            case 2:
+                return "Selasa";
+                break;
+
+            case 3:
+                return "Rabu";
+                break;
+
+            case 4:
+                return "Kamis";
+                break;
+
+            case 5:
+                return "Jumat";
+                break;
+
+            case 6:
+                return "Sabtu";
+                break;
         }
     }
 

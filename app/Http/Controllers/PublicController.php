@@ -352,9 +352,9 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadirannya kurang dari 80%
                                 $caption = $caption . '
 ' . $no . '. *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . ' (' . $all_persentase . '%)*';
                                 if ($is_50) {
-                                    $caption = $caption . ' - Keterangan: Sudah 2 bulan berturut-turut kehadiran < 50%, Amashol RJ/WK segera memberikan SP 1 sesuai mekanisme';
+                                    $caption = $caption . ' - Keterangan: Sudah 2 bulan berturut-turut kehadiran < 50%, Amshol RJ/WK segera memberikan SP 1 sesuai mekanisme';
                                 } elseif ($data->peringatan_kbm == 3) {
-                                    $caption = $caption . ' - Keterangan: Sudah mencapai 3 bulan kehadiran < 80%, Amashol RJ/WK segera memberikan SP 1 sesuai mekanisme';
+                                    $caption = $caption . ' - Keterangan: Sudah mencapai 3 bulan kehadiran < 80%, Amshol RJ/WK segera memberikan SP 1 sesuai mekanisme';
                                 }
                                 $no++;
                             }
