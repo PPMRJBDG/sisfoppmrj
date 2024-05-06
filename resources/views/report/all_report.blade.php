@@ -165,7 +165,7 @@
                 $act = 'active';
             }
             ?>
-            <button class="tablinks {{$act}}" onclick="openPresensi(event, 'th{{ $th->y }}')">{{ $th->y }}</button>
+            <button class="tablinks {{$act}}" onclick="openPresensi(event, 'th{{ $th->y }}')">{{ ($th->y-1).'-'.$th->y }}</button>
             @endforeach
         </div>
         @foreach($tahun as $th)
@@ -190,9 +190,11 @@
                 </thead>
                 <tbody>
                     <?php
+                    $m1 = [9, 10, 11, 12];
+                    $m2 = [1, 2, 3, 4, 5, 6, 7, 8];
                     ?>
                     @foreach($tahun_bulan as $tb)
-                    @if(substr($tb->ym,0,4)==$th->y)
+                    @if(substr($tb->ym,0,4)==($th->y-1) && in_array(intval(substr($tb->ym,5,2)), $m1) || substr($tb->ym,0,4)==$th->y && in_array(intval(substr($tb->ym,5,2)), $m2))
                     <tr>
                         <?php
                         $total_kbm = 0;
@@ -225,7 +227,7 @@
                         $all_alpha = $all_alpha + $total_alpha;
                         ?>
                         <th class="text-center p-1">
-                            <h6 class="mb-0">{{ date_format(date_create($tb->ym), 'M') }}</h6>
+                            <h6 class="mb-0">{{ date_format(date_create($tb->ym), 'M Y') }}</h6>
                         </th>
                         <th class="text-center p-1">
                             <h6 class="mb-0">{{ $total_kbm }}</h6>
@@ -296,7 +298,7 @@
                         @foreach($pelanggaran as $plg)
                         <tr>
                             <td class="ps-0">
-                                <h6 class="mb-0">[SP {{ $plg->keringanan_sp }}] {{ $plg->jenis->jenis_pelanggaran }}</h6>
+                                <h6 class="mb-0">[SP {{ $plg->keringanan_sp }}] {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small></h6>
                             </td>
                             <td class="text-center">
                                 @if($plg->is_surat_peringatan!='')

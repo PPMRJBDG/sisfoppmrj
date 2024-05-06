@@ -278,3 +278,44 @@ function build_calendar($month, $year, $presences, $today)
   })
 </script>
 @include('base.end')
+
+
+
+            // kirim absensi bulanan - bulk ortu
+            //             $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
+            //             foreach ($view_usantri as $vs) {
+            //                 $check_report = ReportScheduler::where('fkSantri_id', $vs->santri_id)->first();
+            //                 if ($check_report == null) {
+            //                     $create_report = ReportScheduler::create([
+            //                         'fkSantri_id' => $vs->santri_id,
+            //                         'link_url' => $setting->host_url . '/report/' . $vs->ids,
+            //                         'month' => date("m"),
+            //                         'status' => 0,
+            //                         'count' => 0,
+            //                         'ids' => $vs->ids
+            //                     ]);
+            //                 } else {
+            //                     $check_report->month = date("m");
+            //                     $check_report->status = 0;
+            //                     $check_report->count = 0;
+            //                     $create_report = $check_report->save();
+            //                 }
+            //                 if ($create_report) {
+            //                     $nohp = $vs->nohp_ortu;
+            //                     if ($nohp != '') {
+            //                         if ($nohp[0] == '0') {
+            //                             $nohp = '62' . substr($nohp, 1);
+            //                         }
+            //                         $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+            //                             $query->where('name', 'NOT LIKE', '%Bulk%');
+            //                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+            //                         if ($wa_phone != null) {
+            //                             $caption = 'Berikut kami informasikan laporan mahasiswa an. ' . $vs->fullname . '
+            // Silahkan klik link dibawah ini:
+            // ' . $setting->host_url . '/report/' . $vs->ids;
+            //                             WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
+            //                         }
+            //                         $time_post++;
+            //                     }
+            //                 }
+            //             }

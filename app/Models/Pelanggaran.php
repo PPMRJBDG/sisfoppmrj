@@ -42,7 +42,8 @@ class Pelanggaran extends Model
         'is_archive',
         'is_wa',
         'peringatan_kbm',
-        'periode_tahun'
+        'periode_tahun',
+        'periode_bulan_kbm'
     ];
 
     public static function attr()
@@ -81,7 +82,8 @@ class Pelanggaran extends Model
             'is_st_dikembalikan',
             'keterangan',
             'is_archive',
-            'is_wa'
+            'is_wa',
+            'periode_bulan_kbm'
         ];
     }
 
