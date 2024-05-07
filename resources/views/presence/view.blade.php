@@ -2,7 +2,7 @@
 'path' => 'presensi/list',
 'title' => 'Presensi ' . (isset($presence) ? $presence->name : ''),
 'breadcrumbs' => ['Daftar Presensi', 'Presensi ' . (isset($presence) ? $presence->name : '')],
-'backRoute' => isset($presence) ? ($presence->presenceGroup ? route('view presence group', $presence->presenceGroup->id) : route('presence tm')) : ''
+'backRoute' => false
 ])
 
 @if(isset($presence))
@@ -27,6 +27,25 @@
   <span>Jumlah {{ (auth()->user()->hasRole('koor lorong')) ? 'Anggota' : 'Mahasiswa' }} {{ $jumlah_mhs }}</span>
 </div>
 
+<div class="row">
+  <div class="col-sm-12 col-md-12 mt-2">
+    @if (session('santri_is_present'))
+    <div class="p-0">
+      <div class="alert alert-warning text-white mb-0">
+        {{ session('santri_is_present') }}
+      </div>
+    </div>
+    @endif
+    @if (session('success'))
+    <div class="p-0">
+      <div class="alert alert-success text-white mb-0">
+        {{ session('success') }}
+      </div>
+    </div>
+    @endif
+  </div>
+</div>
+
 @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
 <div class="row">
   <div class="col-sm-12 col-md-12 mt-2">
@@ -48,20 +67,6 @@
 
 <div class="card tabcontent" id="hadir" style="display:block;">
   <div class="card-body px-0 pt-0 pb-2">
-    @if (session('successes'))
-    <div class="px-4">
-      <div class="alert alert-success text-white">
-        <?php echo session('successes') ?>
-      </div>
-    </div>
-    @endif
-    @if (session('errors'))
-    <div class="px-4">
-      <div class="alert alert-danger text-white">
-        <?php echo session('errors') ?>
-      </div>
-    </div>
-    @endif
     <div class="table-responsive p-2">
       <table id="table" class="table align-items-center mb-0">
         <thead>
@@ -82,7 +87,7 @@
             </td>
             <td class="align-middle text-center text-sm">
               @if($update)
-              <a class="btn btn-danger btn-block btn-xs mb-0" href="{{ route('delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak hadir?')">Alpha</a>
+              <a class="btn btn-danger btn-block btn-xs mb-0" href="{{ route('delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id, 'lorong' => $lorong]) }}" onclick="return confirm('Yakin tidak hadir?')">Alpha</a>
               <!-- @if($present->is_late) -->
               <!-- <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
               <!-- @else -->
@@ -129,7 +134,7 @@
             <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
             @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
             <br>
-            <a class="btn btn-primary btn-xs mb-0" href="{{ route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id]) }}" onclick="return confirm('Yakin disetujui?')">Setujui ?</a>
+            <a class="btn btn-primary btn-xs mb-0" href="{{ route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id, 'lorong' => $lorong]) }}" onclick="return confirm('Yakin disetujui?')">Setujui ?</a>
             @endif
           </td>
         </tr>
@@ -147,7 +152,7 @@
           <td class="align-middle text-center text-sm">
             <span class="text-primary font-weight-bolder">{{ $permit->status }}</span>
             <br>
-            <a class="btn btn-warning btn-xs mb-0" href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" onclick="return confirm('Yakin ditolak?')">Tolak ?</a>
+            <a class="btn btn-warning btn-xs mb-0" href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong]) }}" onclick="return confirm('Yakin ditolak?')">Tolak ?</a>
           </td>
         </tr>
         @endif
@@ -179,7 +184,7 @@
           </td>
           <td class="text-sm">
             @if($update)
-            <a class="btn btn-primary btn-block btn-xs mb-0" href="{{ route('is present', ['id' => $mhs['presence_id'], 'santriId' => $mhs['santri_id']]) }}" onclick="return confirm('Yakin hadir?')">Hadir</a>
+            <a class="btn btn-primary btn-block btn-xs mb-0" href="{{ route('is present', ['id' => $mhs['presence_id'], 'santriId' => $mhs['santri_id'], 'lorong' => $lorong]) }}" onclick="return confirm('Yakin hadir?')">Hadir</a>
             @endif
           </td>
         </tr>
@@ -209,7 +214,7 @@
   // });
 
   $('.select_lorong').change((e) => {
-    window.location.replace(`{{ url("/") }}/presensi/list/<?php echo $id; ?>/${$(e.currentTarget).val()}`)
+    window.location.replace(`{{ url("/") }}/presensi/list/<?php echo $id; ?>?lorong=${$(e.currentTarget).val()}`)
   })
 </script>
 @include('base.end')

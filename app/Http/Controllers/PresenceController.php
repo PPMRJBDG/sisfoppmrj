@@ -219,8 +219,12 @@ class PresenceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function view($id, $lorong = '-')
+    public function view($id, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $presence = Presence::find($id);
 
         $for = '';
@@ -746,22 +750,30 @@ class PresenceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function delete_present($id, $santriId)
+    public function delete_present($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
         if ($present) {
             $deleted = $present->delete();
 
             if (!$deleted)
-                return redirect()->route('view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
+                return redirect()->route('view presence', [$id, 'lorong' => $lorong])->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
         }
 
-        return redirect()->route('view presence', $id)->with('success', 'Berhasil menghapus presensi');
+        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
     }
 
-    public function is_present($id, $santriId)
+    public function is_present($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
 
         if ($present == null) {
@@ -772,11 +784,15 @@ class PresenceController extends Controller
             ]);
         }
 
-        return redirect()->route('view presence', $id)->with('success', 'Berhasil mengubah telat');
+        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
     }
 
-    public function is_late($id, $santriId)
+    public function is_late($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
         if ($present) {
@@ -788,11 +804,15 @@ class PresenceController extends Controller
             ]);
         }
 
-        return redirect()->route('view presence', $id)->with('success', 'Berhasil mengubah telat');
+        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
     }
 
-    public function is_not_late($id, $santriId)
+    public function is_not_late($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
         if ($present) {
@@ -804,7 +824,7 @@ class PresenceController extends Controller
             ]);
         }
 
-        return redirect()->route('view presence', $id)->with('success', 'Berhasil mengubah telat');
+        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
     }
 
 
@@ -867,7 +887,6 @@ class PresenceController extends Controller
                         ->select('permits.*', 'permits.updated_at')
                         ->where('santris.fkLorong_id', $lorong->id)
                         ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
-                        ->where('permits.status', $status)
                         ->orderBy('permits.status', 'DESC')
                         ->orderBy('permits.created_at', 'DESC')
                         ->get();
@@ -902,13 +921,15 @@ class PresenceController extends Controller
         $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
 
         if (!$permit)
-            return redirect()->route('presence permit approval')->withErrors(['permit_not_found', 'Izin tidak ditemukan.']);
+            // return redirect()->route('presence permit approval')->withErrors(['permit_not_found', 'Izin tidak ditemukan.']);
+            return redirect()->back()->withErrors('permit_not_found', 'Izin tidak ditemukan.');
 
         // check whether santri is present in the presence
         $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
 
         if ($present)
-            return redirect()->route('presence permit approval')->withErrors(['santri_is_present' => 'Santri telah hadir di presensi ini.']);
+            // return redirect()->route('presence permit approval')->withErrors(['santri_is_present' => 'Santri telah hadir di presensi ini.']);
+            return redirect()->back()->with('santri_is_present', 'Santri telah hadir di presensi ini.');
 
         $permit->status = 'approved';
 
@@ -918,7 +939,8 @@ class PresenceController extends Controller
             $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name;
             WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
         } else {
-            return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
+            // return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
+            return redirect()->back()->withErrors('failed_updating_permit', 'Izin gagal disetujui.');
         }
         // return redirect()->route('presence permit approval', ['page' => $page])->with('success', 'Izin berhasil disetujui.');
         return redirect()->back()->with('success', 'Izin berhasil disetujui.');

@@ -35,7 +35,7 @@
 
   <div class="card-body px-0 pt-0 pb-2">
     @if ($errors->any())
-    <div class="p-4">
+    <div class="p-2">
       <div class="alert alert-danger text-white">
         <ul>
           @foreach ($errors->all() as $error)
@@ -46,7 +46,7 @@
     </div>
     @endif
     @if (session('success'))
-    <div class="p-4">
+    <div class="p-2">
       <div class="alert alert-success text-white">
         {{ session('success') }}
       </div>
@@ -81,7 +81,8 @@
               @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
               <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a>
               @endif
-              @elseif($permit->status=='approved')
+              @endif
+              @if($permit->status=='approved' || $permit->status=='pending')
               <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a>
               @endif
               <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a>
