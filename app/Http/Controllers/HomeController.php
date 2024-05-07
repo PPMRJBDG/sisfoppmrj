@@ -343,17 +343,17 @@ class HomeController extends Controller
                 $get_presence = Presence::where('event_date', '>=', $split_periode[0] . '-09-01')
                     ->where('event_date', '<=', $split_periode[1] . '-08-31')
                     ->where('fkPresence_group_id', $pg->id)
-                    ->orderBy('id', 'ASC')
+                    ->orderBy('id', 'DESC')
                     ->get();
             } elseif ($tb == null) {
                 $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
                     ->where('fkPresence_group_id', $pg->id)
-                    ->orderBy('id', 'ASC')
+                    ->orderBy('id', 'DESC')
                     ->get();
             } else {
                 $get_presence = Presence::where('event_date', '>=', $tb . '-01')->where('event_date', '<=', $tb . '-31')
                     ->where('fkPresence_group_id', $pg->id)
-                    ->orderBy('id', 'ASC')
+                    ->orderBy('id', 'DESC')
                     ->get();
             }
             if (count($get_presence) > 0) {

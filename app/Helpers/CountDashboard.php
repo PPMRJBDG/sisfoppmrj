@@ -117,7 +117,7 @@ class CountDashboard
         return count($view_usantri);
     }
 
-    public static function mhs_hadir($presence_id, $for, $lorong = null)
+    public static function mhs_hadir($presence_id, $for, $lorong = '-')
     {
         $presence = Presence::find($presence_id);
         $presents = null;
@@ -170,7 +170,7 @@ class CountDashboard
         return $presents;
     }
 
-    public static function mhs_ijin($presence_id, $for, $lorong = null)
+    public static function mhs_ijin($presence_id, $for, $lorong = '-')
     {
         $arr_santri = [];
         if ($for == 'all') {
@@ -201,7 +201,7 @@ class CountDashboard
         return $permits;
     }
 
-    public static function mhs_alpha($presence_id, $for, $event_date, $lorong = null)
+    public static function mhs_alpha($presence_id, $for, $event_date, $lorong = '-')
     {
 
         $mhs_alpha = array();
