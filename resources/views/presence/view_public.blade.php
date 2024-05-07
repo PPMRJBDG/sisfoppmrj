@@ -132,11 +132,11 @@
                         </td>
                         <td class="align-middle text-center text-sm">
                             @if($update)
-                            <a class="btn btn-danger btn-block btn-xs mb-0" href="{{ route('dwngr delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak hadir?')">Alpha</a>
+                            <a class="btn btn-danger btn-block btn-xs mb-0" href="{{ route('dwngr delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id, 'lorong'=> $lorong]) }}" onclick="return confirm('Yakin tidak hadir?')">Alpha</a>
                             @if($present->is_late)
-                            <a class="btn btn-primary btn-xs mb-0" href="{{ route('dwngr is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a>
+                            <!-- <a class="btn btn-primary btn-xs mb-0" href="{{ route('dwngr is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id, 'lorong'=> $lorong]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
                             @else
-                            <a class="btn btn-warning btn-xs mb-0" href="{{ route('dwngr is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a>
+                            <!-- <a class="btn btn-warning btn-xs mb-0" href="{{ route('dwngr is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id, 'lorong'=> $lorong]) }}" onclick="return confirm('Yakin telat?')">Telat</a> -->
                             @endif
                             @endif
                         </td>
@@ -222,7 +222,7 @@
                     </td>
                     <td class="text-sm">
                         @if($update)
-                        <a class="btn btn-primary btn-block btn-xs mb-0" href="{{ route('dwngr is present', ['id' => $mhs['presence_id'], 'santriId' => $mhs['santri_id']]) }}" onclick="return confirm('Yakin hadir?')">Hadir</a>
+                        <a class="btn btn-primary btn-block btn-xs mb-0" href="{{ route('dwngr is present', ['id' => $mhs['presence_id'], 'santriId' => $mhs['santri_id'], 'lorong'=> $lorong]) }}" onclick="return confirm('Yakin hadir?')">Hadir</a>
                         @endif
                     </td>
                 </tr>
@@ -256,7 +256,7 @@
     // });
 
     $('.select_lorong').change((e) => {
-        window.location.replace(`{{ url("/") }}/dwngr/list/<?php echo $id; ?>/${$(e.currentTarget).val()}`)
+        window.location.replace(`{{ url("/") }}/dwngr/list/<?php echo $id; ?>?lorong=${$(e.currentTarget).val()}`)
     })
 </script>
 @include('base.end')

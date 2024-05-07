@@ -188,7 +188,7 @@ Route::get('/dwngr/{id}/present/{santriId}', [App\Http\Controllers\PublicControl
 Route::get('/dwngr/{id}/late/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_late'])->name('dwngr is late');
 Route::get('/dwngr/{id}/notlate/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_not_late'])->name('dwngr is not late');
 Route::get('/dwngr/list/{id}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
-Route::get('/dwngr/list/{id}/{lorong}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
+// Route::get('/dwngr/list/{id}/{lorong}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
 
 // msgtools
 Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');

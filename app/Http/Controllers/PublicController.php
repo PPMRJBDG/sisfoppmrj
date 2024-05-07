@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Helpers\WaSchedules;
 use App\Helpers\CommonHelpers;
 use App\Helpers\CountDashboard;
@@ -726,8 +727,12 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
     }
 
     // PRESENCE
-    public function presence_view($id, $lorong = '-')
+    public function presence_view($id, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $presence = Presence::find($id);
 
         $for = 'all';
@@ -768,8 +773,12 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         ]);
     }
 
-    public function presence_delete_present($id, $santriId)
+    public function presence_delete_present($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
         if ($present) {
@@ -779,11 +788,15 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
                 return redirect()->route('dwngr view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
         }
 
-        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil menghapus presensi');
+        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
     }
 
-    public function presence_is_present($id, $santriId)
+    public function presence_is_present($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
 
         if ($present == null) {
@@ -794,11 +807,15 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             ]);
         }
 
-        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil mengubah telat');
+        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
     }
 
-    public function presence_is_late($id, $santriId)
+    public function presence_is_late($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
         if ($present) {
@@ -810,11 +827,15 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             ]);
         }
 
-        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil mengubah telat');
+        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
     }
 
-    public function presence_is_not_late($id, $santriId)
+    public function presence_is_not_late($id, $santriId, Request $request)
     {
+        $lorong = $request->get('lorong');
+        if ($lorong == null) {
+            $lorong = '-';
+        }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
         if ($present) {
@@ -826,6 +847,6 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             ]);
         }
 
-        return redirect()->route('dwngr view presence', $id)->with('success', 'Berhasil mengubah telat');
+        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
     }
 }
