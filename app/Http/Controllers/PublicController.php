@@ -18,7 +18,7 @@ use App\Models\Pelanggaran;
 use App\Models\Sodaqoh;
 use App\Models\Materi;
 use App\Models\Santri;
-use App\Models\JenisPelanggaran;
+use App\Models\Lorong;
 use App\Models\ReportScheduler;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\SpWhatsappContacts;
@@ -391,9 +391,11 @@ Amalsholih koor lorong menggambungi anggotanya yang kehadirannya kurang dari 80%
 
             $check_akumulasi_sp = Pelanggaran::where('is_archive', 0)->whereNotNull('keringanan_sp')->orderBy('fkSantri_id')->get();
             $caption_pelanggaran = '*[DATA PELANGGARAN AKTIF]*';
+            $nox = 1;
             foreach ($check_akumulasi_sp as $casp) {
                 $caption_pelanggaran = $caption_pelanggaran . '
-*' . $casp->santri->user->fullname . '*: ' . $casp->jenis->jenis_pelanggaran . ' (SP ' . $casp->keringanan_sp . ')';
+' . $nox . ' *' . $casp->santri->user->fullname . '*: ' . $casp->jenis->jenis_pelanggaran . ' (SP ' . $casp->keringanan_sp . ')';
+                $nox++;
             }
             $contact_id = 'wa_ketertiban_group_id';
             WaSchedules::save('Data Pelanggaran Aktif', $caption_pelanggaran, $contact_id, $time_post);
@@ -724,24 +726,24 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
     }
 
     // PRESENCE
-    public function presence_view($id)
+    public function presence_view($id, $lorong = '-')
     {
         $presence = Presence::find($id);
 
         $for = 'all';
         // jumlah mhs / anggota lorong
-        $jumlah_mhs = CountDashboard::total_mhs($for);
+        $jumlah_mhs = CountDashboard::total_mhs($for, $lorong);
 
         // hadir
-        $presents = CountDashboard::mhs_hadir($id, $for);
+        $presents = CountDashboard::mhs_hadir($id, $for, $lorong);
 
         // ijin berdasarkan lorong masing2
-        $permits = CountDashboard::mhs_ijin($id, $for);
+        $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
         // need approval
         $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
 
         // alpha
-        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date);
+        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
 
         $update = true;
         if ($presence != null) {
@@ -753,12 +755,15 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         }
 
         return view('presence.view_public', [
+            'id' => $id,
             'presence' => $presence,
             'jumlah_mhs' => $jumlah_mhs,
             'mhs_alpha' => $mhs_alpha,
             'permits' => $permits,
             'need_approval' => $need_approval,
             'presents' => $presents == null ? [] : $presents,
+            'data_lorong' => Lorong::all(),
+            'lorong' => $lorong,
             'update' => $update
         ]);
     }

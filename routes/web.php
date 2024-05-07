@@ -44,7 +44,7 @@ Route::get('/presensi/izin/pengajuan/berjangka', [App\Http\Controllers\PresenceC
 Route::post('/presensi/izin/pengajuan/store', [App\Http\Controllers\PresenceController::class, 'store_my_permit'])->name('store my presence permit')->middleware('role:santri|superadmin');
 Route::post('/presensi/izin/pengajuan/berjangka/store', [App\Http\Controllers\PresenceController::class, 'store_my_ranged_permit'])->name('store my ranged presence permit')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/persetujuan', [App\Http\Controllers\PresenceController::class, 'permit_approval'])->name('presence permit approval')->middleware('role:koor lorong|superadmin|rj1|wk');
-Route::get('/presensi/izin/persetujuan/{tb}', [App\Http\Controllers\PresenceController::class, 'permit_approval'])->name('presence permit approval tb')->middleware('role:koor lorong|superadmin|rj1|wk');
+Route::get('/presensi/izin/persetujuan/{tb}/{status}', [App\Http\Controllers\PresenceController::class, 'permit_approval'])->name('presence permit approval tb')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::get('/presensi/izin/saya', [App\Http\Controllers\PresenceController::class, 'my_permits'])->name('my presence permits')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/saya/edit', [App\Http\Controllers\PresenceController::class, 'edit_permit'])->name('edit presence permit')->middleware('role:santri|superadmin');
 Route::post('/presensi/izin/saya/update', [App\Http\Controllers\PresenceController::class, 'update_permit'])->name('update presence permit')->middleware('role:santri|superadmin');
@@ -63,6 +63,7 @@ Route::get('/presensi/laporan-umum', [App\Http\Controllers\PresenceController::c
 Route::get('/presensi/list', [App\Http\Controllers\PresenceController::class, 'list_and_manage'])->name('presence tm')->middleware('permission:view presences list');
 Route::get('/presensi/list/create', [App\Http\Controllers\PresenceController::class, 'create'])->name('create presence')->middleware('permission:create presences');
 Route::get('/presensi/list/{id}', [App\Http\Controllers\PresenceController::class, 'view'])->name('view presence')->middleware('permission:view presences list');
+Route::get('/presensi/list/{id}/{lorong}', [App\Http\Controllers\PresenceController::class, 'view'])->name('view presence')->middleware('permission:view presences list');
 Route::get('/presensi/list/{id}/present/create', [App\Http\Controllers\PresenceController::class, 'create_present'])->name('create present')->middleware('permission:create presents');
 Route::post('/presensi/list/store', [App\Http\Controllers\PresenceController::class, 'store'])->name('store presence')->middleware('permission:create presents');
 Route::post('/presensi/list/update/{id}', [App\Http\Controllers\PresenceController::class, 'update'])->name('update presence')->middleware('permission:update presences');
@@ -187,6 +188,7 @@ Route::get('/dwngr/{id}/present/{santriId}', [App\Http\Controllers\PublicControl
 Route::get('/dwngr/{id}/late/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_late'])->name('dwngr is late');
 Route::get('/dwngr/{id}/notlate/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_not_late'])->name('dwngr is not late');
 Route::get('/dwngr/list/{id}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
+Route::get('/dwngr/list/{id}/{lorong}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
 
 // msgtools
 Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');

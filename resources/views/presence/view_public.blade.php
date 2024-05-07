@@ -78,6 +78,17 @@
     <span>Jumlah Mahasiswa {{ $jumlah_mhs }}</span>
 </div>
 
+<div class="row">
+    <div class="col-sm-12 col-md-12 mt-2">
+        <select class="select_lorong form-control" name="select_lorong" id="select_lorong">
+            <option value="-">Semua Lorong</option>
+            @foreach($data_lorong as $l)
+            <option {{ ($lorong==$l->id) ? 'selected' : '' }} value="{{$l->id}}">{{$l->name}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
 <div class="tab mt-2">
     <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir {{count($presents)}}</button>
     <button class="tablinks" onclick="openTab(event, 'ijin')">Ijin {{count($permits)}}</button>
@@ -243,5 +254,9 @@
     //         // [1, 'desc']
     //     ]
     // });
+
+    $('.select_lorong').change((e) => {
+        window.location.replace(`{{ url("/") }}/dwngr/list/<?php echo $id; ?>/${$(e.currentTarget).val()}`)
+    })
 </script>
 @include('base.end')

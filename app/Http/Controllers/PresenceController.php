@@ -219,7 +219,7 @@ class PresenceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function view($id)
+    public function view($id, $lorong = '-')
     {
         $presence = Presence::find($id);
 
@@ -229,19 +229,20 @@ class PresenceController extends Controller
         } elseif (auth()->user()->santri != '') {
             $for = 'lorong';
         }
+
         // jumlah mhs / anggota lorong
-        $jumlah_mhs = CountDashboard::total_mhs($for);
+        $jumlah_mhs = CountDashboard::total_mhs($for, $lorong);
 
         // hadir
-        $presents = CountDashboard::mhs_hadir($id, $for);
+        $presents = CountDashboard::mhs_hadir($id, $for, $lorong);
 
         // ijin berdasarkan lorong masing2
-        $permits = CountDashboard::mhs_ijin($id, $for);
+        $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
         // need approval
         $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
 
         // alpha
-        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date);
+        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
 
         $update = true;
         if ($presence != null) {
@@ -253,12 +254,15 @@ class PresenceController extends Controller
         }
 
         return view('presence.view', [
+            'id' => $id,
             'presence' => $presence,
             'jumlah_mhs' => $jumlah_mhs,
             'mhs_alpha' => $mhs_alpha,
             'permits' => $permits,
             'need_approval' => $need_approval,
             'presents' => $presents == null ? [] : $presents,
+            'data_lorong' => Lorong::all(),
+            'lorong' => $lorong,
             'update' => $update
         ]);
     }
@@ -811,7 +815,7 @@ class PresenceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function permit_approval($tb = null)
+    public function permit_approval($tb = null, $status = 'pending')
     {
         $lastScheduleCheck = SystemMetaData::where('key', 'lastScheduleCheck')->first();
 
@@ -841,23 +845,46 @@ class PresenceController extends Controller
         }
 
         // get current santri
-        $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
-            ->select('permits.*', 'permits.updated_at')
-            ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
-            ->orderBy('permits.created_at', 'DESC')
-            ->get();
+        if ($status == 'all') {
+            $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                ->select('permits.*', 'permits.updated_at')
+                ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+                ->orderBy('permits.created_at', 'DESC')
+                ->get();
+        } else {
+            $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                ->select('permits.*', 'permits.updated_at')
+                ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+                ->where('permits.status', $status)
+                ->orderBy('permits.created_at', 'DESC')
+                ->get();
+        }
         if ($lorong) {
             if (auth()->user()->hasRole('koor lorong'))
-                $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
-                    ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
-                    ->select('permits.*', 'permits.updated_at')
-                    ->where('santris.fkLorong_id', $lorong->id)
-                    ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
-                    ->orderBy('permits.created_at', 'DESC')
-                    ->get();
+                if ($status == 'all') {
+                    $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                        ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
+                        ->select('permits.*', 'permits.updated_at')
+                        ->where('santris.fkLorong_id', $lorong->id)
+                        ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+                        ->where('permits.status', $status)
+                        ->orderBy('permits.status', 'DESC')
+                        ->orderBy('permits.created_at', 'DESC')
+                        ->get();
+                } else {
+                    $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                        ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
+                        ->select('permits.*', 'permits.updated_at')
+                        ->where('santris.fkLorong_id', $lorong->id)
+                        ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
+                        ->where('permits.status', $status)
+                        ->orderBy('permits.status', 'DESC')
+                        ->orderBy('permits.created_at', 'DESC')
+                        ->get();
+                }
         }
 
-        return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'tahun_bulan' => $tahun_bulan, 'tb' => $tb]);
+        return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'tahun_bulan' => $tahun_bulan, 'tb' => $tb, 'status' => $status]);
     }
 
     /**

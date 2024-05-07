@@ -27,6 +27,19 @@
   <span>Jumlah {{ (auth()->user()->hasRole('koor lorong')) ? 'Anggota' : 'Mahasiswa' }} {{ $jumlah_mhs }}</span>
 </div>
 
+@if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+<div class="row">
+  <div class="col-sm-12 col-md-12 mt-2">
+    <select class="select_lorong form-control" name="select_lorong" id="select_lorong">
+      <option value="-">Semua Lorong</option>
+      @foreach($data_lorong as $l)
+      <option {{ ($lorong==$l->id) ? 'selected' : '' }} value="{{$l->id}}">{{$l->name}}</option>
+      @endforeach
+    </select>
+  </div>
+</div>
+@endif
+
 <div class="tab mt-2">
   <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir {{count($presents)}}</button>
   <button class="tablinks" onclick="openTab(event, 'ijin')">Ijin {{count($permits)}}</button>
@@ -34,17 +47,6 @@
 </div>
 
 <div class="card tabcontent" id="hadir" style="display:block;">
-  <div class="card-header p-2 d-flex justify-content-between align-items-center">
-    <!-- <h6>Daftar hadir: {{count($presents)}}</h6> -->
-    @if($update)
-    @can('create presents')
-    <!-- <a href="{{ route('create present', $presence->id) }}" class="btn btn-primary mb-0">
-      <i class="fas fa-plus" aria-hidden="true"></i>
-      Tambah kehadiran
-    </a> -->
-    @endcan
-    @endif
-  </div>
   <div class="card-body px-0 pt-0 pb-2">
     @if (session('successes'))
     <div class="px-4">
@@ -70,6 +72,7 @@
         </thead>
         <tbody>
           @foreach($presents as $present)
+          @if($present->santri->fkLorong_id==$lorong || $lorong=='-')
           <tr>
             <td class="text-sm">
               <b>{{ $present->santri->user->fullname }}</b>
@@ -88,6 +91,7 @@
               @endif
             </td>
           </tr>
+          @endif
           @endforeach
         </tbody>
       </table>
@@ -97,10 +101,8 @@
 
 <div class="card tabcontent" id="ijin" style="display:none;">
   @if(count($permits)>0 || count($need_approval)>0)
-  <div class="card-header p-3">
-    <h6>
-      <!-- Disetujui: {{count($permits)}}
-      <br> -->
+  <div class="card-header p-2 pb-0">
+    <h6 class="mb-0 bg-warning p-1 text-white">
       Perlu persetujuan/ditolak: {{count($need_approval)}}
     </h6>
   </div>
@@ -116,6 +118,7 @@
       <tbody>
         <!-- need approval -->
         @foreach($need_approval as $na)
+        @if($na->santri->fkLorong_id==$lorong || $lorong=='-')
         <tr>
           <td class="text-sm">
             <b>{{ $na->santri->user->fullname }}</b>
@@ -130,9 +133,11 @@
             @endif
           </td>
         </tr>
+        @endif
         @endforeach
 
         @foreach($permits as $permit)
+        @if($permit->santri->fkLorong_id==$lorong || $lorong=='-')
         <tr>
           <td class="text-sm">
             <b>{{ $permit->santri->user->fullname }}</b>
@@ -145,6 +150,7 @@
             <a class="btn btn-warning btn-xs mb-0" href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" onclick="return confirm('Yakin ditolak?')">Tolak ?</a>
           </td>
         </tr>
+        @endif
         @endforeach
       </tbody>
     </table>
@@ -156,10 +162,6 @@
 
 <div class="card tabcontent" id="alpha" style="display:none;">
   @if(count($mhs_alpha)>0)
-  <div class="card-header p-2 d-flex justify-content-between align-items-center">
-    <!-- <h6>Daftar alpha: {{count($mhs_alpha)}}</h6> -->
-  </div>
-
   <div class="table-responsive p-2">
     <table class="table align-items-center mb-0">
       <thead>
@@ -170,6 +172,7 @@
       </thead>
       <tbody>
         @foreach($mhs_alpha as $mhs)
+        @if($mhs['fkLorong_id']==$lorong || $lorong=='-')
         <tr>
           <td class="text-sm">
             <b>{{ $mhs['name'] }}</b>
@@ -180,6 +183,7 @@
             @endif
           </td>
         </tr>
+        @endif
         @endforeach
       </tbody>
     </table>
@@ -203,5 +207,9 @@
   // [1, 'desc']
   //   ]
   // });
+
+  $('.select_lorong').change((e) => {
+    window.location.replace(`{{ url("/") }}/presensi/list/<?php echo $id; ?>/${$(e.currentTarget).val()}`)
+  })
 </script>
 @include('base.end')

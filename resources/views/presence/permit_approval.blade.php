@@ -3,18 +3,31 @@
 <div class="card">
   <div class="card-header p-2 align-items-center" style="background-color:#f6f9fc;">
     @role('superadmin|rj1|wk|koor lorong')
-    <a href="{{ route('create presence permit') }}" class="btn btn-primary btn-xs m-2 mb-0" style="float:right;">
-      <i class="fas fa-plus" aria-hidden="true"></i> Buat izin
-    </a>
+    <div class="row">
+      <div class="col-md-12 col-sm-6">
+        <a href="{{ route('create presence permit') }}" class="btn btn-primary btn-xs m-2 mb-0" style="float:right;">
+          <i class="fas fa-plus" aria-hidden="true"></i> Buat izin
+        </a>
+      </div>
+    </div>
     @endrole
     <div class="row">
-      <div class="col-sm-6 col-md-3 ps-0">
+      <div class="col-sm-12 col-md-3">
         <small>Pilih Tahun-Bulan</small>
-        <select class="select_tb form-control mb-3" name="select_tb" id="select_tb">
+        <select class="select_tb form-control" name="select_tb" id="select_tb">
           <option value="-">Silahkan Pilih</option>
           @foreach($tahun_bulan as $tbx)
           <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
           @endforeach
+        </select>
+      </div>
+      <div class="col-sm-12 col-md-3">
+        <small>Tampilkan</small>
+        <select class="select_show form-control" name="select_show" id="select_show">
+          <option {{ ($status=='pending') ? 'selected': '' }} value="pending">Pending</option>
+          <option {{ ($status=='rejected') ? 'selected': '' }} value="rejected">Rejected</option>
+          <option {{ ($status=='approved') ? 'selected': '' }} value="approved">Approved</option>
+          <option {{ ($status=='all') ? 'selected': '' }} value="all">All</option>
         </select>
       </div>
     </div>
@@ -92,7 +105,12 @@
 @endif
 <script>
   $('.select_tb').change((e) => {
-    window.location.replace(`{{ url("/") }}/presensi/izin/persetujuan/${$(e.currentTarget).val()}`)
+    var status = $('#select_show').val();
+    window.location.replace(`{{ url("/") }}/presensi/izin/persetujuan/${$(e.currentTarget).val()}/` + status)
+  })
+  $('.select_show').change((e) => {
+    var tb = $('#select_tb').val();
+    window.location.replace(`{{ url("/") }}/presensi/izin/persetujuan/` + tb + `/${$(e.currentTarget).val()}`)
   })
   $('#table').DataTable({
     order: [],

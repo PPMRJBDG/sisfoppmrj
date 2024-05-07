@@ -75,25 +75,27 @@
 <div class="card">
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <div class="card-header p-2 d-flex justify-content-between align-items-center">
-        <div class="d-flex text-primary font-weight-bold">
-            Daftar Pelanggaran {{ ($is_archive) ? 'Arsip' : 'Aktif' }}
-        </div>
-        <div class="d-flex">
-            <a href="{{ route('create pelanggaran') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus" aria-hidden="true"></i>
-                Input Pelanggaran
-            </a>
-            @if($is_archive)
-            <a href="/pelanggaran/s/0/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
-                <i class="fas fa-view" aria-hidden="true"></i>
-                Pelanggaran Aktif
-            </a>
-            @else
-            <a href="/pelanggaran/s/1/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
-                <i class="fas fa-view" aria-hidden="true"></i>
-                Lihat Arsip
-            </a>
-            @endif
+        <div class="row">
+            <div class="d-flex col-md-6 col-sm-12 text-primary font-weight-bold">
+                Daftar Pelanggaran {{ ($is_archive) ? 'Arsip' : 'Aktif' }}
+            </div>
+            <div class="d-flex col-md-6 col-sm-12">
+                <a href="{{ route('create pelanggaran') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    Input Pelanggaran
+                </a>
+                @if($is_archive)
+                <a href="/pelanggaran/s/0/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
+                    <i class="fas fa-view" aria-hidden="true"></i>
+                    Pelanggaran Aktif
+                </a>
+                @else
+                <a href="/pelanggaran/s/1/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
+                    <i class="fas fa-view" aria-hidden="true"></i>
+                    Lihat Arsip
+                </a>
+                @endif
+            </div>
         </div>
     </div>
     @endif
