@@ -764,8 +764,11 @@ class PresenceController extends Controller
             if (!$deleted)
                 return redirect()->route('view presence', [$id, 'lorong' => $lorong])->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
         }
-
-        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
+        if ($request->get('json') == 'true') {
+            return json_encode(array("status" => true));
+        } else {
+            return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
+        }
     }
 
     public function is_present($id, $santriId, Request $request)
@@ -784,7 +787,11 @@ class PresenceController extends Controller
             ]);
         }
 
-        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+        if ($request->get('json') == 'true') {
+            return json_encode(array("status" => true));
+        } else {
+            return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+        }
     }
 
     public function is_late($id, $santriId, Request $request)

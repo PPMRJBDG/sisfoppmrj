@@ -31,7 +31,7 @@
 @if($count_dashboard!='')
 <div class="card shadow-lg mb-2">
     <div class="card-body p-3">
-        <p class="mb-2 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Cacah Jiwa</p>
+        <p class="mb-0 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Cacah Jiwa</p>
         <div id="toggle-cacahjiwa" style="display:none;">
             <?php echo $count_dashboard; ?>
         </div>
@@ -259,19 +259,24 @@
         </div>
     </div>
     <div class="card-body p-0 pt-2 tabcontent" id="tabgrafik">
-        @foreach($presence_group as $pg)
-        <p class="mb-0 text-sm font-weight-bolder">Grafik Kehadiran {{ $pg->name }}</p>
-        <label style="color:#3A416F;"><i class="ni ni-air-baloon"></i></label> hadir
-        <label style="color:#5e72e4;"><i class="ni ni-air-baloon"></i></label> ijin
-        <label style="color:#f56565;"><i class="ni ni-air-baloon"></i></label> alpha
-        <div class="card mb-3">
-            <div class="card-body p-3">
-                <div class="chart">
-                    <canvas id="mixed-chart-{{ $pg->id }}" class="chart-canvas" height="300px"></canvas>
+        <div class="card-body bg-primary text-white" id="loading-grafik" style="border-radius:4px;">
+            <center>Loading...</center>
+        </div>
+        <div class="card-grafik" id="card-grafik" style="display:none;">
+            @foreach($presence_group as $pg)
+            <p class="mb-0 text-sm font-weight-bolder">Grafik Kehadiran {{ $pg->name }}</p>
+            <label style="color:#3A416F;"><i class="ni ni-air-baloon"></i></label> hadir
+            <label style="color:#5e72e4;"><i class="ni ni-air-baloon"></i></label> ijin
+            <label style="color:#f56565;"><i class="ni ni-air-baloon"></i></label> alpha
+            <div class="card mb-3">
+                <div class="card-body p-3">
+                    <div class="chart">
+                        <canvas id="mixed-chart-{{ $pg->id }}" class="chart-canvas" height="300px"></canvas>
+                    </div>
                 </div>
             </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
     @endif
 </div>
@@ -280,122 +285,6 @@
 <script src="{{ asset('js/plugins/Chart.extension.js') }}"></script>
 
 <script>
-    function showHideCacah() {
-        $("#toggle-cacahjiwa").toggle();
-    }
-
-    var presence_group = <?php echo json_encode($presence_group); ?>;
-    var data_presensi = <?php echo json_encode($data_presensi); ?>;
-
-    presence_group.forEach(function(item, index) {
-        var ctx7 = document.getElementById("mixed-chart-" + item.id).getContext("2d");
-        var gradientStroke1 = ctx7.createLinearGradient(0, 230, 0, 50);
-        gradientStroke1.addColorStop(1, 'rgba(94,114,228,0.2)');
-        gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-        gradientStroke1.addColorStop(0, 'rgba(94,114,228,0)'); //purple colors
-        new Chart(ctx7, {
-            data: {
-                labels: data_presensi['tanggal_presensi'][item.id],
-                datasets: [{
-                        type: "bar",
-                        label: "Hadir",
-                        weight: 5,
-                        tension: 0.4,
-                        borderWidth: 0,
-                        pointBackgroundColor: "#3A416F",
-                        borderColor: "#3A416F",
-                        backgroundColor: '#3A416F',
-                        borderRadius: 4,
-                        borderSkipped: false,
-                        data: data_presensi['total_presensi'][item.id] ? data_presensi['total_presensi'][item.id]['hadir'] : [0],
-                        maxBarThickness: 10,
-                    },
-                    {
-                        type: "line",
-                        label: "Ijin",
-                        tension: 0.4,
-                        borderWidth: 0,
-                        pointRadius: 0,
-                        pointBackgroundColor: "#5e72e4",
-                        borderColor: "#5e72e4",
-                        borderWidth: 3,
-                        backgroundColor: gradientStroke1,
-                        data: data_presensi['total_presensi'][item.id] ? data_presensi['total_presensi'][item.id]['ijin'] : 0,
-                        fill: true,
-                    },
-                    {
-                        type: "line",
-                        label: "Alpha",
-                        tension: 0.4,
-                        borderWidth: 0,
-                        pointRadius: 0,
-                        pointBackgroundColor: "#f56565",
-                        borderColor: "#f56565",
-                        borderWidth: 3,
-                        backgroundColor: gradientStroke1,
-                        data: data_presensi['total_presensi'][item.id] ? data_presensi['total_presensi'][item.id]['alpha'] : 0,
-                        fill: true,
-                    }
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false,
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
-                },
-                scales: {
-                    y: {
-                        grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            padding: 10,
-                            color: '#b2b9bf',
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                    x: {
-                        grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: true,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            color: '#b2b9bf',
-                            padding: 10,
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                },
-            },
-        });
-    })
-
     $('#table-hadir').DataTable({
         order: [
             [10, 'asc']

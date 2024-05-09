@@ -1,6 +1,17 @@
 @include('base.start', ['path' => 'user/list/santri', 'title' => 'Daftar User', 'breadcrumbs' => ['Daftar User']])
 <div class="card">
-  <?php echo $count_dashboard; ?>
+
+  @if($count_dashboard!='')
+  <div class="card shadow-lg mb-0">
+    <div class="card-body p-3">
+      <p class="mb-0 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Cacah Jiwa</p>
+      <div id="toggle-cacahjiwa" style="display:none;">
+        <?php echo $count_dashboard; ?>
+      </div>
+    </div>
+  </div>
+  @endif
+
   <div class="card-header pb-0 p-3">
     @can('create users')
     <a href="{{ route('create user') }}" class="btn btn-primary form-control mb-2">

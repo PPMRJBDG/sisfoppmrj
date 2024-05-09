@@ -60,15 +60,18 @@
 @endif
 
 <div class="tab mt-2">
-  <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir {{count($presents)}}</button>
+  <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir <span id="c-hdr"> {{count($presents)}}</span></button>
   <button class="tablinks" onclick="openTab(event, 'ijin')">Ijin {{count($permits)}}</button>
-  <button class="tablinks" onclick="openTab(event, 'alpha')">Alpha {{count($mhs_alpha)}}</button>
+  <button class="tablinks" onclick="openTab(event, 'alpha')">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></button>
 </div>
 
 <div class="card tabcontent" id="hadir" style="display:block;">
   <div class="card-body px-0 pt-0 pb-2">
+    <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
+      <a id="btn-select-all" class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
+    </div>
     <div class="table-responsive p-2">
-      <table id="table" class="table align-items-center mb-0">
+      <table id="table-hadir" class="table align-items-center mb-0">
         <thead>
           <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
@@ -78,16 +81,17 @@
         <tbody>
           @foreach($presents as $present)
           @if($present->santri->fkLorong_id==$lorong || $lorong=='-')
-          <tr>
+          <tr id="trh{{$present->fkSantri_id}}" class="dtmhsh" val-id="{{$present->fkSantri_id}}" val-name="{{$present->santri->user->fullname}}">
             <td class="text-sm">
               <b>{{ $present->santri->user->fullname }}</b>
               <br>
               <small>{{ $present->created_at }}</small>
               <!-- | <b>{{ $present->is_late ? 'Telat' : 'Tidak telat' }}</b> -->
             </td>
-            <td class="align-middle text-center text-sm">
+            <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
               @if($update)
-              <a class="btn btn-danger btn-block btn-xs mb-0" href="{{ route('delete present', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id, 'lorong' => $lorong]) }}" onclick="return confirm('Yakin tidak hadir?')">Alpha</a>
+              <a class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
+
               <!-- @if($present->is_late) -->
               <!-- <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
               <!-- @else -->
@@ -167,24 +171,27 @@
 
 <div class="card tabcontent" id="alpha" style="display:none;">
   @if(count($mhs_alpha)>0)
+  <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
+    <a id="btn-select-all" class="btn btn-primary btn-block btn-xs mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
+  </div>
   <div class="table-responsive p-2">
-    <table class="table align-items-center mb-0">
+    <table id="table-alpha" class="table align-items-center mb-0">
       <thead>
         <tr>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
+          <th class="text-uppercase text-xxs font-weight-bolder">Nama</th>
+          <th class="text-uppercase text-xxs font-weight-bolder">Action</th>
         </tr>
       </thead>
       <tbody>
         @foreach($mhs_alpha as $mhs)
         @if($mhs['fkLorong_id']==$lorong || $lorong=='-')
-        <tr>
+        <tr id="tra{{$mhs['santri_id']}}" class="dtmhsa" val-id="{{$mhs['santri_id']}}" val-name="{{$mhs['name']}}">
           <td class="text-sm">
             <b>{{ $mhs['name'] }}</b>
           </td>
-          <td class="text-sm">
+          <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
             @if($update)
-            <a class="btn btn-primary btn-block btn-xs mb-0" href="{{ route('is present', ['id' => $mhs['presence_id'], 'santriId' => $mhs['santri_id'], 'lorong' => $lorong]) }}" onclick="return confirm('Yakin hadir?')">Hadir</a>
+            <a class="btn btn-primary btn-block btn-xs mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
             @endif
           </td>
         </tr>
@@ -206,12 +213,138 @@
 </div>
 @endif
 
+<style>
+  #table-hadir_filter,
+  #table-alpha_filter {
+    margin-top: 0px !important;
+  }
+
+  #table-hadir_filter label,
+  #table-alpha_filter label,
+  #table-hadir_filter label input,
+  #table-alpha_filter label input {
+    width: 100% !important;
+  }
+</style>
 <script>
-  // $('#table').DataTable({
-  //   order: [
-  // [1, 'desc']
-  //   ]
-  // });
+  $('#table-hadir').DataTable({
+    "paging": false,
+    "ordering": false,
+    "info": false
+  });
+  $('#table-alpha').DataTable({
+    "paging": false,
+    "ordering": false,
+    "info": false
+  });
+
+  function selectForAlpha(id) {
+    const el = document.querySelector("#trh" + id);
+    var name = el.getAttribute('val-name')
+    $("#trh" + id).addClass('bg-primary text-white');
+    $("#slbtnh-" + id).html('<span class="text-white"><small>loading</small></span>');
+    savePresensi(id, name, 'delete');
+  }
+
+  function selectForHadir(id) {
+    const el = document.querySelector("#tra" + id);
+    var name = el.getAttribute('val-name')
+    $("#tra" + id).addClass('bg-primary text-white');
+    $("#slbtna-" + id).html('<span class="text-white"><small>loading</small></span>');
+    savePresensi(id, name, 'present');
+  }
+
+  function alphaAll() {
+    $(".dtmhsh").addClass('bg-primary text-white');
+    const el = document.querySelectorAll(".dtmhsh");
+    var id = 0;
+    for (var i = 0; i < el.length; i++) {
+      id = el[i].getAttribute('val-id')
+      var name = el[i].getAttribute('val-name')
+      $("#slbtnh-" + id).html('<span class="text-white"><small>loading</small></span>');
+      savePresensi(id, name, 'delete');
+    }
+  }
+
+  function hadirAll() {
+    $(".dtmhsa").addClass('bg-primary text-white');
+    const el = document.querySelectorAll(".dtmhsa");
+    var id = 0;
+    for (var i = 0; i < el.length; i++) {
+      id = el[i].getAttribute('val-id')
+      var name = el[i].getAttribute('val-name')
+      $("#slbtna-" + id).html('<span class="text-white"><small>loading</small></span>');
+      savePresensi(id, name, 'present');
+    }
+  }
+
+  async function savePresensi(santriId, name, st) {
+    var lorong = '<?php echo $lorong; ?>';
+    // console.log(lorong)
+    $.get(`{{ url("/") }}/presensi/` + <?php echo $id; ?> + `/` + st + `/` + santriId + `?lorong=` + lorong + `&json=true`, null,
+      function(data, status) {
+        var return_data = JSON.parse(data);
+        if (return_data.status) {
+          var zxca = parseInt($("#c-hdr").html());
+          var zxcb = parseInt($("#c-alp").html());
+          var x = 'a'; // berarti proses delete
+          var tedf = 'Hadir';
+          var ghdf = 'alpha';
+          var btn = 'primary';
+          var datetime = '';
+          if (st == 'present') {
+            x = 'h'; // berarti proses present
+            tedf = 'Alpha';
+            ghdf = 'hadir';
+            btn = 'danger';
+            zxca++;
+            zxcb--;
+            $("#c-hdr").html(zxca)
+            $("#c-alp").html(zxcb)
+            datetime = '<br><small>' + dateTime() + '</small>';
+          } else {
+            zxca--;
+            zxcb++;
+            $("#c-hdr").html(zxca)
+            $("#c-alp").html(zxcb)
+          }
+
+          var text = '<tr id="tr' + x + santriId + '" class="dtmhs' + x + '" val-id="' + santriId + '" val-name="' + name + '">' +
+            '<td class="text-sm">' +
+            '<b>' + name + '</b>' + datetime +
+            '</td>' +
+            '<td class="text-sm" id="slbtn' + x + '-' + santriId + '">' +
+            '<a class = "btn btn-' + btn + ' btn-block btn-xs mb-0" href = "#" onclick = "selectFor' + tedf + '(' + santriId + ')">' + tedf + '</a>' +
+            '</td>' +
+            '</tr>';
+
+          if (x == 'a') {
+            x = 'h';
+          } else {
+            x = 'a';
+          }
+          const element = document.getElementById("tr" + x + "" + santriId);
+          element.remove();
+
+          text = text + $("#table-" + ghdf + " tbody").html();
+          $("#table-" + ghdf + " tbody").html(text);
+        }
+      }
+    );
+  }
+
+  function dateTime() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var h = String(today.getHours()).padStart(2, '0');
+    var i = String(today.getMinutes()).padStart(2, '0');
+    var s = String(today.getSeconds()).padStart(2, '0');
+
+    today = yyyy + '-' + mm + '-' + dd + ' ' + h + ':' + i + ':' + s;
+    return today;
+  }
 
   $('.select_lorong').change((e) => {
     window.location.replace(`{{ url("/") }}/presensi/list/<?php echo $id; ?>?lorong=${$(e.currentTarget).val()}`)
