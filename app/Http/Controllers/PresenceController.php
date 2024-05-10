@@ -783,56 +783,58 @@ class PresenceController extends Controller
             Present::create([
                 'fkSantri_id' => $santriId,
                 'fkPresence_id' => $id,
-                'is_late' => 0
+                'is_late' => 0,
+                'updated_by' => auth()->user()->fullname,
+                'metadata' => $_SERVER['HTTP_USER_AGENT']
             ]);
         }
 
         if ($request->get('json') == 'true') {
             return json_encode(array("status" => true));
         } else {
-            return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+            return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menginput presensi');
         }
     }
 
-    public function is_late($id, $santriId, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+    // public function is_late($id, $santriId, Request $request)
+    // {
+    //     $lorong = $request->get('lorong');
+    //     if ($lorong == null) {
+    //         $lorong = '-';
+    //     }
+    //     $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
-        if ($present) {
-            $present->delete();
-            Present::create([
-                'fkSantri_id' => $santriId,
-                'fkPresence_id' => $id,
-                'is_late' => 1
-            ]);
-        }
+    //     if ($present) {
+    //         $present->delete();
+    //         Present::create([
+    //             'fkSantri_id' => $santriId,
+    //             'fkPresence_id' => $id,
+    //             'is_late' => 1
+    //         ]);
+    //     }
 
-        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
-    }
+    //     return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+    // }
 
-    public function is_not_late($id, $santriId, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+    // public function is_not_late($id, $santriId, Request $request)
+    // {
+    //     $lorong = $request->get('lorong');
+    //     if ($lorong == null) {
+    //         $lorong = '-';
+    //     }
+    //     $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
-        if ($present) {
-            $present->delete();
-            Present::create([
-                'fkSantri_id' => $santriId,
-                'fkPresence_id' => $id,
-                'is_late' => 0
-            ]);
-        }
+    //     if ($present) {
+    //         $present->delete();
+    //         Present::create([
+    //             'fkSantri_id' => $santriId,
+    //             'fkPresence_id' => $id,
+    //             'is_late' => 0
+    //         ]);
+    //     }
 
-        return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
-    }
+    //     return redirect()->route('view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+    // }
 
 
     // ============ PERMIT ============
@@ -939,11 +941,13 @@ class PresenceController extends Controller
             return redirect()->back()->with('santri_is_present', 'Santri telah hadir di presensi ini.');
 
         $permit->status = 'approved';
+        $permit->approved_by = auth()->user()->fullname;
+        $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
         $updated = $permit->save();
 
         if ($updated) {
-            $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name;
+            $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
             WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
         } else {
             // return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
@@ -970,11 +974,13 @@ class PresenceController extends Controller
             return redirect()->route('presence permit approval')->withErrors(['permit_not_found', 'Izin tidak ditemukan.']);
 
         $permit->status = 'rejected';
+        $permit->rejected_by = auth()->user()->fullname;
+        $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
         $updated = $permit->save();
 
         if ($updated) {
-            $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name;
+            $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
             WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', 1, true);
 
             $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;

@@ -672,13 +672,22 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         if ($permit != null) {
             if ($permit->status == 'approved') {
                 $permit->status = 'rejected';
-                if ($permit->save()) {
-                    try {
-                        $approved_by = auth()->user()->fullname;
-                    } catch (Exception  $err) {
-                        $approved_by = $_SERVER['HTTP_USER_AGENT'];
+
+                try {
+                    if (isset(auth()->user()->fullname)) {
+                        $rejected_by = auth()->user()->fullname;
+                    } else {
+                        $rejected_by = $_SERVER['HTTP_USER_AGENT'];
                     }
-                    $caption = '*' . $approved_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name;
+                } catch (Exception  $err) {
+                    $rejected_by = $_SERVER['HTTP_USER_AGENT'];
+                }
+
+                $permit->rejected_by = $rejected_by;
+                $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+
+                if ($permit->save()) {
+                    $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
                     WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
 
                     $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
@@ -788,7 +797,11 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
                 return redirect()->route('dwngr view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
         }
 
-        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
+        if ($request->get('json') == 'true') {
+            return json_encode(array("status" => true));
+        } else {
+            return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
+        }
     }
 
     public function presence_is_present($id, $santriId, Request $request)
@@ -799,54 +812,70 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         }
         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
 
+        try {
+            if (isset(auth()->user()->fullname)) {
+                $presented_by = auth()->user()->fullname;
+            } else {
+                $presented_by = 'Dewan Guru';
+            }
+        } catch (Exception  $err) {
+            $presented_by = 'Dewan Guru';
+        }
+
         if ($present == null) {
             Present::create([
                 'fkSantri_id' => $santriId,
                 'fkPresence_id' => $id,
-                'is_late' => 0
+                'is_late' => 0,
+                'updated_by' => $presented_by,
+                'metadata' => $_SERVER['HTTP_USER_AGENT']
             ]);
         }
 
-        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+        if ($request->get('json') == 'true') {
+            return json_encode(array("status" => true));
+        } else {
+            return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menginput presensi');
+        }
     }
 
-    public function presence_is_late($id, $santriId, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+    // public function presence_is_late($id, $santriId, Request $request)
+    // {
+    //     $lorong = $request->get('lorong');
+    //     if ($lorong == null) {
+    //         $lorong = '-';
+    //     }
+    //     $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
-        if ($present) {
-            $present->delete();
-            Present::create([
-                'fkSantri_id' => $santriId,
-                'fkPresence_id' => $id,
-                'is_late' => 1
-            ]);
-        }
+    //     if ($present) {
+    //         $present->delete();
+    //         Present::create([
+    //             'fkSantri_id' => $santriId,
+    //             'fkPresence_id' => $id,
+    //             'is_late' => 1
+    //         ]);
+    //     }
 
-        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
-    }
+    //     return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+    // }
 
-    public function presence_is_not_late($id, $santriId, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+    // public function presence_is_not_late($id, $santriId, Request $request)
+    // {
+    //     $lorong = $request->get('lorong');
+    //     if ($lorong == null) {
+    //         $lorong = '-';
+    //     }
+    //     $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
-        if ($present) {
-            $present->delete();
-            Present::create([
-                'fkSantri_id' => $santriId,
-                'fkPresence_id' => $id,
-                'is_late' => 0
-            ]);
-        }
+    //     if ($present) {
+    //         $present->delete();
+    //         Present::create([
+    //             'fkSantri_id' => $santriId,
+    //             'fkPresence_id' => $id,
+    //             'is_late' => 0
+    //         ]);
+    //     }
 
-        return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
-    }
+    //     return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
+    // }
 }

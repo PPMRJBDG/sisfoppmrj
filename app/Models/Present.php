@@ -12,7 +12,9 @@ class Present extends Model
     protected $fillable = [
         'fkSantri_id',
         'fkPresence_id',
-        'is_late'
+        'is_late',
+        'updated_by',
+        'metadata'
     ];
 
     /**
@@ -31,4 +33,3 @@ class Present extends Model
         return $this->belongsTo(Presence::class, 'fkPresence_id');
     }
 }
-

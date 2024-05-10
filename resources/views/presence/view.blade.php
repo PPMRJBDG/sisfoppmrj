@@ -7,18 +7,23 @@
 
 @if(isset($presence))
 <div class="card">
-  <div class="card-body p-3 d-flex">
-    <div class="">
-      <h6 class="text-sm">Presensi {{ $presence->name }}</h6>
+  <div class="card-body p-2">
+    <script>
+      function togglePrsc() {
+        $("#toggle-prsc").toggle();
+      }
+    </script>
+    <center><button class="btn btn-primary btn-block mb-0" onclick="togglePrsc()">Presensi {{ $presence->name }}</button></center>
+    <div id="toggle-prsc" style="display:none;">
       @include('components.presence_summary', ['presence' => $presence])
-    </div>
-    <div class="ms-auto text-end">
-      @can('delete presences')
-      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
-      @endcan
-      @can('update presences')
-      <a class="btn btn-link text-dark px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Ubah</a>
-      @endcan
+      <div class="ms-auto text-end">
+        @can('delete presences')
+        <a class="btn btn-danger text-danger text-gradient px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
+        @endcan
+        @can('update presences')
+        <a class="btn btn-primary text-white px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Ubah</a>
+        @endcan
+      </div>
     </div>
   </div>
 </div>
@@ -28,16 +33,16 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-12 col-md-12 mt-2">
+  <div class="col-sm-12 col-md-12">
     @if (session('santri_is_present'))
-    <div class="p-0">
+    <div class="p-0 mt-2">
       <div class="alert alert-warning text-white mb-0">
         {{ session('santri_is_present') }}
       </div>
     </div>
     @endif
     @if (session('success'))
-    <div class="p-0">
+    <div class="p-0 mt-2">
       <div class="alert alert-success text-white mb-0">
         {{ session('success') }}
       </div>
@@ -60,17 +65,18 @@
 @endif
 
 <div class="tab mt-2">
-  <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir <span id="c-hdr"> {{count($presents)}}</span></button>
+  <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir <span id="c-hdr">{{count($presents)}}</span></button>
   <button class="tablinks" onclick="openTab(event, 'ijin')">Ijin {{count($permits)}}</button>
   <button class="tablinks" onclick="openTab(event, 'alpha')">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></button>
 </div>
 
 <div class="card tabcontent" id="hadir" style="display:block;">
   <div class="card-body px-0 pt-0 pb-2">
+    <div style="font-size:10px;padding:10px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
     <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
       <a id="btn-select-all" class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
     </div>
-    <div class="table-responsive p-2">
+    <div class="table-responsive">
       <table id="table-hadir" class="table align-items-center mb-0">
         <thead>
           <tr>
@@ -81,8 +87,8 @@
         <tbody>
           @foreach($presents as $present)
           @if($present->santri->fkLorong_id==$lorong || $lorong=='-')
-          <tr id="trh{{$present->fkSantri_id}}" class="dtmhsh" val-id="{{$present->fkSantri_id}}" val-name="{{$present->santri->user->fullname}}">
-            <td class="text-sm">
+          <tr title="{{$present->metadata}}" id="trh{{$present->fkSantri_id}}" class="dtmhsh" val-id="{{$present->fkSantri_id}}" val-name="{{$present->santri->user->fullname}}" updated-by="{{$present->updated_by}}">
+            <td class=" text-sm">
               <b>{{ $present->santri->user->fullname }}</b>
               <br>
               <small>{{ $present->created_at }}</small>
@@ -90,6 +96,7 @@
             </td>
             <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
               @if($update)
+              <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
               <a class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
 
               <!-- @if($present->is_late) -->
@@ -116,7 +123,7 @@
     </h6>
   </div>
 
-  <div class="table-responsive p-2">
+  <div class="table-responsive">
     <table class="table align-items-center mb-0">
       <thead>
         <tr>
@@ -128,7 +135,7 @@
         <!-- need approval -->
         @foreach($need_approval as $na)
         @if($na->santri->fkLorong_id==$lorong || $lorong=='-')
-        <tr>
+        <tr title="{{ ($na->approved_by=='') ? '' : 'Approved by '.$na->approved_by}} {{ ($na->rejected_by=='') ? '' : ' | Rejected by '.$na->rejected_by }}">
           <td class="text-sm">
             <b>{{ $na->santri->user->fullname }}</b>
             <br>
@@ -147,7 +154,7 @@
 
         @foreach($permits as $permit)
         @if($permit->santri->fkLorong_id==$lorong || $lorong=='-')
-        <tr>
+        <tr title="{{ ($permit->approved_by=='') ? '' : 'Approved by '.$permit->approved_by}} {{ ($permit->rejected_by=='') ? '' : ' | Rejected by '.$permit->rejected_by }}">
           <td class="text-sm">
             <b>{{ $permit->santri->user->fullname }}</b>
             <br>
@@ -174,7 +181,7 @@
   <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
     <a id="btn-select-all" class="btn btn-primary btn-block btn-xs mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
   </div>
-  <div class="table-responsive p-2">
+  <div class="table-responsive">
     <table id="table-alpha" class="table align-items-center mb-0">
       <thead>
         <tr>
@@ -237,6 +244,7 @@
     "ordering": false,
     "info": false
   });
+  cekKoorLorong();
 
   function selectForAlpha(id) {
     const el = document.querySelector("#trh" + id);
@@ -280,6 +288,7 @@
 
   async function savePresensi(santriId, name, st) {
     var lorong = '<?php echo $lorong; ?>';
+    var user = '<?php echo auth()->user()->fullname; ?>';
     // console.log(lorong)
     $.get(`{{ url("/") }}/presensi/` + <?php echo $id; ?> + `/` + st + `/` + santriId + `?lorong=` + lorong + `&json=true`, null,
       function(data, status) {
@@ -309,11 +318,12 @@
             $("#c-alp").html(zxcb)
           }
 
-          var text = '<tr id="tr' + x + santriId + '" class="dtmhs' + x + '" val-id="' + santriId + '" val-name="' + name + '">' +
+          var text = '<tr id="tr' + x + santriId + '" class="dtmhs' + x + '" val-id="' + santriId + '" val-name="' + name + '" updated-by="' + user + '">' +
             '<td class="text-sm">' +
             '<b>' + name + '</b>' + datetime +
             '</td>' +
-            '<td class="text-sm" id="slbtn' + x + '-' + santriId + '">' +
+            '<td class="align-middle text-center text-sm" id="slbtn' + x + '-' + santriId + '">' +
+            '<small style="font-size: 9px;">Updated by ' + user + '</small><br>' +
             '<a class = "btn btn-' + btn + ' btn-block btn-xs mb-0" href = "#" onclick = "selectFor' + tedf + '(' + santriId + ')">' + tedf + '</a>' +
             '</td>' +
             '</tr>';
@@ -328,9 +338,33 @@
 
           text = text + $("#table-" + ghdf + " tbody").html();
           $("#table-" + ghdf + " tbody").html(text);
+          cekKoorLorong();
         }
       }
     );
+  }
+
+  async function cekKoorLorong() {
+    var arr_name = [];
+    const el = document.querySelectorAll(".dtmhsh");
+    for (var i = 0; i < el.length; i++) {
+      arr_name.push(el[i].getAttribute('updated-by'));
+
+    }
+    var uniqueNames = [];
+    $.each(arr_name, function(i, elx) {
+      if ($.inArray(elx, uniqueNames) === -1) uniqueNames.push(elx);
+    });
+
+    var dz = '';
+    $.each(uniqueNames, function(i, x) {
+      if (dz == '') {
+        dz = x
+      } else {
+        dz = dz + ', ' + x
+      }
+    })
+    $("#nact").html(dz)
   }
 
   function dateTime() {

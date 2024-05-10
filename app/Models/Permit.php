@@ -17,7 +17,8 @@ class Permit extends Model
         'reason_category',
         'approved_by',
         'rejected_by',
-        'ids'
+        'ids',
+        'metadata'
     ];
 
     /**
