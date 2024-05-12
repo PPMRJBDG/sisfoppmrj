@@ -12,7 +12,7 @@
     </div>
     @endrole
     <div class="row">
-      <div class="col-sm-12 col-md-3">
+      <div class="col-6">
         <small>Pilih Tahun-Bulan</small>
         <select class="select_tb form-control" name="select_tb" id="select_tb">
           <option value="-">Silahkan Pilih</option>
@@ -21,7 +21,7 @@
           @endforeach
         </select>
       </div>
-      <div class="col-sm-12 col-md-3">
+      <div class="col-6">
         <small>Tampilkan</small>
         <select class="select_show form-control" name="select_show" id="select_show">
           <option {{ ($status=='pending') ? 'selected': '' }} value="pending">Pending</option>
@@ -32,6 +32,32 @@
       </div>
     </div>
   </div>
+
+  @if(!auth()->user()->hasRole('santri'))
+  <div class="p-2">
+    <div class="d-flex">
+      <div class="col-4 p-0">
+        <a style="width:100%;" href="#" class="btn btn-danger btn-xs m-0" onclick="return actionSave('delete');">
+          Delete
+        </a>
+      </div>
+      @if($status=='pending' || $status=='approved')
+      <div class="col-4 p-0">
+        <a style="width:100%;" href="#" class="btn btn-warning btn-xs m-0" onclick="return actionSave('reject');">
+          Reject
+        </a>
+      </div>
+      @endif
+      @if($status=='pending' || $status=='rejected')
+      <div class="col-4 p-0">
+        <a style="width:100%;" href="#" class="btn btn-primary btn-xs m-0" onclick="return actionSave('approve');">
+          Approve
+        </a>
+      </div>
+      @endif
+    </div>
+  </div>
+  @endif
 
   <div class="card-body px-0 pt-0 pb-2">
     @if ($errors->any())
@@ -57,8 +83,9 @@
       <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder"></th>
-            <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder"></th> -->
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder">
+              <input type="checkbox" class="custom-control-input" id="all-ids" onclick="selectAllCheckbox(this)">
+            </th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Keterangan</th>
           </tr>
@@ -67,12 +94,9 @@
           @if(isset($permits))
           @foreach($permits as $permit)
           <tr class="text-sm">
-            <td></td>
-            <!-- <td>
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" name="name{{$permit->fkSantri_id}}" value="val{{$permit->fkSantri_id}}" id="ids{{$permit->fkSantri_id}}">
-              </div>
-            </td> -->
+            <td>
+              <input type="checkbox" class="cls-ckb" santri-id="{{$permit->fkSantri_id}}" presence-id="{{$permit->fkPresence_id}}" id="ids{{$permit->fkSantri_id}}">
+            </td>
             <td>
               <b>{{ $permit->santri->user->fullname }}</b>
               <br>
@@ -83,17 +107,20 @@
             <td class="text-xs">
               <i><b>{{ $permit->presence->name }}</b></i>
               <br>
-              <div class="mt-1 mb-1"><span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span> {{ $permit->reason }}</div>
+              <div class="mt-1 mb-1">
+                <span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span>
+                <br>{{ $permit->reason }}
+              </div>
 
               @if($permit->status=='rejected' || $permit->status=='pending')
               @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-              <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a>
+              <!-- <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a> -->
               @endif
               @endif
               @if($permit->status=='approved' || $permit->status=='pending')
-              <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a>
+              <!-- <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a> -->
               @endif
-              <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a>
+              <!-- <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a> -->
             </td>
             @endforeach
             @endif
@@ -117,14 +144,55 @@
     var status = $('#select_show').val();
     window.location.replace(`{{ url("/") }}/presensi/izin/persetujuan/${$(e.currentTarget).val()}/` + status)
   })
+
   $('.select_show').change((e) => {
     var tb = $('#select_tb').val();
     window.location.replace(`{{ url("/") }}/presensi/izin/persetujuan/` + tb + `/${$(e.currentTarget).val()}`)
   })
+
   $('#table').DataTable({
     order: [],
     paging: false,
     pageLength: 25
   });
+
+  function actionSave(action) {
+    var datax = {};
+    datax['json'] = true;
+
+    const ival = []
+    const el = document.querySelectorAll(".cls-ckb");
+    for (var i = 0; i < el.length; i++) {
+      if (el[i].checked) {
+        ival.push([el[i].getAttribute('presence-id'), el[i].getAttribute('santri-id')])
+      }
+    }
+    if (ival.length == 0) {
+      alert('Silahkan pilih minimal satu mahasiswa');
+      return false
+    } else {
+      var pesan_action = '';
+      var url = '/presensi/izin/saya/'
+      if (action == 'delete') {
+        pesan_action = 'menghapus';
+        url = '/presensi/izin/persetujuan/'
+      } else if (action == 'approve') {
+        pesan_action = 'menyetujui';
+      } else if (action == 'reject') {
+        pesan_action = 'menolak';
+      }
+      if (confirm('Apakah anda yakin untuk ' + pesan_action + ' perijinan ini ?')) {
+        datax['data_json'] = JSON.stringify(ival);
+        $.get(`{{ url("/") }}` + url + action, datax,
+          function(data, status) {
+            var return_data = JSON.parse(data);
+            if (return_data.status) {
+              window.location.reload();
+            }
+          }
+        )
+      }
+    }
+  }
 </script>
 @include('base.end')

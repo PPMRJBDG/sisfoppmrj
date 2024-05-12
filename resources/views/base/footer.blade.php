@@ -289,4 +289,15 @@
             $("#show-info-ss-berjangka").show();
         }
     }
+
+    function selectAllCheckbox(thisx) {
+        const el = document.querySelectorAll(".cls-ckb");
+        for (var i = 0; i < el.length; i++) {
+            if (thisx.checked) {
+                el[i].checked = true
+            } else {
+                el[i].checked = false
+            }
+        }
+    }
 </script>

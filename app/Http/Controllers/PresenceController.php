@@ -923,38 +923,67 @@ class PresenceController extends Controller
     public function approve_permit(Request $request)
     {
         // get current santri
-        $presenceId = $request->get('presenceId');
-        $santriId = $request->get('santriId');
-        $page = $request->get('page');
+        $json = $request->get('json');
+        if (isset($json)) {
+            if ($json) {
+                $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari:
+';
+                $message = '';
+                $updated = false;
+                $data_json = json_decode($request->get('data_json'));
 
-        $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+                foreach ($data_json as $dt) {
+                    $presenceId = $dt[0];
+                    $santriId = $dt[1];
 
-        if (!$permit)
-            // return redirect()->route('presence permit approval')->withErrors(['permit_not_found', 'Izin tidak ditemukan.']);
-            return redirect()->back()->withErrors('permit_not_found', 'Izin tidak ditemukan.');
+                    $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+                    if ($permit) {
+                        $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
+                        if ($present) {
+                            $message = ' *(Gagal: Mahasiswa telah hadir di presensi ini)*';
+                        } else {
+                            $permit->status = 'approved';
+                            $permit->approved_by = auth()->user()->fullname;
+                            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+                            $updated = $permit->save();
+                        }
+                        $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message . '
+';
+                    }
+                }
 
-        // check whether santri is present in the presence
-        $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
-
-        if ($present)
-            // return redirect()->route('presence permit approval')->withErrors(['santri_is_present' => 'Santri telah hadir di presensi ini.']);
-            return redirect()->back()->with('santri_is_present', 'Santri telah hadir di presensi ini.');
-
-        $permit->status = 'approved';
-        $permit->approved_by = auth()->user()->fullname;
-        $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
-
-        $updated = $permit->save();
-
-        if ($updated) {
-            $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-            WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
+                WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
+                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui']);
+            }
         } else {
-            // return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
-            return redirect()->back()->withErrors('failed_updating_permit', 'Izin gagal disetujui.');
+            $presenceId = $request->get('presenceId');
+            $santriId = $request->get('santriId');
+
+            $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+
+            if (!$permit)
+                return redirect()->back()->withErrors('permit_not_found', 'Izin tidak ditemukan.');
+
+            // check whether santri is present in the presence
+            $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
+
+            if ($present)
+                return redirect()->back()->with('santri_is_present', 'Santri telah hadir di presensi ini.');
+
+            $permit->status = 'approved';
+            $permit->approved_by = auth()->user()->fullname;
+            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+
+            $updated = $permit->save();
+
+            if ($updated) {
+                $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
+                WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
+            } else {
+                return redirect()->back()->withErrors('failed_updating_permit', 'Izin gagal disetujui.');
+            }
+            return redirect()->back()->with('success', 'Izin berhasil disetujui.');
         }
-        // return redirect()->route('presence permit approval', ['page' => $page])->with('success', 'Izin berhasil disetujui.');
-        return redirect()->back()->with('success', 'Izin berhasil disetujui.');
     }
 
     /**
@@ -965,61 +994,125 @@ class PresenceController extends Controller
     public function reject_permit(Request $request)
     {
         // get current santri
-        $presenceId = $request->get('presenceId');
-        $santriId = $request->get('santriId');
+        $json = $request->get('json');
+        $setting = Settings::find(1);
+        if (isset($json)) {
+            if ($json) {
+                $time_post = 1;
+                $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari:
+';
+                $message = '';
+                $data_json = json_decode($request->get('data_json'));
 
-        $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+                foreach ($data_json as $dt) {
+                    $presenceId = $dt[0];
+                    $santriId = $dt[1];
 
-        if (!$permit)
-            return redirect()->route('presence permit approval')->withErrors(['permit_not_found', 'Izin tidak ditemukan.']);
+                    $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+                    if ($permit) {
+                        $permit->status = 'rejected';
+                        $permit->rejected_by = auth()->user()->fullname;
+                        $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+                        $updated = $permit->save();
+                        if ($updated) {
+                            $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message . '
+';
 
-        $permit->status = 'rejected';
-        $permit->rejected_by = auth()->user()->fullname;
-        $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+                            $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
+                            // kirim ke yg ijin
+                            $nohp = $permit->santri->user->nohp;
+                            if ($nohp != '') {
+                                if ($nohp[0] == '0') {
+                                    $nohp = '62' . substr($nohp, 1);
+                                }
+                                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                                if ($wa_phone != null) {
+                                    $caption_a = 'Mohon maaf, Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus.';
+                                    WaSchedules::save($name, $caption_a, $wa_phone->pid, $time_post);
+                                }
+                            }
 
-        $updated = $permit->save();
-
-        if ($updated) {
-            $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-            WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', 1, true);
-
-            $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
-            // kirim ke yg ijin
-            $nohp = $permit->santri->user->nohp;
-            if ($nohp != '') {
-                if ($nohp[0] == '0') {
-                    $nohp = '62' . substr($nohp, 1);
+                            $name = '[Rejected-Ortu] Perijinan Dari ' . $permit->santri->user->fullname;
+                            // kirim ke orangtua
+                            $nohp_ortu = $permit->santri->nohp_ortu;
+                            if ($nohp_ortu != '') {
+                                if ($nohp_ortu[0] == '0') {
+                                    $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                                }
+                                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                                if ($wa_phone != null) {
+                                    $caption_b = 'Mohon maaf, Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus.';
+                                    WaSchedules::save($name, $caption_b, $wa_phone->pid, $time_post);
+                                }
+                            }
+                            $time_post++;
+                        }
+                    }
                 }
-                $setting = Settings::find(1);
-                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                    $query->where('name', 'NOT LIKE', '%Bulk%');
-                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                if ($wa_phone != null) {
-                    $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus.';
-                    WaSchedules::save($name, $caption, $wa_phone->pid, 2);
-                }
+
+                WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', $time_post, true);
+
+                return json_encode(['status' => true, 'message' => 'Izin berhasil ditolak']);
             }
-
-            $name = '[Rejected-Ortu] Perijinan Dari ' . $permit->santri->user->fullname;
-            // kirim ke orangtua
-            $nohp_ortu = $permit->santri->nohp_ortu;
-            if ($nohp_ortu != '') {
-                if ($nohp_ortu[0] == '0') {
-                    $nohp_ortu = '62' . substr($nohp_ortu, 1);
-                }
-                $setting = Settings::find(1);
-                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                    $query->where('name', 'NOT LIKE', '%Bulk%');
-                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-                if ($wa_phone != null) {
-                    $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus.';
-                    WaSchedules::save($name, $caption, $wa_phone->pid, 3);
-                }
-            }
-            // return redirect()->route('presence permit approval')->with('success', 'Izin berhasil ditolak.');
-            return redirect()->back()->with('success', 'Izin berhasil ditolak.');
         } else {
-            return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
+            $presenceId = $request->get('presenceId');
+            $santriId = $request->get('santriId');
+
+            $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+
+            if (!$permit)
+                return redirect()->route('presence permit approval')->withErrors(['permit_not_found', 'Izin tidak ditemukan.']);
+
+            $permit->status = 'rejected';
+            $permit->rejected_by = auth()->user()->fullname;
+            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+
+            $updated = $permit->save();
+
+            if ($updated) {
+                $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
+                WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', 1, true);
+
+                $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
+                // kirim ke yg ijin
+                $nohp = $permit->santri->user->nohp;
+                if ($nohp != '') {
+                    if ($nohp[0] == '0') {
+                        $nohp = '62' . substr($nohp, 1);
+                    }
+                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                    if ($wa_phone != null) {
+                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus.';
+                        WaSchedules::save($name, $caption, $wa_phone->pid, 2);
+                    }
+                }
+
+                $name = '[Rejected-Ortu] Perijinan Dari ' . $permit->santri->user->fullname;
+                // kirim ke orangtua
+                $nohp_ortu = $permit->santri->nohp_ortu;
+                if ($nohp_ortu != '') {
+                    if ($nohp_ortu[0] == '0') {
+                        $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                    }
+                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                    if ($wa_phone != null) {
+                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus.';
+                        WaSchedules::save($name, $caption, $wa_phone->pid, 3);
+                    }
+                }
+                // return redirect()->route('presence permit approval')->with('success', 'Izin berhasil ditolak.');
+                return redirect()->back()->with('success', 'Izin berhasil ditolak.');
+            } else {
+                return redirect()->route('presence permit approval')->withErrors(['failed_updating_permit', 'Izin gagal disetujui.']);
+            }
         }
     }
 
@@ -1763,26 +1856,51 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
      */
     public function delete_permit(Request $request)
     {
-        $presenceId = $request->get('presenceId');
-        $santriId = $request->get('santriId');
-        $tb = $request->get('tb');
+        $json = $request->get('json');
+        if (isset($json)) {
+            if ($json) {
+                $caption = '*' . auth()->user()->fullname . '* Menghapus perijinan dari:
+';
+                $data_json = json_decode($request->get('data_json'));
 
-        // get current santri
-        $santri = Santri::find($santriId);
+                foreach ($data_json as $dt) {
+                    $presenceId = $dt[0];
+                    $santriId = $dt[1];
 
-        if (!$santri)
-            return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
+                    $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+                    if ($permit) {
+                        $permit->delete();
 
-        $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santri->id);
+                        $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
+';
+                    }
+                }
 
-        if (!$permit)
-            return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['permit_not_found' => 'Izin tidak ditemukan.']);
+                WaSchedules::save('Permit Delete', $caption, 'wa_ketertiban_group_id', null, true);
+                return json_encode(['status' => true, 'message' => 'Izin berhasil dihapus']);
+            }
+        } else {
+            $presenceId = $request->get('presenceId');
+            $santriId = $request->get('santriId');
+            $tb = $request->get('tb');
 
-        $deleted = $permit->delete();
+            // get current santri
+            $santri = Santri::find($santriId);
 
-        if (!$deleted)
-            return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['failed_deleting_permit', 'Gagal menghapus izin.']);
+            if (!$santri)
+                return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
 
-        return redirect()->route('presence permit approval', ['tb' => $tb])->with('success', 'Berhasil menghapus izin');
+            $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santri->id);
+
+            if (!$permit)
+                return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['permit_not_found' => 'Izin tidak ditemukan.']);
+
+            $deleted = $permit->delete();
+
+            if (!$deleted)
+                return redirect()->route('presence permit approval', ['tb' => $tb])->withErrors(['failed_deleting_permit', 'Gagal menghapus izin.']);
+
+            return redirect()->route('presence permit approval', ['tb' => $tb])->with('success', 'Berhasil menghapus izin');
+        }
     }
 }
