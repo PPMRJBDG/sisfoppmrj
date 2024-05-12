@@ -25,13 +25,13 @@
             4. Bagi yang <b>izin pulang, jangan lupa meminta SS</b><br>
             5. Bagi yang mengajar prasaringan/musyawarah tidak perlu izin<br>
             6. Jika memungkinkan, mengikuti KBM melalui SDC<br>
-            7. Ijin ini akan dikirim otomatis via WA ke Koor Lorong
+            7. Ijin ini akan dikirim otomatis via WA ke Koor Lorong dan Orang Tua
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="form-group" style="border:solid 1px #ddd;padding:5px 8px;border-radius:4px;">
+          <div class="form-group" style="border:solid 1px #ddd;padding:5px 8px;border-radius:4px;background:#f9f9f9;">
             Estimasi Jumlah KBM bulan ini: <b>{{ $data_kbm_ijin['kbm'] }}</b>
             <br>
             Jumlah kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100),0) }} (30% dari total KBM)</b>
@@ -75,13 +75,29 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
-            <select name="reason_category" class="form-control" required>
+            <select name="reason_category" class="form-control" required onchange="checkSS(this)">
               <option value="">Pilih kategori alasan</option>
               @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
               <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
               @endforeach
             </select>
           </div>
+        </div>
+      </div>
+      <div class="row" id="show-ss" style="display:none;">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-control-label">Apakah sudah meminta SS ?</label>
+            <select name="status_ss" id="status_ss" disabled class="form-control" onchange="infoSS(this)">
+              <option value="Setelah ini mau meminta">Setelah ini mau meminta</option>
+              <option value="Belum, maaf mendadak tidak sempat">Belum, maaf mendadak tidak sempat</option>
+              <option value="Belum, maaf posisi sudah di tempat tujuan">Belum, maaf posisi sudah di tempat tujuan</option>
+              <option value="Belum, maaf dewan guru tidak ada di rumah">Belum, maaf dewan guru tidak ada di rumah</option>
+              <option value="Tidak perlu membawa SS karena tujuan Bandung Raya">Tidak perlu membawa SS karena tujuan Bandung Raya</option>
+              <option value="Alhamdulillah Sudah">Alhamdulillah Sudah</option>
+            </select>
+          </div>
+          <label id="show-info-ss" style="display:none;" class="alert alert-danger text-white m-0 mb-2">Silahkan menghubungi dewan guru untuk mengirimkan foto SS</label>
         </div>
       </div>
       <div class="row">

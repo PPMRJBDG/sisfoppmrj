@@ -251,12 +251,42 @@
         $('#exampleModal').css('z-index', '10000');
         $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + ids + '"  style="height:100%;width:100%;"></iframe>');
     }
+
     $('#close').click(function() {
         $('#exampleModal').fadeOut();
         $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
     });
+
     $('#closeb').click(function() {
         $('#exampleModal').fadeOut();
         $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
     });
+
+    function checkSS(val) {
+        $("#show-ss").hide();
+        $("#show-ss-berjangka").hide();
+        const el = document.querySelector("#status_ss");
+        const elb = document.querySelector("#status_ss_berjangka");
+        el.disabled = true
+        if (elb != null) {
+            elb.disabled = true
+        }
+        if (val.value.match("Pulang")) {
+            $("#show-ss").show();
+            $("#show-ss-berjangka").show();
+            el.disabled = false
+            if (elb != null) {
+                elb.disabled = false
+            }
+        }
+    }
+
+    function infoSS(val) {
+        $("#show-info-ss").hide();
+        $("#show-info-ss-berjangka").hide();
+        if (val.value.match("Belum")) {
+            $("#show-info-ss").show();
+            $("#show-info-ss-berjangka").show();
+        }
+    }
 </script>

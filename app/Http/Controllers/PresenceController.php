@@ -1043,14 +1043,14 @@ class PresenceController extends Controller
         if ($santri) {
             $from = date_format(date_create(date('Y-m') . "-01 00:00:00"), "Y-m-d H:i:s");
             $to = date_format(date_create(date('Y-m') . "-31 23:59:59"), "Y-m-d H:i:s");
-            $myPermits = Permit::where('fkSantri_id', $santri->id)->whereBetween('created_at', [$from, $to])->get();
+            $myPermits = Permit::where('fkSantri_id', $santri->id)->whereBetween('created_at', [$from, $to])->orderBy('created_at', 'DESC')->get();
             $myRangedPermits = RangedPermitGenerator::where('fkSantri_id', $santri->id)->orderBy('created_at', 'DESC')->get();
             return view('presence.my_permits', ['myPermits' => $myPermits, 'myRangedPermits' => $myRangedPermits]);
         } elseif (auth()->user()->hasRole('superadmin')) {
             $time = strtotime(date('Y-m') . "-01 00:00:00");
             $from = date("Y-m-d H:i:s", strtotime("-1 month", $time));
             $to = date_format(date_create(date('Y-m') . "-31 23:59:59"), "Y-m-d H:i:s");
-            $myPermits = Permit::whereBetween('created_at', [$from, $to])->get();
+            $myPermits = Permit::whereBetween('created_at', [$from, $to])->orderBy('created_at', 'DESC')->get();
             $myRangedPermits = RangedPermitGenerator::orderBy('created_at', 'DESC')->get();
             return view('presence.my_permits', ['myPermits' => $myPermits, 'myRangedPermits' => $myRangedPermits]);
         }
@@ -1153,6 +1153,19 @@ class PresenceController extends Controller
                 // return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
             }
 
+            $add_ss = $request->input('status_ss');
+            $add_ss_k = '';
+            if (isset($add_ss)) {
+                $add_ss = 'Status SS: ' . $add_ss;
+                $add_ss_k = $add_ss . '
+
+*NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+            } else {
+                if (str_contains($request->input('reason_category'), 'Pulang -')) {
+                    return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
+                }
+            }
+
             $ids = uniqid();
             $inserted = false;
             $inserted = Permit::create([
@@ -1161,7 +1174,8 @@ class PresenceController extends Controller
                 'reason' => $request->input('reason'),
                 'reason_category' => $request->input('reason_category'),
                 'status' => 'approved', // default (apabila ijin tidak sesuai baru di reject)
-                'ids' => $ids
+                'ids' => $ids,
+                'status_ss' => $request->input('status_ss')
             ]);
 
             if ($inserted) {
@@ -1171,22 +1185,23 @@ class PresenceController extends Controller
                 } else {
                     $lorong = '*' . $santri->lorong->name . '*';
                 }
+
                 $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '        
 Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+' . $add_ss_k;
 
                 $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
-
 ' . $lorong . '
 Presensi: ' . $presence->name . '
-Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason') . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
+Alasan:  [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+' . $add_ss;
 
-                WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu, $request->input('reason_category'));
+                WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
                 return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
             } else {
                 return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Gagal membuat izin.']);
@@ -1260,6 +1275,19 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                     return redirect()->route('ranged presence permit submission')->withErrors(['ranged_permit_already_exists' => 'Izin berjangka pada presensi tersebut dengan waktu yang sama sudah sudah ada.']);
 
 
+                $add_ss = $request->input('status_ss');
+                $add_ss_k = '';
+                if (isset($add_ss)) {
+                    $add_ss = 'Status SS: ' . $add_ss;
+                    $add_ss_k = $add_ss . '
+
+*NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+                } else {
+                    if (str_contains($request->input('reason_category'), 'Pulang -')) {
+                        return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
+                    }
+                }
+
                 // now let's insert permits to existing presences.
                 $createdPresences = Presence::whereDate('event_date', '>=', $request->input('from_date'))
                     ->whereDate('event_date', '<=', $request->input('to_date'))
@@ -1283,7 +1311,7 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                     $updated_by = '';
                     if ($presence->event_date == date('Y-m-d')) {
                         $statusx = 'approved';
-                        $updated_by = 'system';
+                        $updated_by = 'System';
                     }
                     $ids = uniqid();
                     $inserted = Permit::create([
@@ -1293,7 +1321,8 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                         'reason_category' => $request->input('reason_category'),
                         'status' => $statusx,
                         'approved_by' => $updated_by,
-                        'ids' => $ids
+                        'ids' => $ids,
+                        'status_ss' => $request->input('status_ss')
                     ]);
                 }
 
@@ -1318,12 +1347,18 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                 $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
 Presensi: ' . $pres_name . '
-Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason') . '
-Dari: ' . $request->input('from_date') . '
-Sampai: ' . $request->input('to_date');
+Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+' . $add_ss_k;
 
-                WaSchedules::insertToKetertiban($santri, $caption, $caption, $request->input('reason_category'));
+                $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
+' . $lorong . '
+Presensi: ' . $pres_name . '
+Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+' . $add_ss;
+
+                WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
 
                 return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
             } else {
@@ -1429,6 +1464,19 @@ Sampai: ' . $request->input('to_date');
             // return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['presence_already_exists' => 'Santri sudah hadir pada presensi tersebut. Tidak bisa izin.']);
         }
 
+        $add_ss = $request->input('status_ss');
+        $add_ss_k = '';
+        if (isset($add_ss)) {
+            $add_ss = 'Status SS: ' . $add_ss;
+            $add_ss_k = $add_ss . '
+
+*NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+        } else {
+            if (str_contains($request->input('reason_category'), 'Pulang -')) {
+                return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
+            }
+        }
+
         $ids = uniqid();
         $inserted = Permit::create([
             'fkSantri_id' => $santriId,
@@ -1436,7 +1484,8 @@ Sampai: ' . $request->input('to_date');
             'reason' => $request->input('reason'),
             'reason_category' => $request->input('reason_category'),
             'status' => $request->input('status'),
-            'ids' => $ids
+            'ids' => $ids,
+            'status_ss' => $request->input('status_ss')
         ]);
 
         if ($inserted) {
@@ -1449,30 +1498,31 @@ Sampai: ' . $request->input('to_date');
                 $lorong = '*' . $santri->lorong->name . '*';
             }
             if ($request->input('status') == 'pending') {
-                $sttijn = 'Status: *Pending (Perlu persetujuan, amshol cek di sisfo)*';
+                $sttijn = 'Link approve: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
             } else {
                 $sttijn = 'Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
             }
-            $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 
+            $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 ' . $sttijn . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+' . $add_ss_k;
 
-            $caption_ortu = null;
-            if ($request->input('status') == 'approved') {
-                $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
-
+            if ($request->input('status') == 'pending') {
+                $sttijn = 'Status: *Pending*';
+            }
+            $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 Presensi: ' . $presence->name . '
-Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason') . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*';
-            }
+Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+' . $sttijn . '
+Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+' . $add_ss;
 
-            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu, $request->input('reason_category'));
+            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
 
             return redirect()->route('presence permit approval')->with('success', 'Berhasil membuat izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {
@@ -1531,6 +1581,18 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
             if (isset($existingRangedPermit))
                 return redirect()->route('ranged presence permit submission')->withErrors(['ranged_permit_already_exists' => 'Izin berjangka pada presensi tersebut dengan waktu yang sama sudah sudah ada.']);
 
+            $add_ss = $request->input('status_ss');
+            $add_ss_k = '';
+            if (isset($add_ss)) {
+                $add_ss = 'Status SS: ' . $add_ss;
+                $add_ss_k = $add_ss . '
+
+*NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+            } else {
+                if (str_contains($request->input('reason_category'), 'Pulang -')) {
+                    return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
+                }
+            }
 
             // now let's insert permits to existing presences.
             $createdPresences = Presence::whereDate('event_date', '>=', $request->input('from_date'))
@@ -1559,7 +1621,8 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                     'reason_category' => $request->input('reason_category'),
                     'status' => $request->input('status'),
                     'approved_by' => 'system',
-                    'ids' => $ids
+                    'ids' => $ids,
+                    'status_ss' => $request->input('status_ss')
                 ]);
             }
 
@@ -1580,24 +1643,36 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
             } else {
                 $lorong = '*' . $santri->lorong->name . '*';
             }
+
+            $sttijn = '';
             if ($request->input('status') == 'pending') {
-                $sttijn = 'Status: *Pending (Perlu persetujuan, amshol cek di sisfo)*';
+                $sttijn = 'Status: *Pending (Perlu persetujuan, amshol cek di SISFO)*';
             }
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 Presensi: ' . $pres_name . '
-Kategori: ' . $request->input('reason_category') . '
-Alasan: ' . $request->input('reason') . '
-Dari: ' . $request->input('from_date') . '
-Sampai: ' . $request->input('to_date') . '
-' . $sttijn;
+Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+' . $sttijn . '
+' . $add_ss_k;
 
-            WaSchedules::insertToKetertiban($santri, $caption, $caption, $request->input('reason_category'));
+            if ($request->input('status') == 'pending') {
+                $sttijn = 'Status: *Pending*';
+            }
+            $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
+' . $lorong . '
+Presensi: ' . $pres_name . '
+Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+' . $sttijn . '
+' . $add_ss;
 
-            return redirect()->route('my presence permits')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin kamu. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
+            WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
+
+            return redirect()->route('presence permit approval')->with('success', 'Berhasil membuat izin berjangka, silakan cek daftar izin. Semoga Allah paring pengampunan, aman selamat lancar barokah. Alhamdulillah jazakumullahu khoiro.');
         } else {
-            return redirect()->route('presence permit submission')->withErrors(['failed_adding_permit' => 'Gagal membuat izin berjangka.']);
+            return redirect()->route('create presence permit')->withErrors(['failed_adding_permit' => 'Gagal membuat izin berjangka.']);
         }
     }
 

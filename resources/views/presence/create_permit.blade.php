@@ -14,8 +14,8 @@
     @endif
     <label class="custom-control-label">Perijinan akan di Approve oleh Ketua / RJ / Wk</label>
     <div class="tab mt-2">
-      <button class="tablinks active" onclick="openTab(event, 'harian')">Harian</button>
-      <button class="tablinks" onclick="openTab(event, 'berjangka')">Berjangka</button>
+      <button class="tablinks active" id="tab-harian" onclick="openTab(event, 'harian')">Harian</button>
+      <button class="tablinks" id="tab-berjangka" onclick="openTab(event, 'berjangka')">Berjangka</button>
     </div>
 
     <div class="card tabcontent" id="harian" style="display:block;">
@@ -52,13 +52,29 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
-                <select name="reason_category" class="form-control" required>
+                <select name="reason_category" id="reason_category" class="form-control" required onchange="checkSS(this)">
                   <option value="">Pilih kategori alasan</option>
                   @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
                   <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
                   @endforeach
                 </select>
               </div>
+            </div>
+          </div>
+          <div class="row" id="show-ss" style="display:none;">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-control-label">Apakah sudah meminta SS ?</label>
+                <select name="status_ss" id="status_ss" disabled class="form-control" onchange="infoSS(this)">
+                  <option value="Setelah ini mau meminta">Setelah ini mau meminta</option>
+                  <option value="Belum, maaf mendadak tidak sempat">Belum, maaf mendadak tidak sempat</option>
+                  <option value="Belum, maaf posisi sudah di tempat tujuan">Belum, maaf posisi sudah di tempat tujuan</option>
+                  <option value="Belum, maaf dewan guru tidak ada di rumah">Belum, maaf dewan guru tidak ada di rumah</option>
+                  <option value="Tidak perlu membawa SS karena tujuan Bandung Raya">Tidak perlu membawa SS karena tujuan Bandung Raya</option>
+                  <option value="Alhamdulillah Sudah">Alhamdulillah Sudah</option>
+                </select>
+              </div>
+              <label id="show-info-ss" style="display:none;" class="alert alert-danger text-white m-0 mb-2">Silahkan informasikan ke mahasiswa yang bersangkutan untuk menghubungi dewan guru dan meminta diirimkan foto SS</label>
             </div>
           </div>
           <div class="row">
@@ -150,13 +166,29 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
-                  <select name="reason_category" class="form-control" required>
+                  <select name="reason_category" id="reason_category_jangka" class="form-control" required onchange="checkSS(this)">>
                     <option value="">Pilih kategori alasan</option>
                     @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
                     <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
                     @endforeach
                   </select>
                 </div>
+              </div>
+            </div>
+            <div class="row" id="show-ss-berjangka" style="display:none;">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="form-control-label">Apakah sudah meminta SS ?</label>
+                  <select name="status_ss" id="status_ss_berjangka" disabled class="form-control" onchange="infoSS(this)">
+                    <option value="Setelah ini mau meminta">Setelah ini mau meminta</option>
+                    <option value="Belum, maaf mendadak tidak sempat">Belum, maaf mendadak tidak sempat</option>
+                    <option value="Belum, maaf posisi sudah di tempat tujuan">Belum, maaf posisi sudah di tempat tujuan</option>
+                    <option value="Belum, maaf dewan guru tidak ada di rumah">Belum, maaf dewan guru tidak ada di rumah</option>
+                    <option value="Tidak perlu membawa SS karena tujuan Bandung Raya">Tidak perlu membawa SS karena tujuan Bandung Raya</option>
+                    <option value="Alhamdulillah Sudah">Alhamdulillah Sudah</option>
+                  </select>
+                </div>
+                <label id="show-info-ss-berjangka" style="display:none;" class="alert alert-danger text-white m-0 mb-2">Silahkan informasikan ke mahasiswa yang bersangkutan untuk menghubungi dewan guru dan meminta diirimkan foto SS</label>
               </div>
             </div>
             <div class="row">
@@ -198,4 +230,32 @@
         </form>
       </div>
     </div>
-    @include('base.end')
+  </div>
+</div>
+@include('base.end')
+
+<script>
+  $("#tab-harian").click(function() {
+    tabAction();
+  })
+  $("#tab-berjangka").click(function() {
+    tabAction();
+  })
+
+  function tabAction() {
+    $("#show-ss").hide();
+    $("#show-ss-berjangka").hide();
+    $("#show-info-ss").hide();
+    $("#show-info-ss-berjangka").hide();
+    $("#reason_category").val("");
+    $("#reason_category_jangka").val("");
+    $("#status_ss").val("Setelah ini mau meminta");
+    $("#status_ss_berjangka").val("Setelah ini mau meminta");
+    const el = document.querySelector("#status_ss");
+    const elb = document.querySelector("#status_ss_berjangka");
+    el.disabled = true
+    if (elb != null) {
+      elb.disabled = true
+    }
+  }
+</script>

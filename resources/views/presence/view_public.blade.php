@@ -94,7 +94,7 @@
 
 <div class="card tabcontent" id="hadir" style="display:block;">
     <div class="card-body px-0 pt-0 pb-2">
-        <small style="font-size:9px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></small>
+        <small style="font-size:11px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></small>
         <div class="table-responsive">
             <table id="table-hadir" class="table align-items-center mb-0">
                 <thead>

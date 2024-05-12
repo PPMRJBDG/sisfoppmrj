@@ -13,9 +13,6 @@
         Buat grup presensi
       </a>
       @endcan
-      <!-- <a tooltip="TEsT" href="{{ route('check presence schedules') }}" class="btn btn-success">
-          Generate pengajian terjadwal
-        </a>     -->
     </div>
   </div>
   <div class="card-body pt-4 p-3">

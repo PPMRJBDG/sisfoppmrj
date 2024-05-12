@@ -18,7 +18,8 @@ class Permit extends Model
         'approved_by',
         'rejected_by',
         'ids',
-        'metadata'
+        'metadata',
+        'status_ss'
     ];
 
     /**

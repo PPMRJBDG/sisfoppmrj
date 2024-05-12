@@ -91,6 +91,7 @@ Route::get('/presensi/list/group/{id}/presensi/create', [App\Http\Controllers\Pr
 Route::post('/presensi/list/group/{id}/presensi/store', [App\Http\Controllers\PresenceController::class, 'store_in_group'])->name('store presence in group')->middleware('permission:create presences');
 Route::get('/permit/{ids}', [App\Http\Controllers\PublicController::class, 'view_permit'])->name('view permit');
 Route::get('/permit/reject/{ids}', [App\Http\Controllers\PublicController::class, 'reject_permit'])->name('reject permit');
+Route::get('/permit/approve/{ids}', [App\Http\Controllers\PublicController::class, 'approve_permit'])->name('approve permit');
 
 // Lorongs
 Route::get('/lorong/saya', [App\Http\Controllers\LorongController::class, 'my_lorong'])->name('my lorong')->middleware('role:santri|koor lorong|superadmin');

@@ -3,7 +3,7 @@
 
 <div class="card-body px-0 pt-0 pb-2">
   @if (session('success'))
-  <div class="p-4">
+  <div class="p-0">
     <div class="alert alert-success text-white">
       {{ session('success') }}
     </div>
@@ -16,7 +16,7 @@
   </div>
 
   <div class="card tabcontent" id="harian" style="display:block;">
-    <div class="card-header pb-0 align-items-center">
+    <div class="card-header p-2 pb-0 align-items-center">
       <h6>Daftar izin saya</h6>
       <div class="col-md-12">
         <div class="form-group">
@@ -69,7 +69,7 @@
   </div>
 
   <div class="card tabcontent" id="berjangka" style="display:none;">
-    <div class="card-header pb-0 justify-content-between align-items-center">
+    <div class="card-header p-2 pb-0 justify-content-between align-items-center">
       <h6>Daftar izin Generator</h6>
       <div class="col-md-12">
         <div class="form-group">

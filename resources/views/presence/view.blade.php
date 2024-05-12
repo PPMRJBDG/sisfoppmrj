@@ -2,7 +2,7 @@
 'path' => 'presensi/list',
 'title' => 'Presensi ' . (isset($presence) ? $presence->name : ''),
 'breadcrumbs' => ['Daftar Presensi', 'Presensi ' . (isset($presence) ? $presence->name : '')],
-'backRoute' => false
+'backRoute' => route('presence tm')
 ])
 
 @if(isset($presence))
@@ -72,8 +72,8 @@
 
 <div class="card tabcontent" id="hadir" style="display:block;">
   <div class="card-body px-0 pt-0 pb-2">
-    <div style="font-size:10px;padding:10px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
-    <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
+    <div style="font-size:11px;padding:10px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
+    <div class="card-body p-2" style="background:#f9f9f9;">
       <a id="btn-select-all" class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
     </div>
     <div class="table-responsive">
@@ -226,12 +226,12 @@
     margin-top: 0px !important;
   }
 
-  #table-hadir_filter label,
+  /* #table-hadir_filter label,
   #table-alpha_filter label,
   #table-hadir_filter label input,
   #table-alpha_filter label input {
     width: 100% !important;
-  }
+  } */
 </style>
 <script>
   $('#table-hadir').DataTable({

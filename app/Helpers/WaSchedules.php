@@ -93,34 +93,12 @@ class WaSchedules
         }
     }
 
-    public static function insertToKetertiban($santri, $caption, $caption_ortu, $reason_category = null)
+    public static function insertToKetertiban($santri, $caption, $caption_ortu)
     {
         $setting = Settings::first();
 
         // kirim ke group koor lorong
-        if (str_contains($reason_category, 'Pulang -')) {
-            $caption = $caption . '
-            
-*NB: Pastikan yang ijin pulang ke luar wilayah Bandung Raya untuk meminta SS ke salah satu Dewan Guru*';
-        }
         WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id', null, true);
-
-        // wa ke yang ijin
-        if (str_contains($reason_category, 'Pulang -')) {
-            $nohp = $santri->user->nohp;
-            if ($nohp != '') {
-                if ($nohp[0] == '0') {
-                    $nohp = '62' . substr($nohp, 1);
-                }
-                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                    $query->where('name', 'NOT LIKE', '%Bulk%');
-                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                if ($wa_phone != null) {
-                    $caption = 'Bagi yang ijin pulang ke luar wilayah Bandung Raya, silahkan meminta SS ke salah satu Dewan Guru.';
-                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $wa_phone->pid, 3);
-                }
-            }
-        }
 
         // kirim ke ortu
         if ($caption_ortu != null) {

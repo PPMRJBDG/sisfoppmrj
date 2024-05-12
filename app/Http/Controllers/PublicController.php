@@ -656,8 +656,11 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         $message = '';
         if ($permit != null) {
             if ($permit->status == 'approved') {
+                $message = 'Permintaan ijin sudah disetujui';
+            } elseif ($permit->status == 'pending') {
+                $message = 'Permintaan ijin masih pending';
             } else {
-                $message = 'Permintaan ijin sudah ditolak.';
+                $message = 'Permintaan ijin sudah ditolak';
             }
         } else {
             $message = 'Perijinan tidak ditemukan.';
@@ -670,66 +673,92 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         $permit = Permit::where('ids', $ids)->first();
         $message = '';
         if ($permit != null) {
-            if ($permit->status == 'approved') {
-                $permit->status = 'rejected';
+            $permit->status = 'rejected';
 
-                try {
-                    if (isset(auth()->user()->fullname)) {
-                        $rejected_by = auth()->user()->fullname;
-                    } else {
-                        $rejected_by = $_SERVER['HTTP_USER_AGENT'];
-                    }
-                } catch (Exception  $err) {
+            try {
+                if (isset(auth()->user()->fullname)) {
+                    $rejected_by = auth()->user()->fullname;
+                } else {
                     $rejected_by = $_SERVER['HTTP_USER_AGENT'];
                 }
+            } catch (Exception  $err) {
+                $rejected_by = $_SERVER['HTTP_USER_AGENT'];
+            }
 
-                $permit->rejected_by = $rejected_by;
-                $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+            $permit->rejected_by = $rejected_by;
+            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
-                if ($permit->save()) {
-                    $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-                    WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
+            if ($permit->save()) {
+                $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
+                WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
 
-                    $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
-                    // kirim ke yg ijin
-                    $nohp = $permit->santri->user->nohp;
-                    if ($nohp != '') {
-                        if ($nohp[0] == '0') {
-                            $nohp = '62' . substr($nohp, 1);
-                        }
-                        $setting = Settings::find(1);
-                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                        if ($wa_phone != null) {
-                            $caption = 'Perijinan Anda di Tolak oleh Pengurus.';
-                            WaSchedules::save($name, $caption, $wa_phone->pid);
-                        }
+                $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
+                // kirim ke yg ijin
+                $nohp = $permit->santri->user->nohp;
+                if ($nohp != '') {
+                    if ($nohp[0] == '0') {
+                        $nohp = '62' . substr($nohp, 1);
                     }
-
-                    // kirim ke orangtua
-                    $nohp_ortu = $permit->santri->nohp_ortu;
-                    if ($nohp_ortu != '') {
-                        if ($nohp_ortu[0] == '0') {
-                            $nohp_ortu = '62' . substr($nohp_ortu, 1);
-                        }
-                        $setting = Settings::find(1);
-                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-                        if ($wa_phone != null) {
-                            $caption = 'Perijinan *' . $permit->santri->user->fullname . '* di Tolak oleh Pengurus.';
-                            WaSchedules::save($name, $caption, $wa_phone->pid, 2);
-                        }
+                    $setting = Settings::find(1);
+                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                    if ($wa_phone != null) {
+                        $caption = 'Perijinan Anda di Tolak oleh Pengurus.';
+                        WaSchedules::save($name, $caption, $wa_phone->pid);
                     }
-
-                    $message = 'Permintaan ijin berhasil ditolak.';
                 }
-            } else {
-                $message = 'Permintaan ijin sudah ditolak.';
+
+                // kirim ke orangtua
+                $nohp_ortu = $permit->santri->nohp_ortu;
+                if ($nohp_ortu != '') {
+                    if ($nohp_ortu[0] == '0') {
+                        $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                    }
+                    $setting = Settings::find(1);
+                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                    if ($wa_phone != null) {
+                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* di Tolak oleh Pengurus.';
+                        WaSchedules::save($name, $caption, $wa_phone->pid, 2);
+                    }
+                }
+
+                $message = 'Permintaan ijin berhasil ditolak';
             }
         } else {
-            $message = 'Perijinan tidak ditemukan.';
+            $message = 'Perijinan tidak ditemukan';
+        }
+
+        return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+    }
+
+    public function approve_permit($ids)
+    {
+        $permit = Permit::where('ids', $ids)->first();
+        $message = '';
+        if ($permit != null) {
+            $permit->status = 'approved';
+
+            try {
+                if (isset(auth()->user()->fullname)) {
+                    $approved_by = auth()->user()->fullname;
+                } else {
+                    $approved_by = $_SERVER['HTTP_USER_AGENT'];
+                }
+            } catch (Exception  $err) {
+                $approved_by = $_SERVER['HTTP_USER_AGENT'];
+            }
+
+            $permit->approved_by = $approved_by;
+            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+
+            if ($permit->save()) {
+                $message = 'Permintaan ijin berhasil disetujui';
+            }
+        } else {
+            $message = 'Perijinan tidak ditemukan';
         }
 
         return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);

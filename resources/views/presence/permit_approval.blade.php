@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-md-12 col-sm-6">
         <a href="{{ route('create presence permit') }}" class="btn btn-primary btn-xs m-2 mb-0" style="float:right;">
-          <i class="fas fa-plus" aria-hidden="true"></i> Buat izin
+          <i class="fas fa-plus" aria-hidden="true"></i> Buatkan Izin Mahasaiswa
         </a>
       </div>
     </div>
@@ -53,18 +53,26 @@
     </div>
     @endif
 
-    <div class="table-responsive p-2">
+    <div class="table-responsive p-0">
       <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder"></th>
+            <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder"></th> -->
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Alasan</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Keterangan</th>
           </tr>
         </thead>
         <tbody>
           @if(isset($permits))
           @foreach($permits as $permit)
           <tr class="text-sm">
+            <td></td>
+            <!-- <td>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="name{{$permit->fkSantri_id}}" value="val{{$permit->fkSantri_id}}" id="ids{{$permit->fkSantri_id}}">
+              </div>
+            </td> -->
             <td>
               <b>{{ $permit->santri->user->fullname }}</b>
               <br>
@@ -115,6 +123,7 @@
   })
   $('#table').DataTable({
     order: [],
+    paging: false,
     pageLength: 25
   });
 </script>
