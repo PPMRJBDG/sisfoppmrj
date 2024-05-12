@@ -204,7 +204,7 @@ NB:
             $lm = strtotime(date("Y-m-d"));
             $last_month = date('Y-m', $lm);
 
-            $periode_tahun = Periode::latest('periode_tahun')->first();
+            // $periode_tahun = Periode::latest('periode_tahun')->first();
             $list_angkatan = DB::table('santris')
                 ->select('angkatan')
                 ->whereNull('exit_at')
@@ -243,7 +243,9 @@ NB:
                         // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
                         if ($all_persentase < 80) {
                             $all_persentase = number_format($all_persentase, 2);
-                            $data_mhs[] = $vu->nohp_ortu;
+                            $data_mhs[$vu->santri_id]['nohp'] = $vu->nohp_ortu;
+                            $data_mhs[$vu->santri_id]['caption'] = '*[Laporan Mingguan] Presensi KBM ' . $vu->fullname . ' pada bulan ' . date("M Y") . ': ' . $all_persentase . '%*';
+
                             $data_presensi_weekly = $data_presensi_weekly . '
 - [' . $vu->angkatan . '] ' . $vu->fullname . ': *' . $all_persentase . '%*';
                         }
@@ -252,15 +254,13 @@ NB:
             }
 
             if (count($data_mhs) > 0) {
-                $add_koor = '
-
-Amalsholih koor lorong menggambungi anggotanya yang kehadirannya kurang dari 80%.';
-                WaSchedules::save('Weekly Report', $data_presensi_weekly . $add_koor, 'wa_ketertiban_group_id');
+                WaSchedules::save('Weekly Report', $data_presensi_weekly, 'wa_ketertiban_group_id', 1);
 
                 // kirim ke ortu
                 $time_post = 2;
                 foreach ($data_mhs as $dm) {
-                    WaSchedules::save('[Ortu] Weekly Report', $data_presensi_weekly, WaSchedules::getContactId($dm), $time_post);
+                    // echo var_dump($dm);
+                    WaSchedules::save('[Ortu] Weekly Report', $dm['caption'], WaSchedules::getContactId($dm['nohp']), $time_post);
                     $time_post++;
                 }
             }
