@@ -17,7 +17,8 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 </div>
 @endif
 <div class="card shadow-lg">
-    <div class="card-header">
+    <div class="card-header p-2">
+        <small><i>Last update: {{date_format(date_create($last_update->updated_at), 'd M Y H:i:s')}}</i></small>
         <div class="card shadow-lg">
             <div class="table-responsive">
                 <table class="table align-items-center mb-0">
@@ -28,23 +29,29 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                             <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Sudah Lunas</th>
                             <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Belum Lunas</th>
                             <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Penerimaan</th>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Kekurangan</th>
+                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Total Estimasi</th>
                         </tr>
                     </thead>
                     <?php
                     $total_vlunas = 0;
                     $total_xlunas = 0;
                     $total_penerimaan = 0;
+                    $total_kekurangan = 0;
+                    $total_estimasi_penerimaan = 0;
                     ?>
                     <tbody>
                         @if(count($list_periode)>0)
                         <?php
                         foreach ($list_periode as $per) {
                         ?>
-                            <tr class="text-center text-sm">
+                            <tr class="text-center text-bold text-sm">
                                 <?php
                                 $v = App\Models\Sodaqoh::where('status_lunas', 1)->where('periode', $per->periode)->get();
                                 $x = App\Models\Sodaqoh::whereNull('status_lunas')->where('periode', $per->periode)->get();
                                 $total = 0;
+                                $total_x = 0;
+                                $total_nominal = 0;
                                 foreach ($v as $data_vlunas) {
                                     foreach ($bulan as $b) {
                                         $total = $total + $data_vlunas->$b;
@@ -53,7 +60,9 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                                 foreach ($x as $data_xlunas) {
                                     foreach ($bulan as $b) {
                                         $total = $total + $data_xlunas->$b;
+                                        $total_x = $total_x + $data_xlunas->$b;
                                     }
+                                    $total_nominal = $data_vlunas->nominal + $total_nominal;
                                 }
                                 ?>
                                 <td>{{ $per->periode }}</td>
@@ -67,11 +76,19 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                                 <td class="font-weight-bolder text-right">
                                     {{ number_format($total, 0) }}
                                 </td>
+                                <td class="font-weight-bolder text-right">
+                                    {{ number_format($total_nominal-$total_x, 0) }}
+                                </td>
+                                <td class="font-weight-bolder text-right">
+                                    {{ number_format($total+($total_nominal-$total_x), 0) }}
+                                </td>
                             </tr>
                         <?php
                             $total_vlunas += count($v);
                             $total_xlunas += count($x);
                             $total_penerimaan = $total_penerimaan + $total;
+                            $total_kekurangan = $total_kekurangan + ($total_nominal - $total_x);
+                            $total_estimasi_penerimaan = $total_estimasi_penerimaan + ($total_penerimaan + $total_kekurangan);
                         }
                         ?>
                         @endif
@@ -81,6 +98,8 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                             <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_vlunas }}</td>
                             <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_xlunas }}</td>
                             <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_penerimaan, 0) }}</td>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_kekurangan, 0) }}</td>
+                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_estimasi_penerimaan, 0) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -88,7 +107,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         </div>
     </div>
 
-    <div class="card-body pt-0">
+    <div class="card-body p-2">
         @if(count($datax)>0)
         <center><b>Periode {{ isset($periode) ? $periode : '' }}</b></center><br>
         @endif
@@ -110,9 +129,8 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
             <select class="select_lunas form-control" name="select_lunas" id="select_lunas">
                 <option {{ ($select_lunas == 2) ? 'selected' : '' }} value="2">Semua</option>
                 <option {{ ($select_lunas == 1) ? 'selected' : '' }} value="1">Sudah Lunas</option>
-                <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="0">Belum Lunas</option>
-                <!-- <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="3">Sudah Nyicil</option>
-                <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="4">Belum Nyicil</option> -->
+                <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="0">Belum Lunas (sama sekali)</option>
+                <option {{ ($select_lunas == 3) ? 'selected' : '' }} value="3">Belum Lunas (baru dicicil)</option>
             </select>
         </div>
         <div class="table-responsive mt-2">
@@ -130,8 +148,16 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 <tbody>
                     @if(isset($datax))
                     @foreach($datax as $data)
+                    <?php
+                    $st = 0;
+                    foreach ($bulan as $b) {
+                        $st = $st + intval($data->$b);
+                    }
+                    ?>
+                    @if(($st==0 && $select_lunas==0) || ($st>0 && $select_lunas==3) || $select_lunas==1)
                     <tr class="text-sm" id="data{{$data->fkSantri_id}}">
                         <td>
+                            <a onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($bulan)}})" class="btn btn-primary btn-xs mb-0">Bayar</a>
                             <b>[{{ $data->santri->angkatan }}]</b> {{ $data->santri->user->fullname }}
                         </td>
                         <td>
@@ -154,20 +180,20 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                             }
                         }
                         ?>
-                        <td class="{{ $text_error }}">
+                        <td id="terbayar{{$data->fkSantri_id}}" class="{{ $text_error }}">
                             <b>{{ $text_error == '' ? 'Lunas' : number_format($status_lunas,0) }}</b>
                         </td>
-                        <td class="{{ $text_error }}">
+                        <td id="kekurangan{{$data->fkSantri_id}}" class="{{ $text_error }}">
                             <b>{{ number_format($kekurangan,0) }}</b>
                         </td>
                         <td>
-                            <a onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($bulan)}})" class="btn btn-primary btn-xs mb-0">Bayar</a>
                             <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                             @if($data->status_lunas=='')
                             <a onclick="reminderSodaqoh({{$data}})" class="btn btn-warning btn-xs mb-0">Ingatkan</a>
                             @endif
                         </td>
                     </tr>
+                    @endif
                     @endforeach
                     @endif
                 </tbody>
@@ -186,7 +212,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 </div>
             </div>
             <div class="modal-body">
-                <div class="p-2" style="background:#f9f9ff;">
+                <div class="p-2" style="background:#f9f9ff;border:1px #ddd solid;">
                     <input class="form-control" readonly type="hidden" id="sodaqoh_id" name="sodaqoh_id" value="">
                     <input class="form-control" readonly type="hidden" id="periode" name="periode" value="">
                     <input class="form-control" readonly type="hidden" id="santri_id" name="santri_id" value="">
@@ -226,10 +252,10 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                         <?php foreach ($bulan as $bl) {
                         ?>
                             <tr class="text-sm" id="idx{{$bl}}">
-                                <td class="p-0" style="border-bottom-width:0!important;">
+                                <td class="p-0" style="border-bottom-width:0!important;width:20%;">
                                     <input class="form-control" disabled type="text" value="{{$bl}}">
                                 </td>
-                                <td class="p-0" style="border-bottom-width:0!important;">
+                                <td class="p-0" style="border-bottom-width:0!important;width:40%;">
                                     <input class="form-control" disabled type="date" id="{{$bl}}_date" name="{{$bl}}_date">
                                 </td>
                                 <td class="p-0" style="border-bottom-width:0!important;">
@@ -238,17 +264,28 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                             </tr>
                         <?php }
                         ?>
+                        <tr>
+                            <td class="text-sm font-weight-bolder ps-0 text-warning" colspan="2" style="border:none!important;">Kekurangan: <span id="kekurangan"></span></td>
+                        </tr>
                     </tbody>
                 </table>
                 <hr>
-                <div class="form-group form-check">
+                <div class="form-group form-check mb-0">
                     <label class="custom-control-label">Info via WA</label>
                     <input class="form-check-input" type="checkbox" id="info-wa" name="info-wa">
                 </div>
             </div>
+            <div class="card-header p-2" id="info-update-sodaqoh" style="display:none;border-radius:4px;">
+                <h6 id="bg-warning" class="mb-0 bg-warning p-1 text-white" style="display:none;">
+                    <span id="info-warning"></span>
+                </h6>
+                <h6 id="bg-success" class="mb-0 bg-success p-1 text-white" style="display:none;">
+                    <span id="info-success"></span>
+                </h6>
+            </div>
             <div class="modal-footer">
-                <button type="button" id="save" class="btn btn-primary" data-dismiss="modal">Simpan</button>
-                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+                <button type="button" id="close" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
+                <button type="button" id="save" class="btn btn-primary mb-0" data-dismiss="modal">Simpan</button>
             </div>
         </div>
     </div>
@@ -288,9 +325,17 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $('#ket').val(data.keterangan);
         $('#nm').text(nm + ' | ' + data.periode);
 
+        setHistory(data, bulan)
+    }
+
+    async function setHistory(data, bulan) {
+        $("#kekurangan").html('');
+        var kekurangan = 0;
+        var terbayar = 0;
         bulan.forEach(function(item, b) {
             document.getElementById('idx' + item).setAttribute('style', 'display:none;');
             if (data[item] > 0) {
+                terbayar = terbayar + parseInt(data[item]);
                 $('#' + item).val(new Intl.NumberFormat("id-ID", {
                     style: "currency",
                     currency: "IDR"
@@ -299,6 +344,11 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 document.getElementById('idx' + item).setAttribute('style', 'display:block;');
             }
         })
+        kekurangan = parseInt(data['nominal']) - terbayar;
+        $("#kekurangan").html(new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR"
+        }).format(parseInt(kekurangan)));
     }
 
     function reminderSodaqoh(data) {
@@ -312,6 +362,10 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 }
             );
         }
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     $('#save').click(function() {
@@ -332,9 +386,33 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $.post("{{ route('store sodaqoh') }}", datax,
             function(data, status) {
                 var return_data = JSON.parse(data);
-                alert(return_data.message);
+                // alert(return_data.message);
+                $("#info-update-sodaqoh").show();
                 if (return_data.status) {
-                    location.reload();
+                    $("#bg-success").show();
+                    $("#info-success").html(return_data.message);
+                    setHistory(return_data.data, return_data.bulan)
+
+                    var kekurangan = 0;
+                    var terbayar = 0;
+                    return_data.bulan.forEach(function(item, b) {
+                        if (return_data.data[item] > 0) {
+                            terbayar = terbayar + parseInt(return_data.data[item]);
+                        }
+                        kekurangan = parseInt(return_data.data.nominal) - terbayar;
+                    })
+                    var text_style = 'text-error';
+                    terbayar = numberWithCommas(terbayar)
+                    if (kekurangan <= 0) {
+                        text_style = 'text-dark';
+                        terbayar = 'Lunas';
+                    }
+
+                    $("#terbayar" + return_data.data.fkSantri_id).html('<b class="' + text_style + '">' + terbayar + '</b>');
+                    $("#kekurangan" + return_data.data.fkSantri_id).html('<b class="' + text_style + '">' + numberWithCommas(kekurangan) + '</b>');
+                } else {
+                    $("#bg-warning").show();
+                    $("#info-warning").html(return_data.message);
                 }
             }
         );
@@ -346,6 +424,10 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     });
 
     function clear() {
+        $("#kekurangan").html('');
+        $("#info-update-sodaqoh").hide();
+        $("#bg-warning").hide();
+        $("#bg-success").hide();
         $('#sodaqoh_id').val('');
         $('#periode').val('');
         $('#nominal').val('');

@@ -29,12 +29,18 @@ class SodaqohController extends Controller
             ->orderBy('angkatan', 'ASC')
             ->get();
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
+        $last_update = Sodaqoh::select('updated_at')->orderBy('updated_at', 'DESC')->limit(1)->first();
+
+        $st = null;
+        if ($status == 1) {
+            $st = 1;
+        }
 
         if (($periode == '-' && $angkatan == '-') || ($periode == null && $angkatan == null)) {
             if ($status == 2) {
                 $datax = Sodaqoh::get();
             } else {
-                $datax = Sodaqoh::where('status_lunas', $status)->get();
+                $datax = Sodaqoh::where('status_lunas', $st)->get();
             }
             $periode = '-';
             $angkatan = '-';
@@ -46,7 +52,7 @@ class SodaqohController extends Controller
             } else {
                 $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
                     $query->where('angkatan', $angkatan);
-                })->where('periode', $periode)->where('status_lunas', $status)->get();
+                })->where('periode', $periode)->where('status_lunas', $st)->get();
             }
         } elseif ($angkatan != null && ($periode == null || $periode == '-')) {
             if ($status == 2) {
@@ -56,13 +62,13 @@ class SodaqohController extends Controller
             } else {
                 $datax = Sodaqoh::whereHas('santri', function ($query) use ($angkatan) {
                     $query->where('angkatan', $angkatan);
-                })->where('status_lunas', $status)->get();
+                })->where('status_lunas', $st)->get();
             }
         } elseif ($periode != null && ($angkatan == null || $angkatan == '-')) {
             if ($status == 2) {
                 $datax = Sodaqoh::where('periode', $periode)->get();
             } else {
-                $datax = Sodaqoh::where('periode', $periode)->where('status_lunas', $status)->get();
+                $datax = Sodaqoh::where('periode', $periode)->where('status_lunas', $st)->get();
             }
         }
 
@@ -72,7 +78,8 @@ class SodaqohController extends Controller
             'list_periode' => $list_periode,
             'list_angkatan' => $list_angkatan,
             'select_lunas' => $status == null ? '0' : $status,
-            'periode' => $periode
+            'periode' => $periode,
+            'last_update' => $last_update
         ]);
     }
 
@@ -123,7 +130,7 @@ class SodaqohController extends Controller
                         }
                     }
                     // end kirim wa
-                    return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
+                    return json_encode(array("status" => true, "message" => 'Berhasil diinput', 'data' => $check, 'bulan' => $bulan));
                 } else {
                     return json_encode(array("status" => false, "message" => 'Gagal diinput'));
                 }

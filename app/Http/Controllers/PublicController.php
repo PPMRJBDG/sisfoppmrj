@@ -43,7 +43,6 @@ class PublicController extends Controller
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
                 $caption = '*[Preview] Amshol Cek Daftar Kehadiran Kemarin:*';
-
                 $get_presence = Presence::where('event_date', $yesterday)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
@@ -73,12 +72,24 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
 ';
                             }
                         }
+
+                        if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
+                            $infodp_xxz = 'PPM 1 dan 2';
+                            if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
+                                $infodp_xxz = 'PPM 2';
+                            } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
+                                $infodp_xxz = 'PPM 1';
+                            }
+                            $infodp = '*[SISFO PPMRJ]* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
+                            WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
+                            $time_post++;
+                        }
                     }
                 }
 
                 $name = '[Preview] Daily Report ' . date_format(date_create($yesterday), "d M Y");
                 if ($contact_id != '' && count($get_presence) > 0) {
-                    $insert = WaSchedules::save($name, $caption, $contact_id, 1, true);
+                    $insert = WaSchedules::save($name, $caption, $contact_id, $time_post, true);
                     if ($insert) {
                         echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
                     } else {
