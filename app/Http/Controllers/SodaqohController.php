@@ -180,7 +180,8 @@ Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0
             $text_kekurangan = '';
             $status_lunas = '*[LUNAS]*';
             if ($nominal_kekurangan > 0) {
-                $text_kekurangan = 'Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
+                $text_kekurangan = '
+Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
                 $status_lunas = '*[BELUM LUNAS]*';
             } else {
                 $check->status_lunas = 1;
