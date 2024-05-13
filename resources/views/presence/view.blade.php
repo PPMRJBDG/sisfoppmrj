@@ -38,7 +38,7 @@
             <select name="dewan_pengajar2" id="dewan_pengajar2" class="form-control">
               <option value="">Pilih Dewan Pengajar PPM 2</option>
               @foreach($dewan_pengajar as $dp)
-              <option {{($presence->fkDewan_pengajar_1==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
+              <option {{($presence->fkDewan_pengajar_2==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
               @endforeach
             </select>
           </div>
