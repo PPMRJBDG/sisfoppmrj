@@ -448,7 +448,8 @@ NB:
                 $contact_id = 'wa_ketertiban_group_id';
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
-Amalsholih segera disesuaikan sesuai kehadiran masing2.';
+
+Amalsholih segera mengabsen agar tidak lupa, serta sesuaikan Dewan Pengajarnya.';
                 WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
 
                 $contact_id = 'wa_dewanguru_group_id';
