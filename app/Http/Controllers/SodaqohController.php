@@ -77,7 +77,7 @@ class SodaqohController extends Controller
             'select_angkatan' => $angkatan,
             'list_periode' => $list_periode,
             'list_angkatan' => $list_angkatan,
-            'select_lunas' => $status == null ? '0' : $status,
+            'select_lunas' => $status == null ? 0 : $status,
             'periode' => $periode,
             'last_update' => $last_update
         ]);
@@ -99,14 +99,21 @@ class SodaqohController extends Controller
 
                 if ($check->save()) {
                     $terbayar = 0;
+                    $history_payment = '
+*Riwayat Pembayaran:*';
                     foreach ($bulan as $b) {
                         $terbayar = $terbayar + $check->$b;
+                        if ($check->$b != '') {
+                            $history_payment = $history_payment . '
+        - Rp ' . number_format($check->$b, 0);
+                        }
                     }
                     $nominal_kekurangan = $check->nominal - $terbayar;
                     $text_kekurangan = '';
                     $status_lunas = '*[LUNAS]*';
                     if ($nominal_kekurangan > 0) {
-                        $text_kekurangan = 'Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
+                        $text_kekurangan = '
+Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
                         $status_lunas = '*[BELUM LUNAS]*';
                     } else {
                         $check->status_lunas = 1;
@@ -124,7 +131,9 @@ class SodaqohController extends Controller
                                 $query->where('name', 'NOT LIKE', '%Bulk%');
                             })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                             if ($wa_phone != null) {
-                                $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. ' . $check->santri->user->fullname . ' sudah dikonfirmasi. ' . $text_kekurangan;
+                                $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. *' . $check->santri->user->fullname . '* senilai *Rp ' . number_format($request->input('nominal_bayar'), 0) . '* sudah dikonfirmasi.
+' . $history_payment . '
+' . $text_kekurangan;
                                 WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);
                             }
                         }

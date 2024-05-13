@@ -154,7 +154,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                         $st = $st + intval($data->$b);
                     }
                     ?>
-                    @if(($st==0 && $select_lunas==0) || ($st>0 && $select_lunas==3) || $select_lunas==1)
+                    @if(($st==0 && $select_lunas==0) || ($st>0 && $select_lunas==3) || $select_lunas==1 || $select_lunas==2)
                     <tr class="text-sm" id="data{{$data->fkSantri_id}}">
                         <td>
                             <a onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($bulan)}})" class="btn btn-primary btn-xs mb-0">Bayar</a>
@@ -370,6 +370,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 
     $('#save').click(function() {
         var datax = {};
+        $("#info-update-sodaqoh").hide();
         datax['id'] = $('#sodaqoh_id').val();
         datax['nominal'] = $('#nominal').val();
         datax['fkSantri_id'] = $('#santri_id').val();
