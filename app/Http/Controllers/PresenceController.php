@@ -15,7 +15,7 @@ use App\Models\Permit;
 use App\Models\RangedPermitGenerator;
 use App\Models\Lorong;
 use App\Models\Settings;
-use App\Models\Periode;
+use App\Models\DewanPengajars;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Helpers\PresenceGroupsChecker;
 use App\Helpers\WaSchedules;
@@ -144,42 +144,58 @@ class PresenceController extends Controller
      */
     public function update(Request $request)
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'event_date' => 'date',
-        ]);
-
-        if ($request->input('is_date_time_limited'))
-            $request->validate([
-                'start_date_time' => 'required|date',
-                'end_date_time' => 'required|date',
-            ]);
-
-        if ($request->input('fkPresence_group_id'))
-            $request->validate([
-                'fkPresence_group_id' => 'integer',
-            ]);
-
-        $presence = Presence::find($request->route('id'));
-
-        $presence->name = $request->input('name');
-        $presence->event_date = $request->input('event_date');
-        $presence->fkPresence_group_id = $request->input('fkPresence_group_id') ? $request->input('fkPresence_group_id') : null;
-
-        if ($request->input('is_date_time_limited')) {
-            $presence->start_date_time = $request->input('start_date_time');
-            $presence->end_date_time = $request->input('end_date_time');
+        $json = $request->input('json');
+        if (isset($json)) {
+            if ($json) {
+                $presence = Presence::find($request->route('id'));
+                $presence->name = $request->input('name');
+                $presence->fkDewan_pengajar_1 = $request->input('dp1');
+                $presence->fkDewan_pengajar_2 = $request->input('dp2');
+                $updated = $presence->save();
+                if ($updated) {
+                    return json_encode(['status' => true, 'message' => 'Berhasil update nama presensi dan dewan pengajar']);
+                } else {
+                    return json_encode(['status' => false, 'message' => 'Gagal update nama presensi dan dewan pengajar']);
+                }
+            }
         } else {
-            $presence->start_date_time = null;
-            $presence->end_date_time = null;
+            $request->validate([
+                'name' => 'required|max:100',
+                'event_date' => 'date',
+            ]);
+
+            if ($request->input('is_date_time_limited'))
+                $request->validate([
+                    'start_date_time' => 'required|date',
+                    'end_date_time' => 'required|date',
+                ]);
+
+            if ($request->input('fkPresence_group_id'))
+                $request->validate([
+                    'fkPresence_group_id' => 'integer',
+                ]);
+
+            $presence = Presence::find($request->route('id'));
+
+            $presence->name = $request->input('name');
+            $presence->event_date = $request->input('event_date');
+            $presence->fkPresence_group_id = $request->input('fkPresence_group_id') ? $request->input('fkPresence_group_id') : null;
+
+            if ($request->input('is_date_time_limited')) {
+                $presence->start_date_time = $request->input('start_date_time');
+                $presence->end_date_time = $request->input('end_date_time');
+            } else {
+                $presence->start_date_time = null;
+                $presence->end_date_time = null;
+            }
+
+            $updated = $presence->save();
+
+            if (!$updated)
+                return redirect()->back()->withErrors(['failed_updating_presence']);
+
+            return redirect()->back()->with('success', 'Berhasil mengubah presensi');
         }
-
-        $updated = $presence->save();
-
-        if (!$updated)
-            return redirect()->back()->withErrors(['failed_updating_presence']);
-
-        return redirect()->back()->with('success', 'Berhasil mengubah presensi');
     }
 
     /**
@@ -266,6 +282,7 @@ class PresenceController extends Controller
             'need_approval' => $need_approval,
             'presents' => $presents == null ? [] : $presents,
             'data_lorong' => Lorong::all(),
+            'dewan_pengajar' => DewanPengajars::all(),
             'lorong' => $lorong,
             'update' => $update
         ]);

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\PresenceGroup;
 use App\Models\Santri;
 use App\Models\Present;
+use App\Models\DewanPengajars;
 
 class Presence extends Model
 {
@@ -16,8 +17,22 @@ class Presence extends Model
         'end_date_time',
         'fkPresence_group_id',
         'event_date',
-        'total_mhs'
+        'total_mhs',
+        'fkDewan_pengajar_1',
+        'fkDewan_pengajar_2'
     ];
+
+    /**
+     * Get the user leader associated with the Lorong.
+     */
+    public function dewanPengajar1()
+    {
+        return $this->belongsTo(DewanPengajars::class, 'fkDewan_pengajar_1');
+    }
+    public function dewanPengajar2()
+    {
+        return $this->belongsTo(DewanPengajars::class, 'fkDewan_pengajar_2');
+    }
 
     /**
      * Get the user leader associated with the Lorong.

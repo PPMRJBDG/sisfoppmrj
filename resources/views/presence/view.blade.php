@@ -11,11 +11,49 @@
     <script>
       function togglePrsc() {
         $("#toggle-prsc").toggle();
+
+        $("#info-update-presence").hide();
+        $("#info-update").html('')
       }
     </script>
     <center><button class="btn btn-primary btn-block mb-0" onclick="togglePrsc()">Presensi {{ $presence->name }}</button></center>
     <div id="toggle-prsc" style="display:none;">
+      <br>
       @include('components.presence_summary', ['presence' => $presence])
+      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('kurikulum'))
+      <div class="row p-2 ">
+        <div class="card-body p-2" style="background:#f9f9f9;border:#ddd 1px solid;">
+          <div class="col-12 pb-2">
+            <input class="form-control" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text">
+          </div>
+          <div class="col-12 pb-2">
+            <select name="dewan_pengajar1" id="dewan_pengajar1" class="form-control">
+              <option value="">Pilih Dewan Pengajar PPM 1</option>
+              @foreach($dewan_pengajar as $dp)
+              <option {{($presence->fkDewan_pengajar_1==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-12 pb-2">
+            <select name="dewan_pengajar2" id="dewan_pengajar2" class="form-control">
+              <option value="">Pilih Dewan Pengajar PPM 2</option>
+              @foreach($dewan_pengajar as $dp)
+              <option {{($presence->fkDewan_pengajar_1==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-12">
+            <a style="width:100%;" class="btn btn-primary text-white px-3 mb-0" href="#" onclick="savePresenceName(<?php echo $presence->id; ?>)">Simpan</a>
+          </div>
+          <div class="card-header p-0 pt-2" id="info-update-presence" style="display:none;">
+            <h6 class="mb-0 bg-warning p-1 text-white">
+              <span id="info-update"></span>
+            </h6>
+          </div>
+        </div>
+      </div>
+      @endif
+      <br>
       <div class="ms-auto text-end">
         @can('delete presences')
         <a class="btn btn-danger text-danger text-gradient px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
@@ -365,6 +403,24 @@
       }
     })
     $("#nact").html(dz)
+  }
+
+  function savePresenceName(id) {
+    var datax = {};
+    datax['json'] = true;
+    datax['name'] = $("#presence_name").val();
+    datax['dp1'] = $("#dewan_pengajar1").val();
+    datax['dp2'] = $("#dewan_pengajar2").val();
+    $("#info-update-presence").hide();
+    $("#info-update").html('');
+
+    $.post(`{{ url("/") }}/presensi/list/update/` + id, datax,
+      function(data, status) {
+        var return_data = JSON.parse(data);
+        $("#info-update-presence").show();
+        $("#info-update").html(return_data.message);
+      }
+    )
   }
 
   function dateTime() {
