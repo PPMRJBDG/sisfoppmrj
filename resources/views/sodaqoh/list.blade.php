@@ -189,7 +189,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                         <td>
                             <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                             @if($data->status_lunas=='')
-                            <a onclick="reminderSodaqoh({{$data}})" class="btn btn-warning btn-xs mb-0">Ingatkan</a>
+                            <a onclick="reminderSodaqoh({{$data}})" id="ingatkan{{$data->id}}" class="btn btn-warning btn-xs mb-0">Ingatkan</a>
                             @endif
                         </td>
                     </tr>
@@ -353,12 +353,14 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 
     function reminderSodaqoh(data) {
         if (confirm("Ingatkan sekarang ?")) {
+            $("#ingatkan" + data.id).html('Loading');
             var datax = {};
             datax['id'] = data.id;
             $.post("{{ route('reminder sodaqoh') }}", datax,
-                function(data, status) {
-                    var return_data = JSON.parse(data);
-                    alert(return_data.message);
+                function(dataz, status) {
+                    var return_data = JSON.parse(dataz);
+                    $("#ingatkan" + data.id).html('Ingatkan');
+                    // alert(return_data.message);
                 }
             );
         }
