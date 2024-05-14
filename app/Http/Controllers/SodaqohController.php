@@ -198,7 +198,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     $query->where('name', 'NOT LIKE', '%Bulk%');
                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                 if ($wa_phone != null) {
-                    $caption = $status_lunas . ' Mengingatkan Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. *' . $check->santri->user->fullname . '*.
+                    $caption = $status_lunas . ' Mengingatkan Kewajiban Pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $check->periode . ' an. *' . $check->santri->user->fullname . '*.
 ' . $history_payment . '
 ' . $text_kekurangan;
                     WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);

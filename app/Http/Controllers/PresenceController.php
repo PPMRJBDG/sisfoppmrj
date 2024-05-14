@@ -1267,9 +1267,11 @@ class PresenceController extends Controller
             $add_ss_k = '';
             if (isset($add_ss)) {
                 $add_ss = 'Status SS: ' . $add_ss;
-                $add_ss_k = $add_ss . '
+                if (str_contains($request->input('status_ss'), 'Belum')) {
+                    $add_ss_k = $add_ss . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+                }
             } else {
                 if (str_contains($request->input('reason_category'), 'Pulang -')) {
                     return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
@@ -1389,9 +1391,11 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                 $add_ss_k = '';
                 if (isset($add_ss)) {
                     $add_ss = 'Status SS: ' . $add_ss;
-                    $add_ss_k = $add_ss . '
+                    if (str_contains($request->input('status_ss'), 'Belum')) {
+                        $add_ss_k = $add_ss . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+                    }
                 } else {
                     if (str_contains($request->input('reason_category'), 'Pulang -')) {
                         return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
@@ -1578,9 +1582,11 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
         $add_ss_k = '';
         if (isset($add_ss)) {
             $add_ss = 'Status SS: ' . $add_ss;
-            $add_ss_k = $add_ss . '
+            if (str_contains($request->input('status_ss'), 'Belum')) {
+                $add_ss_k = $add_ss . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+            }
         } else {
             if (str_contains($request->input('reason_category'), 'Pulang -')) {
                 return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
@@ -1695,9 +1701,11 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
             $add_ss_k = '';
             if (isset($add_ss)) {
                 $add_ss = 'Status SS: ' . $add_ss;
-                $add_ss_k = $add_ss . '
+                if (str_contains($request->input('status_ss'), 'Belum')) {
+                    $add_ss_k = $add_ss . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
+                }
             } else {
                 if (str_contains($request->input('reason_category'), 'Pulang -')) {
                     return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
