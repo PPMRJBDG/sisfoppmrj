@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  @if(!auth()->user()->hasRole('santri'))
+  @if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
   <div class="p-2">
     <div class="d-flex">
       <div class="col-4 p-0">
@@ -112,15 +112,15 @@
                 <br>{{ $permit->reason }}
               </div>
 
-              @if($permit->status=='rejected' || $permit->status=='pending')
+              <!-- @if($permit->status=='rejected' || $permit->status=='pending')
               @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-              <!-- <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a> -->
+              <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a>
               @endif
               @endif
               @if($permit->status=='approved' || $permit->status=='pending')
-              <!-- <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a> -->
+              <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a>
               @endif
-              <!-- <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a> -->
+              <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a> -->
             </td>
             @endforeach
             @endif

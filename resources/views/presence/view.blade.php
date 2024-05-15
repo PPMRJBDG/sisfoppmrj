@@ -111,9 +111,11 @@
 <div class="card tabcontent" id="hadir" style="display:block;">
   <div class="card-body px-0 pt-0 pb-2">
     <div style="font-size:11px;padding:10px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
+    @if($update)
     <div class="card-body p-2" style="background:#f9f9f9;">
       <a id="btn-select-all" class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
     </div>
+    @endif
     <div class="table-responsive">
       <table id="table-hadir" class="table align-items-center mb-0">
         <thead>
@@ -216,9 +218,11 @@
 
 <div class="card tabcontent" id="alpha" style="display:none;">
   @if(count($mhs_alpha)>0)
+  @if($update)
   <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
     <a id="btn-select-all" class="btn btn-primary btn-block btn-xs mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
   </div>
+  @endif
   <div class="table-responsive">
     <table id="table-alpha" class="table align-items-center mb-0">
       <thead>
