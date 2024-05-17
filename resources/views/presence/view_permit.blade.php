@@ -35,10 +35,21 @@
                         <b>{{$message}}</b>
                     </td>
                 </tr>
+                @if($permit->status=='rejected')
+                <tr>
+                    <td>
+                        Alasan Ditolak<br>
+                        <b>{{$permit->alasan_rejected}}</b>
+                    </td>
+                </tr>
+                @endif
                 @if($permit->status=='approved' || $permit->status=='pending')
                 <tr>
                     <td>
-                        <a style="width:100%;" href="{{ route('reject permit', [$permit->ids]) }}" class="btn btn-danger btn-block mb-0" onclick="return confirm('Yakin di tolak ?')">Reject</a>
+                        <?php
+                        $url = route('reject permit', [$permit->ids]);
+                        ?>
+                        <a style="width:100%;" class="btn btn-danger btn-block mb-0" onclick="promptDeletePermit('{{$url}}','{{$permit->ids}}')">Reject</a>
                     </td>
                 </tr>
                 @endif
@@ -60,3 +71,4 @@
     </div>
 </div>
 @endif
+@include('base.footer')

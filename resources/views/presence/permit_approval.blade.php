@@ -95,7 +95,7 @@
           @foreach($permits as $permit)
           <tr class="text-sm">
             <td>
-              <input type="checkbox" class="cls-ckb" santri-id="{{$permit->fkSantri_id}}" presence-id="{{$permit->fkPresence_id}}" id="ids{{$permit->fkSantri_id}}">
+              <input type="checkbox" onclick="showInputAlasan(this, '{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}')" class="cls-ckb" santri-id="{{$permit->fkSantri_id}}" presence-id="{{$permit->fkPresence_id}}" id="ids{{$permit->fkSantri_id}}">
             </td>
             <td>
               <b>{{ $permit->santri->user->fullname }}</b>
@@ -105,11 +105,17 @@
               <span class="badge {{ $permit->status == 'pending' ? 'bg-gradient-secondary' : ($permit->status == 'approved' ? 'bg-gradient-success' : ($permit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($permit->status) }}</span>
             </td>
             <td class="text-xs">
-              <i><b>{{ $permit->presence->name }}</b></i>
-              <br>
-              <div class="mt-1 mb-1">
-                <span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span>
-                <br>{{ $permit->reason }}
+              <div>
+                <i><b>{{ $permit->presence->name }}</b></i>
+                <br>
+                <div class="mt-1 mb-1">
+                  <span class="text-primary">[{{ ucfirst($permit->reason_category) }}]</span>
+                  <br>{{ $permit->reason }}
+                </div>
+              </div>
+              <div id="asd-b-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}" style="display:none;">
+                <span class="text-danger">Jika ditolak, berikan alasannya</span>
+                <input type="text" class="form-control" id="alasan-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}">
               </div>
 
               <!-- @if($permit->status=='rejected' || $permit->status=='pending')
@@ -156,6 +162,14 @@
     pageLength: 25
   });
 
+  function showInputAlasan(thisx, sid) {
+    if (thisx.checked) {
+      $("#asd-b-" + sid).show();
+    } else {
+      $("#asd-b-" + sid).hide();
+    }
+  }
+
   function actionSave(action) {
     var datax = {};
     datax['json'] = true;
@@ -164,7 +178,14 @@
     const el = document.querySelectorAll(".cls-ckb");
     for (var i = 0; i < el.length; i++) {
       if (el[i].checked) {
-        ival.push([el[i].getAttribute('presence-id'), el[i].getAttribute('santri-id')])
+        if (action == 'reject') {
+          var alasan = $("#alasan-" + el[i].getAttribute('presence-id') + '-' + el[i].getAttribute('santri-id')).val();
+          if (alasan == '') {
+            alert('Berikan alasan pada form yang masih kosong')
+            return false;
+          }
+        }
+        ival.push([el[i].getAttribute('presence-id'), el[i].getAttribute('santri-id'), alasan])
       }
     }
     if (ival.length == 0) {

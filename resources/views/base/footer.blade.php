@@ -302,6 +302,8 @@
             } else {
                 el[i].checked = false
             }
+
+            showInputAlasan(el[i], el[i].getAttribute('presence-id') + '-' + el[i].getAttribute('santri-id'));
         }
     }
 
@@ -310,6 +312,36 @@
             $("#btn-prsc").hide();
         } else {
             $("#btn-prsc").show();
+        }
+    }
+
+    function promptDeletePermit(url, id, presence_id = null, santri_id = null) {
+        var alasan = prompt('Yakin di tolak ? Berikan alasannya');
+        if (alasan != '') {
+            var datax = {}
+            if (presence_id != null && santri_id != null) {
+                const ival = []
+                ival.push([presence_id, santri_id, alasan])
+                datax['data_json'] = JSON.stringify(ival);
+            } else {
+                datax['alasan'] = alasan
+            }
+            $.get(url, datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    // console.log(return_data)
+                    if (return_data.status) {
+                        // alert(return_data.message)
+                        window.location.reload();
+                    } else {
+                        alert(return_data.message)
+                    }
+                }
+            )
+            return true;
+        } else {
+            alert('Silahkan berikan alasannya')
+            return false
         }
     }
 </script>

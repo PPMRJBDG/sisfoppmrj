@@ -455,8 +455,8 @@ NB:
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
 
-Pengajar PPM 1: ' . $pengajar_1 . '
-Pengajar PPM 2: ' . $pengajar_2 . '
+Pengajar PPM 1: *' . $pengajar_1 . '*
+Pengajar PPM 2: *' . $pengajar_2 . '*
 
 Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar, silahkan disesuaikan lagi';
                 WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
@@ -465,8 +465,8 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id . '
 
-Pengajar PPM 1: ' . $pengajar_1 . '
-Pengajar PPM 2: ' . $pengajar_2;
+Pengajar PPM 1: *' . $pengajar_1 . '*
+Pengajar PPM 2: *' . $pengajar_2 . '*';
                 WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
 
                 if ($setting->wa_link_presensi_koor) {
@@ -699,13 +699,12 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
         return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
     }
 
-    public function reject_permit($ids)
+    public function reject_permit($ids, Request $request)
     {
         $permit = Permit::where('ids', $ids)->first();
         $message = '';
+        $statusx = false;
         if ($permit != null) {
-            $permit->status = 'rejected';
-
             try {
                 if (isset(auth()->user()->fullname)) {
                     $rejected_by = auth()->user()->fullname;
@@ -716,11 +715,13 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
                 $rejected_by = $_SERVER['HTTP_USER_AGENT'];
             }
 
+            $permit->status = 'rejected';
             $permit->rejected_by = $rejected_by;
+            $permit->alasan_rejected = $request->get('alasan');
             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
             if ($permit->save()) {
-                $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
+                $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . ' -> karena ' . $permit->alasan_rejected;
                 WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
 
                 $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
@@ -735,7 +736,7 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
                         $query->where('name', 'NOT LIKE', '%Bulk%');
                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                     if ($wa_phone != null) {
-                        $caption = 'Perijinan Anda di Tolak oleh Pengurus.';
+                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
                         WaSchedules::save($name, $caption, $wa_phone->pid);
                     }
                 }
@@ -751,18 +752,21 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
                         $query->where('name', 'NOT LIKE', '%Bulk%');
                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                     if ($wa_phone != null) {
-                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* di Tolak oleh Pengurus.';
+                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
                         WaSchedules::save($name, $caption, $wa_phone->pid, 2);
                     }
                 }
-
                 $message = 'Permintaan ijin berhasil ditolak';
+                $statusx = true;
+            } else {
+                $message = 'Terjadi kesalahan sistem';
             }
         } else {
             $message = 'Perijinan tidak ditemukan';
         }
 
-        return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+        return json_encode(['status' => $statusx, 'permit' => $permit, 'message' => $message]);
+        // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
     }
 
     public function approve_permit($ids)
@@ -783,6 +787,7 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             }
 
             $permit->approved_by = $approved_by;
+            $permit->alasan_rejected = '';
             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
             if ($permit->save()) {
@@ -792,7 +797,8 @@ Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluar
             $message = 'Perijinan tidak ditemukan';
         }
 
-        return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+        return redirect()->route('view permit', $ids)->with(['success', $message]);
+        // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
     }
 
     // PRESENCE

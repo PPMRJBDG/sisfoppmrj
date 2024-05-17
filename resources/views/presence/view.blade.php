@@ -206,7 +206,10 @@
           <td class="align-middle text-center text-sm">
             <span class="text-primary font-weight-bolder">{{ $permit->status }}</span>
             <br>
-            <a class="btn btn-warning btn-xs mb-0" href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong]) }}" onclick="return confirm('Yakin ditolak?')">Tolak ?</a>
+            <?php
+            $url = route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong, 'json' => true]);
+            ?>
+            <a class="btn btn-warning btn-xs mb-0" onclick="promptDeletePermit('{{$url}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Tolak ?</a>
           </td>
         </tr>
         @endif
