@@ -80,8 +80,8 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <label for="fkPresence_id" class="form-control-label">Alasan</label>
-                <textarea class="form-control" name="reason" placeholder="Cth: Sakit"></textarea>
+                <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas <span style="color:#4d4d4d;">(minimal 10 karakter)</span></label>
+                <textarea class="form-control" name="reason" minlength="10" placeholder="Cth: Sakit"></textarea>
               </div>
             </div>
           </div>
@@ -194,8 +194,8 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="fkPresence_id" class="form-control-label">Alasan</label>
-                  <textarea class="form-control" name="reason" placeholder="Cth: Sakit" required></textarea>
+                  <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas <span style="color:#4d4d4d;">(minimal 10 karakter)</span></label>
+                  <textarea class="form-control" name="reason" minlength="10" placeholder="Cth: Sakit"></textarea>
                 </div>
               </div>
             </div>

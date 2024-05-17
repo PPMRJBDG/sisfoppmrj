@@ -195,15 +195,15 @@ function build_calendar($month, $year)
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="fkPresence_id" class="form-control-label">Alasan</label>
-            <textarea class="form-control" name="reason" placeholder="Cth: Sakit" required></textarea>
+            <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas <span style="color:#4d4d4d;">(minimal 10 karakter)</span></label>
+            <textarea class="form-control" name="reason" minlength="10" placeholder="Cth: Sakit" required onkeyup="return checkTextLength(this)"></textarea>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input class="btn btn-primary form-control" type="submit" value="Ajukan atas {{ auth()->user()->fullname }}">
+            <input style="display:none;" id="btn-prsc" class="btn btn-primary form-control" type="submit" value="Ajukan atas {{ auth()->user()->fullname }}">
           </div>
         </div>
       </div>

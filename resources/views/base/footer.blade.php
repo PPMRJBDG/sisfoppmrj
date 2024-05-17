@@ -94,7 +94,11 @@
                             data_body = data_body + '</td>';
                         });
                         persentase = hadir / (hadir + alpha) * 100;
-                        data_body = data_body + '<td class="text-center font-weight-bolder">' + persentase.toFixed(2) + '%</td></tr>';
+                        var style = '';
+                        if (persentase < 80) {
+                            style = 'text-warning';
+                        }
+                        data_body = data_body + '<td class="text-center font-weight-bolder ' + style + '">' + persentase.toFixed(2) + '%</td></tr>';
                         no++;
                     });
                     $('#data-table').html(data_body);
@@ -298,6 +302,14 @@
             } else {
                 el[i].checked = false
             }
+        }
+    }
+
+    function checkTextLength(th) {
+        if (th.value.length < 10) {
+            $("#btn-prsc").hide();
+        } else {
+            $("#btn-prsc").show();
         }
     }
 </script>
