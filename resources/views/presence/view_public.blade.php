@@ -67,7 +67,29 @@
 @if(isset($presence))
 <div class="card">
     <div class="card-body p-3">
+        <script>
+            function togglePrsc() {
+                $("#toggle-prsc").toggle();
+
+                $("#info-update-presence").hide();
+                $("#info-update").html('')
+            }
+        </script>
         <center><button class="btn btn-primary btn-block mb-0" onclick="togglePrsc()">Presensi {{ $presence->name }}</button></center>
+        <div id="toggle-prsc" style="display:none;">
+            <div class="row p-2 ">
+                <div class="card-body p-2" style="background:#f9f9f9;border:#ddd 1px solid;">
+                    <div class="col-12 pb-2">
+                        <small>Pengajar PPM 1</small>
+                        <input class="form-control" disabled value="{{$presence->dewanPengajar1->name}}" type="text">
+                    </div>
+                    <div class="col-12 pb-2">
+                        <small>Pengajar PPM 2</small>
+                        <input class="form-control" disabled value="{{$presence->dewanPengajar2->name}}" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

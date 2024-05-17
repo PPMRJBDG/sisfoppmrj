@@ -19,7 +19,7 @@
   <link href="{{ asset('css/nucleo-svg.css') }}" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('css/argon-dashboard.css') }}" rel="stylesheet" />
-  <link id="pagestyle" href="{{ asset('css/argon-dashboard.min.css') }}" rel="stylesheet" />
+  <!-- <link id="pagestyle" href="{{ asset('css/argon-dashboard.min.css') }}" rel="stylesheet" /> -->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
   <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
@@ -95,11 +95,12 @@
 </style>
 
 <body class="g-sidenav-show bg-gray-100">
+
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('{{ asset('img/foto-ppm.jpg') }}'); background-size: cover;">
     <span class="mask bg-primary opacity-9"></span>
   </div>
   @include('base.sidebar', ['path' => $path, 'title' => $title])
-  <main class="main-content position-relative border-radius-lg ">
+  <main class="main-content position-relative border-radius-lg ps">
     @include('base.navbar', ['breadcrumbs' => $breadcrumbs])
     <div class="container-fluid pl-4 pr-4 pt-2 pb-2">

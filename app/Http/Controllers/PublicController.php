@@ -42,7 +42,8 @@ class PublicController extends Controller
             $time_post = 1;
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
-                $caption = '*[Preview] Amshol Cek Daftar Kehadiran Kemarin:*';
+                $caption = '*[Preview]*
+*Amshol Cek Daftar Kehadiran Kemarin:*';
                 $get_presence = Presence::where('event_date', $yesterday)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
@@ -57,10 +58,8 @@ class PublicController extends Controller
 
                         $caption = $caption . '
 ________________________
-*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
-Hadir: ' . count($presents) . '
-Ijin: ' . count($permits) . '
-Alpha: ' . count($mhs_alpha) . '
+*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->presenceGroup->name . '_*
+Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
 
 ';
@@ -147,10 +146,8 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
 
                         $caption = $caption . '
 ________________________
-*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
-Hadir: ' . count($presents) . '
-Ijin: ' . count($permits) . '
-Alpha: ' . count($mhs_alpha) . '
+*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->presenceGroup->name . '_*
+Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
                         if (count($mhs_alpha) > 0) {
@@ -446,15 +443,30 @@ NB:
                 }
 
                 $contact_id = 'wa_ketertiban_group_id';
+                $pengajar_1 = '-';
+                if ($get_presence_today->fkDewan_pengajar_1 != '') {
+                    $pengajar_1 = $get_presence_today->dewanPengajar1->name;
+                }
+                $pengajar_2 = '-';
+                if ($get_presence_today->fkDewan_pengajar_2 != '') {
+                    $pengajar_2 = $get_presence_today->dewanPengajar2->name;
+                }
+
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
 
-Amalsholih segera mengabsen agar tidak lupa, serta sesuaikan Dewan Pengajarnya.';
+Pengajar PPM 1: ' . $pengajar_1 . '
+Pengajar PPM 2: ' . $pengajar_2 . '
+
+Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar, silahkan disesuaikan lagi';
                 WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
 
                 $contact_id = 'wa_dewanguru_group_id';
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
-' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id;
+' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id . '
+
+Pengajar PPM 1: ' . $pengajar_1 . '
+Pengajar PPM 2: ' . $pengajar_2;
                 WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
 
                 if ($setting->wa_link_presensi_koor) {

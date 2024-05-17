@@ -250,7 +250,11 @@ class CountDashboard
                         if ($lorong == '-') {
                             $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
                         } else {
-                            $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                            if (!$lorong) {
+                                $mhs_alpha[$mhs->santri_id]['lorong'] = 'Belum ditentukan lorongnya';
+                            } else {
+                                $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                            }
                         }
                     }
                 }

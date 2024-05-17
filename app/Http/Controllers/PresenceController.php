@@ -1267,8 +1267,9 @@ class PresenceController extends Controller
             $add_ss_k = '';
             if (isset($add_ss)) {
                 $add_ss = 'Status SS: ' . $add_ss;
+                $add_ss_k = 'Status SS: ' . $add_ss;
                 if (str_contains($request->input('status_ss'), 'Belum')) {
-                    $add_ss_k = $add_ss . '
+                    $add_ss_k = $add_ss_k . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
                 }
@@ -1391,8 +1392,9 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                 $add_ss_k = '';
                 if (isset($add_ss)) {
                     $add_ss = 'Status SS: ' . $add_ss;
+                    $add_ss_k = 'Status SS: ' . $add_ss;
                     if (str_contains($request->input('status_ss'), 'Belum')) {
-                        $add_ss_k = $add_ss . '
+                        $add_ss_k = $add_ss_k . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
                     }
@@ -1582,8 +1584,9 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
         $add_ss_k = '';
         if (isset($add_ss)) {
             $add_ss = 'Status SS: ' . $add_ss;
+            $add_ss_k = 'Status SS: ' . $add_ss;
             if (str_contains($request->input('status_ss'), 'Belum')) {
-                $add_ss_k = $add_ss . '
+                $add_ss_k = $add_ss_k . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
             }
@@ -1701,8 +1704,9 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
             $add_ss_k = '';
             if (isset($add_ss)) {
                 $add_ss = 'Status SS: ' . $add_ss;
+                $add_ss_k = 'Status SS: ' . $add_ss;
                 if (str_contains($request->input('status_ss'), 'Belum')) {
-                    $add_ss_k = $add_ss . '
+                    $add_ss_k = $add_ss_k . '
 
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
                 }

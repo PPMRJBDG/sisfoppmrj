@@ -282,7 +282,7 @@
 </div>
 
 <script src="{{ asset('js/plugins/chartjs.min.js') }}"></script>
-<script src="{{ asset('js/plugins/Chart.extension.js') }}"></script>
+<!-- <script src="{{ asset('js/plugins/Chart.extension.js') }}"></script> -->
 
 <script>
     $('#table-hadir').DataTable({

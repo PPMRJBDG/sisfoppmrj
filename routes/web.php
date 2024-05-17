@@ -130,6 +130,14 @@ Route::get('/materi/list/edit/{id}', [App\Http\Controllers\MateriController::cla
 Route::post('/materi/list/update/{id}', [App\Http\Controllers\MateriController::class, 'update'])->name('update materi')->middleware('permission:update materis');
 Route::get('/materi/list/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete'])->name('delete materi')->middleware('permission:delete materis');
 
+// materis dewan pengajar
+Route::get('/dewan-pengajar', [App\Http\Controllers\MateriController::class, 'list_pengajar'])->name('materi list pengajar')->middleware('permission:view materis list');
+Route::get('/dewan-pengajar/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete_pengajar'])->name('materi delete pengajar')->middleware('permission:delete materis');
+Route::post('/dewan-pengajar/store', [App\Http\Controllers\MateriController::class, 'store_pengajar'])->name('materi store pengajar')->middleware('permission:create materis');
+Route::post('/dewan-pengajar/update/{id}', [App\Http\Controllers\MateriController::class, 'update_pengajar'])->name('materi update pengajar')->middleware('permission:update materis');
+Route::get('/dewan-pengajar/jadwal', [App\Http\Controllers\MateriController::class, 'jadwal'])->name('jadwal pengajar')->middleware('permission:view materis list');
+Route::post('/dewan-pengajar/jadwal/store', [App\Http\Controllers\MateriController::class, 'jadwal_store'])->name('store jadwal pengajar')->middleware('permission:create materis');
+
 // monitoring materis
 Route::get('/materi/monitoring/list', [App\Http\Controllers\MonitoringMateriController::class, 'list_and_manage'])->name('monitoring materi tm');
 Route::get('/materi/monitoring/list/{materiId}/{santriId}', [App\Http\Controllers\MonitoringMateriController::class, 'edit'])->name('edit monitoring materi');

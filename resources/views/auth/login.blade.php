@@ -118,7 +118,7 @@
               </div>
             </div>
             <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url({{ asset('img/foto-pp.jpg') }});background-size: cover;">
+              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://ppmrjbandung.com/wp-content/uploads/2024/03/Cetak_8RP_Foto-Utama_8RP_DSCF9929-1536x1024.jpg');background-size: cover;background-position: center;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
                 <h4 class="mt-5 text-white font-weight-bolder position-relative">Sistem Informasi PPMRJ</h4>
                 <p class="text-white position-relative"></p>

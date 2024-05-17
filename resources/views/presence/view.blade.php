@@ -24,9 +24,11 @@
       <div class="row p-2 ">
         <div class="card-body p-2" style="background:#f9f9f9;border:#ddd 1px solid;">
           <div class="col-12 pb-2">
+            <small>Nama KBM</small>
             <input class="form-control" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text">
           </div>
           <div class="col-12 pb-2">
+            <small>Pengajar PPM 1</small>
             <select name="dewan_pengajar1" id="dewan_pengajar1" class="form-control">
               <option value="">Pilih Dewan Pengajar PPM 1</option>
               @foreach($dewan_pengajar as $dp)
@@ -35,6 +37,7 @@
             </select>
           </div>
           <div class="col-12 pb-2">
+            <small>Pengajar PPM 2</small>
             <select name="dewan_pengajar2" id="dewan_pengajar2" class="form-control">
               <option value="">Pilih Dewan Pengajar PPM 2</option>
               @foreach($dewan_pengajar as $dp)

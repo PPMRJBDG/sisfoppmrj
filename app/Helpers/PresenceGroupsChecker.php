@@ -8,6 +8,7 @@ use App\Models\RangedPermitGenerator;
 use App\Models\Permit;
 use App\Models\Present;
 use App\Models\Liburan;
+use App\Models\JadwalPengajars;
 use App\Helpers\CountDashboard;
 
 class PresenceGroupsChecker
@@ -51,13 +52,20 @@ class PresenceGroupsChecker
                     continue;
                 }
 
+                $getPengajar1 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                    ->where('day', $currentDay)->where('ppm', 1)->first();
+                $getPengajar2 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                    ->where('day', $currentDay)->where('ppm', 2)->first();
+
                 $newPresenceInThisDate = Presence::create([
                     'fkPresence_group_id' => $presenceGroup->id,
                     'name' => $presenceName,
                     'event_date' => $currentDate,
                     'total_mhs' => CountDashboard::total_mhs('all'),
                     'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
-                    'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour))
+                    'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour)),
+                    'fkDewan_pengajar_1' => ($getPengajar1 != null) ? $getPengajar1->fkDewan_pengajar_id : null,
+                    'fkDewan_pengajar_2' => ($getPengajar2 != null) ? $getPengajar2->fkDewan_pengajar_id : null
                 ]);
 
                 if (!$newPresenceInThisDate) {
