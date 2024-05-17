@@ -317,7 +317,7 @@
 
     function promptDeletePermit(url, id, presence_id = null, santri_id = null) {
         var alasan = prompt('Yakin di tolak ? Berikan alasannya');
-        if (alasan != '') {
+        if (alasan) {
             var datax = {}
             if (presence_id != null && santri_id != null) {
                 const ival = []
