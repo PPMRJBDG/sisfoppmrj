@@ -315,4 +315,28 @@ class CountDashboard
         }
         return $mhs_alpha;
     }
+
+    public static function sumPresentByPengajar($st, $presence_id, $pengajar_id)
+    {
+        if ($st == 'sum_kbm') {
+            $get_presence = Presence::where('fkPresence_group_id', $presence_id)->where('fkDewan_pengajar_1', $pengajar_id)->orWhere('fkDewan_pengajar_2', $pengajar_id)->get();
+            return count($get_presence);
+        } elseif ($st == 'persentase') {
+            $get_presence = Presence::where('fkDewan_pengajar_1', $pengajar_id)->orWhere('fkDewan_pengajar_2', $pengajar_id)->get();
+            $persentase = 0;
+            if ($get_presence != null) {
+                $total_present = 0;
+                $loop = 0;
+                foreach ($get_presence as $gp) {
+                    $loop++;
+                    $get_present = Present::where('fkPresence_id', $gp->id)->get();
+                    $total_present += (count($get_present) / $gp->total_mhs * 100);
+                }
+                $persentase = number_format($total_present / $loop, 2);
+            }
+            return $persentase;
+        } else {
+            return 0;
+        }
+    }
 }

@@ -126,8 +126,9 @@ class MateriController extends Controller
     public function list_pengajar()
     {
         $pengajar = DewanPengajars::all();
+        $presence = PresenceGroup::whereIn('id', [1, 2])->get();
 
-        return view('materi.list_pengajar', ['pengajar' => $pengajar]);
+        return view('materi.list_pengajar', ['pengajar' => $pengajar, 'presence' => $presence]);
     }
 
     public function store_pengajar(Request $request)
