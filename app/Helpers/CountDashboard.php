@@ -332,7 +332,9 @@ class CountDashboard
                     $get_present = Present::where('fkPresence_id', $gp->id)->get();
                     $total_present += (count($get_present) / $gp->total_mhs * 100);
                 }
-                $persentase = number_format($total_present / $loop, 2);
+                if ($total_present > 0) {
+                    $persentase = number_format($total_present / $loop, 2);
+                }
             }
             return $persentase;
         } else {
