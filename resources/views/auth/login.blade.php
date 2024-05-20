@@ -14,6 +14,9 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
+<?php
+$setting = App\Models\Settings::first();
+?>
 
 <head>
   <meta charset="utf-8" />
@@ -21,7 +24,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/logo.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
   <title>
-    {{app()->version()}} SISFO PPMRJ - LOGIN
+    {{$setting->apps_name}} - LOGIN
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -43,31 +46,8 @@
         <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
           <div class="container-fluid">
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="">
-              SISFO PPMRJ
+              {{$setting->apps_name}}
             </a>
-            <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon mt-2">
-                <span class="navbar-toggler-bar bar1"></span>
-                <span class="navbar-toggler-bar bar2"></span>
-                <span class="navbar-toggler-bar bar3"></span>
-              </span>
-            </button>
-            <div class="collapse navbar-collapse d-flex justify-content-end" id="navigation">
-              <ul class="navbar-nav">
-                <!-- <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center me-2 active" aria-current="page" href="">
-                    <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
-                    About
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link me-2" href="../pages/profile.html">
-                    <i class="fa fa-user opacity-6 text-dark me-1"></i>
-                    Contact
-                  </a>
-                </li> -->
-              </ul>
-            </div>
           </div>
         </nav>
         <!-- End Navbar -->
@@ -118,9 +98,9 @@
               </div>
             </div>
             <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://ppmrjbandung.com/wp-content/uploads/2024/03/Cetak_8RP_Foto-Utama_8RP_DSCF9929-1536x1024.jpg');background-size: cover;background-position: center;">
+              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background: url('{{ url('storage/logo-apps/' . $setting->bgImage) }}');background-size: cover;background-position: center;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">Sistem Informasi PPMRJ</h4>
+                <h4 class="mt-5 text-white font-weight-bolder position-relative">{{$setting->apps_name}}</h4>
                 <p class="text-white position-relative"></p>
               </div>
             </div>

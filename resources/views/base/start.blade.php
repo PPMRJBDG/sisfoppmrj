@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+$setting = App\Models\Settings::first();
+?>
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- <link rel="apple-touch-icon" sizes="76x76" href="{{ url('storage/logo-apps/' . App\Models\Settings::first()->logoImgUrl) }}"> -->
-  <link rel="icon" type="image/png" href="{{ url('storage/logo-apps/' . App\Models\Settings::first()->logoImgUrl) }}">
+  <link rel="icon" type="image/png" href="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}">
   <title>
-    {{ $title }} - Sisfo PPMRJ 2022
+    {{ $title }} - {{$setting->apps_name}}
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -97,10 +99,10 @@
 <body class="g-sidenav-show bg-gray-100">
 
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
-  <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('{{ asset('img/foto-ppm.jpg') }}'); background-size: cover;">
+  <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('{{ url('storage/logo-apps/' . $setting->bgImage) }}'); background-size: cover;">
     <span class="mask bg-primary opacity-9"></span>
   </div>
-  @include('base.sidebar', ['path' => $path, 'title' => $title])
+  @include('base.sidebar', ['path' => $path, 'title' => $title, 'setting' => $setting])
   <main class="main-content position-relative border-radius-lg ps">
     @include('base.navbar', ['breadcrumbs' => $breadcrumbs])
     <div class="container-fluid pl-4 pr-4 pt-2 pb-2">

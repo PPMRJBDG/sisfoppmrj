@@ -63,17 +63,24 @@ class SettingController extends Controller
     {
         $setting = Settings::find(1);
         if ($setting != null) {
+            $setting->org_name = $request->org;
             $setting->apps_name = $request->apps;
 
             if ($request->hasFile('logoImg')) {
-                $logo_old = $setting->logoImgUrl;
-
                 $request->validate([
                     'logoImg' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
                 ]);
                 // Save the file locally in the storage/public/ folder under a new folder named /destinations
                 $request->logoImg->store('logo-apps', 'public');
                 $setting->logoImgUrl = $request->logoImg->hashName();
+            }
+            if ($request->hasFile('bgImg')) {
+                $request->validate([
+                    'bgImg' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
+                ]);
+                // Save the file locally in the storage/public/ folder under a new folder named /destinations
+                $request->bgImg->store('logo-apps', 'public');
+                $setting->bgImage = $request->bgImg->hashName();
             }
 
             $setting->save();

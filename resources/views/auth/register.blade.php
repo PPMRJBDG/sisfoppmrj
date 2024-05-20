@@ -14,6 +14,9 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
+<?php
+$setting = App\Models\Settings::first();
+?>
 
 <head>
   <meta charset="utf-8" />
@@ -21,7 +24,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
   <title>
-    SISFO PPMRJ - REGISTRASI SANTRI BARU
+    {{$setting->apps_name}} - REGISTRASI SANTRI BARU
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -43,7 +46,7 @@
         <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow mt-4 py-2 start-0 end-0 mx-4">
           <div class="container-fluid">
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="../pages/dashboard.html">
-              SISFO PPMRJ
+              {{$setting->apps_name}}
             </a>
             <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
@@ -60,7 +63,7 @@
                     Sign in
                   </a>
                 </li>
-              </ul>             
+              </ul>
             </div>
           </div>
         </nav>
@@ -81,28 +84,28 @@
                 </div>
                 <div class="card-body">
                   @if ($errors->any())
-                    <div class="alert alert-danger text-white">
-                      <ul>
-                          @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                          @endforeach
-                      </ul>
-                    </div>
+                  <div class="alert alert-danger text-white">
+                    <ul>
+                      @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                      @endforeach
+                    </ul>
+                  </div>
                   @endif
                   <form role="form" action="{{ route('store user from public') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Nama lengkap</label>
-                      <input type="text" name="fullname" class="form-control form-control-lg" placeholder="Nama lengkap" aria-label="Nama lengkap">                      
+                      <input type="text" name="fullname" class="form-control form-control-lg" placeholder="Nama lengkap" aria-label="Nama lengkap">
                     </div>
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Email</label>
-                      <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email">                      
+                      <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email">
                     </div>
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Password</label>
                       <div class="position-relative">
-                        <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="password">                      
+                        <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="password">
                         <div style="position: absolute; top: 0; right: 0; bottom: 0; display: flex; align-items: center">
                           <small><button class="me-3" style="background: none; border: 0" id="show">Show</button></small>
                         </div>
@@ -110,7 +113,7 @@
                     </div>
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Tanggal Lahir</label>
-                      <input type="date" name="birthdate" class="form-control form-control-lg" placeholder="Tanggal lahir" aria-label="birthdate">                      
+                      <input type="date" name="birthdate" class="form-control form-control-lg" placeholder="Tanggal lahir" aria-label="birthdate">
                     </div>
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
@@ -124,17 +127,17 @@
                       <label for="example-text-input" class="form-control-label">Lorong</label>
                       <select class="form-control" name="fkLorong_id">
                         @foreach($lorongs as $lorong)
-                          <option value="{{ $lorong->id }}">{{ $lorong->name }}</option>
+                        <option value="{{ $lorong->id }}">{{ $lorong->name }}</option>
                         @endforeach
-                      </select>  
+                      </select>
                     </div>
                     <div class="text-center">
                       <input type="submit" id="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0" value="Register">
                     </div>
                   </form>
-                </div>                
+                </div>
               </div>
-            </div>            
+            </div>
           </div>
         </div>
       </div>
@@ -160,8 +163,7 @@
   <script src="{{ asset('js/argon-dashboard.min.js?v=2.0.2') }}"></script>
   <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
   <script>
-    $('#show').click((e) =>
-    {
+    $('#show').click((e) => {
       e.preventDefault();
 
       $('#show').text($('#show').text() == 'Hide' ? 'Show' : 'Hide');

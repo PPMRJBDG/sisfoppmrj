@@ -14,6 +14,9 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
+<?php
+$setting = App\Models\Settings::first();
+?>
 
 <head>
   <meta charset="utf-8" />
@@ -21,7 +24,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}">
   <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
   <title>
-    {{ $title }} - Sisfo PPMRJ 2022
+    {{ $title }} - {{$setting->apps_name}}
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />

@@ -79,7 +79,7 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                             } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
                                 $infodp_xxz = 'PPM 1';
                             }
-                            $infodp = '*[SISFO PPMRJ]* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
+                            $infodp = '*[' . $setting->apps_name . ']* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
                             WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
                             $time_post++;
                         }
@@ -491,32 +491,6 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
             }
 
             echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
-        } elseif ($time == 'sodaqoh-xlunas') {
-            $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
-            $sodaqoh = Sodaqoh::whereNull('status_lunas')->get();
-            if (count($sodaqoh) > 0) {
-                $time_post = 2;
-                foreach ($sodaqoh as $sdq) {
-                    $view_usantri = DB::table('v_user_santri')->where('santri_id', $sdq->fkSantri_id)->first();
-                    if ($view_usantri == null) {
-                        $kekurangan = 0;
-                        $sudah_bayar = 0;
-                        foreach ($bulan as $b) {
-                            $sudah_bayar = $sudah_bayar + $sdq->$b;
-                        }
-                        $kekurangan = $sdq->nominal - $sudah_bayar;
-                        $contact_id = WaSchedules::getContactId($sdq->santri->nohp_ortu);
-                        $caption = '*[Sodaqoh Tahunan PPMRJ]* Sekedar mengingatkan kepada Bapak/Ibu sekalian terkait pembayaran Sodaqoh Tahunan PPM RJ Periode ' . $sdq->periode . '. Bagi yang membayar per bulan atau per beberapa bulan sekali dipersilahkan untuk mempersiapkan pembayarannya.
-Saat ini kekurangan masih senilai: *Rp ' . number_format($kekurangan, 0) . ',-*
-
-Semoga Allah paring kemudahan dan kelancaran rezekinya, dan rezeki yang dikeluarkan untuk *Fisabilillah* semoga bermanfaat untuk Putra/i dan keluarga. Aamiin 🤲🏻';
-                        WaSchedules::save('Belum Lunas Sodaqoh PPM', $caption, $contact_id, $time_post);
-                        $time_post++;
-                    }
-                }
-            }
-
-            echo json_encode(['status' => true, 'message' => '[sodaqoh-xlunas] success running scheduler']);
         }
     }
 

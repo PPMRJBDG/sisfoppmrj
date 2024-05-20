@@ -27,6 +27,14 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
+                                        Nama Organisasi
+                                    </label>
+                                    <input class="form-control" type="text" name="org" value="{{$list_setting->org_name}}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">
                                         Nama Aplikasi
                                     </label>
                                     <input class="form-control" type="text" name="apps" value="{{$list_setting->apps_name}}" required>
@@ -34,16 +42,28 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="example-text-input" class="form-control-label">Logo Aplikasi (Size: 115x90)</label>
+                                    <label for="example-text-input" class="form-control-label">Logo Aplikasi</label>
                                     @if(isset($list_setting->logoImgUrl))
-                                    <div class="alert alert-info text-white">
-                                        <div>
-                                            Logo saat ini
-                                        </div>
-                                        <img style="width: 256px" src="{{ url('storage/logo-apps/' . $list_setting->logoImgUrl) }}" alt="">
+                                    <div class="">
+                                        <center>
+                                            <img style="width: 120px" src="{{ url('storage/logo-apps/' . $list_setting->logoImgUrl) }}" alt="">
+                                        </center>
                                     </div>
                                     @endif
                                     <input class="form-control" type="file" name="logoImg">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="example-text-input" class="form-control-label">Backgroun Aplikasi</label>
+                                    @if(isset($list_setting->logoImgUrl))
+                                    <div class="">
+                                        <center>
+                                            <img style="width: 100%" src="{{ url('storage/logo-apps/' . $list_setting->bgImage) }}" alt="">
+                                        </center>
+                                    </div>
+                                    @endif
+                                    <input class="form-control" type="file" name="bgImg">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -222,6 +242,73 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                 </div>
             </div>
         </div>
+        <!-- Jenis Pelanggaran -->
+        <div class="col-md-12 mb-2">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form action="{{ route('store jenis pelanggaran') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Jenis Pelanggaran
+                                            </label>
+                                            <input class="form-control" type="text" name="jenis_pelanggaran" required>
+                                            <label class="form-control-label">
+                                                Kategori Pelanggaran
+                                            </label>
+                                            <select class="kategori_pelanggaran form-control" name="kategori_pelanggaran" id="kategori_pelanggaran">
+                                                <option value="">Kategori Pelanggaran</option>
+                                                <option value="ringan">Ringan</option>
+                                                <option value="sedang">Sedang</option>
+                                                <option value="berat">Berat</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Pelanggaran">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="table-responsive">
+                                <table id="table-pelanggaran" class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
+                                            <!-- <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kategori</th> -->
+                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(isset($list_jenis_pelanggaran))
+                                        @foreach($list_jenis_pelanggaran as $data)
+                                        <tr class="text-sm">
+                                            <td>
+                                                <b>[{{ $data->kategori_pelanggaran }}]</b> {{ $data->jenis_pelanggaran }}
+                                            </td>
+                                            <td class="align-middle text-center text-xs">
+                                                <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
             <div class="card shadow-lg">
@@ -393,73 +480,6 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <!-- Jenis Pelanggaran -->
-        <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <form action="{{ route('store jenis pelanggaran') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                Jenis Pelanggaran
-                                            </label>
-                                            <input class="form-control" type="text" name="jenis_pelanggaran" required>
-                                            <label class="form-control-label">
-                                                Kategori Pelanggaran
-                                            </label>
-                                            <select class="kategori_pelanggaran form-control" name="kategori_pelanggaran" id="kategori_pelanggaran">
-                                                <option value="">Kategori Pelanggaran</option>
-                                                <option value="ringan">Ringan</option>
-                                                <option value="sedang">Sedang</option>
-                                                <option value="berat">Berat</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Pelanggaran">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="table-responsive">
-                                <table id="table-pelanggaran" class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
-                                            <!-- <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kategori</th> -->
-                                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if(isset($list_jenis_pelanggaran))
-                                        @foreach($list_jenis_pelanggaran as $data)
-                                        <tr class="text-sm">
-                                            <td>
-                                                <b>[{{ $data->kategori_pelanggaran }}]</b> {{ $data->jenis_pelanggaran }}
-                                            </td>
-                                            <td class="align-middle text-center text-xs">
-                                                <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
