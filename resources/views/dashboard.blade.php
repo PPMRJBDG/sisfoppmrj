@@ -1,28 +1,10 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
 
 <button id="opener">Barcode scanner</button>
-<div class="modal" title="Barcode scanner">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <span class="found"></span>
-            <div id="interactive" class="viewport"></div>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Barcode Scanner</h4>
-            </div>
-
-            <div class="modal-footer">
-                <label class="btn btn-default pull-left">
-                    <i class="fa fa-camera"></i> Use camera app
-                    <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden" />
-                </label>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+<div id="modal" title="Barcode scanner">
+    <span class="found"></span>
+    <div id="interactive" class="viewport"></div>
+</div>
 
 <p class="mb-2 text-sm font-weight-bolder text-white">Selamat datang, {{ auth()->user()->fullname }}!</p>
 
