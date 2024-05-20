@@ -14,11 +14,9 @@
 </head>
 
 <body>
-    <div id="log-result">
-
-    </div>
     <div id="interactive" class="viewport">
         <video autoplay="true" preload="auto"></video>
+        <div id="log-result"></div>
     </div>
     <script type="text/javascript">
         Quagga.init({
@@ -51,6 +49,7 @@
             Quagga.start();
             Quagga.onDetected(function(result) {
                 $("#log-result").html("detected: " + JSON.stringify(result));
+                Quagga.stop();
             });
             Quagga.onProcessed(function(result) {
                 $("#log-result").html("process: " + JSON.stringify(result));
