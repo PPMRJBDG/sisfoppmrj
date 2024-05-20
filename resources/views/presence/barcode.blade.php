@@ -37,22 +37,23 @@
                     left: "0%", // left offset
                     bottom: "0%" // bottom offset
                 },
-                singleChannel: false
+                singleChannel: true
             },
             decoder: {
-                readers: ["code_128_reader"]
+                readers: ["code_128_reader", "code_93_reader"]
             }
         }, function(err) {
             if (err) {
-                $("#log-result").html(JSON.stringify(err));
+                console.log(err)
+                $("#log-result").html("error: " + JSON.stringify(err));
                 return
             }
             Quagga.start();
             Quagga.onDetected(function(result) {
-                $("#log-result").html(JSON.stringify(result));
+                $("#log-result").html("detected: " + JSON.stringify(result));
             });
             Quagga.onProcessed(function(result) {
-                $("#log-result").html(JSON.stringify(result));
+                $("#log-result").html("process: " + JSON.stringify(result));
             });
         });
     </script>
