@@ -1,12 +1,12 @@
 @include('base.start', ['path' => '', 'title' => 'Dashboard', 'breadcrumbs' => ['Dashboard']])
 
-<button id="opener">Barcode scanner</button>
-<div id="modal" title="Barcode scanner">
-    <span class="found"></span>
-    <div id="interactive" class="viewport"></div>
-</div>
-
 <p class="mb-2 text-sm font-weight-bolder text-white">Selamat datang, {{ auth()->user()->fullname }}!</p>
+
+<div class="col-12 mb-2">
+    <div class="card shadow-lg p-3">
+        <a href="# " class="btn btn-success form-control mb-0">Absen Sekarang</a>
+    </div>
+</div>
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
 <!-- @if(count($get_presence_today)>0) -->
