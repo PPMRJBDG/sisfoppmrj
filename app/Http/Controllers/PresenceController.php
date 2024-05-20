@@ -38,6 +38,13 @@ class PresenceController extends Controller
     }
 
 
+    public function barcode()
+    {
+
+        // exit;
+        return view('presence.barcode');
+    }
+
     // ============ PRESENCE REPORT ============
 
     /**

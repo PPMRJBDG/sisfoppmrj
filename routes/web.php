@@ -34,6 +34,7 @@ Route::get('/profil', [App\Http\Controllers\UserController::class, 'my_profile']
 Route::get('/profil/edit', [App\Http\Controllers\UserController::class, 'edit_my_profile'])->name('edit my profile');
 Route::post('/profile/update', [App\Http\Controllers\UserController::class, 'update_my_profile'])->name('update my profile');
 
+Route::get('/presensi/barcode', [App\Http\Controllers\PresenceController::class, 'barcode'])->name('barcode');
 Route::get('/presensi/izin/persetujuan/create', [App\Http\Controllers\PresenceController::class, 'create_permit'])->name('create presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::post('/presensi/izin/persetujuan/store', [App\Http\Controllers\PresenceController::class, 'store_permit'])->name('store presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::post('/presensi/izin/persetujuan/store/ranged', [App\Http\Controllers\PresenceController::class, 'store_permit_ranged'])->name('store presence permit ranged')->middleware('role:koor lorong|superadmin|rj1|wk');
