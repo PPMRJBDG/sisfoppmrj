@@ -37,14 +37,15 @@
                 alert(err);
                 return
             }
-            alert("Initialization finished. Ready to start");
+            $("#log-start").val("Initialization finished. Ready to start");
             Quagga.start();
             Quagga.onDetected(function(result) {
-                alert(result.codeResult.code)
-                console.log(result.codeResult.code);
+                $("#log-result").val(result.codeResult.code);
             });
         });
     </script>
+    <input type="text" value="" id="log-start" />
+    <input type="text" value="" id="log-result" />
 </body>
 
 </html>
