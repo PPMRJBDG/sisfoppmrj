@@ -4,7 +4,7 @@
 
 <div class="col-12 mb-2">
     <div class="card shadow-lg p-3">
-        <a href="{{ url('presensi/barcode') }}" class="btn btn-success form-control mb-0">Absen Sekarang</a>
+        <a href="{{ url('presensi/barcode') }}" class="btn btn-success form-control mb-0">Absen Sekarang (Dev)</a>
     </div>
 </div>
 
