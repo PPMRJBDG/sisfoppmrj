@@ -14,6 +14,8 @@
 </head>
 
 <body>
+    <input type="text" value="" id="log-start" />
+    <input type="text" value="" id="log-result" placeholder="result" />
     <div id="interactive" class="viewport">
         <video autoplay="true" preload="auto"></video>
     </div>
@@ -27,14 +29,21 @@
                     width: 520,
                     height: 400,
                     facingMode: "environment" //"environment" for back camera, "user" front camera
-                }
+                },
+                area: { // defines rectangle of the detection/localization area
+                    top: "0%", // top offset
+                    right: "0%", // right offset
+                    left: "0%", // left offset
+                    bottom: "0%" // bottom offset
+                },
+                singleChannel: false
             },
             decoder: {
-                readers: ["code_39_reader"]
+                readers: ["code_128_reader"]
             }
         }, function(err) {
             if (err) {
-                alert(err);
+                $("#log-start").val(err);
                 return
             }
             $("#log-start").val("Initialization finished. Ready to start");
@@ -42,10 +51,11 @@
             Quagga.onDetected(function(result) {
                 $("#log-result").val(result.codeResult.code);
             });
+            Quagga.onProcessed(function(result) {
+                $("#log-result").val(result);
+            });
         });
     </script>
-    <input type="text" value="" id="log-start" />
-    <input type="text" value="" id="log-result" />
 </body>
 
 </html>
