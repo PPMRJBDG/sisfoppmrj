@@ -19,6 +19,43 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 @endif
 <div class="row">
     <div class="col-md-6">
+        <div class="col-md-12 mb-2">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form action="{{ route('store apps') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        Nama Aplikasi
+                                    </label>
+                                    <input class="form-control" type="text" name="apps" value="{{$list_setting->apps_name}}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="example-text-input" class="form-control-label">Logo Aplikasi (Size: 115x90)</label>
+                                    @if(isset($list_setting->logoImgUrl))
+                                    <div class="alert alert-info text-white">
+                                        <div>
+                                            Logo saat ini
+                                        </div>
+                                        <img style="width: 256px" src="{{ url('storage/logo-apps/' . $list_setting->logoImgUrl) }}" alt="">
+                                    </div>
+                                    @endif
+                                    <input class="form-control" type="file" name="logoImg">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Simpan Aplikasi">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- Periode Tahun -->
         <div class="col-md-12 mb-2">
             <div class="card shadow-lg">

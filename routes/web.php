@@ -176,6 +176,7 @@ Route::post('/op/in-out/store', [App\Http\Controllers\KeuanganController::class,
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');
+Route::post('/setting/store_apps', [App\Http\Controllers\SettingController::class, 'store_apps'])->name('store apps')->middleware('role:superadmin|rj1');
 Route::post('/setting/store_periode', [App\Http\Controllers\SettingController::class, 'store_periode'])->name('store periode')->middleware('role:superadmin|rj1');
 Route::post('/setting/store_liburan', [App\Http\Controllers\SettingController::class, 'store_liburan'])->name('store liburan')->middleware('role:superadmin|rj1');
 Route::post('/setting/store_jenis_pelanggaran', [App\Http\Controllers\SettingController::class, 'store_jenis_pelanggaran'])->name('store jenis pelanggaran')->middleware('role:superadmin|rj1');

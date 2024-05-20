@@ -452,11 +452,19 @@ NB:
                     $pengajar_2 = $get_presence_today->dewanPengajar2->name;
                 }
 
+                if (str_contains(strtolower($get_presence_today->name), 'hasda')) {
+                    $pemateri1 = 'Penyampai Dalil / PPG';
+                    $pemateri2 = 'Penyampai Teks / Naslis';
+                } else {
+                    $pemateri1 = 'Pengajar PPM 1';
+                    $pemateri2 = 'Pengajar PPM 2';
+                }
+
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
 
-Pengajar PPM 1: *' . $pengajar_1 . '*
-Pengajar PPM 2: *' . $pengajar_2 . '*
+' . $pemateri1 . ': *' . $pengajar_1 . '*
+' . $pemateri2 . ': *' . $pengajar_2 . '*
 
 Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar, silahkan disesuaikan lagi';
                 WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
@@ -465,8 +473,8 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
 ' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id . '
 
-Pengajar PPM 1: *' . $pengajar_1 . '*
-Pengajar PPM 2: *' . $pengajar_2 . '*';
+' . $pemateri1 . ': *' . $pengajar_1 . '*
+' . $pemateri2 . ': *' . $pengajar_2 . '*';
                 WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
 
                 if ($setting->wa_link_presensi_koor) {

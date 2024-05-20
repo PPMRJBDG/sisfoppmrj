@@ -9,6 +9,8 @@ class Settings extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'apps_name',
+        'profileImgUrl',
         'wa_sender_account_id',
         'wa_team_id',
         'wa_type',

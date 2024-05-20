@@ -2,7 +2,8 @@
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href=" {{ url('') }}">
-      <img src="{{ asset('img/logo.png') }}" class="navbar-brand-img h-100" alt="main_logo">
+      <!-- <img src="{{ asset('img/logo.png') }}" class="navbar-brand-img h-100" alt="main_logo"> -->
+      <img src="{{ url('storage/logo-apps/' . App\Models\Settings::first()->logoImgUrl) }}" class="navbar-brand-img h-100" alt="main_logo">
       <span class="ms-1 font-weight-bold">SISFO PPMRJ</span>
     </a>
   </div>
@@ -32,14 +33,6 @@
           </div>
           <span class="nav-link-text ms-1">Setting</span>
         </a>
-        @if(!auth()->user()->hasRole('rj1'))
-        <a class="nav-link {{ $path == 'database' ? 'active' : '' }}" href="{{ url('database') }}">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-bag-17 text-info text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1">Database</span>
-        </a>
-        @endif
         <a class="nav-link {{ $path == 'pelanggaran' ? 'active' : '' }}" href="{{ url('pelanggaran') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-umbrella-13 text-info text-sm opacity-10"></i>
@@ -53,7 +46,7 @@
           </div>
           <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
         </a>
-        <a class="nav-link {{ $path == 'receipt' ? 'active' : '' }}" href="{{ url('receipt') }}">
+        <!-- <a class="nav-link {{ $path == 'receipt' ? 'active' : '' }}" href="{{ url('receipt') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
@@ -70,7 +63,7 @@
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">In Out OP</span>
-        </a>
+        </a> -->
       </li>
 
       @if(auth()->user()->hasRole('superadmin'))
@@ -87,7 +80,13 @@
         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
           <i class="ni ni-collection text-info text-sm opacity-10"></i>
         </div>
-        <span class="nav-link-text ms-1">Report Scheduler</span>
+        <span class="nav-link-text ms-1">Link Laporan</span>
+      </a>
+      <a class="nav-link {{ $path == 'msgtools/report' ? 'active' : '' }}" href="{{ url('msgtools/report') }}">
+        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+          <i class="ni ni-collection text-info text-sm opacity-10"></i>
+        </div>
+        <span class="nav-link-text ms-1">Scheduler</span>
       </a>
       @endif
       @endif

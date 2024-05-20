@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-body">
         <div class="alert alert-success text-white">
-            Daftar report yang sudah / belum dibaca oleh Orangtua
+            Daftar Link Laporan untuk Orang Tua
         </div>
         <div class="table-responsive">
             <table id="table-report" class="table align-items-center mb-0">
@@ -11,31 +11,31 @@
                     <tr>
                         <th class="text-uppercase text-sm text-secondary">Nama</th>
                         <th class="text-uppercase text-sm text-secondary">Link</th>
-                        <th class="text-uppercase text-sm text-secondary">Bulan</th>
+                        <!-- <th class="text-uppercase text-sm text-secondary">Bulan</th> -->
                         <th class="text-uppercase text-sm text-secondary">Status</th>
-                        <th class="text-uppercase text-sm text-secondary">Dibaca</th>
+                        <!-- <th class="text-uppercase text-sm text-secondary">Dibaca</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($datax as $d)
                     <tr class="text-sm">
-                        <td>
+                        <td onclick="getReport('<?php echo base64_encode($d->santri->id); ?>')" style="cursor:pointer;">
                             {{ $d->santri->user->fullname }}
                         </td>
                         <td>
                             {{ $d->link_url }}
                         </td>
-                        <td>
+                        <!-- <td>
                             {{ $d->month }}
-                        </td>
+                        </td> -->
                         <td>
                             @if($d->status==1)
                             <i class="ni ni-check-bold text-info text-sm opacity-10"></i>
                             @endif
                         </td>
-                        <td>
+                        <!-- <td>
                             {{ $d->count . 'x' }}
-                        </td>
+                        </td> -->
                     </tr>
                     @endforeach
                 </tbody>

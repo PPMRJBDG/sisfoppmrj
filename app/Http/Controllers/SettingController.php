@@ -13,6 +13,7 @@ use App\Models\SpTeam;
 use App\Models\SpUsers;
 use App\Models\SpWhatsappContacts;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -56,6 +57,28 @@ class SettingController extends Controller
             'list_wa_group' => $list_wa_group,
             'list_jenis_pelanggaran' => $list_jenis_pelanggaran,
         ]);
+    }
+
+    public function store_apps(Request $request)
+    {
+        $setting = Settings::find(1);
+        if ($setting != null) {
+            $setting->apps_name = $request->apps;
+
+            if ($request->hasFile('logoImg')) {
+                $logo_old = $setting->logoImgUrl;
+
+                $request->validate([
+                    'logoImg' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
+                ]);
+                // Save the file locally in the storage/public/ folder under a new folder named /destinations
+                $request->logoImg->store('logo-apps', 'public');
+                $setting->logoImgUrl = $request->logoImg->hashName();
+            }
+
+            $setting->save();
+        }
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil update aplikasi.');
     }
 
     public function store_settings(Request $request)

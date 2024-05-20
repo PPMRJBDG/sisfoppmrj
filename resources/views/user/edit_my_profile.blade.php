@@ -69,7 +69,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Foto profil (kosongkan jika tidak ingin diganti)</label>
@@ -81,10 +81,10 @@
               <img style="width: 256px" src="{{ url('storage/users/' . $user->profileImgUrl) }}" alt="">
             </div>
             @endif
-            <input class="form-control" type="file" name="profileImg" placeholder="Contoh: Pengajian Maghrib">
+            <input class="form-control" type="file" name="profileImg">
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="row">
         <div class="col-md-12">
