@@ -398,7 +398,9 @@
         App.init();
 
         Quagga.onDetected(function(result) {
+            alert(code);
             var code = result.codeResult.code;
+            $(".found").html(code);
             Quagga.stop();
             window.location.href = "scannerview.php?barcode=" + code;
         });
