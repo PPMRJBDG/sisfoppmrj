@@ -14,8 +14,9 @@
 </head>
 
 <body>
-    <input type="text" value="" id="log-start" />
-    <input type="text" value="" id="log-result" placeholder="result" />
+    <div id="log-result">
+
+    </div>
     <div id="interactive" class="viewport">
         <video autoplay="true" preload="auto"></video>
     </div>
@@ -43,16 +44,15 @@
             }
         }, function(err) {
             if (err) {
-                $("#log-start").val(err);
+                $("#log-result").html(JSON.stringify(err));
                 return
             }
-            $("#log-start").val("Initialization finished. Ready to start");
             Quagga.start();
             Quagga.onDetected(function(result) {
-                $("#log-result").val(result.codeResult.code);
+                $("#log-result").html(JSON.stringify(result));
             });
             Quagga.onProcessed(function(result) {
-                $("#log-result").val(result);
+                $("#log-result").html(JSON.stringify(result));
             });
         });
     </script>
