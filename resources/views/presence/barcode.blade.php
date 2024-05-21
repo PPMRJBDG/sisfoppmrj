@@ -15,7 +15,7 @@
 </head>
 <style>
     .drawingBuffer {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
     }
@@ -29,7 +29,7 @@
             <div id="interactive" class="viewport">
                 <center>
                     <video autoplay="true" preload="auto">
-                        <canvas className="drawingBuffer" width="640" height="480" />
+                        <canvas class="drawingBuffer"></canvas>
                     </video>
                 </center>
                 <div id="log-result"></div>
@@ -80,8 +80,10 @@
                 type: "LiveStream",
                 target: document.querySelector('#interactive'),
                 constraints: {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
+                    // width: window.innerWidth,
+                    // height: window.innerHeight,
+                    width: 520,
+                    height: 200,
                     facingMode: "environment",
                     // deviceId: backCamID
                 },
@@ -98,7 +100,7 @@
             multiple: false,
             locator: {
                 halfSample: false,
-                patchSize: "medium", // x-small, small, medium, large, x-large
+                patchSize: "large", // x-small, small, medium, large, x-large
                 debug: {
                     showCanvas: true,
                     showPatches: true,
