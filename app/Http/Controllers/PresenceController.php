@@ -37,13 +37,20 @@ class PresenceController extends Controller
         $this->middleware('auth');
     }
 
-
     public function barcode()
     {
         $date = strtotime(date("Y-m-d"));
         $presence = Presence::where('event_date', $date);
 
         return view('presence.barcode');
+    }
+
+    public function generate_barcode()
+    {
+        $date = strtotime(date("Y-m-d"));
+        $presence = Presence::where('event_date', $date);
+
+        return view('presence.barcode_generate');
     }
 
     // ============ PRESENCE REPORT ============

@@ -10,7 +10,7 @@
     <link id="pagestyle" href="{{ asset('css/argon-dashboard.css') }}" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-1.9.0.min.js" integrity="sha256-f6DVw/U4x2+HjgEqw5BZf67Kq/5vudRZuRkljnbF344=" crossorigin="anonymous"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js" type="text/javascript"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 </head>
 <style>
@@ -26,11 +26,9 @@
         <div class="card shadow-lg p-2 text-center">
             <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
-            <div id="interactive" class="viewport">
+            <div id="interactive" class="viewport drawingBuffer">
                 <center>
-                    <video autoplay="true" preload="auto">
-                        <canvas width="200" height="100" class="drawingBuffer"></canvas>
-                    </video>
+                    <video autoplay="true" preload="auto"></video>
                 </center>
                 <div id="log-result"></div>
             </div>
@@ -84,12 +82,6 @@
                     height: 300,
                     facingMode: "environment",
                 },
-                area: { // defines rectangle of the detection/localization area
-                    top: "0%", // top offset
-                    right: "0%", // right offset
-                    left: "0%", // left offset
-                    bottom: "0%" // bottom offset
-                },
             },
             numOfWorkers: navigator.hardwareConcurrency,
             locate: true,
@@ -105,17 +97,17 @@
                 halfSample: false,
                 patchSize: "large", // x-small, small, medium, large, x-large
                 debug: {
-                    showCanvas: true,
-                    showPatches: true,
-                    showFoundPatches: true,
-                    showSkeleton: true,
-                    showLabels: true,
-                    showPatchLabels: true,
-                    showRemainingPatchLabels: true,
+                    showCanvas: false,
+                    showPatches: false,
+                    showFoundPatches: false,
+                    showSkeleton: false,
+                    showLabels: false,
+                    showPatchLabels: false,
+                    showRemainingPatchLabels: false,
                     boxFromPatches: {
-                        showTransformed: true,
-                        showTransformedBox: true,
-                        showBB: true
+                        showTransformed: false,
+                        showTransformedBox: false,
+                        showBB: false
                     }
                 }
             },
