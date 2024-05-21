@@ -15,7 +15,7 @@
 </head>
 <style>
     .drawingBuffer {
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
     }
@@ -86,6 +86,12 @@
                     height: 200,
                     facingMode: "environment",
                     // deviceId: backCamID
+                },
+                area: { // defines rectangle of the detection/localization area
+                    top: "0%", // top offset
+                    right: "0%", // right offset
+                    left: "0%", // left offset
+                    bottom: "0%" // bottom offset
                 },
             },
             numOfWorkers: navigator.hardwareConcurrency,
