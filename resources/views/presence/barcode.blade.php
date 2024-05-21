@@ -78,8 +78,8 @@
                 type: "LiveStream",
                 target: document.querySelector('#interactive'),
                 constraints: {
-                    width: $(window).width(),
-                    height: $(window).height(),
+                    width: window.screen.width,
+                    height: window.screen.height,
                     facingMode: "environment",
                     // deviceId: backCamID
                 },
@@ -96,34 +96,24 @@
             multiple: false,
             locator: {
                 halfSample: false,
-                patchSize: "large", // x-small, small, medium, large, x-large
+                patchSize: "medium", // x-small, small, medium, large, x-large
                 debug: {
-                    showCanvas: false,
-                    showPatches: false,
-                    showFoundPatches: false,
-                    showSkeleton: false,
-                    showLabels: false,
-                    showPatchLabels: false,
-                    showRemainingPatchLabels: false,
+                    showCanvas: true,
+                    showPatches: true,
+                    showFoundPatches: true,
+                    showSkeleton: true,
+                    showLabels: true,
+                    showPatchLabels: true,
+                    showRemainingPatchLabels: true,
                     boxFromPatches: {
-                        showTransformed: false,
-                        showTransformedBox: false,
-                        showBB: false
+                        showTransformed: true,
+                        showTransformedBox: true,
+                        showBB: true
                     }
                 }
             },
             decoder: {
-                readers: [
-                    "code_128_reader",
-                    "ean_reader",
-                    "ean_8_reader",
-                    "code_39_reader",
-                    "code_39_vin_reader",
-                    "codabar_reader",
-                    "upc_reader",
-                    "upc_e_reader",
-                    "i2of5_reader"
-                ]
+                readers: ["code_128_reader"]
 
             }
         }, function(err) {
