@@ -29,7 +29,7 @@
             <div id="interactive" class="viewport">
                 <center>
                     <video autoplay="true" preload="auto">
-                        <canvas width="200" height="100" id="drawingBuffer"></canvas>
+                        <!-- <canvas width="200" height="100" id="drawingBuffer"></canvas> -->
                     </video>
                 </center>
                 <div id="log-result"></div>
@@ -43,7 +43,7 @@
                 type: "LiveStream",
                 target: document.querySelector('#interactive'),
                 constraints: {
-                    width: window.innerWidth,
+                    width: 520,
                     height: 200,
                     facingMode: "environment" //"environment" for back camera, "user" front camera
                 },
