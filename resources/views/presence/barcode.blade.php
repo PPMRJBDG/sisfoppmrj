@@ -10,7 +10,7 @@
     <link id="pagestyle" href="{{ asset('css/argon-dashboard.css') }}" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-1.9.0.min.js" integrity="sha256-f6DVw/U4x2+HjgEqw5BZf67Kq/5vudRZuRkljnbF344=" crossorigin="anonymous"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 </head>
 <style>
