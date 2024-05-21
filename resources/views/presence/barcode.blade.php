@@ -26,7 +26,7 @@
         <div class="card shadow-lg p-2 text-center">
             <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
-            <div id="interactive" class="viewport drawingBuffer">
+            <div id="interactive" class="viewport">
                 <center>
                     <video autoplay="true" preload="auto"></video>
                 </center>
