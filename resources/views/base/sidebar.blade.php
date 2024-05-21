@@ -122,14 +122,14 @@
       </li>
       @endcan
       @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('santri'))
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link {{ $path == 'presensi/terbaru' ? 'active' : '' }}" href="{{ url('presensi/terbaru') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-app text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Presensi Terbaru</span>
         </a>
-      </li>
+      </li> -->
       @endif
       @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
       <li class="nav-item">

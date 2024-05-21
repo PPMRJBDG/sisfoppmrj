@@ -40,8 +40,9 @@ class PresenceController extends Controller
 
     public function barcode()
     {
+        $date = strtotime(date("Y-m-d"));
+        $presence = Presence::where('event_date', $date);
 
-        // exit;
         return view('presence.barcode');
     }
 
@@ -249,6 +250,9 @@ class PresenceController extends Controller
             $lorong = '-';
         }
         $presence = Presence::find($id);
+        if ($presence == null) {
+            return redirect()->route('dashboard');
+        }
 
         $for = '';
         if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {

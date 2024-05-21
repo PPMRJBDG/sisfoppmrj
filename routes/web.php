@@ -35,6 +35,7 @@ Route::get('/profil/edit', [App\Http\Controllers\UserController::class, 'edit_my
 Route::post('/profile/update', [App\Http\Controllers\UserController::class, 'update_my_profile'])->name('update my profile');
 
 Route::get('/presensi/barcode', [App\Http\Controllers\PresenceController::class, 'barcode'])->name('barcode');
+Route::get('/presensi/generate-barcode', [App\Http\Controllers\PresenceController::class, 'barcode'])->name('barcode');
 Route::get('/presensi/izin/persetujuan/create', [App\Http\Controllers\PresenceController::class, 'create_permit'])->name('create presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::post('/presensi/izin/persetujuan/store', [App\Http\Controllers\PresenceController::class, 'store_permit'])->name('store presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::post('/presensi/izin/persetujuan/store/ranged', [App\Http\Controllers\PresenceController::class, 'store_permit_ranged'])->name('store presence permit ranged')->middleware('role:koor lorong|superadmin|rj1|wk');
@@ -59,7 +60,7 @@ Route::get('/presensi/izin/list/{tb}', [App\Http\Controllers\PresenceController:
 // Route::get('/presensi/laporan', [App\Http\Controllers\PresenceController::class, 'report'])->name('presence report');
 
 // presences
-Route::get('/presensi/terbaru', [App\Http\Controllers\PresenceController::class, 'latest_list'])->name('latest presences')->middleware('role:santri|superadmin|koor lorong');
+// Route::get('/presensi/terbaru', [App\Http\Controllers\PresenceController::class, 'latest_list'])->name('latest presences')->middleware('role:santri|superadmin|koor lorong');
 Route::get('/presensi/laporan-umum', [App\Http\Controllers\PresenceController::class, 'report'])->name('presence report');
 Route::get('/presensi/list', [App\Http\Controllers\PresenceController::class, 'list_and_manage'])->name('presence tm')->middleware('permission:view presences list');
 Route::get('/presensi/list/create', [App\Http\Controllers\PresenceController::class, 'create'])->name('create presence')->middleware('permission:create presences');
