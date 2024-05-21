@@ -24,9 +24,9 @@
 <body class="bg-primary">
     <div class="col-12 p-2">
         <div class="card shadow-lg p-2 text-center">
-            <a href="{{ url('/') }}" class="btn btn-primary mb-2">Kembali</a>
+            <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
-            <div id="interactive" class="viewport drawingBuffer">
+            <div id="interactive" class="viewport">
                 <center>
                     <video class="bg-" autoplay="true" preload="auto"></video>
                 </center>
@@ -79,7 +79,7 @@
                 target: document.querySelector('#interactive'),
                 constraints: {
                     width: $(window).width(),
-                    height: 250,
+                    height: $(window).height(),
                     facingMode: "environment",
                     // deviceId: backCamID
                 },
@@ -139,6 +139,7 @@
                 drawingCanvas = Quagga.canvas.dom.overlay;
 
             if (result) {
+                $("#btn-act").html('Processing...');
                 if (result.boxes) {
                     drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
                     result.boxes.filter(function(box) {
@@ -179,6 +180,7 @@
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
             alert("Barcode Reader value : " + code);
+            $("#btn-act").html('Kembali');
             Quagga.stop();
         });
     </script>
