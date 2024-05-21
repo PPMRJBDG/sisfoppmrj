@@ -28,7 +28,9 @@
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
             <div id="interactive" class="viewport">
                 <center>
-                    <video class="bg-" autoplay="true" preload="auto"></video>
+                    <video autoplay="true" preload="auto">
+                        <canvas className="drawingBuffer" width="640" height="480" />
+                    </video>
                 </center>
                 <div id="log-result"></div>
             </div>
@@ -78,8 +80,8 @@
                 type: "LiveStream",
                 target: document.querySelector('#interactive'),
                 constraints: {
-                    width: window.screen.width,
-                    height: window.screen.height,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
                     facingMode: "environment",
                     // deviceId: backCamID
                 },
