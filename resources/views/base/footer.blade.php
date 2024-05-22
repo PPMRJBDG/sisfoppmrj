@@ -311,7 +311,7 @@ $setting = App\Models\Settings::first();
     }
 
     function checkTextLength(th) {
-        const elb = document.querySelector("#btn-prsc");
+        const el = document.querySelector("#btn-prsc");
         if (th.value.length < 10) {
             // $("#btn-prsc").hide();
             el.disabled = true
