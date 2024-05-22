@@ -1453,10 +1453,10 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
 
                     $statusx = 'pending';
                     $updated_by = '';
-                    if ($presence->event_date == date('Y-m-d')) {
-                        $statusx = 'approved';
-                        $updated_by = 'System';
-                    }
+                    // if ($presence->event_date == date('Y-m-d')) {
+                    //     $statusx = 'approved';
+                    //     $updated_by = 'System';
+                    // }
                     $ids = uniqid();
                     $inserted = Permit::create([
                         'fkSantri_id' => $santri->id,
