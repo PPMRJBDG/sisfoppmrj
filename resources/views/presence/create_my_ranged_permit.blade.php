@@ -111,7 +111,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input style="display:none;" id="btn-prsc" class="btn btn-primary form-control" type="submit" value="Ajukan atas {{ auth()->user()->fullname }}">
+            <input disabled id="btn-prsc" class="btn btn-primary form-control" type="submit" value="Ajukan atas {{ auth()->user()->fullname }}">
           </div>
         </div>
       </div>

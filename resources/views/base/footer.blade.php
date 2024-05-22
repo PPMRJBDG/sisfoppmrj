@@ -311,10 +311,13 @@ $setting = App\Models\Settings::first();
     }
 
     function checkTextLength(th) {
+        const elb = document.querySelector("#btn-prsc");
         if (th.value.length < 10) {
-            $("#btn-prsc").hide();
+            // $("#btn-prsc").hide();
+            el.disabled = true
         } else {
-            $("#btn-prsc").show();
+            // $("#btn-prsc").show();
+            el.disabled = false
         }
     }
 
