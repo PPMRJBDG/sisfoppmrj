@@ -1516,10 +1516,10 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
     public function delete_my_ranged_permit($id)
     {
         // get current santri
-        $santri = auth()->user()->santri;
+        // $santri = auth()->user()->santri;
 
-        if (!$santri)
-            return redirect()->route('my presence permits')->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
+        // if (!$santri)
+        //     return redirect()->route('my presence permits')->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
 
         $rangedPermit = RangedPermitGenerator::find($id);
 

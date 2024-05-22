@@ -14,7 +14,8 @@ class RangedPermitGenerator extends Model
         'from_date',
         'to_date',
         'reason',
-        'reason_category'
+        'reason_category',
+        'status'
     ];
 
     /**
@@ -33,4 +34,3 @@ class RangedPermitGenerator extends Model
         return $this->belongsTo(PresenceGroup::class, 'fkPresenceGroup_id');
     }
 }
-

@@ -98,6 +98,7 @@ class PresenceGroupsChecker
             $createdPresences = Presence::whereDate('event_date', '>=', $rangedPermitGenerator->from_date)
                 ->whereDate('event_date', '<=', $rangedPermitGenerator->to_date)
                 ->where('fkPresence_group_id', $rangedPermitGenerator->fkPresenceGroup_id)
+                ->where('status', 'approved')
                 ->get();
 
             foreach ($createdPresences as $presence) {
