@@ -20,12 +20,12 @@
         </a>
       </li>
 
-      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('ku'))
+      @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('ku'))
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">PENGURUS</h6>
       </li>
       <li class="nav-item">
-        @if(!auth()->user()->hasRole('ku'))
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
         <a class="nav-link {{ $path == 'setting' ? 'active' : '' }}" href="{{ url('setting') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-settings text-info text-sm opacity-10"></i>
@@ -39,12 +39,22 @@
           <span class="nav-link-text ms-1">Daftar Pelanggaran</span>
         </a>
         @endif
+        @if(!auth()->user()->hasRole('wk'))
         <a class="nav-link {{ $path == 'sodaqoh/list' ? 'active' : '' }}" href="{{ url('sodaqoh/list') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
         </a>
+        @endif
+        @if(!auth()->user()->hasRole('ku'))
+        <a class="nav-link {{ $path == 'catatan-penghubung' ? 'active' : '' }}" href="{{ url('catatan-penghubung') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-books text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Catatan Penghubung</span>
+        </a>
+        @endif
         <!-- <a class="nav-link {{ $path == 'receipt' ? 'active' : '' }}" href="{{ url('receipt') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>

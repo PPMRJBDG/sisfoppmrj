@@ -15,7 +15,8 @@ class RangedPermitGenerator extends Model
         'to_date',
         'reason',
         'reason_category',
-        'status'
+        'status',
+        'approved_by'
     ];
 
     /**

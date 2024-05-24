@@ -892,7 +892,7 @@ class PresenceController extends Controller
         // get current santri
         $santri = auth()->user()->santri;
         $lorong = null;
-        $permits = Permit::query();
+        // $permits = Permit::query();
         $tahun_bulan = DB::table('presences')
             ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
             ->groupBy('ym')
@@ -947,7 +947,20 @@ class PresenceController extends Controller
                 }
         }
 
-        return view('presence.permit_approval', ['permits' => $permits, 'lorong' => $lorong, 'santri' => $santri, 'tahun_bulan' => $tahun_bulan, 'tb' => $tb, 'status' => $status]);
+        $rangedPermitGenerator = RangedPermitGenerator::where('status', 'pending')->get();
+
+        return view(
+            'presence.permit_approval',
+            [
+                'permits' => $permits,
+                'rangedPermitGenerator' => $rangedPermitGenerator,
+                'lorong' => $lorong,
+                'santri' => $santri,
+                'tahun_bulan' => $tahun_bulan,
+                'tb' => $tb,
+                'status' => $status
+            ]
+        );
     }
 
     /**
@@ -966,7 +979,7 @@ class PresenceController extends Controller
                 $message = '';
                 $updated = false;
                 $data_json = json_decode($request->get('data_json'));
-
+                $is_present = '';
                 foreach ($data_json as $dt) {
                     $presenceId = $dt[0];
                     $santriId = $dt[1];
@@ -975,6 +988,11 @@ class PresenceController extends Controller
                     if ($permit) {
                         $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
                         if ($present) {
+                            if ($is_present == '') {
+                                $is_present = $permit->santri->user->fullname;
+                            } else {
+                                $is_present = $is_present . ', ' . $permit->santri->user->fullname;
+                            }
                             $message = ' *(Gagal: Mahasiswa telah hadir di presensi ini)*';
                         } else {
                             $permit->status = 'approved';
@@ -989,7 +1007,7 @@ class PresenceController extends Controller
                 }
 
                 WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
-                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui']);
+                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui', 'is_present' => $is_present . ' telah hadir di presensi ini']);
             }
         } else {
             $presenceId = $request->get('presenceId');
@@ -1020,6 +1038,31 @@ class PresenceController extends Controller
                 return redirect()->back()->withErrors('failed_updating_permit', 'Izin gagal disetujui.');
             }
             return redirect()->back()->with('success', 'Izin berhasil disetujui.');
+        }
+    }
+
+    public function approve_range_permit(Request $request)
+    {
+        $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan berjangka dari:
+';
+
+        $rpgId = $request->get('rpgId');
+        $santriId = $request->get('santriId');
+
+        $permit = RangedPermitGenerator::where('id', $rpgId)->where('fkSantri_id', $santriId)->whereNot('status', 'approved')->first();
+        if ($permit) {
+            PresenceGroupsChecker::checkPermitGenerators();
+            $permit->status = 'approved';
+            $permit->approved_by = auth()->user()->fullname;
+            if ($permit->save()) {
+                $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presenceGroup->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
+                WaSchedules::save('Range Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
+                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui']);
+            } else {
+                return json_encode(['status' => false, 'message' => 'Gagal, sedang terjadi kesalahan sistem']);
+            }
+        } else {
+            return json_encode(['status' => false, 'message' => 'IJin berjangka tidak ditemukan']);
         }
     }
 
@@ -1056,7 +1099,8 @@ class PresenceController extends Controller
                         $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
                         $updated = $permit->save();
                         if ($updated) {
-                            $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message  . ' -> karena ' . $permit->alasan_rejected . '
+                            $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message  . '
+*Alasan Ditolak:* Karena ' . $permit->alasan_rejected . '
 ';
 
                             $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
@@ -1070,7 +1114,7 @@ class PresenceController extends Controller
                                     $query->where('name', 'NOT LIKE', '%Bulk%');
                                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                                 if ($wa_phone != null) {
-                                    $caption_a = 'Mohon maaf, Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
+                                    $caption_a = 'Mohon maaf, Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
                                     WaSchedules::save($name, $caption_a, $wa_phone->pid, $time_post);
                                 }
                             }
@@ -1086,7 +1130,7 @@ class PresenceController extends Controller
                                     $query->where('name', 'NOT LIKE', '%Bulk%');
                                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                                 if ($wa_phone != null) {
-                                    $caption_b = 'Mohon maaf, Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
+                                    $caption_b = 'Mohon maaf, Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
                                     WaSchedules::save($name, $caption_b, $wa_phone->pid, $time_post);
                                 }
                             }
@@ -1130,7 +1174,7 @@ class PresenceController extends Controller
                         $query->where('name', 'NOT LIKE', '%Bulk%');
                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                     if ($wa_phone != null) {
-                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
+                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
                         WaSchedules::save($name, $caption, $wa_phone->pid, 2);
                     }
                 }
@@ -1146,7 +1190,7 @@ class PresenceController extends Controller
                         $query->where('name', 'NOT LIKE', '%Bulk%');
                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                     if ($wa_phone != null) {
-                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
+                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
                         WaSchedules::save($name, $caption, $wa_phone->pid, 3);
                     }
                 }

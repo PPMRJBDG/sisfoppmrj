@@ -53,6 +53,7 @@ Route::post('/presensi/izin/saya/update', [App\Http\Controllers\PresenceControll
 Route::get('/presensi/izin/saya/delete', [App\Http\Controllers\PresenceController::class, 'delete_my_permit'])->name('delete my presence permit')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/saya/berjangka/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_my_ranged_permit'])->name('delete my ranged presence permit')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/saya/approve', [App\Http\Controllers\PresenceController::class, 'approve_permit'])->name('approve presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
+Route::get('/presensi/izin/pengajuan/berjangka/approve', [App\Http\Controllers\PresenceController::class, 'approve_range_permit'])->name('approve presence range permit')->middleware('role:superadmin|rj1|wk');
 Route::get('/presensi/izin/saya/reject', [App\Http\Controllers\PresenceController::class, 'reject_permit'])->name('reject presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::get('/presensi/izin/list', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk');
 Route::get('/presensi/izin/list/{tb}', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk');
@@ -201,6 +202,10 @@ Route::get('/dwngr/{id}/late/{santriId}', [App\Http\Controllers\PublicController
 Route::get('/dwngr/{id}/notlate/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_not_late'])->name('dwngr is not late');
 Route::get('/dwngr/list/{id}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
 // Route::get('/dwngr/list/{id}/{lorong}', [App\Http\Controllers\PublicController::class, 'presence_view'])->name('dwngr view presence');
+
+// Catatan Penghubung
+Route::get('/catatan-penghubung', [App\Http\Controllers\CatatanPenghubungController::class, 'index'])->name('index')->middleware('role:superadmin|rj1|wk');
+Route::post('/catatan-penghubung/store', [App\Http\Controllers\CatatanPenghubungController::class, 'store'])->name('store catatan')->middleware('role:superadmin|rj1|wk');
 
 // msgtools
 Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');

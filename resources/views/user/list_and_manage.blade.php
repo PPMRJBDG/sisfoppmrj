@@ -4,7 +4,7 @@
   @if($count_dashboard!='')
   <div class="card shadow-lg mb-0">
     <div class="card-body p-3">
-      <p class="mb-0 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Cacah Jiwa</p>
+      <p class="mb-0 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Tampilkan Cacah Jiwa</p>
       <div id="toggle-cacahjiwa" style="display:none;">
         <?php echo $count_dashboard; ?>
       </div>

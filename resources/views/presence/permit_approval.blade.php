@@ -34,7 +34,7 @@
   </div>
 
   @if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
-  <div class="p-2">
+  <div class="p-2 bg-gray-100">
     <div class="d-flex">
       <div class="col-4 p-0">
         <a style="width:100%;" href="#" class="btn btn-danger btn-xs m-0" onclick="return actionSave('delete');">
@@ -80,10 +80,10 @@
     @endif
 
     <div class="table-responsive p-0">
-      <table id="table" class="table align-items-center mb-0">
+      <table id="table-harian" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder">
+            <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder">
               <input type="checkbox" class="custom-control-input" id="all-ids" onclick="selectAllCheckbox(this)">
             </th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
@@ -93,8 +93,8 @@
         <tbody>
           @if(isset($permits))
           @foreach($permits as $permit)
-          <tr class="text-sm">
-            <td>
+          <tr class="text-sm" id="prmt-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}">
+            <td class=" text-center">
               <input type="checkbox" onclick="showInputAlasan(this, '{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}')" class="cls-ckb" santri-id="{{$permit->fkSantri_id}}" presence-id="{{$permit->fkPresence_id}}" id="ids{{$permit->fkSantri_id}}">
             </td>
             <td>
@@ -114,8 +114,10 @@
                 </div>
               </div>
               <div id="asd-b-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}" style="display:none;">
+                @if($permit->status!='rejected')
                 <span class="text-danger">Jika ditolak, berikan alasannya</span>
                 <input type="text" class="form-control" id="alasan-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}">
+                @endif
               </div>
 
               <!-- @if($permit->status=='rejected' || $permit->status=='pending')
@@ -134,6 +136,55 @@
         </tbody>
       </table>
     </div>
+
+    @if(isset($rangedPermitGenerator))
+    @if(count($rangedPermitGenerator)>0)
+    <div class="table-responsive p-0">
+      <div class="p-2 text-center text-bold bg-gray-100" style="border-bottom:#eee solid 2px;border-top:#ddd solid 2px;">
+        Berjangka <span class="badge bg-gradient-secondary">pending</span>
+      </div>
+      <table id="table-berjangka" class="table align-items-center mb-0">
+        <thead style="background-color:#f6f9fc;">
+          <tr>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-4">Nama</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Durasi</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Alasan</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($rangedPermitGenerator as $rpg)
+          <tr class="text-sm" id="rpg-{{$rpg->id}}">
+            <td class="ps-4">
+              <b>{{ $rpg->santri->user->fullname }}</b>
+              <br>
+              <span class="text-xxs">{{ $rpg->updated_at }}</span>
+            </td>
+            <td class="text-xs">
+              <i><b>{{ $rpg->presenceGroup->name }}</b></i>
+              <br>
+              {{$rpg->from_date}} s.d {{$rpg->to_date}}
+            </td>
+            <td class="text-xs">
+              <div>
+                <div class="mt-1 mb-1">
+                  <span class="text-primary">[{{ ucfirst($rpg->reason_category) }}]</span>
+                  <br>{{ $rpg->reason }}
+                </div>
+              </div>
+            </td>
+            <td>
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+              <a onclick="return actionSaveRangePermit('{{$rpg->id}}','{{$rpg->fkSantri_id}}');" class="btn btn-success btn-xs mb-0">Terima</a>
+              @endif
+            </td>
+            @endforeach
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    @endif
+    @endif
   </div>
 </div>
 @else
@@ -208,11 +259,33 @@
           function(data, status) {
             var return_data = JSON.parse(data);
             if (return_data.status) {
+              if (return_data.is_present != '') {
+                alert(return_data.is_present)
+              }
               window.location.reload();
             }
           }
         )
       }
+    }
+  }
+
+  function actionSaveRangePermit(rpgId, santriId) {
+    var datax = {};
+    if (confirm('Apakah anda yakin untuk menyetujui perijinan berjangka ini ?')) {
+      datax['rpgId'] = rpgId;
+      datax['santriId'] = santriId;
+      $.get(`{{ url("/") }}/presensi/izin/pengajuan/berjangka/approve`, datax,
+        function(data, status) {
+          var return_data = JSON.parse(data);
+          if (return_data.status) {
+            const element = document.getElementById("rpg-" + rpgId);
+            element.remove();
+          } else {
+            alert(return_data.message)
+          }
+        }
+      )
     }
   }
 </script>

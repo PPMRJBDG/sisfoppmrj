@@ -56,7 +56,7 @@
               <small>{{ $myPermit->updated_at }}</small>
             </td>
             <td colspan=3>
-              @if($myPermit->status=='approved')
+              @if($myPermit->status!='rejected')
               <a href="{{ route('edit presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-primary btn-xs mb-0">Edit</a>
               @endif
               <a href="{{ route('delete my presence permit') }}?presenceId={{ $myPermit->fkPresence_id }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
@@ -104,8 +104,9 @@
               {{ $myRangedPermit->reason }}
             </td>
             <td><small>
-                {{ $myRangedPermit->from_date }}<br> s.d<br>
-                {{ $myRangedPermit->to_date }}
+                <span class="badge {{ $myRangedPermit->status == 'pending' ? 'bg-gradient-secondary' : ($myRangedPermit->status == 'approved' ? 'bg-gradient-success' : ($myRangedPermit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($myRangedPermit->status) }}</span>
+                <br>
+                {{ $myRangedPermit->from_date }} s.d {{ $myRangedPermit->to_date }}
               </small></td>
             <td class="align-middle text-center text-sm">
               <a href="{{ route('delete my ranged presence permit', $myRangedPermit->id) }}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
@@ -117,19 +118,20 @@
       </table>
     </div>
   </div>
+</div>
 
-  <script>
-    $('#table-izin').DataTable({
-      order: [
-        // [1, 'desc']
-      ],
-      pageLength: 25
-    });
-    $('#table-generator').DataTable({
-      order: [
-        // [1, 'desc']
-      ],
-      pageLength: 25
-    });
-  </script>
-  @include('base.end')
+<script>
+  $('#table-izin').DataTable({
+    order: [
+      // [1, 'desc']
+    ],
+    pageLength: 25
+  });
+  $('#table-generator').DataTable({
+    order: [
+      // [1, 'desc']
+    ],
+    pageLength: 25
+  });
+</script>
+@include('base.end')

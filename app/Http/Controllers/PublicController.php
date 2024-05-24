@@ -703,7 +703,8 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
             if ($permit->save()) {
-                $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . ' -> karena ' . $permit->alasan_rejected;
+                $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
+*Alasan Ditolak:* Karena ' . $permit->alasan_rejected;
                 WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
 
                 $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
@@ -718,7 +719,7 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
                         $query->where('name', 'NOT LIKE', '%Bulk%');
                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                     if ($wa_phone != null) {
-                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
+                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
                         WaSchedules::save($name, $caption, $wa_phone->pid);
                     }
                 }
@@ -734,7 +735,7 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
                         $query->where('name', 'NOT LIKE', '%Bulk%');
                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                     if ($wa_phone != null) {
-                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena ' . $permit->alasan_rejected . '.';
+                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
                         WaSchedules::save($name, $caption, $wa_phone->pid, 2);
                     }
                 }
