@@ -260,7 +260,7 @@
             var return_data = JSON.parse(data);
             if (return_data.status) {
               if (return_data.is_present != '') {
-                alert(return_data.is_present)
+                alert(return_data.is_present + ' telah hadir di presensi ini')
               }
               window.location.reload();
             }

@@ -1007,7 +1007,7 @@ class PresenceController extends Controller
                 }
 
                 WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
-                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui', 'is_present' => $is_present . ' telah hadir di presensi ini']);
+                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui', 'is_present' => $is_present]);
             }
         } else {
             $presenceId = $request->get('presenceId');
