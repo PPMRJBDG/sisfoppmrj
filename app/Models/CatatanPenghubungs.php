@@ -14,8 +14,15 @@ class CatatanPenghubungs extends Model
         'cat_kbm',
         'cat_asmara',
         'cat_akhlaq',
+        'cat_umum',
         'created_by',
-        'status'
+        'status',
+        'rating_kepribadian',
+        'rating_sholat',
+        'rating_kbm',
+        'rating_asmara',
+        'rating_akhlaq',
+        'rating_umum',
     ];
 
     /**
