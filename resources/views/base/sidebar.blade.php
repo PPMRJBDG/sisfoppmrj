@@ -100,10 +100,19 @@
       @endif
       @endif
 
-      @can('view presences list')
+      <li class="nav-item">
+        <a class="nav-link {{ $path == 'jadwal-kbm' ? 'active' : '' }}" href="{{ url('jadwal-kbm') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-collection text-success text-sm opacity-10"></i>
+          </div>
+          <span class="nav-calendar ms-1">Jadwal KBM</span>
+        </a>
+      </li>
+
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Presensi</h6>
       </li>
+      @can('view presences list')
       @if(auth()->user()->hasRole('superadmin'))
       <!-- <li class="nav-item">
           <a class="nav-link {{ $path == 'presensi/laporan' ? 'active' : '' }}" href="{{ url('presensi/laporan') }}">

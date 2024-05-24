@@ -134,6 +134,8 @@ Route::post('/materi/list/update/{id}', [App\Http\Controllers\MateriController::
 Route::get('/materi/list/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete'])->name('delete materi')->middleware('permission:delete materis');
 
 // materis dewan pengajar
+Route::get('/jadwal-kbm', [App\Http\Controllers\MateriController::class, 'jadwal_kbm'])->name('jadwal kbm')->middleware('role:superadmin|santri');
+Route::post('/jadwal-kbm/store', [App\Http\Controllers\MateriController::class, 'jadwal_kbm_store'])->name('jadwal kbm store')->middleware('role:superadmin|santri');
 Route::get('/dewan-pengajar', [App\Http\Controllers\MateriController::class, 'list_pengajar'])->name('materi list pengajar')->middleware('permission:view materis list');
 Route::get('/dewan-pengajar/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete_pengajar'])->name('materi delete pengajar')->middleware('permission:delete materis');
 Route::post('/dewan-pengajar/store', [App\Http\Controllers\MateriController::class, 'store_pengajar'])->name('materi store pengajar')->middleware('permission:create materis');

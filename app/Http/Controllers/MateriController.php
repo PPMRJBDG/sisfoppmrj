@@ -7,6 +7,9 @@ use App\Models\Materi;
 use App\Models\DewanPengajars;
 use App\Models\JadwalPengajars;
 use App\Models\PresenceGroup;
+use App\Models\HourKbms;
+use App\Models\DayKbms;
+use App\Models\JadwalHariJamKbms;
 
 class MateriController extends Controller
 {
@@ -121,6 +124,39 @@ class MateriController extends Controller
         }
 
         return redirect()->route('materi tm')->with('success', 'Berhasil menghapus Materi');
+    }
+
+    public function jadwal_kbm()
+    {
+        $santri_id = auth()->user()->santri->id;
+        $day_kbm = DayKbms::all();
+        $hour_kbm = HourKbms::all();
+
+        return view('materi.jadwal_kbm', ['day_kbm' => $day_kbm, 'hour_kbm' => $hour_kbm, 'santri_id' => $santri_id]);
+    }
+
+    public function jadwal_kbm_store(Request $request)
+    {
+        $santri_id = auth()->user()->santri->id;
+
+        if ($request->input('action') == 'insert') {
+            $jadwal = JadwalHariJamKbms::where('fkSantri_id', $santri_id)
+                ->where('fkHari_kbm_id', $request->input('day'))
+                ->where('fkJam_kbm_id', $request->input('hour'))->first();
+
+            if ($jadwal == null) {
+                JadwalHariJamKbms::create([
+                    'fkSantri_id' => $santri_id,
+                    'fkHari_kbm_id' => $request->input('day'),
+                    'fkJam_kbm_id' => $request->input('hour')
+                ]);
+            }
+        } elseif ($request->input('action') == 'delete') {
+            $jadwal = JadwalHariJamKbms::where('fkSantri_id', $santri_id)
+                ->where('fkHari_kbm_id', $request->input('day'))
+                ->where('fkJam_kbm_id', $request->input('hour'))->first();
+            $jadwal->delete();
+        }
     }
 
     public function list_pengajar()

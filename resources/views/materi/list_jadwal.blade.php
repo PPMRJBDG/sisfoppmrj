@@ -57,7 +57,6 @@
 </div>
 <script>
     async function savePengajar(pengajar, presence, day, ppm) {
-        console.log(pengajar.value + ' - ' + presence + ' - ' + day + ' - ' + ppm)
         var datax = {};
         datax['pengajar'] = pengajar.value;
         datax['presence'] = presence;
