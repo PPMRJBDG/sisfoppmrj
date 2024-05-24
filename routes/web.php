@@ -53,7 +53,7 @@ Route::post('/presensi/izin/saya/update', [App\Http\Controllers\PresenceControll
 Route::get('/presensi/izin/saya/delete', [App\Http\Controllers\PresenceController::class, 'delete_my_permit'])->name('delete my presence permit')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/saya/berjangka/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_my_ranged_permit'])->name('delete my ranged presence permit')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/saya/approve', [App\Http\Controllers\PresenceController::class, 'approve_permit'])->name('approve presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
-Route::get('/presensi/izin/pengajuan/berjangka/approve', [App\Http\Controllers\PresenceController::class, 'approve_range_permit'])->name('approve presence range permit')->middleware('role:superadmin|rj1|wk');
+Route::get('/presensi/izin/pengajuan/berjangka/approve', [App\Http\Controllers\PresenceController::class, 'approve_range_permit'])->name('approve presence range permit')->middleware('role:superadmin|rj1');
 Route::get('/presensi/izin/saya/reject', [App\Http\Controllers\PresenceController::class, 'reject_permit'])->name('reject presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::get('/presensi/izin/list', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk');
 Route::get('/presensi/izin/list/{tb}', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk');

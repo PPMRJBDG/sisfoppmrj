@@ -137,6 +137,7 @@
       </table>
     </div>
 
+    @if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
     @if(isset($rangedPermitGenerator))
     @if(count($rangedPermitGenerator)>0)
     <div class="table-responsive p-0">
@@ -183,6 +184,7 @@
         </tbody>
       </table>
     </div>
+    @endif
     @endif
     @endif
   </div>
