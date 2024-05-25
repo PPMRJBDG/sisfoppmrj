@@ -8,5 +8,7 @@ class HourKbms extends Model
 {
     protected $fillable = [
         'hour_name',
+        'is_break',
+        'is_disable'
     ];
 }

@@ -18,6 +18,16 @@
                                 </th>
                                 @endforeach
                             </tr>
+                            @if (auth()->user()->hasRole('superadmin'))
+                            <tr class="text-center">
+                                <th></th>
+                                @foreach($day_kbm as $dn)
+                                <th class="text-sm">
+                                    <span class="badge bg-gradient-primary" id="total-day-{{$dn->id}}"></span>
+                                </th>
+                                @endforeach
+                            </tr>
+                            @else
                             <tr>
                                 <th></th>
                                 @foreach($day_kbm as $dn)
@@ -27,6 +37,7 @@
                                 </th>
                                 @endforeach
                             </tr>
+                            @endif
                         </thead>
                         <tbody id="">
                             @foreach($hour_kbm as $hn)
@@ -35,13 +46,35 @@
                                 @foreach($day_kbm as $dn)
                                 <th>
                                     <?php
-                                    $checked = '';
-                                    $get_data = App\Models\JadwalHariJamKbms::where('fkSantri_id', $santri_id)->where('fkHari_kbm_id', $dn->id)->where('fkJam_kbm_id', $hn->id)->first();
-                                    if ($get_data != null) {
-                                        $checked = 'checked';
+                                    if (auth()->user()->hasRole('superadmin')) {
+                                        $get_data = App\Models\JadwalHariJamKbms::where('fkHari_kbm_id', $dn->id)->where('fkJam_kbm_id', $hn->id)->get();
+                                        if (count($get_data) == 0) {
+                                            $jumlah_mhs = '';
+                                        } else {
+                                            $jumlah_mhs = count($get_data);
+                                        }
+                                    } else {
+                                        $checked = '';
+                                        $get_data = App\Models\JadwalHariJamKbms::where('fkSantri_id', $santri_id)->where('fkHari_kbm_id', $dn->id)->where('fkJam_kbm_id', $hn->id)->first();
+                                        if ($get_data != null) {
+                                            $checked = 'checked';
+                                        }
                                     }
                                     ?>
+
+                                    @if($hn->is_break || $hn->is_disable)
+                                    @if($hn->is_break)
+                                    <span class="text-warning"><small>break</small></span>
+                                    @else
+                                    <input style="background: grey;" disabled class="form-check-input" type="checkbox">
+                                    @endif
+                                    @else
+                                    @if(auth()->user()->hasRole('superadmin'))
+                                    <span class="badge bg-gradient-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
+                                    @else
                                     <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">
+                                    @endif
+                                    @endif
                                 </th>
                                 @endforeach
                             </tr>
@@ -54,6 +87,19 @@
     </div>
 </div>
 <script>
+    function countHourPerDay() {
+        const dayname = <?php echo $day_kbm; ?>;
+        dayname.forEach(function(d) {
+            var day = 0;
+            const cx = document.querySelectorAll("span[name-day=" + d.day_name + "]");
+            for (var i = 0; i < cx.length; i++) {
+                if (cx[i].getAttribute('val-day-hour') != '')
+                    day = day + parseInt(cx[i].getAttribute('val-day-hour'));
+            }
+            $("#total-day-" + d.id).html(day / 2 + ' Mhs');
+        })
+    }
+
     async function setJadwal(x, day_id, hour_id) {
         var datax = {};
         datax['day'] = day_id;
@@ -126,5 +172,6 @@
         })
     }
     checkDay();
+    countHourPerDay();
 </script>
 @include('base.end')

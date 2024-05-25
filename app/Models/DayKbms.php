@@ -8,5 +8,6 @@ class DayKbms extends Model
 {
     protected $fillable = [
         'day_name',
+        'is_holiday'
     ];
 }

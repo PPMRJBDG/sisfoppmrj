@@ -128,8 +128,12 @@ class MateriController extends Controller
 
     public function jadwal_kbm()
     {
-        $santri_id = auth()->user()->santri->id;
-        $day_kbm = DayKbms::all();
+        if (auth()->user()->hasRole('superadmin')) {
+            $santri_id = 0;
+        } else {
+            $santri_id = auth()->user()->santri->id;
+        }
+        $day_kbm = DayKbms::whereNull('is_holiday')->get();
         $hour_kbm = HourKbms::all();
 
         return view('materi.jadwal_kbm', ['day_kbm' => $day_kbm, 'hour_kbm' => $hour_kbm, 'santri_id' => $santri_id]);
