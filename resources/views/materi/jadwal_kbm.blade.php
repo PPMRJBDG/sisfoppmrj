@@ -47,11 +47,15 @@
                                 <th>
                                     <?php
                                     if (auth()->user()->hasRole('superadmin')) {
+                                        $data_mhs = array();
                                         $get_data = App\Models\JadwalHariJamKbms::where('fkHari_kbm_id', $dn->id)->where('fkJam_kbm_id', $hn->id)->get();
                                         if (count($get_data) == 0) {
                                             $jumlah_mhs = '';
                                         } else {
                                             $jumlah_mhs = count($get_data);
+                                            foreach ($get_data as $gd) {
+                                                $data_mhs[] = $gd->santri->user->fullname;
+                                            }
                                         }
                                     } else {
                                         $checked = '';
@@ -70,7 +74,7 @@
                                     @endif
                                     @else
                                     @if(auth()->user()->hasRole('superadmin'))
-                                    <span class="badge bg-gradient-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
+                                    <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge bg-gradient-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
                                     @else
                                     <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">
                                     @endif
@@ -86,7 +90,45 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modalMahasiswa" tabindex="-1" role="dialog" aria-labelledby="modalMahasiswaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h6 class="modal-title" id="modalMahasiswaLabel">Jadwal KBM</h6>
+                    <h5 class="modal-title" id="modalMahasiswaLabel"><span id="nm"></span></h5>
+                </div>
+            </div>
+            <div class="modal-body">
+                <table id="modal-body-mhs">
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="close" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    function viewMahasiswa(data, day, hour) {
+        $('#modalMahasiswa').fadeIn();
+        $('#modalMahasiswa').css('background', 'rgba(0, 0, 0, 0.7)');
+        $('#modalMahasiswa').css('z-index', '10000');
+        $('#nm').text(day + ' | ' + hour);
+        var content = '';
+        for (var x = 0; x < data.length; x++) {
+            content = content + '<tr><td>' + (x + 1) + '.</td><td>' + data[x] + '</td></tr>';
+        }
+        console.log(content)
+        $("#modal-body-mhs").html(content);
+    }
+    $('#close').click(function() {
+        $('#modalMahasiswa').fadeOut();
+    });
+
     function countHourPerDay() {
         const dayname = <?php echo $day_kbm; ?>;
         dayname.forEach(function(d) {

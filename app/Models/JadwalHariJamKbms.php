@@ -11,4 +11,9 @@ class JadwalHariJamKbms extends Model
         'fkHari_kbm_id',
         'fkJam_kbm_id'
     ];
+
+    public function santri()
+    {
+        return $this->belongsTo(Santri::class, 'fkSantri_id');
+    }
 }
