@@ -9,6 +9,8 @@ use App\Models\Presence;
 
 class Present extends Model
 {
+    protected $primaryKey = 'fkSantri_id';
+
     protected $fillable = [
         'fkSantri_id',
         'fkPresence_id',

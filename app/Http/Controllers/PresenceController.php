@@ -79,7 +79,7 @@ class PresenceController extends Controller
                 return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
             } else {
                 $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santriIdToInsert)->first();
-
+                $barcode = $request->input('barcode');
                 if ($existingPresent == null) {
                     // sign in
                     $sign_in = date("Y-m-d H:i:s");
@@ -87,7 +87,6 @@ class PresenceController extends Controller
                     if ($sign_in > $presence->start_date_time) {
                         $is_late = 1;
                     }
-                    $barcode = $request->input('barcode');
                     $inserted = Present::create([
                         'fkSantri_id' => $santriIdToInsert,
                         'fkPresence_id' => $presence->id,
@@ -105,7 +104,10 @@ class PresenceController extends Controller
                     }
                 } else {
                     // sign out
-                    $existingPresent->barcode_out = $request->input('barcode');
+                    if ($existingPresent->sign_out != '') {
+                        return json_encode(['status' => true, 'sign' => 'out', 'message' => 'Anda sudah sign out']);
+                    }
+                    $existingPresent->barcode_out = $barcode;
                     $existingPresent->sign_out = date("Y-m-d H:i:s");
                     // $existingPresent->reason_togo_home_early = $request->input('reason_togo_home_early');
 

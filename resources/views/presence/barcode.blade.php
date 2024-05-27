@@ -80,7 +80,7 @@
             }
         }, function(err) {
             if (err) {
-                $("#log-result").html("error: " + JSON.stringify(err));
+                $("#log-result").html("Message: " + JSON.stringify(err));
             }
 
             Quagga.start();
@@ -148,7 +148,7 @@
                         alert(return_data.message);
                         window.location.replace(`{{ url("/") }}/home`)
                     } else {
-                        $("#log-result").html("Error: " + JSON.stringify(return_data.message));
+                        $("#log-result").html("Message: " + JSON.stringify(return_data.message));
                         Quagga.start();
                     }
                 }
