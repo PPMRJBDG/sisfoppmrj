@@ -1950,6 +1950,35 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
         return redirect()->route('my presence permits')->with('success', 'Berhasil menghapus izin');
     }
 
+
+    public function delete_and_present(Request $request)
+    {
+        $presenceId = $request->get('presence_id');
+        $santriId = $request->get('santri_id');
+
+        $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId);
+        if ($permit->delete()) {
+            $check_present = Present::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+
+            if ($check_present == null) {
+                $present = Present::create([
+                    'fkSantri_id' => $santriId,
+                    'fkPresence_id' => $presenceId,
+                    'is_late' => 0,
+                    'updated_by' => auth()->user()->fullname,
+                    'metadata' => $_SERVER['HTTP_USER_AGENT']
+                ]);
+                if ($present) {
+                    return json_encode(array("status" => true));
+                } else {
+                    return json_encode(array("status" => false, 'message' => $check_present->santri->user->fullname . ' gagal dihadirkan pada presensi ini'));
+                }
+            } else {
+                return json_encode(array("status" => false, 'message' => $check_present->santri->user->fullname . ' sudah hadir pada presensi ini'));
+            }
+        }
+    }
+
     /**
      * Delete user.
      *

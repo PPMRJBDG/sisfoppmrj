@@ -42,6 +42,16 @@ $setting = App\Models\Settings::first();
     </div>
 </div>
 <script>
+    $('#close').click(function() {
+        $('#exampleModal').fadeOut();
+        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
+    });
+
+    $('#closeb').click(function() {
+        $('#exampleModal').fadeOut();
+        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
+    });
+
     function showHideCacah() {
         $("#toggle-cacahjiwa").toggle();
     }
@@ -259,16 +269,6 @@ $setting = App\Models\Settings::first();
         $('#contentReport').html('<iframe src="{{ url("/") }}/report/' + ids + '"  style="height:100%;width:100%;"></iframe>');
     }
 
-    $('#close').click(function() {
-        $('#exampleModal').fadeOut();
-        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
-    });
-
-    $('#closeb').click(function() {
-        $('#exampleModal').fadeOut();
-        $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
-    });
-
     function checkSS(val) {
         $("#show-ss").hide();
         $("#show-ss-berjangka").hide();
@@ -321,7 +321,32 @@ $setting = App\Models\Settings::first();
         }
     }
 
-    function promptDeletePermit(url, id, presence_id = null, santri_id = null) {
+    function promptApprovePermit(url, id, presence_id = null, santri_id = null) {
+        if (confirm('Yakin di approve ?')) {
+            var datax = {}
+            datax['json'] = true;
+            const ival = []
+            ival.push([presence_id, santri_id])
+            datax['data_json'] = JSON.stringify(ival);
+            $.get(url, datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    if (return_data.status) {
+                        if (return_data.is_present != '') {
+                            alert(return_data.is_present + ' telah hadir di presensi ini')
+                        }
+                        window.location.reload();
+                    } else {
+                        alert(return_data.message)
+                        window.location.reload();
+                    }
+                }
+            )
+            return true;
+        }
+    }
+
+    function promptRejectPermit(url, id, presence_id = null, santri_id = null) {
         var alasan = prompt('Yakin di tolak ? Berikan alasannya');
         if (alasan) {
             var datax = {}
@@ -348,6 +373,101 @@ $setting = App\Models\Settings::first();
         } else {
             alert('Silahkan berikan alasannya')
             return false
+        }
+    }
+
+    function showInputAlasan(thisx, sid) {
+        if (thisx.checked) {
+            $("#asd-b-" + sid).show();
+        } else {
+            $("#asd-b-" + sid).hide();
+        }
+    }
+
+    function promptDeleteAndPresent(id, presence_id = null, santri_id = null) {
+        if (confirm('Apakah anda yakin untuk menghadirkan dari perijinan ini ?')) {
+            var datax = {};
+            datax['presence_id'] = presence_id;
+            datax['santri_id'] = santri_id;
+
+            $.get(`{{ url("/") }}/presensi/izin/pengajuan/delete_and_present`, datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    if (return_data.status) {
+                        window.location.reload();
+                    } else {
+                        alert(return_data.message)
+                    }
+                }
+            )
+        }
+    }
+
+    function actionSave(action) {
+        var datax = {};
+        datax['json'] = true;
+
+        const ival = []
+        const el = document.querySelectorAll(".cls-ckb");
+        for (var i = 0; i < el.length; i++) {
+            if (el[i].checked) {
+                if (action == 'reject') {
+                    var alasan = $("#alasan-" + el[i].getAttribute('presence-id') + '-' + el[i].getAttribute('santri-id')).val();
+                    if (alasan == '') {
+                        alert('Berikan alasan pada form yang masih kosong')
+                        return false;
+                    }
+                }
+                ival.push([el[i].getAttribute('presence-id'), el[i].getAttribute('santri-id'), alasan])
+            }
+        }
+        if (ival.length == 0) {
+            alert('Silahkan pilih minimal satu mahasiswa');
+            return false
+        } else {
+            var pesan_action = '';
+            var url = '/presensi/izin/saya/'
+            if (action == 'delete') {
+                pesan_action = 'menghapus';
+                url = '/presensi/izin/persetujuan/'
+            } else if (action == 'approve') {
+                pesan_action = 'menyetujui';
+            } else if (action == 'reject') {
+                pesan_action = 'menolak';
+            }
+            if (confirm('Apakah anda yakin untuk ' + pesan_action + ' perijinan ini ?')) {
+                datax['data_json'] = JSON.stringify(ival);
+                $.get(`{{ url("/") }}` + url + action, datax,
+                    function(data, status) {
+                        var return_data = JSON.parse(data);
+                        if (return_data.status) {
+                            if (return_data.is_present != '' && action == 'approve') {
+                                alert(return_data.is_present + ' telah hadir di presensi ini')
+                            }
+                            window.location.reload();
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    function actionSaveRangePermit(rpgId, santriId) {
+        var datax = {};
+        if (confirm('Apakah anda yakin untuk menyetujui perijinan berjangka ini ?')) {
+            datax['rpgId'] = rpgId;
+            datax['santriId'] = santriId;
+            $.get(`{{ url("/") }}/presensi/izin/pengajuan/berjangka/approve`, datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    if (return_data.status) {
+                        const element = document.getElementById("rpg-" + rpgId);
+                        element.remove();
+                    } else {
+                        alert(return_data.message)
+                    }
+                }
+            )
         }
     }
 </script>

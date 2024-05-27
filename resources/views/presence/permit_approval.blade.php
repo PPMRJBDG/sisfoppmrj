@@ -88,6 +88,9 @@
             </th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Keterangan</th>
+            @if($status=='rejected')
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Alasan di Reject</th>
+            @endif
           </tr>
         </thead>
         <tbody>
@@ -119,17 +122,10 @@
                 <input type="text" class="form-control" id="alasan-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}">
                 @endif
               </div>
-
-              <!-- @if($permit->status=='rejected' || $permit->status=='pending')
-              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-              <a href="{{ route('approve presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-success btn-xs mb-0">Terima</a>
-              @endif
-              @endif
-              @if($permit->status=='approved' || $permit->status=='pending')
-              <a href="{{ route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id]) }}" class="btn btn-warning btn-xs mb-0">Tolak</a>
-              @endif
-              <a href="{{ route('delete presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'tb' => $tb]) }}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Delete</a> -->
             </td>
+            @if($status=='rejected')
+            <td class="text-xs">{{$permit->alasan_rejected}}</td>
+            @endif
             @endforeach
             @endif
           </tr>
@@ -175,8 +171,8 @@
               </div>
             </td>
             <td>
-              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-              <a onclick="return actionSaveRangePermit('{{$rpg->id}}','{{$rpg->fkSantri_id}}');" class="btn btn-success btn-xs mb-0">Terima</a>
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
+              <a onclick="return actionSaveRangePermit('{{$rpg->id}}','{{$rpg->fkSantri_id}}');" class="btn btn-success btn-xs mb-0">Approve</a>
               @endif
             </td>
             @endforeach
@@ -214,81 +210,5 @@
     paging: false,
     pageLength: 25
   });
-
-  function showInputAlasan(thisx, sid) {
-    if (thisx.checked) {
-      $("#asd-b-" + sid).show();
-    } else {
-      $("#asd-b-" + sid).hide();
-    }
-  }
-
-  function actionSave(action) {
-    var datax = {};
-    datax['json'] = true;
-
-    const ival = []
-    const el = document.querySelectorAll(".cls-ckb");
-    for (var i = 0; i < el.length; i++) {
-      if (el[i].checked) {
-        if (action == 'reject') {
-          var alasan = $("#alasan-" + el[i].getAttribute('presence-id') + '-' + el[i].getAttribute('santri-id')).val();
-          if (alasan == '') {
-            alert('Berikan alasan pada form yang masih kosong')
-            return false;
-          }
-        }
-        ival.push([el[i].getAttribute('presence-id'), el[i].getAttribute('santri-id'), alasan])
-      }
-    }
-    if (ival.length == 0) {
-      alert('Silahkan pilih minimal satu mahasiswa');
-      return false
-    } else {
-      var pesan_action = '';
-      var url = '/presensi/izin/saya/'
-      if (action == 'delete') {
-        pesan_action = 'menghapus';
-        url = '/presensi/izin/persetujuan/'
-      } else if (action == 'approve') {
-        pesan_action = 'menyetujui';
-      } else if (action == 'reject') {
-        pesan_action = 'menolak';
-      }
-      if (confirm('Apakah anda yakin untuk ' + pesan_action + ' perijinan ini ?')) {
-        datax['data_json'] = JSON.stringify(ival);
-        $.get(`{{ url("/") }}` + url + action, datax,
-          function(data, status) {
-            var return_data = JSON.parse(data);
-            if (return_data.status) {
-              if (return_data.is_present != '') {
-                alert(return_data.is_present + ' telah hadir di presensi ini')
-              }
-              window.location.reload();
-            }
-          }
-        )
-      }
-    }
-  }
-
-  function actionSaveRangePermit(rpgId, santriId) {
-    var datax = {};
-    if (confirm('Apakah anda yakin untuk menyetujui perijinan berjangka ini ?')) {
-      datax['rpgId'] = rpgId;
-      datax['santriId'] = santriId;
-      $.get(`{{ url("/") }}/presensi/izin/pengajuan/berjangka/approve`, datax,
-        function(data, status) {
-          var return_data = JSON.parse(data);
-          if (return_data.status) {
-            const element = document.getElementById("rpg-" + rpgId);
-            element.remove();
-          } else {
-            alert(return_data.message)
-          }
-        }
-      )
-    }
-  }
 </script>
 @include('base.end')

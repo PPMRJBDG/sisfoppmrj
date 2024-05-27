@@ -146,18 +146,11 @@
               <b>{{ $present->santri->user->fullname }}</b>
               <br>
               <small>{{ $present->created_at }}</small>
-              <!-- | <b>{{ $present->is_late ? 'Telat' : 'Tidak telat' }}</b> -->
             </td>
             <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
               @if($update)
               <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
               <a class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
-
-              <!-- @if($present->is_late) -->
-              <!-- <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
-              <!-- @else -->
-              <!-- <a class="btn btn-warning btn-xs mb-0" href="{{ route('is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a> -->
-              <!-- @endif -->
               @endif
             </td>
           </tr>
@@ -183,6 +176,7 @@
         <tr>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Status</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder"></th>
         </tr>
       </thead>
       <tbody>
@@ -199,8 +193,17 @@
             <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
             @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
             <br>
-            <a class="btn btn-primary btn-xs mb-0" href="{{ route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id, 'lorong' => $lorong]) }}" onclick="return confirm('Yakin disetujui?')">Setujui ?</a>
+
+            <?php
+            $url_promptApprovePermit = route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id, 'lorong' => $lorong]);
+            ?>
+
+            <a class="btn btn-success btn-xs mb-0" onclick="promptApprovePermit('{{$url_promptApprovePermit}}','{{$na->ids}}','{{$na->fkPresence_id}}','{{$na->fkSantri_id}}')">Approve</a>
+            <a class="btn btn-primary btn-xs mb-0" onclick="promptDeleteAndPresent('{{$na->ids}}','{{$na->fkPresence_id}}','{{$na->fkSantri_id}}')">Hadir</a>
             @endif
+          </td>
+          <td class="align-middle text-xs">
+            {{$na->alasan_rejected}}
           </td>
         </tr>
         @endif
@@ -217,11 +220,17 @@
           <td class="align-middle text-center text-sm">
             <span class="text-primary font-weight-bolder">{{ $permit->status }}</span>
             <br>
+
             <?php
-            $url = route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong, 'json' => true]);
+            $url_promptRejectPermit = route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong, 'json' => true]);
             ?>
-            <a class="btn btn-warning btn-xs mb-0" onclick="promptDeletePermit('{{$url}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Tolak ?</a>
+
+            @if($update)
+            <a class="btn btn-warning btn-xs mb-0" onclick="promptRejectPermit('{{$url_promptRejectPermit}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Reject</a>
+            <a class="btn btn-primary btn-xs mb-0" onclick="promptDeleteAndPresent('{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Hadir</a>
+            @endif
           </td>
+          <td></td>
         </tr>
         @endif
         @endforeach
@@ -236,7 +245,7 @@
 <div class="card tabcontent" id="alpha" style="display:none;">
   @if(count($mhs_alpha)>0)
   @if($update)
-  <div class="card-body p-2 pb-0" style="background:#f9f9f9;">
+  <div class="card-body p-2 pb-0">
     <a id="btn-select-all" class="btn btn-primary btn-block btn-xs mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
   </div>
   @endif
@@ -303,6 +312,7 @@
     "ordering": false,
     "info": false
   });
+
   cekKoorLorong();
 
   function selectForAlpha(id) {
@@ -322,26 +332,30 @@
   }
 
   function alphaAll() {
-    $(".dtmhsh").addClass('bg-primary text-white');
-    const el = document.querySelectorAll(".dtmhsh");
-    var id = 0;
-    for (var i = 0; i < el.length; i++) {
-      id = el[i].getAttribute('val-id')
-      var name = el[i].getAttribute('val-name')
-      $("#slbtnh-" + id).html('<span class="text-white"><small>loading</small></span>');
-      savePresensi(id, name, 'delete');
+    if (confirm('Apakah yakin dialphakan semua ?')) {
+      $(".dtmhsh").addClass('bg-primary text-white');
+      const el = document.querySelectorAll(".dtmhsh");
+      var id = 0;
+      for (var i = 0; i < el.length; i++) {
+        id = el[i].getAttribute('val-id')
+        var name = el[i].getAttribute('val-name')
+        $("#slbtnh-" + id).html('<span class="text-white"><small>loading</small></span>');
+        savePresensi(id, name, 'delete');
+      }
     }
   }
 
   function hadirAll() {
-    $(".dtmhsa").addClass('bg-primary text-white');
-    const el = document.querySelectorAll(".dtmhsa");
-    var id = 0;
-    for (var i = 0; i < el.length; i++) {
-      id = el[i].getAttribute('val-id')
-      var name = el[i].getAttribute('val-name')
-      $("#slbtna-" + id).html('<span class="text-white"><small>loading</small></span>');
-      savePresensi(id, name, 'present');
+    if (confirm('Apakah yakin dihadirkan semua ?')) {
+      $(".dtmhsa").addClass('bg-primary text-white');
+      const el = document.querySelectorAll(".dtmhsa");
+      var id = 0;
+      for (var i = 0; i < el.length; i++) {
+        id = el[i].getAttribute('val-id')
+        var name = el[i].getAttribute('val-name')
+        $("#slbtna-" + id).html('<span class="text-white"><small>loading</small></span>');
+        savePresensi(id, name, 'present');
+      }
     }
   }
 
