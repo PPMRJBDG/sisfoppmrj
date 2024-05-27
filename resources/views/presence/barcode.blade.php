@@ -131,10 +131,9 @@
         });
 
         Quagga.onDetected(function(result) {
-            var code = result.codeResult.code;
-            $("#log-result").html("Detected: " + code);
-            $("#btn-act").html('Kembali');
+            Quagga.stop();
 
+            var code = result.codeResult.code;
             var datax = {};
             datax['barcode'] = code;
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
@@ -142,8 +141,9 @@
                     alert('store');
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
+                        $("#log-result").html("Detected: " + code);
+                        $("#btn-act").html('Kembali');
                         alert(return_data.message);
-                        Quagga.stop();
                         window.location.replace(`{{ url("/") }}/home`)
                     } else {
                         $("#log-result").html("Error: " + JSON.stringify(return_data.message));
