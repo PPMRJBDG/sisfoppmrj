@@ -131,9 +131,14 @@
         });
 
         Quagga.onDetected(function(result) {
-            Quagga.stop();
-
+            $("#log-result").html("Detected: " + code);
+            $("#btn-act").html('Kembali');
             var code = result.codeResult.code;
+            storePresent(code);
+            Quagga.stop();
+        });
+
+        async function storePresent(code) {
             var datax = {};
             datax['barcode'] = code;
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
@@ -141,18 +146,15 @@
                     alert('store');
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
-                        $("#log-result").html("Detected: " + code);
-                        $("#btn-act").html('Kembali');
                         alert(return_data.message);
                         window.location.replace(`{{ url("/") }}/home`)
                     } else {
                         $("#log-result").html("Error: " + JSON.stringify(return_data.message));
-                        // alert(return_data.message)
                         Quagga.start();
                     }
                 }
             )
-        });
+        }
     </script>
 </body>
 
