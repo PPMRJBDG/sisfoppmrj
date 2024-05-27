@@ -80,7 +80,7 @@
             }
         }, function(err) {
             if (err) {
-                $("#log-result").html("error: " + JSON.stringify(err));
+                // $("#log-result").html("error: " + JSON.stringify(err));
             }
 
             Quagga.start();
@@ -92,7 +92,7 @@
 
             if (result) {
                 $("#btn-act").html('Processing...');
-                $("#log-result").html("processing: " + JSON.stringify(result));
+                // $("#log-result").html("processing: " + JSON.stringify(result));
                 if (result.boxes) {
                     drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
                     result.boxes.filter(function(box) {
