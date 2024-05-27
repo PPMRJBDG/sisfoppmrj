@@ -148,7 +148,7 @@
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
                 function(data, status) {
                     var return_data = JSON.parse(data);
-                    $("#log-result").html("Result: " + return_data);
+                    $("#log-result").html("Result: " + return_data.message);
 
                     // if (return_data.status) {
                     //     alert(return_data.message);
