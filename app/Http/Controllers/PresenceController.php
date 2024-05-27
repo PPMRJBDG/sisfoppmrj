@@ -70,6 +70,8 @@ class PresenceController extends Controller
     public function store_present_barcode(Request $request)
     {
         try {
+            return json_encode(['status' => true, 'message' => 'Testing']);
+            exit;
             $santriIdToInsert = auth()->user()->santri;
 
             $datetime = date("Y-m-d H:i:s");
@@ -114,8 +116,8 @@ class PresenceController extends Controller
                     }
                 }
             }
-        } catch (Exception $error) {
-            return json_encode(['status' => false, 'message' => $error]);
+        } catch (Exception $err) {
+            return json_encode(['status' => false, 'message' => $err]);
         }
     }
 

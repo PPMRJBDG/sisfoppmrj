@@ -145,24 +145,20 @@
             alert(code)
             var datax = {};
             datax['barcode'] = code;
-            try {
-                $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
-                    function(data, status) {
-                        var return_data = JSON.parse(data);
-                        $("#log-result").html("Result: " + return_data);
+            $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    $("#log-result").html("Result: " + return_data);
 
-                        // if (return_data.status) {
-                        //     alert(return_data.message);
-                        //     // window.location.replace(`{{ url("/") }}/home`)
-                        // } else {
-                        //     $("#log-result").html("Error: " + JSON.stringify(return_data.message));
-                        //     // Quagga.start();
-                        // }
-                    }
-                )
-            } catch (err) {
-                $("#log-result").html("Error: " + err);
-            }
+                    // if (return_data.status) {
+                    //     alert(return_data.message);
+                    //     // window.location.replace(`{{ url("/") }}/home`)
+                    // } else {
+                    //     $("#log-result").html("Error: " + JSON.stringify(return_data.message));
+                    //     // Quagga.start();
+                    // }
+                }
+            )
         }
     </script>
 </body>
