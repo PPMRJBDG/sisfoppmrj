@@ -22,7 +22,6 @@
 </style>
 
 <body class="bg-primary">
-    <input type="text" value="" id="hide-barcode" disabled>
     <div class="col-12 p-2">
         <div class="card shadow-lg p-2 text-center">
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
@@ -134,29 +133,24 @@
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
             $("#log-result").html("Detected: " + code);
-            $("#hide-barcode").val(code);
             $("#btn-act").html('Kembali');
+            storePresent(code);
             Quagga.stop();
-            storePresent();
         });
 
-        async function storePresent() {
-            var code = $("#hide-barcode").val();
-            alert(code)
+        async function storePresent(code) {
             var datax = {};
             datax['barcode'] = code;
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
                 function(data, status) {
                     var return_data = JSON.parse(data);
-                    $("#log-result").html("Result: " + return_data.message);
-
-                    // if (return_data.status) {
-                    //     alert(return_data.message);
-                    //     // window.location.replace(`{{ url("/") }}/home`)
-                    // } else {
-                    //     $("#log-result").html("Error: " + JSON.stringify(return_data.message));
-                    //     // Quagga.start();
-                    // }
+                    if (return_data.status) {
+                        alert(return_data.message);
+                        window.location.replace(`{{ url("/") }}/home`)
+                    } else {
+                        $("#log-result").html("Error: " + JSON.stringify(return_data.message));
+                        Quagga.start();
+                    }
                 }
             )
         }

@@ -70,7 +70,7 @@ class PresenceController extends Controller
     public function store_present_barcode(Request $request)
     {
         try {
-            $santriIdToInsert = auth()->user()->santri;
+            $santriIdToInsert = auth()->user()->santri->id;
 
             $datetime = date("Y-m-d H:i:s");
             $presence = Presence::where('start_date_time', '<=', $datetime)
@@ -94,11 +94,10 @@ class PresenceController extends Controller
                         'barcode_in' => $barcode,
                         'sign_in' => $sign_in,
                         'updated_by' => auth()->user()->fullname,
-                        // 'metadata' => $_SERVER['HTTP_USER_AGENT'],
+                        'metadata' => $_SERVER['HTTP_USER_AGENT'],
                         'is_late' => $is_late
                     ]);
-                    return json_encode(['status' => true, 'message' => $inserted]);
-                    exit;
+
                     if ($inserted) {
                         return json_encode(['status' => true, 'sign' => 'in', 'message' => 'Sign in berhasil']);
                     } else {
