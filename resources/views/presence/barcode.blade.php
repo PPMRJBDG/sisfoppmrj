@@ -131,14 +131,14 @@
         });
 
         Quagga.onDetected(function(result) {
+            var code = result.codeResult.code;
             $("#log-result").html("Detected: " + code);
             $("#btn-act").html('Kembali');
-            var code = result.codeResult.code;
-            storePresent(code);
+            Quagga.storePresent(code);
             Quagga.stop();
         });
 
-        async function storePresent(code) {
+        Quagga.storePresent(function(code) {
             var datax = {};
             datax['barcode'] = code;
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
@@ -154,7 +154,7 @@
                     }
                 }
             )
-        }
+        })
     </script>
 </body>
 
