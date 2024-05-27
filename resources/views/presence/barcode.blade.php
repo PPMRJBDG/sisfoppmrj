@@ -22,6 +22,7 @@
 </style>
 
 <body class="bg-primary">
+    <input type="text" value="" id="hide_barcode" disabled>
     <div class="col-12 p-2">
         <div class="card shadow-lg p-2 text-center">
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
@@ -133,32 +134,35 @@
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
             $("#log-result").html("Detected: " + code);
+            $("#hide-barcode").val(code);
             $("#btn-act").html('Kembali');
-            Quagga.storePresent(code);
+            storePresent();
             Quagga.stop();
         });
 
-        Quagga.storePresent(function(code) {
-            var datax = {};
-            datax['barcode'] = code;
-            try {
-                $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
-                    function(data) {
-                        alert('store');
-                        var return_data = JSON.parse(data);
-                        if (return_data.status) {
-                            alert(return_data.message);
-                            // window.location.replace(`{{ url("/") }}/home`)
-                        } else {
-                            $("#log-result").html("Error: " + JSON.stringify(return_data.message));
-                            Quagga.start();
-                        }
-                    }
-                )
-            } catch (err) {
-                $("#log-result").html("Error: " + err);
-            }
-        })
+        async function storePresent() {
+            var code = $("#hide-barcode").val();
+            alert(code)
+            // var datax = {};
+            // datax['barcode'] = code;
+            // try {
+            //     $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
+            //         function(data) {
+            //             alert('store');
+            //             var return_data = JSON.parse(data);
+            //             if (return_data.status) {
+            //                 alert(return_data.message);
+            //                 // window.location.replace(`{{ url("/") }}/home`)
+            //             } else {
+            //                 $("#log-result").html("Error: " + JSON.stringify(return_data.message));
+            //                 Quagga.start();
+            //             }
+            //         }
+            //     )
+            // } catch (err) {
+            //     $("#log-result").html("Error: " + err);
+            // }
+        }
     </script>
 </body>
 
