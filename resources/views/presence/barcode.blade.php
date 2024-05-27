@@ -143,25 +143,24 @@
         async function storePresent() {
             var code = $("#hide-barcode").val();
             alert(code)
-            // var datax = {};
-            // datax['barcode'] = code;
-            // try {
-            //     $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
-            //         function(data) {
-            //             alert('store');
-            //             var return_data = JSON.parse(data);
-            //             if (return_data.status) {
-            //                 alert(return_data.message);
-            //                 // window.location.replace(`{{ url("/") }}/home`)
-            //             } else {
-            //                 $("#log-result").html("Error: " + JSON.stringify(return_data.message));
-            //                 Quagga.start();
-            //             }
-            //         }
-            //     )
-            // } catch (err) {
-            //     $("#log-result").html("Error: " + err);
-            // }
+            var datax = {};
+            datax['barcode'] = code;
+            try {
+                $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
+                    function(data) {
+                        var return_data = JSON.parse(data);
+                        if (return_data.status) {
+                            alert(return_data.message);
+                            // window.location.replace(`{{ url("/") }}/home`)
+                        } else {
+                            $("#log-result").html("Error: " + JSON.stringify(return_data.message));
+                            // Quagga.start();
+                        }
+                    }
+                )
+            } catch (err) {
+                $("#log-result").html("Error: " + err);
+            }
         }
     </script>
 </body>
