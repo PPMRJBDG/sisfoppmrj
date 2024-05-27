@@ -24,6 +24,7 @@ use App\Helpers\CommonHelpers;
 use App\Helpers\CountDashboard;
 
 use Carbon\Carbon;
+use Error;
 
 class PresenceController extends Controller
 {
@@ -68,49 +69,53 @@ class PresenceController extends Controller
 
     public function store_present_barcode(Request $request)
     {
-        $santriIdToInsert = auth()->user()->santri;
+        try {
+            $santriIdToInsert = auth()->user()->santri;
 
-        $datetime = date("Y-m-d H:i:s");
-        $presence = Presence::where('start_date_time', '<=', $datetime)
-            ->where('end_date_time', '>=', $datetime)->first();
-        if ($presence == null) {
-            return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
-        } else {
-            $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santriIdToInsert)->first();
-
-            if ($existingPresent == null) {
-                // sign in
-                $sign_in = date("Y-m-d H:i:s");
-                $is_late = 0;
-                if ($sign_in > $presence->start_date_time) {
-                    $is_late = 1;
-                }
-                $inserted = Present::create([
-                    'fkSantri_id' => $santriIdToInsert,
-                    'fkPresence_id' => $presence->id,
-                    'barcode_in' => $request->input('barcode'),
-                    'sign_in' => $sign_in,
-                    'updated_by' => auth()->user()->fullname,
-                    'metadata' => $_SERVER['HTTP_USER_AGENT'],
-                    'is_late' => $is_late
-                ]);
-                if ($inserted) {
-                    return json_encode(['status' => true, 'sign' => 'in', 'message' => 'Sign in berhasil']);
-                } else {
-                    return json_encode(['status' => false, 'sign' => 'in', 'message' => 'Sign in gagal']);
-                }
+            $datetime = date("Y-m-d H:i:s");
+            $presence = Presence::where('start_date_time', '<=', $datetime)
+                ->where('end_date_time', '>=', $datetime)->first();
+            if ($presence == null) {
+                return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
             } else {
-                // sign out
-                $existingPresent->barcode_out = $request->input('barcode');
-                $existingPresent->sign_out = date("Y-m-d H:i:s");
-                // $existingPresent->reason_togo_home_early = $request->input('reason_togo_home_early');
+                $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santriIdToInsert)->first();
 
-                if ($existingPresent->save()) {
-                    return json_encode(['status' => true, 'sign' => 'out', 'message' => 'Sign out berhasil']);
+                if ($existingPresent == null) {
+                    // sign in
+                    $sign_in = date("Y-m-d H:i:s");
+                    $is_late = 0;
+                    if ($sign_in > $presence->start_date_time) {
+                        $is_late = 1;
+                    }
+                    $inserted = Present::create([
+                        'fkSantri_id' => $santriIdToInsert,
+                        'fkPresence_id' => $presence->id,
+                        'barcode_in' => $request->input('barcode'),
+                        'sign_in' => $sign_in,
+                        'updated_by' => auth()->user()->fullname,
+                        'metadata' => $_SERVER['HTTP_USER_AGENT'],
+                        'is_late' => $is_late
+                    ]);
+                    if ($inserted) {
+                        return json_encode(['status' => true, 'sign' => 'in', 'message' => 'Sign in berhasil']);
+                    } else {
+                        return json_encode(['status' => false, 'sign' => 'in', 'message' => 'Sign in gagal']);
+                    }
                 } else {
-                    return json_encode(['status' => false, 'sign' => 'out', 'message' => 'Sign out gagal']);
+                    // sign out
+                    $existingPresent->barcode_out = $request->input('barcode');
+                    $existingPresent->sign_out = date("Y-m-d H:i:s");
+                    // $existingPresent->reason_togo_home_early = $request->input('reason_togo_home_early');
+
+                    if ($existingPresent->save()) {
+                        return json_encode(['status' => true, 'sign' => 'out', 'message' => 'Sign out berhasil']);
+                    } else {
+                        return json_encode(['status' => false, 'sign' => 'out', 'message' => 'Sign out gagal']);
+                    }
                 }
             }
+        } catch (Error $error) {
+            return json_encode(['status' => false, 'message' => $error]);
         }
     }
 

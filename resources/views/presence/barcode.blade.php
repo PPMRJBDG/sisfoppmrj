@@ -145,7 +145,8 @@
                         Quagga.stop();
                         window.location.replace(`{{ url("/") }}/home`)
                     } else {
-                        alert(return_data.message)
+                        $("#log-result").html("detected: " + JSON.stringify(return_data.message));
+                        // alert(return_data.message)
                         Quagga.start();
                     }
                 }
