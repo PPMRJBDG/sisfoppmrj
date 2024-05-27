@@ -94,7 +94,7 @@ class PresenceController extends Controller
                         'barcode_in' => $barcode,
                         'sign_in' => $sign_in,
                         'updated_by' => auth()->user()->fullname,
-                        'metadata' => $_SERVER['HTTP_USER_AGENT'],
+                        // 'metadata' => $_SERVER['HTTP_USER_AGENT'],
                         'is_late' => $is_late
                     ]);
                     return json_encode(['status' => true, 'message' => $inserted]);
