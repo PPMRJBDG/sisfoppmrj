@@ -14,7 +14,13 @@ class Present extends Model
         'fkPresence_id',
         'is_late',
         'updated_by',
-        'metadata'
+        'metadata',
+        'barcode_in',
+        'barcode_out',
+        'sign_in',
+        'sign_out',
+        'reason_togo_home_early'
+
     ];
 
     /**

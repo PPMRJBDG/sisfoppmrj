@@ -74,27 +74,33 @@
 </div>
 <div class="card">
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-    <div class="card-header p-2 d-flex justify-content-between align-items-center">
+    <div class="card-header p-2">
         <div class="row">
-            <div class="d-flex col-md-6 col-sm-12 text-primary font-weight-bold">
+            <div class="col-md-6 col-sm-12 text-primary font-weight-bold mb-2">
                 Daftar Pelanggaran {{ ($is_archive) ? 'Arsip' : 'Aktif' }}
             </div>
-            <div class="d-flex col-md-6 col-sm-12">
-                <a href="{{ route('create pelanggaran') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
-                    Input Pelanggaran
-                </a>
-                @if($is_archive)
-                <a href="/pelanggaran/s/0/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
-                    <i class="fas fa-view" aria-hidden="true"></i>
-                    Pelanggaran Aktif
-                </a>
-                @else
-                <a href="/pelanggaran/s/1/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm">
-                    <i class="fas fa-view" aria-hidden="true"></i>
-                    Lihat Arsip
-                </a>
-                @endif
+            <div class="col-md-6 col-sm-12 text-end">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <a href="{{ route('create pelanggaran') }}" class="btn btn-primary btn-sm w-100 mb-2">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Input Pelanggaran
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        @if($is_archive)
+                        <a href="/pelanggaran/s/0/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm w-100 mb-2">
+                            <i class="fas fa-view" aria-hidden="true"></i>
+                            Pelanggaran Aktif
+                        </a>
+                        @else
+                        <a href="/pelanggaran/s/1/param/{{$value}}/{{$id}}" class="btn btn-success btn-sm w-100 mb-2">
+                            <i class="fas fa-view" aria-hidden="true"></i>
+                            Lihat Arsip
+                        </a>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>

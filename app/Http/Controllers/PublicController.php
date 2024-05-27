@@ -358,7 +358,7 @@ NB:
                                         if (!in_array($lm, $periode_bulan_kbm)) {
                                             if ($check_peringatan->kategori_sp_real == null) {
                                                 $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
-                                                $check_peringatan->keterangan = '[Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
+                                                $check_peringatan->keterangan = $check_peringatan->keterangan . ' | [Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
                                             }
                                             if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
                                                 $check_peringatan->kategori_sp_real = '2';
@@ -367,9 +367,9 @@ NB:
                                                 $check_peringatan->is_peringatan_keras = 0;
                                                 if ($all_persentase < 50) {
                                                     $is_50 = true;
-                                                    $check_peringatan->keterangan = 'Sudah 2 bulan berturut-turut kehadiran dibawah < 50%';
+                                                    $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 2 bulan berturut-turut kehadiran dibawah < 50%';
                                                 } else {
-                                                    $check_peringatan->keterangan = 'Sudah 3 bulan kehadiran dibawah < 80%';
+                                                    $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 3 bulan kehadiran dibawah < 80%';
                                                 }
                                             } else {
                                                 $check_peringatan->saksi = 'sisfo 80%';

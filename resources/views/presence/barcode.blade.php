@@ -24,54 +24,17 @@
 <body class="bg-primary">
     <div class="col-12 p-2">
         <div class="card shadow-lg p-2 text-center">
-            <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
             <div id="interactive" class="viewport">
                 <center>
                     <video autoplay="true" preload="auto"></video>
                 </center>
-                <div id="log-result"></div>
+                <!-- <div id="log-result"></div> -->
             </div>
+            <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
         </div>
     </div>
     <script type="text/javascript">
-        // Quagga.init({
-        //     inputStream: {
-        //         name: "Live",
-        //         type: "LiveStream",
-        //         target: document.querySelector('#interactive'),
-        //         constraints: {
-        //             width: 520,
-        //             height: 200,
-        //             facingMode: "environment" //"environment" for back camera, "user" front camera
-        //         },
-        //         area: { // defines rectangle of the detection/localization area
-        //             top: "0%", // top offset
-        //             right: "0%", // right offset
-        //             left: "0%", // left offset
-        //             bottom: "0%" // bottom offset
-        //         },
-        //         singleChannel: true
-        //     },
-        //     decoder: {
-        //         readers: ["code_128_reader"]
-        //     }
-        // }, function(err) {
-        //     if (err) {
-        //         console.log(err)
-        //         $("#log-result").html("error: " + JSON.stringify(err));
-        //         return
-        //     }
-        //     Quagga.start();
-        //     Quagga.onDetected(function(result) {
-        //         $("#log-result").html("detected: " + JSON.stringify(result.codeResult.code));
-        //         Quagga.stop();
-        //     });
-        //     Quagga.onProcessed(function(result) {
-        //         $("#log-result").html("process: " + JSON.stringify(result));
-        //     });
-        // });
-
         Quagga.init({
             inputStream: {
                 name: "Live",
@@ -169,9 +132,24 @@
 
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
-            $("#log-result").html("detected: " + JSON.stringify(code));
+            // $("#log-result").html("detected: " + JSON.stringify(code));
             $("#btn-act").html('Kembali');
-            Quagga.stop();
+
+            var datax = {};
+            datax['barcode'] = code;
+            $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
+                function(data, status) {
+                    var return_data = JSON.parse(data);
+                    if (return_data.status) {
+                        alert(return_data.message);
+                        Quagga.stop();
+                        window.location.replace(`{{ url("/") }}/home`)
+                    } else {
+                        alert(return_data.message)
+                        Quagga.start();
+                    }
+                }
+            )
         });
     </script>
 </body>

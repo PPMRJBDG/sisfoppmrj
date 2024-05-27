@@ -101,7 +101,12 @@
                             $type = 'date';
                         ?>
                         <input class="form-control" value="<?php if (isset($datax)) {
-                                                                echo $datax->$c;
+                                                                if ($c == 'periode_bulan_kbm') {
+                                                                    $string = str_replace('', '"', $datax->$c);
+                                                                    echo preg_replace('/[^A-Za-z0-9\-]/', '-', $string);
+                                                                } else {
+                                                                    echo $datax->$c;
+                                                                }
                                                             } ?>" type="{{$type}}" name="{{$c}}">
                         @endif
                     </div>

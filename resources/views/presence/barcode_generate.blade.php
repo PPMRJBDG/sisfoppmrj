@@ -22,15 +22,60 @@
 <body class="bg-primary">
     <div class="col-12 p-2">
         <div class="card shadow-lg p-2 text-center">
-            <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(6)">REFRESH</a>
-            <span class="text-bold">GENERATE BARCODE</span>
-            <img id="barcode"></img>
+            <div class="row">
+                <div class="col-md-1 col-sm-12 p-0"></div>
+                <div class="col-md-10 col-sm-12 p-0">
+                    <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(6)">
+                        @if($presence!=null)
+                        {{$presence->name}}
+                        @else
+                        Sedang Tidak Ada KBM
+                        @endif
+                    </a>
+                    <br>
+                    @if($presence!=null)
+                    <span class="text-bold">GENERATE BARCODE</span>
+                    <br>
+                    <img id="barcode" class="mb-2" style="border:solid 1px #ddd;"></img>
+                    <br>
+                    <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(6)">
+                        REFRESH (<span id="seconds">10</span>)
+                    </a>
+                    @endif
+                </div>
+                <div class="col-md-1 col-sm-12 p-0"></div>
+            </div>
         </div>
     </div>
+    <input type="hidden" value="" id="hide_barcode" disabled>
 </body>
 
+@if($presence!=null)
 <script>
     refreshBarcode(6);
+    setInterval(function() {
+        refreshBarcode(6);
+    }, 10000);
+    setInterval(function() {
+        // check barcode
+        var datax = {};
+        datax['barcode'] = $("#hide_barcode").val();
+        $.post(`{{ url("/") }}/presensi/barcode/check`, datax,
+            function(data, status) {
+                var return_data = JSON.parse(data);
+                if (return_data.status) {
+                    refreshBarcode(6);
+                }
+            }
+        )
+
+        // timer code
+        var seconds = parseInt($("#seconds").html());
+        seconds = seconds - 1;
+        if (seconds == 0)
+            seconds = '10'
+        $("#seconds").html(seconds)
+    }, 1000);
 
     function refreshBarcode(lt) {
         let result = '';
@@ -41,8 +86,10 @@
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
             counter += 1;
         }
+        $("#hide_barcode").val(result);
         JsBarcode("#barcode", result);
     }
 </script>
+@endif
 
 </html>

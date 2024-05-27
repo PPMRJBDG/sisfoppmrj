@@ -45,12 +45,73 @@ class PresenceController extends Controller
         return view('presence.barcode');
     }
 
+    public function check_barcode(Request $request)
+    {
+        $existingBarcode = Present::where('barcode_in', $request->input('barcode'))
+            ->whereOr('barcode_out', $request->input('barcode'))->first();
+        if ($existingBarcode == null) {
+            return json_encode(['status' => false]);
+        } else {
+            return json_encode(['status' => true]);
+        }
+        return view('presence.barcode');
+    }
+
     public function generate_barcode()
     {
-        $date = strtotime(date("Y-m-d"));
-        $presence = Presence::where('event_date', $date);
+        $datetime = date("Y-m-d H:i:s");
+        $presence = Presence::where('start_date_time', '<=', $datetime)
+            ->where('end_date_time', '>=', $datetime)->first();
 
-        return view('presence.barcode_generate');
+        return view('presence.barcode_generate', ['presence' => $presence]);
+    }
+
+    public function store_present_barcode(Request $request)
+    {
+        $santriIdToInsert = auth()->user()->santri;
+
+        $datetime = date("Y-m-d H:i:s");
+        $presence = Presence::where('start_date_time', '<=', $datetime)
+            ->where('end_date_time', '>=', $datetime)->first();
+        if ($presence == null) {
+            return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
+        } else {
+            $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santriIdToInsert)->first();
+
+            if ($existingPresent == null) {
+                // sign in
+                $sign_in = date("Y-m-d H:i:s");
+                $is_late = 0;
+                if ($sign_in > $presence->start_date_time) {
+                    $is_late = 1;
+                }
+                $inserted = Present::create([
+                    'fkSantri_id' => $santriIdToInsert,
+                    'fkPresence_id' => $presence->id,
+                    'barcode_in' => $request->input('barcode'),
+                    'sign_in' => $sign_in,
+                    'updated_by' => auth()->user()->fullname,
+                    'metadata' => $_SERVER['HTTP_USER_AGENT'],
+                    'is_late' => $is_late
+                ]);
+                if ($inserted) {
+                    return json_encode(['status' => true, 'sign' => 'in', 'message' => 'Sign in berhasil']);
+                } else {
+                    return json_encode(['status' => false, 'sign' => 'in', 'message' => 'Sign in gagal']);
+                }
+            } else {
+                // sign out
+                $existingPresent->barcode_out = $request->input('barcode');
+                $existingPresent->sign_out = date("Y-m-d H:i:s");
+                // $existingPresent->reason_togo_home_early = $request->input('reason_togo_home_early');
+
+                if ($existingPresent->save()) {
+                    return json_encode(['status' => true, 'sign' => 'out', 'message' => 'Sign out berhasil']);
+                } else {
+                    return json_encode(['status' => false, 'sign' => 'out', 'message' => 'Sign out gagal']);
+                }
+            }
+        }
     }
 
     // ============ PRESENCE REPORT ============
