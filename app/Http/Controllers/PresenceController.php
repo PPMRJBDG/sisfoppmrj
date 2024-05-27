@@ -87,10 +87,11 @@ class PresenceController extends Controller
                     if ($sign_in > $presence->start_date_time) {
                         $is_late = 1;
                     }
+                    $barcode = $request->input('barcode');
                     $inserted = Present::create([
                         'fkSantri_id' => $santriIdToInsert,
                         'fkPresence_id' => $presence->id,
-                        'barcode_in' => $request->input('barcode'),
+                        'barcode_in' => $barcode,
                         'sign_in' => $sign_in,
                         'updated_by' => auth()->user()->fullname,
                         'metadata' => $_SERVER['HTTP_USER_AGENT'],
