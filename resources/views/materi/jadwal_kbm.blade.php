@@ -122,7 +122,6 @@
         for (var x = 0; x < data.length; x++) {
             content = content + '<tr><td>' + (x + 1) + '.</td><td>' + data[x] + '</td></tr>';
         }
-        console.log(content)
         $("#modal-body-mhs").html(content);
     }
     $('#close').click(function() {

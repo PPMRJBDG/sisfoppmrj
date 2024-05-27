@@ -244,7 +244,7 @@ class CommonHelpers
         $kuota = number_format($get_total_kbm * 30 / 100, 0);
 
         $status_ijin = true;
-        if (count($get_total_permit) == $kuota) {
+        if (count($get_total_permit) > $kuota) {
             $status_ijin = false;
         }
 
