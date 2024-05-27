@@ -96,6 +96,8 @@ class PresenceController extends Controller
                         'metadata' => $_SERVER['HTTP_USER_AGENT'],
                         'is_late' => $is_late
                     ]);
+                    return json_encode(['status' => true, 'message' => $inserted]);
+                    exit;
                     if ($inserted) {
                         return json_encode(['status' => true, 'sign' => 'in', 'message' => 'Sign in berhasil']);
                     } else {
