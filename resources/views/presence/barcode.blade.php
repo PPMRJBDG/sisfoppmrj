@@ -132,20 +132,21 @@
 
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
-            $("#log-result").html("detected: " + code);
+            $("#log-result").html("Detected: " + code);
             $("#btn-act").html('Kembali');
 
             var datax = {};
-            datax['barcode'] = JSON.stringify(code);
+            datax['barcode'] = code;
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
-                function(data, status) {
+                function(data) {
+                    alert('store');
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
                         alert(return_data.message);
                         Quagga.stop();
                         window.location.replace(`{{ url("/") }}/home`)
                     } else {
-                        $("#log-result").html("detected: " + JSON.stringify(return_data.message));
+                        $("#log-result").html("Error: " + JSON.stringify(return_data.message));
                         // alert(return_data.message)
                         Quagga.start();
                     }
