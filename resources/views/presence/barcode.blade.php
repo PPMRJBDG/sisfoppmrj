@@ -22,7 +22,7 @@
 </style>
 
 <body class="bg-primary">
-    <input type="text" value="" id="hide_barcode" disabled>
+    <input type="text" value="" id="hide-barcode" disabled>
     <div class="col-12 p-2">
         <div class="card shadow-lg p-2 text-center">
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
@@ -136,8 +136,8 @@
             $("#log-result").html("Detected: " + code);
             $("#hide-barcode").val(code);
             $("#btn-act").html('Kembali');
-            storePresent();
             Quagga.stop();
+            storePresent();
         });
 
         async function storePresent() {
