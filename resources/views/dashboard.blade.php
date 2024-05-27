@@ -2,11 +2,20 @@
 
 <p class="mb-2 text-sm font-weight-bolder text-white">Selamat datang, {{ auth()->user()->fullname }}!</p>
 
+@if($sign_in_out!=null)
 <div class="col-12 mb-2">
     <div class="card shadow-lg p-3">
-        <a href="{{ url('presensi/barcode') }}" class="btn btn-success form-control mb-0">Absen Sekarang (Dev)</a>
+        <a href="{{ url('presensi/barcode') }}" class="btn btn-success form-control mb-0">
+            @if($my_sign==null)
+            Sign In
+            @else
+            Sign Out
+            @endif
+            [{{$sign_in_out->name}}]
+        </a>
     </div>
 </div>
+@endif
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
 <!-- @if(count($get_presence_today)>0) -->
