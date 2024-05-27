@@ -29,7 +29,7 @@
                 <center>
                     <video autoplay="true" preload="auto"></video>
                 </center>
-                <!-- <div id="log-result"></div> -->
+                <div id="log-result"></div>
             </div>
             <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
         </div>
@@ -80,7 +80,7 @@
             }
         }, function(err) {
             if (err) {
-                // $("#log-result").html("error: " + JSON.stringify(err));
+                $("#log-result").html("error: " + JSON.stringify(err));
             }
 
             Quagga.start();
@@ -92,7 +92,7 @@
 
             if (result) {
                 $("#btn-act").html('Processing...');
-                // $("#log-result").html("processing: " + JSON.stringify(result));
+                $("#log-result").html("processing: " + JSON.stringify(result));
                 if (result.boxes) {
                     drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
                     result.boxes.filter(function(box) {
@@ -132,7 +132,7 @@
 
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
-            // $("#log-result").html("detected: " + JSON.stringify(code));
+            $("#log-result").html("detected: " + JSON.stringify(code));
             $("#btn-act").html('Kembali');
 
             var datax = {};
