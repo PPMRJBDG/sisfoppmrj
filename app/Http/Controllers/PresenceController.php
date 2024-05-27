@@ -87,8 +87,6 @@ class PresenceController extends Controller
                     if ($sign_in > $presence->start_date_time) {
                         $is_late = 1;
                     }
-                    return json_encode(['status' => true, 'message' => $request->input('barcode')]);
-                    exit;
                     $inserted = Present::create([
                         'fkSantri_id' => $santriIdToInsert,
                         'fkPresence_id' => $presence->id,
