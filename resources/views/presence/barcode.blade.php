@@ -132,11 +132,11 @@
 
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
-            $("#log-result").html("detected: " + JSON.stringify(code));
+            $("#log-result").html("detected: " + code);
             $("#btn-act").html('Kembali');
 
             var datax = {};
-            datax['barcode'] = code;
+            datax['barcode'] = JSON.stringify(code);
             $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
                 function(data, status) {
                     var return_data = JSON.parse(data);
