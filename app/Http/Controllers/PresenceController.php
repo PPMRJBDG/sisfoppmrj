@@ -114,7 +114,7 @@ class PresenceController extends Controller
                     }
                 }
             }
-        } catch (Error $error) {
+        } catch (Exception $error) {
             return json_encode(['status' => false, 'message' => $error]);
         }
     }
