@@ -1,4 +1,4 @@
-@include('base.start', ['path' => 'sodaqoh/list', 'title' => 'Daftar Sodaqoh', 'breadcrumbs' => ['Daftar Sodaqoh']])
+@include('base.start', ['path' => 'list_sodaqoh', 'title' => 'Daftar Sodaqoh', 'breadcrumbs' => ['Daftar Sodaqoh']])
 <?php
 $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
 ?>
@@ -187,7 +187,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                             <b>{{ number_format($kekurangan,0) }}</b>
                         </td>
                         <td>
-                            <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                            <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan, $select_lunas])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                             @if($data->status_lunas=='')
                             <a onclick="reminderSodaqoh({{$data}})" id="ingatkan{{$data->id}}" class="btn btn-warning btn-xs mb-0">Ingatkan</a>
                             @endif
@@ -301,17 +301,17 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     $('.select_angkatan').change((e) => {
         var periode = $('#select_periode').val()
         var lunas = $('#select_lunas').val()
-        window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/${$(e.currentTarget).val()}/` + lunas)
+        window.location.replace(`{{ url("/") }}/list_sodaqoh/` + periode + `/${$(e.currentTarget).val()}/` + lunas)
     })
     $('.select_periode').change((e) => {
         var angkatan = $('#select_angkatan').val()
         var lunas = $('#select_lunas').val()
-        window.location.replace(`{{ url("/") }}/sodaqoh/list/${$(e.currentTarget).val()}/` + angkatan + `/` + lunas)
+        window.location.replace(`{{ url("/") }}/list_sodaqoh/${$(e.currentTarget).val()}/` + angkatan + `/` + lunas)
     })
     $('.select_lunas').change((e) => {
         var angkatan = $('#select_angkatan').val()
         var periode = $('#select_periode').val()
-        window.location.replace(`{{ url("/") }}/sodaqoh/list/` + periode + `/` + angkatan + `/${$(e.currentTarget).val()}`)
+        window.location.replace(`{{ url("/") }}/list_sodaqoh/` + periode + `/` + angkatan + `/${$(e.currentTarget).val()}`)
     })
 
     function openSodaqoh(data, nm, bulan) {

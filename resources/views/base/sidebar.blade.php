@@ -39,14 +39,6 @@
           <span class="nav-link-text ms-1">Daftar Pelanggaran</span>
         </a>
         @endif
-        @if(!auth()->user()->hasRole('wk'))
-        <a class="nav-link {{ $path == 'sodaqoh/list' ? 'active' : '' }}" href="{{ url('sodaqoh/list') }}">
-          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
-        </a>
-        @endif
         @if(!auth()->user()->hasRole('ku'))
         <a class="nav-link {{ $path == 'catatan-penghubung' ? 'active' : '' }}" href="{{ url('catatan-penghubung') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -55,19 +47,27 @@
           <span class="nav-link-text ms-1">Catatan Penghubung</span>
         </a>
         @endif
+        @if(!auth()->user()->hasRole('wk'))
+        <a class="nav-link {{ $path == 'list_sodaqoh' ? 'active' : '' }}" href="{{ url('list_sodaqoh') }}">
+          <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">Daftar Sodaqoh</span>
+        </a>
+        @endif
         <!-- <a class="nav-link {{ $path == 'receipt' ? 'active' : '' }}" href="{{ url('receipt') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">Input Penerimaan</span>
-        </a>
+        </a> -->
         <a class="nav-link {{ $path == 'rab' ? 'active' : '' }}" href="{{ url('rab') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
           <span class="nav-link-text ms-1">RAB</span>
         </a>
-        <a class="nav-link {{ $path == 'op/in-out' ? 'active' : '' }}" href="{{ url('op/in-out') }}">
+        <!-- <a class="nav-link {{ $path == 'op/in-out' ? 'active' : '' }}" href="{{ url('op/in-out') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>

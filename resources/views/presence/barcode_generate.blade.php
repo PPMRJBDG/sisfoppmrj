@@ -50,12 +50,9 @@
     <input type="hidden" value="" id="hide_barcode" disabled>
 </body>
 
-@if($presence!=null)
 <script>
     refreshBarcode(6);
-    setInterval(function() {
-        refreshBarcode(6);
-    }, 10000);
+
     setInterval(function() {
         // check barcode
         var datax = {};
@@ -77,6 +74,10 @@
         $("#seconds").html(seconds)
     }, 1000);
 
+    setInterval(function() {
+        refreshBarcode(6);
+    }, 10000);
+
     function refreshBarcode(lt) {
         let result = '';
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -90,6 +91,5 @@
         JsBarcode("#barcode", result);
     }
 </script>
-@endif
 
 </html>

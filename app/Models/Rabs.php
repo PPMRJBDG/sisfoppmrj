@@ -8,32 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class Rabs extends Model
 {
     protected $fillable = [
-        'periode_tahunan',
+        'periode_tahun',
         'fkDivisi_id',
-        'fkRab_periode_id',
+        'keperluan',
+        'periode',
         'jumlah',
         'biaya',
-        'bulan_jan',
-        'bulan_feb',
-        'bulan_mar',
-        'bulan_apr',
-        'bulan_mei',
-        'bulan_juni',
-        'bulan_juli',
-        'bulan_ags',
-        'bulan_sept',
-        'bulan_okt',
-        'bulan_nov',
-        'bulan_des'
+        'bulan_1',
+        'bulan_2',
+        'bulan_3',
+        'bulan_4',
+        'bulan_5',
+        'bulan_6',
+        'bulan_7',
+        'bulan_8',
+        'bulan_9',
+        'bulan_10',
+        'bulan_11',
+        'bulan_12'
     ];
 
     public function divisi()
     {
-        return $this->belongsTo(Divisis::class, 'fkDivisi_id');
-    }
-
-    public function rab_periode()
-    {
-        return $this->belongsTo(RabPeriodes::class, 'fkRab_periode_id');
+        return $this->belongsTo(Divisies::class, 'fkDivisi_id');
     }
 }
