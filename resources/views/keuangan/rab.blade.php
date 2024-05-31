@@ -13,6 +13,7 @@
                                 @foreach($periodes as $periode)
                                 <option {{ ($select_periode==$periode->periode_tahun) ? 'selected' : ''; }}>{{$periode->periode_tahun}}</option>
                                 @endforeach
+                                <option {{ ($select_periode=='2024-2025') ? 'selected' : ''; }}>2024-2025</option>
                             </select>
                         </td>
                         <td>
