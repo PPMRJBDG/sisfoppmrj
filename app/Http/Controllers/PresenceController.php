@@ -48,23 +48,31 @@ class PresenceController extends Controller
 
     public function check_barcode(Request $request)
     {
-        $existingBarcode = Present::where('barcode_in', $request->input('barcode'))
-            ->whereOr('barcode_out', $request->input('barcode'))->first();
-        if ($existingBarcode == null) {
-            return json_encode(['status' => false]);
-        } else {
-            return json_encode(['status' => true]);
-        }
-        return view('presence.barcode');
-    }
+        $existingBarcode1 = Present::where('barcode_in', $request->input('barcode1'))
+            ->whereOr('barcode_out', $request->input('barcode1'))->first();
 
-    public function generate_barcode()
-    {
+        $existingBarcode2 = Present::where('barcode_in', $request->input('barcode2'))
+            ->whereOr('barcode_out', $request->input('barcode2'))->first();
+
         $datetime = date("Y-m-d H:i:s");
         $presence = Presence::where('start_date_time', '<=', $datetime)
             ->where('end_date_time', '>=', $datetime)->first();
 
-        return view('presence.barcode_generate', ['presence' => $presence]);
+        $barcode1 = false;
+        $barcode2 = false;
+        if ($existingBarcode1 != null) {
+            $barcode1 = true;
+        }
+        if ($existingBarcode2 != null) {
+            $barcode2 = true;
+        }
+
+        return json_encode(['barcode1' => $barcode1, 'barcode2' => $barcode2, 'presence_name' => ($presence != null) ? $presence->name : '', 'presence' => ($presence == null) ? false : true]);
+    }
+
+    public function generate_barcode()
+    {
+        return view('presence.barcode_generate');
     }
 
     public function store_present_barcode(Request $request)

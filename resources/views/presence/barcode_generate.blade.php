@@ -19,66 +19,94 @@
     }
 </style>
 
-<body class="bg-primary">
-    <div class="col-12 p-2">
-        <div class="card shadow-lg p-2 text-center">
-            <div class="row">
-                <div class="col-md-1 col-sm-12 p-0"></div>
-                <div class="col-md-10 col-sm-12 p-0">
-                    <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(6)">
-                        @if($presence!=null)
-                        {{$presence->name}}
-                        @else
-                        Sedang Tidak Ada KBM
-                        @endif
-                    </a>
-                    <br>
-                    @if($presence!=null)
-                    <span class="text-bold">GENERATE BARCODE</span>
-                    <br>
-                    <img id="barcode" class="mb-2" style="border:solid 1px #ddd;"></img>
-                    <br>
-                    <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(6)">
-                        REFRESH (<span id="seconds">10</span>)
-                    </a>
-                    @endif
-                </div>
-                <div class="col-md-1 col-sm-12 p-0"></div>
+<body class="bg-primary p-2 pt-5">
+    <a href="#" id="presence-name" class="btn btn-warning mb-2 w-100">
+
+    </a>
+    <div class="card shadow-lg p-2 text-center">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 p-0">
+                <br>
+                <span class="text-bold">GENERATE BARCODE</span>
+                <br>
+                <img id="barcode1" class="mb-2" style="width:80%;border:solid 1px #ddd;"></img>
+                <br>
+                <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(1,6)">
+                    REFRESH (<span id="seconds1">10</span>)
+                </a>
+            </div>
+            <div class="col-md-6 col-sm-12 p-0">
+                <br>
+                <span class="text-bold">GENERATE BARCODE</span>
+                <br>
+                <img id="barcode2" class="mb-2" style="width:80%;border:solid 1px #ddd;"></img>
+                <br>
+                <a href="#" class="btn btn-primary mb-2" onclick="refreshBarcode(2,6)">
+                    REFRESH (<span id="seconds2">10</span>)
+                </a>
             </div>
         </div>
     </div>
-    <input type="hidden" value="" id="hide_barcode" disabled>
+    <input type="hidden" value="" id="hide_barcode1" disabled>
+    <input type="hidden" value="" id="hide_barcode2" disabled>
 </body>
 
 <script>
-    refreshBarcode(6);
+    setInterval(function() {
+        checkBarcode();
+    }, 1000);
 
     setInterval(function() {
+        checkBarcode()
+    }, 10000);
+
+    function checkBarcode() {
         // check barcode
         var datax = {};
-        datax['barcode'] = $("#hide_barcode").val();
+        datax['barcode1'] = $("#hide_barcode1").val();
+        datax['barcode2'] = $("#hide_barcode2").val();
         $.post(`{{ url("/") }}/presensi/barcode/check`, datax,
             function(data, status) {
                 var return_data = JSON.parse(data);
-                if (return_data.status) {
-                    refreshBarcode(6);
+                if (return_data.presence) {
+                    $("#presence-name").html(return_data.presence_name.toUpperCase());
+                    if (return_data.barcode1) {
+                        refreshBarcode(1, 6);
+                    }
+                    if (return_data.barcode2) {
+                        refreshBarcode(2, 6);
+                    }
+                } else {
+                    $("#presence-name").html('SEDANG TIDAK ADA KBM');
+                    refreshBarcode(1, 0);
+                    refreshBarcode(2, 0);
                 }
             }
         )
 
         // timer code
-        var seconds = parseInt($("#seconds").html());
-        seconds = seconds - 1;
-        if (seconds == 0)
-            seconds = '10'
-        $("#seconds").html(seconds)
-    }, 1000);
+        var seconds1 = parseInt($("#seconds1").html());
+        seconds1 = seconds1 - 1;
+        if (seconds1 == 0)
+            seconds1 = '10'
+        $("#seconds1").html(seconds1)
 
-    setInterval(function() {
-        refreshBarcode(6);
-    }, 10000);
+        var seconds2 = parseInt($("#seconds2").html());
+        seconds2 = seconds2 - 1;
+        if (seconds2 == 0)
+            seconds2 = '10'
+        $("#seconds2").html(seconds2)
+    }
 
-    function refreshBarcode(lt) {
+    function refreshBarcode(x, lt) {
+        if (lt == 0) {
+            $("#barcode1").hide();
+            $("#barcode2").hide();
+            return false;
+        } else {
+            $("#barcode1").show();
+            $("#barcode2").show();
+        }
         let result = '';
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const charactersLength = characters.length;
@@ -87,8 +115,8 @@
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
             counter += 1;
         }
-        $("#hide_barcode").val(result);
-        JsBarcode("#barcode", result);
+        $("#hide_barcode" + x).val(result);
+        JsBarcode("#barcode" + x, result);
     }
 </script>
 
