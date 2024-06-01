@@ -164,7 +164,8 @@ class PelanggaranController extends Controller
             $message = 'Data berhasil diarsipkan';
         }
 
-        return redirect()->route('pelanggaran tm')->with('success', $message);
+        // return redirect()->route('pelanggaran tm')->with('success', $message);
+        return redirect()->back()->with('success', $message);
     }
 
     public function delete($id)
