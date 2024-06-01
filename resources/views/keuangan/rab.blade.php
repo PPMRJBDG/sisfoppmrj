@@ -42,9 +42,9 @@
                         <td>
                             <label>Periode</label>
                             <select class="form-control" value="" id="periode" name="periode" required>
-                                <option value="Tahunan">Tahunan</option>
-                                <option value="Bulanan">Bulanan</option>
-                                <option value="Mingguan">Mingguan</option>
+                                <option value="tahunan">Tahunan</option>
+                                <option value="bulanan">Bulanan</option>
+                                <option value="mingguan">Mingguan</option>
                             </select>
                         </td>
                         <td>
@@ -88,24 +88,25 @@
                 <tbody id="rab-data">
                     @if(count($rabs)>0)
                     @foreach ($rabs as $rab)
-                    <tr class="text-center" id="rab-{{$rab->id}}">
+                    <tr id="rab-{{$rab->id}}">
                         <td>{{strtoupper($rab->divisi->divisi)}}</td>
                         <td>{{$rab->keperluan}}</td>
-                        <td>{{$rab->periode}}</td>
-                        <td>
+                        <td class="text-center">{{$rab->periode}}</td>
+                        <td class="text-center">
                             <input class="btn btn-warning btn-sm mb-0" type="submit" value="Lihat" onclick="setPeriode(2, {{$rab}})" />
                         </td>
-                        <td>{{number_format($rab->biaya,0)}}</td>
-                        <td>
+                        <td class="text-end">{{number_format($rab->biaya,0)}}</td>
+                        <td class="text-end">
                             <?php
                             $total = 0;
                             for ($i = 1; $i <= 12; $i++) {
                                 $bulan = json_decode($rab['bulan_' . $i]);
-                                for ($x = 1; $x <= 5; $x++) {
-                                    if ($bulan[$x - 1][1]) {
-                                        $total += $rab->biaya;
+                                if ($bulan != null)
+                                    for ($x = 1; $x <= 5; $x++) {
+                                        if ($bulan[$x - 1][1]) {
+                                            $total += $rab->biaya;
+                                        }
                                     }
-                                }
                             }
                             ?>
                             {{number_format($total,0)}}

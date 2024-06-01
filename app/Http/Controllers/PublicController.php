@@ -174,8 +174,6 @@ Ajzkh 🙏🏻';
                 }
                 $caption = $caption . '
 NB:
-- [Peringatan] Apabila kehadiran KBM dalam 3 bulan dibawah *80%*, sesuai mekanisme peraturan PPM akan diberikan *Surat Peringatan 1*
-- [Peringatan] Apabila kehadiran KBM dalam 2 bulan berturut-turut dibawah *50%*, sesuai mekanisme peraturan PPM akan diberikan *Surat Peringatan 1*
 - Jika ada keperluan, dapat melakukan input ijin melalui sisfo
 - Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus atau koor lorong';
 
@@ -329,74 +327,74 @@ NB:
                                 $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
                                 $all_persentase = number_format($all_persentase, 2);
                                 // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
-                                if ($all_persentase < 80) {
-                                    $check_peringatan = Pelanggaran::where('fkSantri_id', $vu->santri_id)
-                                        ->where('fkJenis_pelanggaran_id', 14)
-                                        // ->whereNull('kategori_sp_real')
-                                        ->where('periode_tahun', CommonHelpers::periode())
-                                        ->first();
+//                                 if ($all_persentase < 80) {
+//                                     $check_peringatan = Pelanggaran::where('fkSantri_id', $vu->santri_id)
+//                                         ->where('fkJenis_pelanggaran_id', 14)
+//                                         // ->whereNull('kategori_sp_real')
+//                                         ->where('periode_tahun', CommonHelpers::periode())
+//                                         ->first();
 
-                                    $is_50 = false;
-                                    if ($check_peringatan == null) {
-                                        $store['fkSantri_id'] = $vu->santri_id;
-                                        $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
-                                        $store['tanggal_melanggar'] = date("Y-m-d");
-                                        if ($all_persentase < 50) {
-                                            $store['saksi'] = 'sisfo 50%';
-                                        } else {
-                                            $store['saksi'] = 'sisfo 80%';
-                                        }
-                                        $store['keterangan'] = '[Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
-                                        $store['is_archive'] = 0;
-                                        $store['is_peringatan_keras'] = 0;
-                                        $store['peringatan_kbm'] = 1;
-                                        $store['periode_bulan_kbm'] = json_encode([$lm]);
-                                        $store['periode_tahun'] = CommonHelpers::periode();
-                                        $data = Pelanggaran::create($store);
-                                    } else {
-                                        $periode_bulan_kbm = json_decode($check_peringatan->periode_bulan_kbm);
-                                        if (!in_array($lm, $periode_bulan_kbm)) {
-                                            if ($check_peringatan->kategori_sp_real == null) {
-                                                $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
-                                                $check_peringatan->keterangan = $check_peringatan->keterangan . ' | [Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
-                                            }
-                                            if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
-                                                $check_peringatan->kategori_sp_real = '2';
-                                                $check_peringatan->keringanan_sp = '1';
-                                                $check_peringatan->is_surat_peringatan = date("Y-m-d");
-                                                $check_peringatan->is_peringatan_keras = 0;
-                                                if ($all_persentase < 50) {
-                                                    $is_50 = true;
-                                                    $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 2 bulan berturut-turut kehadiran dibawah < 50%';
-                                                } else {
-                                                    $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 3 bulan kehadiran dibawah < 80%';
-                                                }
-                                            } else {
-                                                $check_peringatan->saksi = 'sisfo 80%';
-                                            }
+//                                     $is_50 = false;
+//                                     if ($check_peringatan == null) {
+//                                         $store['fkSantri_id'] = $vu->santri_id;
+//                                         $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
+//                                         $store['tanggal_melanggar'] = date("Y-m-d");
+//                                         if ($all_persentase < 50) {
+//                                             $store['saksi'] = 'sisfo 50%';
+//                                         } else {
+//                                             $store['saksi'] = 'sisfo 80%';
+//                                         }
+//                                         $store['keterangan'] = '[Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
+//                                         $store['is_archive'] = 0;
+//                                         $store['is_peringatan_keras'] = 0;
+//                                         $store['peringatan_kbm'] = 1;
+//                                         $store['periode_bulan_kbm'] = json_encode([$lm]);
+//                                         $store['periode_tahun'] = CommonHelpers::periode();
+//                                         $data = Pelanggaran::create($store);
+//                                     } else {
+//                                         $periode_bulan_kbm = json_decode($check_peringatan->periode_bulan_kbm);
+//                                         if (!in_array($lm, $periode_bulan_kbm)) {
+//                                             if ($check_peringatan->kategori_sp_real == null) {
+//                                                 $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
+//                                                 $check_peringatan->keterangan = $check_peringatan->keterangan . ' | [Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
+//                                             }
+//                                             if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
+//                                                 $check_peringatan->kategori_sp_real = '2';
+//                                                 $check_peringatan->keringanan_sp = '1';
+//                                                 $check_peringatan->is_surat_peringatan = date("Y-m-d");
+//                                                 $check_peringatan->is_peringatan_keras = 0;
+//                                                 if ($all_persentase < 50) {
+//                                                     $is_50 = true;
+//                                                     $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 2 bulan berturut-turut kehadiran dibawah < 50%';
+//                                                 } else {
+//                                                     $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 3 bulan kehadiran dibawah < 80%';
+//                                                 }
+//                                             } else {
+//                                                 $check_peringatan->saksi = 'sisfo 80%';
+//                                             }
 
-                                            array_push($periode_bulan_kbm, $lm);
-                                            $check_peringatan->periode_bulan_kbm = json_encode(array_unique($periode_bulan_kbm));
-                                        }
+//                                             array_push($periode_bulan_kbm, $lm);
+//                                             $check_peringatan->periode_bulan_kbm = json_encode(array_unique($periode_bulan_kbm));
+//                                         }
 
-                                        $check_peringatan->save();
-                                        $data = Pelanggaran::find($check_peringatan->id);
-                                    }
+//                                         $check_peringatan->save();
+//                                         $data = Pelanggaran::find($check_peringatan->id);
+//                                     }
 
-                                    if ($data) {
-                                        if ($lm == $last_month) {
-                                            $caption = $caption . '
-' . $no . '. *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . ' (' . $all_persentase . '%)*';
-                                            if ($is_50) {
-                                                $caption = $caption . ' - Keterangan: Sudah 2 bulan berturut-turut kehadiran < 50%, Amshol RJ/WK segera memberikan SP 1 sesuai mekanisme';
-                                            } elseif ($data->peringatan_kbm == 3) {
-                                                $caption = $caption . ' - Keterangan: Sudah mencapai 3 bulan kehadiran < 80%, Amshol RJ/WK segera memberikan SP 1 sesuai mekanisme';
-                                            }
-                                            $no++;
-                                        }
-                                    }
-                                }
-                            }
+//                                     if ($data) {
+//                                         if ($lm == $last_month) {
+//                                             $caption = $caption . '
+// ' . $no . '. *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . ' (' . $all_persentase . '%)*';
+//                                             if ($is_50) {
+//                                                 $caption = $caption . ' - Keterangan: Sudah 2 bulan berturut-turut kehadiran < 50%, Amshol RJ/WK segera memberikan SP 1 sesuai mekanisme';
+//                                             } elseif ($data->peringatan_kbm == 3) {
+//                                                 $caption = $caption . ' - Keterangan: Sudah mencapai 3 bulan kehadiran < 80%, Amshol RJ/WK segera memberikan SP 1 sesuai mekanisme';
+//                                             }
+//                                             $no++;
+//                                         }
+//                                     }
+//                                 }
+//                             }
                         }
                     }
                 }
