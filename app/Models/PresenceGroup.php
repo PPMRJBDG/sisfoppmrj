@@ -16,7 +16,9 @@ class PresenceGroup extends Model
         'end_hour',
         'days',
         'show_summary_at_home',
-        'status'
+        'status',
+        'presence_start_hour',
+        'presence_end_hour'
     ];
 
     /**
@@ -72,21 +74,17 @@ class PresenceGroup extends Model
 
         $presencesInRange = Presence::where('fkPresence_group_id', $this->id)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate)->orderBy('event_date', 'ASC')->get();
 
-        if(sizeof($presencesInRange) > 0)
-        {
+        if (sizeof($presencesInRange) > 0) {
             // getting avg present percentage
-            foreach($presencesInRange as $presence)
-            {
+            foreach ($presencesInRange as $presence) {
                 $summary['avg_present_percentage'] += $presence->summary()['totalPercentage'];
             }
 
             // add permits to percentage
-    
+
             $summary['avg_present_percentage'] /= sizeof($presencesInRange);
             // $summary['avg_present_percentage'] = $summary['avg_present_percentage'] / sizeof($santris) * 100;
-        }
-        else
-        {
+        } else {
             $summary['avg_present_percentage'] = 0;
         }
 
@@ -98,19 +96,16 @@ class PresenceGroup extends Model
 
         $presenceGroupId = $this->id;
 
-        $summary['total_permits'] = Permit::whereHas('santri', function($query) use($presenceGroupId, $toDate)
-        {
+        $summary['total_permits'] = Permit::whereHas('santri', function ($query) use ($presenceGroupId, $toDate) {
             $query->where('exit_at', '>=', date("Y-m-t", strtotime($toDate)))
-            ->orWhereNull('exit_at');
+                ->orWhereNull('exit_at');
 
             // ($value->santri->exit_at >= $this->event_date
             //     || $value->santri->exit_at == null);
         })
-        ->whereHas('presence', function($query) use($presenceGroupId, $fromDate, $toDate)
-        {
-            $query->where('fkPresence_group_id', $presenceGroupId)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate);
-
-        })->where('status', 'approved')->count();
+            ->whereHas('presence', function ($query) use ($presenceGroupId, $fromDate, $toDate) {
+                $query->where('fkPresence_group_id', $presenceGroupId)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate);
+            })->where('status', 'approved')->count();
 
         return $summary;
     }
@@ -131,21 +126,17 @@ class PresenceGroup extends Model
 
         $presencesInRange = Presence::where('fkPresence_group_id', $this->id)->whereMonth('event_date', $month)->whereYear('event_date', $year)->orderBy('event_date', 'ASC')->get();
 
-        if(sizeof($presencesInRange) > 0)
-        {
+        if (sizeof($presencesInRange) > 0) {
             // getting avg present percentage
-            foreach($presencesInRange as $presence)
-            {
+            foreach ($presencesInRange as $presence) {
                 $summary['avg_present_percentage'] += $presence->summary()['totalPercentage'];
             }
 
             // add permits to percentage
-    
+
             $summary['avg_present_percentage'] /= sizeof($presencesInRange);
             // $summary['avg_present_percentage'] = $summary['avg_present_percentage'] / sizeof($santris) * 100;
-        }
-        else
-        {
+        } else {
             $summary['avg_present_percentage'] = 0;
         }
 
@@ -153,7 +144,7 @@ class PresenceGroup extends Model
         $previousMonth = $month - 1 > 0 ? $month - 1 : 12;
         $previousMonthsYear = $month - 1 > 0 ? $year : $year - 1;
 
-        if($withDifference)
+        if ($withDifference)
             $summary['difference_with_previous_month'] = $summary['avg_present_percentage'] - $this->summary_in_month($previousMonth, $previousMonthsYear, false)['avg_present_percentage'];
 
         // getting total presences
@@ -164,19 +155,16 @@ class PresenceGroup extends Model
 
         $presenceGroupId = $this->id;
 
-        $summary['total_permits'] = Permit::whereHas('santri', function($query) use($presenceGroupId, $month, $year)
-        {
+        $summary['total_permits'] = Permit::whereHas('santri', function ($query) use ($presenceGroupId, $month, $year) {
             $query->where('exit_at', '>=', date("Y-m-t", strtotime("$year-$month-01")))
-            ->orWhereNull('exit_at');
+                ->orWhereNull('exit_at');
 
             // ($value->santri->exit_at >= $this->event_date
             //     || $value->santri->exit_at == null);
         })
-        ->whereHas('presence', function($query) use($presenceGroupId, $month, $year)
-        {
-            $query->where('fkPresence_group_id', $presenceGroupId)->whereMonth('event_date', $month)->whereYear('event_date', $year);
-
-        })->where('status', 'approved')->count();
+            ->whereHas('presence', function ($query) use ($presenceGroupId, $month, $year) {
+                $query->where('fkPresence_group_id', $presenceGroupId)->whereMonth('event_date', $month)->whereYear('event_date', $year);
+            })->where('status', 'approved')->count();
 
         return $summary;
     }
@@ -193,12 +181,11 @@ class PresenceGroup extends Model
         ];
 
         // loop through months (1-12)
-        for($i = 1; $i < 13; $i++)
-        {
+        for ($i = 1; $i < 13; $i++) {
             $summaryInMonth = $this->summary_in_month($i, $year);
 
             $summary['avg_present_percentage'] += $summaryInMonth['avg_present_percentage'];
-            $summary['avg_present_percentage_monthly'][$i-1] = $summaryInMonth['avg_present_percentage'];
+            $summary['avg_present_percentage_monthly'][$i - 1] = $summaryInMonth['avg_present_percentage'];
         }
 
         $summary['avg_present_percentage'] /= 12;
@@ -206,12 +193,10 @@ class PresenceGroup extends Model
         // getting comparison with previous year
         $previousYear = $year - 1;
 
-        if($withDifference)
-        {
+        if ($withDifference) {
             $summary['difference_with_previous_year'] = $summary['avg_present_percentage'] - $this->summary_in_year($previousYear, false)['avg_present_percentage'];
         }
 
         return $summary;
     }
 }
-

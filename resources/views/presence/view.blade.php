@@ -17,8 +17,7 @@
       }
 
       function isHasda(x) {
-        val = x.toLowerCase();
-        if (val.match('hasda')) {
+        if (x) {
           $("#p1").html('Penyampai Dalil / PPG');
           $("#p2").html('Penyampai Teks / Naslis');
         } else {
@@ -29,17 +28,16 @@
     </script>
     <center><button class="btn btn-primary btn-block mb-0" onclick="togglePrsc()">Presensi {{ $presence->name }}</button></center>
     <div id="toggle-prsc" style="display:none;">
-      <br>
       @include('components.presence_summary', ['presence' => $presence])
       @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('kurikulum'))
       <div class="row p-2 ">
         <div class="card-body p-2" style="background:#f9f9f9;border:#ddd 1px solid;">
           <div class="col-12 pb-2">
             <small>Nama KBM</small>
-            <input class="form-control" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text" onkeyup="isHasda(this.value)">
+            <input class="form-control" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text">
           </div>
           <div class="col-12 pb-2">
-            <small id="p1">{{ (str_contains(strtolower($presence->name),'hasda')) ? 'Penyampai Dalil / PPG' : 'Pengajar PPM 1' }}</small>
+            <small id="p1">{{ ($presence->is_hasda) ? 'Penyampai Dalil / PPG' : 'Pengajar PPM 1' }}</small>
             <select name="dewan_pengajar1" id="dewan_pengajar1" class="form-control">
               <option value="">Pilih Dewan Pengajar PPM 1</option>
               @foreach($dewan_pengajar as $dp)
@@ -48,13 +46,23 @@
             </select>
           </div>
           <div class="col-12 pb-2">
-            <small id="p2">{{ (str_contains(strtolower($presence->name),'hasda')) ? 'Penyampai Teks / Naslis' : 'Pengajar PPM 2' }}</small>
+            <small id="p2">{{ ($presence->is_hasda) ? 'Penyampai Teks / Naslis' : 'Pengajar PPM 2' }}</small>
             <select name="dewan_pengajar2" id="dewan_pengajar2" class="form-control">
               <option value="">Pilih Dewan Pengajar PPM 2</option>
               @foreach($dewan_pengajar as $dp)
               <option {{($presence->fkDewan_pengajar_2==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
               @endforeach
             </select>
+          </div>
+          <div class="col-12 p-2 pl-0">
+            <div class="form-group form-check mb-0">
+              <label>Hasda</label>
+              <input class="form-check-input" onchange="isHasda(this.checked)" type="checkbox" {{ ($presence->is_hasda) ? 'checked' : '' }} id="is_hasda" name="is_hasda">
+            </div>
+            <div class="form-group form-check mb-0">
+              <label>Disatukan</label>
+              <input class="form-check-input" type="checkbox" {{ ($presence->is_put_together) ? 'checked' : '' }} id="is_put_together" name="is_put_together">
+            </div>
           </div>
           <div class="col-12">
             <a style="width:100%;" class="btn btn-primary text-white px-3 mb-0" href="#" onclick="savePresenceName(<?php echo $presence->id; ?>)">Simpan</a>
@@ -67,13 +75,12 @@
         </div>
       </div>
       @endif
-      <br>
       <div class="ms-auto text-end">
         @can('delete presences')
         <a class="btn btn-danger text-danger text-gradient px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
         @endcan
         @can('update presences')
-        <a class="btn btn-primary text-white px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Ubah</a>
+        <!-- <a class="btn btn-primary text-white px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Ubah Lainnya</a> -->
         @endcan
       </div>
     </div>
@@ -446,6 +453,10 @@
     datax['name'] = $("#presence_name").val();
     datax['dp1'] = $("#dewan_pengajar1").val();
     datax['dp2'] = $("#dewan_pengajar2").val();
+    var checkBoxHasda = document.getElementById("is_hasda");
+    datax['is_hasda'] = (checkBoxHasda.checked) ? 1 : 0;
+    var checkBoxPutGe = document.getElementById("is_put_together");
+    datax['is_put_together'] = (checkBoxPutGe.checked) ? 1 : 0;
     $("#info-update-presence").hide();
     $("#info-update").html('');
 

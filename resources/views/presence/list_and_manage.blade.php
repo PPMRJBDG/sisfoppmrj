@@ -28,9 +28,13 @@
           <h6 class="mb-3 text-sm">{{ $presenceGroup->name }} (Grup)</h6>
           <span class="mb-2 text-xs">Jadwal: <span class="text-dark font-weight-bold ms-sm-2">{{ ucwords($presenceGroup->days_in_bahasa()) }}</span></span>
           <br>
-          <span class="mb-2 text-xs">Jam buka: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presenceGroup->start_hour }}</span></span>
+          <span class="mb-2 text-xs">Mulai KBM: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presenceGroup->start_hour }}</span></span>
           -
-          <span class="mb-2 text-xs">Jam tutup: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presenceGroup->end_hour }}</span></span>
+          <span class="mb-2 text-xs">Selesai KBM: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presenceGroup->end_hour }}</span></span>
+          <br>
+          <span class="mb-2 text-xs">Display Barcode (On): <span class="text-dark ms-sm-2 font-weight-bold">{{ $presenceGroup->presence_start_hour }}</span></span>
+          -
+          <span class="mb-2 text-xs">Display Barcode (Off): <span class="text-dark ms-sm-2 font-weight-bold">{{ $presenceGroup->presence_end_hour }}</span></span>
         </div>
         <div class="ms-auto text-end">
           <a class="btn btn-link text-dark text-gradient px-3 mb-0" href="{{ route('view presence group', $presenceGroup->id) }}"><i class="far fa-eye me-2" aria-hidden="true"></i>Lihat</a>

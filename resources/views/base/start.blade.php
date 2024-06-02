@@ -2,6 +2,11 @@
 <html lang="en">
 <?php
 $setting = App\Models\Settings::first();
+
+if (auth()->user()->hasRole('barcode')) {
+  header('Location: presensi/generate-barcode');
+  exit;
+}
 ?>
 
 <head>

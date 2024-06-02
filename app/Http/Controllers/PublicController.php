@@ -489,7 +489,7 @@ NB:
                     $pengajar_2 = $get_presence_today->dewanPengajar2->name;
                 }
 
-                if (str_contains(strtolower($get_presence_today->name), 'hasda')) {
+                if ($get_presence_today->is_hasda) {
                     $pemateri1 = 'Penyampai Dalil / PPG';
                     $pemateri2 = 'Penyampai Teks / Naslis';
                 } else {

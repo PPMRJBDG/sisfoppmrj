@@ -11,10 +11,9 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-- is hasda
-- UX presensi biar mudah
-- scheduler
-- filter perlu approve
+
+- generate barcode login user khusus
+- in out ku
 
 */
 
@@ -35,8 +34,8 @@ Route::get('/profil/edit', [App\Http\Controllers\UserController::class, 'edit_my
 Route::post('/profile/update', [App\Http\Controllers\UserController::class, 'update_my_profile'])->name('update my profile');
 
 Route::get('/presensi/barcode', [App\Http\Controllers\PresenceController::class, 'barcode'])->name('barcode');
-Route::post('/presensi/barcode/check', [App\Http\Controllers\PresenceController::class, 'check_barcode'])->name('check barcode')->middleware('role:koor lorong|superadmin|rj1|wk');
-Route::get('/presensi/generate-barcode', [App\Http\Controllers\PresenceController::class, 'generate_barcode'])->name('generate barcode')->middleware('role:koor lorong|superadmin|rj1|wk');
+Route::post('/presensi/barcode/check', [App\Http\Controllers\PresenceController::class, 'check_barcode'])->name('check barcode')->middleware('role:superadmin|barcode');
+Route::get('/presensi/generate-barcode', [App\Http\Controllers\PresenceController::class, 'generate_barcode'])->name('generate barcode')->middleware('role:superadmin|barcode');
 Route::post('/presensi/barcode/store_present', [App\Http\Controllers\PresenceController::class, 'store_present_barcode'])->name('store present');
 
 Route::get('/presensi/izin/persetujuan/create', [App\Http\Controllers\PresenceController::class, 'create_permit'])->name('create presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');

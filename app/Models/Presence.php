@@ -19,7 +19,9 @@ class Presence extends Model
         'event_date',
         'total_mhs',
         'fkDewan_pengajar_1',
-        'fkDewan_pengajar_2'
+        'fkDewan_pengajar_2',
+        'is_hasda',
+        'is_put_together'
     ];
 
     /**

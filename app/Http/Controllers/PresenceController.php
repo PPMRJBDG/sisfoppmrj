@@ -40,9 +40,6 @@ class PresenceController extends Controller
 
     public function barcode()
     {
-        $date = strtotime(date("Y-m-d"));
-        $presence = Presence::where('event_date', $date);
-
         return view('presence.barcode');
     }
 
@@ -55,8 +52,8 @@ class PresenceController extends Controller
             ->whereOr('barcode_out', $request->input('barcode2'))->first();
 
         $datetime = date("Y-m-d H:i:s");
-        $presence = Presence::where('start_date_time', '<=', $datetime)
-            ->where('end_date_time', '>=', $datetime)->first();
+        $presence = Presence::where('presence_start_date_time', '<=', $datetime)
+            ->where('presence_end_date_time', '>=', $datetime)->first();
 
         $barcode1 = false;
         $barcode2 = false;
@@ -81,8 +78,8 @@ class PresenceController extends Controller
             $santriIdToInsert = auth()->user()->santri->id;
 
             $datetime = date("Y-m-d H:i:s");
-            $presence = Presence::where('start_date_time', '<=', $datetime)
-                ->where('end_date_time', '>=', $datetime)->first();
+            $presence = Presence::where('presence_start_date_time', '<=', $datetime)
+                ->where('presence_end_date_time', '>=', $datetime)->first();
             if ($presence == null) {
                 return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
             } else {
@@ -244,6 +241,8 @@ class PresenceController extends Controller
                 $presence->name = $request->input('name');
                 $presence->fkDewan_pengajar_1 = $request->input('dp1');
                 $presence->fkDewan_pengajar_2 = $request->input('dp2');
+                $presence->is_hasda = $request->input('is_hasda');
+                $presence->is_put_together = $request->input('is_put_together');
                 $updated = $presence->save();
                 if ($updated) {
                     return json_encode(['status' => true, 'message' => 'Berhasil update nama presensi dan dewan pengajar']);
@@ -492,9 +491,13 @@ class PresenceController extends Controller
         if ($request->input('is_date_time_limited')) {
             $presenceGroup->start_hour = $request->input('start_hour');
             $presenceGroup->end_hour = $request->input('end_hour');
+            $presenceGroup->presence_start_hour = $request->input('presence_start_hour');
+            $presenceGroup->presence_end_hour = $request->input('presence_end_hour');
         } else {
             $presenceGroup->start_hour = null;
             $presenceGroup->end_hour = null;
+            $presenceGroup->presence_start_hour = null;
+            $presenceGroup->presence_end_hour = null;
         }
 
         $updated = $presenceGroup->save();
