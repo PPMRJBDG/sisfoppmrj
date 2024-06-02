@@ -19,7 +19,14 @@
     }
 </style>
 
-<body class="bg-primary p-2 pt-5">
+<body class="bg-primary p-2 pt-3">
+    <form id="form" action="{{ url('logout') }}" method="post">
+        @csrf
+        <a class="dropdown-item border-radius-md mb-2 text-center" style="cursor:pointer;" onclick="document.getElementById('form').submit()">
+            Log out
+        </a>
+    </form>
+
     <a href="#" id="presence-name" class="btn btn-warning mb-2 w-100">
 
     </a>
