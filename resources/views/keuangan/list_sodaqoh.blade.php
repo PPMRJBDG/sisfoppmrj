@@ -88,7 +88,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                             $total_xlunas += count($x);
                             $total_penerimaan = $total_penerimaan + $total;
                             $total_kekurangan = $total_kekurangan + ($total_nominal - $total_x);
-                            $total_estimasi_penerimaan = $total_estimasi_penerimaan + ($total_penerimaan + $total_kekurangan);
+                            $total_estimasi_penerimaan = ($total_penerimaan + $total_kekurangan);
                         }
                         ?>
                         @endif

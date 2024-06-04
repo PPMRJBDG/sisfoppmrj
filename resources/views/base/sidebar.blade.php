@@ -67,12 +67,12 @@
           </div>
           <span class="nav-link-text ms-1">RAB</span>
         </a>
-        <!-- <a class="nav-link {{ $path == 'op/in-out' ? 'active' : '' }}" href="{{ url('op/in-out') }}">
+        <a class="nav-link {{ $path == 'keuangan/in-out' ? 'active' : '' }}" href="{{ url('keuangan/in-out') }}">
           <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
             <i class="ni ni-money-coins text-info text-sm opacity-10"></i>
           </div>
-          <span class="nav-link-text ms-1">In Out OP</span>
-        </a> -->
+          <span class="nav-link-text ms-1">In-Out</span>
+        </a>
       </li>
 
       @if(auth()->user()->hasRole('superadmin'))

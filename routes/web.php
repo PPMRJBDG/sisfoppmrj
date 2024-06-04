@@ -178,8 +178,11 @@ Route::get('/rab', [App\Http\Controllers\KeuanganController::class, 'rab'])->nam
 Route::get('/rab/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'rab'])->name('view rab')->middleware('role:superadmin|ku|rj1');
 Route::post('/rab/store', [App\Http\Controllers\KeuanganController::class, 'rab_store'])->name('store rab')->middleware('role:superadmin|ku|rj1');
 Route::get('/rab/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'rab_delete'])->name('delete rab')->middleware('role:superadmin|ku|rj1');
-Route::get('/op/in-out', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
-Route::post('/op/in-out/store', [App\Http\Controllers\KeuanganController::class, 'store_inout'])->name('store inout')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/in-out', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/in-out/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/in-out/{select_periode}/{select_bulan}', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/in-out/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'inout_delete'])->name('delete inout')->middleware('role:superadmin|ku|rj1');
+Route::post('/keuangan/in-out/store', [App\Http\Controllers\KeuanganController::class, 'inout_store'])->name('store inout')->middleware('role:superadmin|ku|rj1');
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');

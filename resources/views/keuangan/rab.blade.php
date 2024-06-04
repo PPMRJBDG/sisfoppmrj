@@ -1,5 +1,11 @@
 @include('base.start', ['path' => 'rab', 'title' => 'RAB', 'breadcrumbs' => ['RAB']])
 
+<style>
+    .new-td {
+        padding: 5px 10px !important;
+    }
+</style>
+
 <input class="form-control" type="hidden" value="" id="rab_id" />
 <div class="card shadow-lg">
     <div class="card-header p-2">
@@ -13,7 +19,12 @@
                                 @foreach($periodes as $periode)
                                 <option {{ ($select_periode==$periode->periode_tahun) ? 'selected' : ''; }}>{{$periode->periode_tahun}}</option>
                                 @endforeach
-                                <option {{ ($select_periode=='2024-2025') ? 'selected' : ''; }}>2024-2025</option>
+                                <?php
+                                $year1 = date('Y');
+                                $year2 = date('Y') + 1;
+                                $year_periode = $year1 . "-" . $year2;
+                                ?>
+                                <option {{ ($select_periode==$year_periode) ? 'selected' : ''; }}>{{$year_periode}}</option>
                             </select>
                         </td>
                         <td>
@@ -72,11 +83,11 @@
     </div>
     <div class="card-body shadow-lg p-0">
         <div class="table-responsive">
-            <table class="table align-items-center mb-4 text-sm">
+            <table class="table align-items-center mb-4 text-xs text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Divisi</th>
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Pengeluaran</th>
+                        <th class="text-uppercase text-start text-secondary font-weight-bolder ps-2">Divisi</th>
+                        <th class="text-uppercase text-start text-secondary font-weight-bolder ps-2">Pengeluaran</th>
                         <th class="text-uppercase text-center text-secondary font-weight-bolder">Periode</th>
                         <th class="text-uppercase text-center text-secondary font-weight-bolder">Jumlah</th>
                         <th class="text-uppercase text-center text-secondary font-weight-bolder">Biaya</th>
@@ -88,33 +99,41 @@
                 <tbody id="rab-data">
                     @if(count($rabs)>0)
                     @foreach ($rabs as $rab)
-                    <tr id="rab-{{$rab->id}}">
-                        <td>{{strtoupper($rab->divisi->divisi)}}</td>
-                        <td>{{$rab->keperluan}}</td>
-                        <td class="text-center">{{$rab->periode}}</td>
-                        <td class="text-center">
-                            <input class="btn btn-warning btn-sm mb-0" type="submit" value="Lihat" onclick="setPeriode(2, {{$rab}})" />
-                        </td>
-                        <td class="text-end">{{number_format($rab->biaya,0)}}</td>
-                        <td class="text-end">
-                            <?php
-                            $total = 0;
-                            for ($i = 1; $i <= 12; $i++) {
-                                $bulan = json_decode($rab['bulan_' . $i]);
-                                if ($bulan != null)
-                                    for ($x = 1; $x <= 5; $x++) {
-                                        if ($bulan[$x - 1][1]) {
-                                            $total += $rab->biaya;
-                                        }
-                                    }
+                    <?php
+                    $total = 0;
+                    $jumlah = 0;
+                    for ($i = 1; $i <= 12; $i++) {
+                        $bulan = json_decode($rab['bulan_' . $i]);
+                        if ($bulan != null)
+                            for ($x = 1; $x <= 5; $x++) {
+                                if ($bulan[$x - 1][1]) {
+                                    $jumlah++;
+                                    $total += $rab->biaya;
+                                }
                             }
-                            ?>
+                    }
+                    ?>
+                    <tr id="rab-{{$rab->id}}">
+                        <td class="new-td">{{strtoupper($rab->divisi->divisi)}}</td>
+                        <td class="new-td">{{$rab->keperluan}}</td>
+                        <td class="new-td text-center">{{$rab->periode}}</td>
+                        <td class="new-td text-center">
+                            <a class="btn btn-warning btn-sm mb-0" style="padding:5px 15px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
+                                ({{$jumlah}})
+                            </a>
+                        </td>
+                        <td class="new-td text-end">{{number_format($rab->biaya,0)}}</td>
+                        <td class="new-td text-end">
                             {{number_format($total,0)}}
                         </td>
                         <!-- <td></td> -->
-                        <td>
-                            <input class="btn btn-success btn-sm mb-0" type="submit" value="Edit" onclick="ubahRab({{$rab}})" />
-                            <input class="btn btn-danger btn-sm mb-0" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})" />
+                        <td class="new-td text-center">
+                            <a class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
@@ -212,8 +231,10 @@
                     // el.checked = data_bulan[(x - 1)][1];
                     el.disabled = false;
                 } else {
-                    const data_bulan = JSON.parse(data['bulan_' + i]);
-                    el.checked = data_bulan[(x - 1)][1];
+                    if (data['bulan_' + i] != null) {
+                        const data_bulan = JSON.parse(data['bulan_' + i]);
+                        el.checked = data_bulan[(x - 1)][1];
+                    }
                     el.disabled = true;
                 }
             }
@@ -252,8 +273,10 @@
         for (var i = 1; i <= 12; i++) {
             for (var x = 1; x <= 5; x++) {
                 const el = document.querySelector("#bln-" + i + "-mg-" + x);
-                const data_bulan = JSON.parse(data['bulan_' + i]);
-                el.checked = data_bulan[(x - 1)][1];
+                if (data['bulan_' + i] != null) {
+                    const data_bulan = JSON.parse(data['bulan_' + i]);
+                    el.checked = data_bulan[(x - 1)][1];
+                }
             }
         }
     }
