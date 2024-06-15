@@ -18,7 +18,7 @@
 @endif
 
 @if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
-<div class="card p-3">
+<div class="card p-2">
   <div class="align-items-center">
     @role('superadmin|rj1|wk|koor lorong')
     <div class="row mb-2">
@@ -83,7 +83,7 @@
 <div class="p-2 text-center font-weight-bolder">
   Harian <span class="badge bg-gradient-secondary">{{$status}}</span>
 </div>
-<div class="card p-3">
+<div class="card p-2">
   <div class="table-responsive">
     <table id="table-harian" class="table align-items-center mb-0">
       <thead>
@@ -152,7 +152,7 @@
 <div class="p-2 text-center font-weight-bolder">
   Berjangka <span class="badge bg-gradient-secondary">{{$status}}</span>
 </div>
-<div class="card p-3">
+<div class="card p-2">
   <div class="table-responsive">
     <table id="table-berjangka" class="table align-items-center mb-0">
       <thead>

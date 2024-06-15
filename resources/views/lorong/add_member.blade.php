@@ -1,6 +1,6 @@
 @if(isset($lorong))
 <div class="card">
-  <div class="card-body pt-4 p-3 d-flex">
+  <div class="card-body pt-4 p-2 d-flex">
     <div class="d-flex flex-column">
       <h6>Lorong Tujuan: {{ $lorong->name }}</h6>
       <span class="mb-2 text-xs">Koor: <span class="text-dark ms-sm-2 font-weight-bold">{{ $lorong->leader->user->fullname }}</span></span>
@@ -9,7 +9,7 @@
   </div>
 </div>
 <div class="card mt-4">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -46,7 +46,7 @@
 </div>
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">Lorong tidak ditemukan.</div>
   </div>
 </div>

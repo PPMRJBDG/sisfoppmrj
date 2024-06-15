@@ -1,6 +1,6 @@
 @if(isset($lorong))
 <div class="card bg-primary text-light">
-  <div class="card-body pt-4 p-3 d-flex">
+  <div class="card-body pt-4 p-2 d-flex">
     <div class="d-flex flex-column">
       <h6>{{ $lorong->name }}</h6>
       <span class="mb-2 text-xs">Koor: <span class="ms-sm-2 font-weight-bold">{{ $lorong->leader->user->fullname }}</span></span>
@@ -17,7 +17,7 @@
   </div>
 </div>
 <div class="card mt-3">
-  <div class="card-header p-3 pb-1 d-flex justify-content-between align-items-center">
+  <div class="card-header p-2 pb-1 d-flex justify-content-between align-items-center">
     <h6 class="font-weight-bolder">Daftar anggota</h6>
     @can('add lorong members')
     <a href="{{ route('add lorong member', $lorong->id) }}" class="btn btn-primary mb-0">

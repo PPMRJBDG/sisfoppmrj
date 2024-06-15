@@ -120,6 +120,13 @@ if (auth()->user()->hasRole('barcode')) {
     background: linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5))
   }
 
+  .btn-secondary,
+  .badge-secondary {
+    background-color: #a6c;
+    background: -webkit-linear-gradient(to right, rgb(218 186 233 / 54%), rgb(134 73 149 / 65%));
+    background: linear-gradient(to right, rgb(218 186 233 / 54%), rgb(134 73 149 / 65%))
+  }
+
   .nav-tabs .nav-link {
     font-weight: 600 !important;
   }
@@ -145,19 +152,25 @@ if (auth()->user()->hasRole('barcode')) {
 <body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0">
   <input type="hidden" value="{{ url('/') }}" id="base-url">
   <input type="hidden" value="#" id="current-url">
-  <header>
-    @include('base.navbar', ['setting', $setting])
-  </header>
   <main class="pt-5 mdb-docs-layout">
-    <div class="container-fluid mt-4 mb-3">
-      <div class="row">
-        <div class="col-md">
-          <button type="button" id="breadcrumb-item" class="btn btn-primary btn-outline btn-sm float-start m-0">Home</button>
-          <button type="button" class="btn btn-primary btn-outline btn-sm float-end m-0" onclick="refreshCurrentUrl()">Refresh</button>
-        </div>
+
+    <!-- HEADER -->
+    <header>
+      @include('base.navbar', ['setting', $setting])
+    </header>
+
+    <!-- BREADCRUM -->
+    <div class="d-flex p-2 mt-2">
+      <div class="flex-fill">
+        <button type="button" id="breadcrumb-item" class="btn btn-primary btn-outline btn-sm float-start m-0">Home</button>
+      </div>
+      <div class="flex-fill">
+        <button type="button" class="btn btn-primary btn-outline btn-sm float-end m-0" onclick="refreshCurrentUrl()">Refresh</button>
       </div>
     </div>
-    <div class="container-fluid" id="content-app">
+
+    <!-- CONTAINER / CONTENT -->
+    <div class="container-fluid pt-0" id="content-app">
 
     </div>
 

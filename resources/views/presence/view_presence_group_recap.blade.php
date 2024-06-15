@@ -1,6 +1,6 @@
 @if(isset($presenceGroup))
 <div class="card">
-  <div class="card-body pt-4 p-3 d-flex">
+  <div class="card-body pt-4 p-2 d-flex">
     <div class="d-flex flex-column">
       <h6>Grup Presensi: {{ $presenceGroup->name }}</h6>
       <span class="mb-2 text-xs">Jadwal: <span class="text-dark font-weight-bold ms-sm-2">{{ ucwords($presenceGroup->days_in_bahasa()) }}</span></span>
@@ -130,7 +130,7 @@
 </div>
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">Grup presensi tidak ditemukan.</div>
   </div>
 </div>

@@ -34,7 +34,7 @@ function printMateriOptions($materis, $santri)
 </style>
 
 <div class="card bg-primary text-light mb-3">
-    <div class="card-body p-3 d-flex justify-content-between align-items-center">
+    <div class="card-body p-2 d-flex justify-content-between align-items-center">
         <h6 class="mb-0">Daftar Monitoring Materi</h6>
         @if(!auth()->user()->hasRole('santri'))
         <a href="{{ route('create materi') }}" class="btn btn-primary">
@@ -49,7 +49,7 @@ function printMateriOptions($materis, $santri)
 <div class="row">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-body p-3">
+            <div class="card-body p-2">
                 <h6 class="text-center text-lg text-primary">Kelas Reguler</h6>
                 @can('view monitoring materis list')
                 <div class="table-responsive">
@@ -79,7 +79,7 @@ function printMateriOptions($materis, $santri)
 
     <div class="col-md-6">
         <div class="card">
-            <div class="card-body p-3">
+            <div class="card-body p-2">
                 <h6 class="text-center text-lg text-primary">Kelas MT</h6>
                 <ul class="list-group">
                     @can('view monitoring materis list')
@@ -111,7 +111,7 @@ function printMateriOptions($materis, $santri)
 </div>
 @else
 <div class="card mb-3">
-    <div class="card-body p-3">
+    <div class="card-body p-2">
         @if (session('success'))
         <div class="alert alert-success text-white">
             {{ session('success') }}

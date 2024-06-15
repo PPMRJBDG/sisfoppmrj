@@ -1,16 +1,18 @@
 @if(isset($presenceGroup))
-<div class="card">
-  <div class="card-body pt-4 p-3 d-flex">
-    <div class="d-flex flex-column">
+<div class="card p-2">
+  <div class="">
+    <div class="">
       <h6>Tujuan Grup Presensi: {{ $presenceGroup->name }}</h6>
-      <span class="mb-2 text-xs">Jadwal: <span class="font-weight-bold ms-sm-2">{{ ucwords($presenceGroup->days_in_bahasa()) }}</span></span>
-      <span class="mb-2 text-xs">Jadwal jam buka: <span class="ms-sm-2 font-weight-bold">{{ $presenceGroup->start_hour }}</span></span>
-      <span class="text-xs">Jadwal jam tutup: <span class="ms-sm-2 font-weight-bold">{{ $presenceGroup->end_hour  }}</span></span>
+      <span class="mb-2 font-weight-bolder">Jadwal:</span> <span class="font-weight-bold ms-sm-2">{{ ucwords($presenceGroup->days_in_bahasa()) }}</span>
+      <br>
+      <span class="mb-2 font-weight-bolder">Jadwal jam buka:</span> <span class="ms-sm-2 badge badge-secondary">{{ $presenceGroup->start_hour }}</span>
+      <br>
+      <span class="font-weight-bolder">Jadwal jam tutup:</span> <span class="ms-sm-2 badge badge-secondary">{{ $presenceGroup->end_hour  }}</span>
     </div>
   </div>
 </div>
-<div class="card mt-4">
-  <div class="card-body pt-4 p-3">
+<div class="card mt-2">
+  <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -40,6 +42,7 @@
       </div>
 
       <hr class="horizontal dark">
+
       <div class="row">
         <div class="col-md-12">
           <div class="form-check">
@@ -78,7 +81,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input class="btn btn-primary form-control" type="submit" value="Submit">
+            <input class="btn btn-primary btn-block" type="submit" value="Submit">
           </div>
         </div>
       </div>
@@ -87,7 +90,7 @@
 </div>
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">Presensi tidak ditemukan.</div>
   </div>
 </div>

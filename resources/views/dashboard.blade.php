@@ -3,8 +3,8 @@
 @if($sign_in_out!=null)
 @if($sign_in_out->sign_out=='')
 <div class="col-12 p-0 mb-2">
-    <div class="card p-3">
-        <a href="{{ url('presensi/barcode') }}" class="btn btn-danger btn-rounded mb-0">
+    <div class="card p-2">
+        <a href="{{ url('presensi/barcode') }}" class="btn btn-danger btn-sm btn-rounded mb-0">
             @if($my_sign==null)
             Sign In
             @else
@@ -19,15 +19,15 @@
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
 <div class="col-12 p-0 mb-2">
-    <div class="card p-3">
+    <div class="card p-2">
         <p class="m-0 mb-2 text-sm font-weight-bolder">Shortcut Presensi Hari Ini</p>
-        <a href="{{ url('presensi/izin/persetujuan') }}" class="btn btn-warning btn-rounded m-0 mb-2">
+        <a href="{{ url('presensi/izin/persetujuan') }}" class="btn btn-warning btn-sm btn-rounded m-0 mb-2">
             Terima / Tolak Ijin
         </a>
         <div class="row">
             @foreach($get_presence_today as $gpt)
             <div class="col-md-{{(12/count($get_presence_today))}}">
-                <a href="/presensi/list/{{ $gpt->id }}" class="btn btn-secondary btn-block btn-rounded mb-2">
+                <a href="/presensi/list/{{ $gpt->id }}" class="btn btn-secondary btn-sm btn-block btn-rounded mb-2">
                     Presensi {{ $gpt->name }}
                 </a>
             </div>
@@ -39,16 +39,16 @@
 
 @if(!auth()->user()->hasRole('superadmin'))
 <div class="col-12 p-0 mb-2">
-    <div class="card p-3">
-        <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>
+    <div class="card p-2">
+        <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-sm btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>
     </div>
 </div>
 @endif
 
 @if($count_dashboard!='')
 <div class="card mb-2">
-    <div class="card-body p-3">
-        <button type="button" class="text-sm font-weight-bolder btn btn-block btn-primary btn-rounded" data-mdb-ripple-init onclick="showHideCacah()">Tampilkan Cacah Jiwa</button>
+    <div class="card-body p-2">
+        <button type="button" class="text-sm font-weight-bolder btn btn-block btn-primary btn-sm btn-rounded" data-mdb-ripple-init onclick="showHideCacah()">Tampilkan Cacah Jiwa</button>
         <div id="toggle-cacahjiwa" class="mt-2" style="display:none;">
             <?php echo $count_dashboard; ?>
         </div>
@@ -56,7 +56,7 @@
 </div>
 @endif
 
-<div class="card p-3">
+<div class="card p-2">
     <p class="mb-2 text-sm font-weight-bolder">Laporan Presensi</p>
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
     <div class="p-0 d-flex mb-2">
@@ -177,7 +177,7 @@
                 @elseif(auth()->user()->hasRole('santri'))
                 <div class="row mt-2 mb-2">
                     <div class="col-12">
-                        <div class="card p-3">
+                        <div class="card p-2">
                             <label class="m-0 text-sm">Filter</label>
                             <div class="p-0 d-flex">
                                 <select class="select_tb form-control" name="select_tb" id="select_tb">
@@ -304,7 +304,7 @@
                     <label style="color:#5e72e4;"><i class="ni ni-air-baloon"></i></label> ijin
                     <label style="color:#f56565;"><i class="ni ni-air-baloon"></i></label> alpha
                     <div class="card mb-3">
-                        <div class="card-body p-3">
+                        <div class="card-body p-2">
                             <div class="chart">
                                 <canvas id="mixed-chart-{{ $pg->id }}" class="chart-canvas" height="300px"></canvas>
                             </div>

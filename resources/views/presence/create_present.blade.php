@@ -5,7 +5,7 @@
 </style>
 @if(isset($presence))
 <div class="card">
-  <div class="card-body pt-4 p-3 d-flex">
+  <div class="card-body pt-4 p-2 d-flex">
     <div class="d-flex flex-column">
       <h6>Presensi {{ $presence->name }}</h6>
       @include('components.presence_summary', ['presence' => $presence])
@@ -13,7 +13,7 @@
   </div>
 </div>
 <div class="card mt-4">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     @if ($errors != null)
     <div class="alert alert-danger text-white">
       <ul>
@@ -112,7 +112,7 @@
 </div>
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">Presensi tidak ditemukan.</div>
   </div>
 </div>

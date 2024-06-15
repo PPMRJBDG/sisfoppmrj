@@ -1,7 +1,7 @@
 <div class="card">
   @if($count_dashboard!='')
   <div class="card shadow-lg mb-0">
-    <div class="card-body p-3">
+    <div class="card-body p-2">
       <p class="mb-0 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Tampilkan Cacah Jiwa</p>
       <div id="toggle-cacahjiwa" style="display:none;">
         <?php echo $count_dashboard; ?>
@@ -10,7 +10,7 @@
   </div>
   @endif
 
-  <div class="card-header pb-0 p-3">
+  <div class="card-header pb-0 p-2">
     @can('create users')
     <a href="{{ route('create user') }}" class="btn btn-primary form-control mb-2">
       <i class="fas fa-plus" aria-hidden="true"></i>
@@ -37,7 +37,7 @@
       </div>
     </div>
   </div>
-  <div class="card-body p-3">
+  <div class="card-body p-2">
     @if (session('success'))
     <div class="alert alert-success text-white">
       {{ session('success') }}

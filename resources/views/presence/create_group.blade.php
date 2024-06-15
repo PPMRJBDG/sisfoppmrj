@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>

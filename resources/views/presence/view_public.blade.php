@@ -58,7 +58,7 @@
 
 @if(isset($presence))
 <div class="card">
-    <div class="card-body p-3">
+    <div class="card-body p-2">
         <script>
             function togglePrsc() {
                 $("#toggle-prsc").toggle();
@@ -229,7 +229,7 @@
 
 @else
 <div class="card">
-    <div class="card-body pt-4 p-3">
+    <div class="card-body pt-4 p-2">
         <div class="alert alert-danger text-white">Presensi tidak ditemukan.</div>
     </div>
 </div>

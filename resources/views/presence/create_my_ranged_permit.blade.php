@@ -1,5 +1,5 @@
 <div class="card" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
-  <div class="card-body p-3">
+  <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -27,7 +27,7 @@
       </div>
       <div class="row mt-2 mb-2">
         <div class="col-md-12">
-          <div class="card p-3 bg-secondary text-white">
+          <div class="card p-2 bg-secondary text-white">
             <div class="col-md-12">
               Estimasi Jumlah KBM bulan ini: <b>{{ $data_kbm_ijin['kbm'] }}</b><br>
               Jumlah kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100),0) }} (30% dari total KBM)</b><br>

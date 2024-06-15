@@ -21,7 +21,7 @@
         @foreach($count_pelanggaran as $key=>$cp)
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
             <div class="card mb-1 mt-1 shadow-sm">
-                <div class="card-body p-3">
+                <div class="card-body p-2">
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">

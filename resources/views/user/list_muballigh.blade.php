@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
+    <div class="card-header pb-0 p-2 d-flex justify-content-between align-items-center">
         <div class="p-2">
             <select class="angkatan-list form-control" name="" id="">
                 <option value="">Filter angkatan</option>
@@ -10,7 +10,7 @@
         </div>
         <h6 class="mb-0 text-sm">{{ count($users) }} Data Muballigh {{ $select_angkatan }}</h6>
     </div>
-    <div class="card-body pt-4 p-3">
+    <div class="card-body pt-4 p-2">
         @if (session('success'))
         <div class="alert alert-success text-white">
             {{ session('success') }}

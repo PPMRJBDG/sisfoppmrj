@@ -1,11 +1,11 @@
 <div class="card">
-  <div class="card-header p-3 d-flex justify-content-between align-items-center">
+  <div class="card-header p-2 d-flex justify-content-between align-items-center">
     <a href="#" class="font-weight-bolder m-0 btn btn-secondary">PROFILE USER</a>
     <a href="{{ route('edit my profile') }}" class="btn btn-primary m-0">
       <i class="fas fa-pen" aria-hidden="true"></i> Ubah profil
     </a>
   </div>
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>

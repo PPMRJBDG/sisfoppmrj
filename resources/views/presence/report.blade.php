@@ -1,5 +1,5 @@
 @if(sizeof($listedPresenceGroups) <= 0) <div class="card h-100">
-  <div class="card-body p-3">
+  <div class="card-body p-2">
     Belum ada data.
   </div>
   </div>
@@ -8,7 +8,7 @@
     @foreach($listedPresenceGroups as $listedPresenceGroup)
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
       <div class="card h-100">
-        <div class="card-body p-3">
+        <div class="card-body p-2">
           <div class="row">
             <div class="numbers">
               <p class="text-sm mb-0 text-uppercase font-weight-bold">Rata-rata Kehadiran {{ $listedPresenceGroup->name }} ({{ date('M') }})</p>
@@ -29,7 +29,7 @@
     @foreach($listedPresenceGroups as $listedPresenceGroup)
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
       <div class="card h-100">
-        <div class="card-body p-3">
+        <div class="card-body p-2">
           <div class="row">
             <div class="numbers">
               <p class="text-sm mb-0 text-uppercase font-weight-bold">Total Presensi {{ $listedPresenceGroup->name }} ({{ date('M') }})</p>
@@ -59,7 +59,7 @@
             dibanding tahun lalu
           </p>
         </div>
-        <div class="card-body p-3">
+        <div class="card-body p-2">
           <div class="chart">
             <canvas id="chart-line-year-avg-{{ $presenceGroup->id }}" class="chart-canvas" height="300"></canvas>
           </div>
@@ -80,7 +80,7 @@
         <div class="card-header pb-0 pt-3 bg-transparent">
           <h6 class="text-capitalize">Kehadiran {{ $presenceGroup->name }} Sepanjang Bulan</h6>
         </div>
-        <div class="card-body p-3">
+        <div class="card-body p-2">
           <div class="chart">
             <canvas id="chart-line-month-count-{{ $presenceGroup->id }}" class="chart-canvas" height="300"></canvas>
           </div>

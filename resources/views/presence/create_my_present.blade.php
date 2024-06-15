@@ -1,7 +1,7 @@
 @if(isset($presence))
 @if(isset($santri))
 <div class="card">
-  <div class="card-body pt-4 p-3 d-flex">
+  <div class="card-body pt-4 p-2 d-flex">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -12,7 +12,7 @@
     </div>
     @endif
     <div class="d-flex flex-column">
-      <div class="d-flex gap-3 justify-content-start">
+      <div class="d-flex gap-2 justify-content-start">
         <span>
           <h6>{{ $presence->name }}</h6>
         </span>
@@ -26,7 +26,7 @@
   </div>
 </div>
 <div class="card mt-4">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <form action="{{ route('store my present', $presence->id) }}" method="post">
       @csrf
       <div class="row">
@@ -41,14 +41,14 @@
 </div>
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">User ini bukanlah santri.</div>
   </div>
 </div>
 @endif
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">Presensi tidak ditemukan.</div>
   </div>
 </div>

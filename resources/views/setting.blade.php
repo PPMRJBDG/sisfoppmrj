@@ -18,8 +18,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 <div class="row">
     <div class="col-md-6">
         <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card p-2 shadow-lg">
+                <div class="">
                     <form action="{{ route('store apps') }}" id="upload-file" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
@@ -44,7 +44,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     @if($list_setting->logoImgUrl!='')
                                     <div class="mb-2">
                                         <center>
-                                            <img style="width: 120px" src="{{ url('storage/logo-apps/' . $list_setting->logoImgUrl) }}" alt="">
+                                            <img style="width: 60px" src="{{ url('storage/logo-apps/' . $list_setting->logoImgUrl) }}" alt="">
                                         </center>
                                     </div>
                                     @endif
@@ -69,7 +69,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </div> -->
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Simpan Aplikasi">
+                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Simpan Aplikasi">
                                 </div>
                             </div>
                         </div>
@@ -79,8 +79,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Periode Tahun -->
         <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card p-2 shadow-lg">
+                <div class="">
                     <div class="row">
                         <div class="col-md-5">
                             <form action="{{ route('store periode') }}" method="POST" enctype="multipart/form-data">
@@ -98,7 +98,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Periode">
+                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Tambah Periode">
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         </div>
                         <div class="col-md-7">
                             <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
+                                <table class="table table-sm align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Angkatan</th>
@@ -136,8 +136,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Generate Sodaqoh -->
         <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card p-2 shadow-lg">
+                <div class="">
                     <form action="{{ route('store generate sodaqoh') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
@@ -162,7 +162,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Generate Sodaqoh Tahunan">
+                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Generate Sodaqoh Tahunan">
                                 </div>
                             </div>
                         </div>
@@ -172,8 +172,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Calendar Liburan -->
         <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card p-2 shadow-lg">
+                <div class="">
                     <div class="row">
                         <div class="col-md-5">
                             <form action="{{ route('store liburan') }}" method="POST" enctype="multipart/form-data">
@@ -199,7 +199,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Liburan">
+                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Tambah Liburan">
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         </div>
                         <div class="col-md-7">
                             <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
+                                <table class="table table-sm align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Dari</th>
@@ -245,8 +245,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Jenis Pelanggaran -->
         <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card p-2 shadow-lg">
+                <div class="">
                     <div class="row">
                         <div class="col-md-5">
                             <form action="{{ route('store jenis pelanggaran') }}" method="POST" enctype="multipart/form-data">
@@ -271,7 +271,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Tambah Pelanggaran">
+                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Tambah Pelanggaran">
                                         </div>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         </div>
                         <div class="col-md-7">
                             <div class="table-responsive">
-                                <table id="table-pelanggaran" class="table align-items-center mb-0">
+                                <table id="table-pelanggaran" class="table table-sm align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
@@ -312,8 +312,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     <div class="col-md-6">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
-            <div class="card shadow-lg">
-                <div class="card-body">
+            <div class="card p-2 shadow-lg">
+                <div class="">
                     <div class="row">
                         <div class="col-md-12">
                             <form action="{{ route('store settings') }}" method="POST" enctype="multipart/form-data">
@@ -487,7 +487,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         @endif
 
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Update Setting">
+                                            <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Update Setting">
                                         </div>
                                     </div>
                                 </div>

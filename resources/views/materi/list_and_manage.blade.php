@@ -1,12 +1,12 @@
 <div class="card">
-  <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
+  <div class="card-header pb-0 p-2 d-flex justify-content-between align-items-center">
     <h6 class="mb-0">Daftar Materi</h6>
     <a href="{{ route('create materi') }}" class="btn btn-primary">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Buat materi
     </a>
   </div>
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     @if (session('success'))
     <div class="alert alert-success text-white">
       {{ session('success') }}

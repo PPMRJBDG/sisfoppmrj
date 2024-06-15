@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-{{auth()->user()->themes}} bg-body-tertiary shadow-5 border-bottom">
   <div class="container-fluid">
-    <a class="navbar-brand ps-2" href="{{ url('') }}">
+    <a class="navbar-brand ps-2" href="#">
       @if($setting->logoImgUrl!='')
       <img src="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}" height="24" alt="PPM Logo" loading="lazy" />
       @else

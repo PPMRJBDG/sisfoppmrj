@@ -1,6 +1,6 @@
 @if(isset($presence))
 <div class="card">
-  <div class="card-body p-3">
+  <div class="card-body p-2">
     <script>
       function togglePrsc() {
         $("#toggle-prsc").toggle();
@@ -105,7 +105,7 @@
   </div>
 </div>
 
-<div class="card p-3">
+<div class="card p-2">
   @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
   <div class="row">
     <div class="col-sm-12 col-md-12 mt-2">
@@ -285,7 +285,7 @@
 </div>
 @else
 <div class="card">
-  <div class="card-body pt-4 p-3">
+  <div class="card-body pt-4 p-2">
     <div class="alert alert-danger text-white">Presensi tidak ditemukan.</div>
   </div>
 </div>
