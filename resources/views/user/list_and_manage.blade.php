@@ -1,6 +1,4 @@
-@include('base.start', ['path' => 'user/list/santri', 'title' => 'Daftar User', 'breadcrumbs' => ['Daftar User']])
 <div class="card">
-
   @if($count_dashboard!='')
   <div class="card shadow-lg mb-0">
     <div class="card-body p-3">
@@ -148,7 +146,14 @@
     </div>
   </div>
 </div>
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('#table').DataTable({
     order: [
       // [1, 'desc']
@@ -157,11 +162,10 @@
   });
   $('.angkatan-list').change((e) => {
     var role = $('#role-list').val()
-    window.location.replace(`{{ url("/") }}/user/list/santri/${$(e.currentTarget).val()}/` + role)
+    getPage(`{{ url("/") }}/user/list/santri/${$(e.currentTarget).val()}/` + role)
   })
   $('.role-list').change((e) => {
     var angkatan = $('#angkatan-list').val()
-    window.location.replace(`{{ url("/") }}/user/list/santri/` + angkatan + `/${$(e.currentTarget).val()}`)
+    getPage(`{{ url("/") }}/user/list/santri/` + angkatan + `/${$(e.currentTarget).val()}`)
   })
 </script>
-@include('base.end')

@@ -111,8 +111,11 @@ class PresenceController extends Controller
                     // sign out
                     if ($existingPresent->sign_out != '') {
                         return json_encode(['status' => true, 'sign' => 'out', 'message' => 'Anda sudah sign out']);
+                    } elseif (date("Y-m-d H:i:s") < $presence->end_date_time && $request->input('reason') == '') {
+                        return json_encode(['status' => true, 'sign' => 'confirm_out', 'message' => 'Anda sign out sebelum jam pulang KBM, silahkan masukkan alasannya']);
                     }
                     $existingPresent->barcode_out = $barcode;
+                    $existingPresent->reason_togo_home_early = $request->input('reason');
                     $existingPresent->sign_out = date("Y-m-d H:i:s");
                     // $existingPresent->reason_togo_home_early = $request->input('reason_togo_home_early');
 
@@ -206,6 +209,8 @@ class PresenceController extends Controller
             $request->validate([
                 'start_date_time' => 'required|date',
                 'end_date_time' => 'required|date',
+                'presence_start_date_time' => 'required|date',
+                'presence_end_date_time' => 'required|date',
             ]);
 
         if ($request->input('fkPresence_group_id'))
@@ -217,6 +222,8 @@ class PresenceController extends Controller
             'name' => $request->input('name'),
             'start_date_time' => $request->input('start_date_time') ? $request->input('start_date_time') : null,
             'end_date_time' => $request->input('end_date_time') ? $request->input('end_date_time') : null,
+            'presence_start_date_time' => $request->input('presence_start_date_time') ? $request->input('presence_start_date_time') : null,
+            'presence_end_date_time' => $request->input('presence_end_date_time') ? $request->input('presence_end_date_time') : null,
             'fkPresence_group_id' => $request->input('fkPresence_group_id') ? $request->input('fkPresence_group_id') : null,
             'event_date' => $request->input('event_date')
         ]);
@@ -260,6 +267,8 @@ class PresenceController extends Controller
                 $request->validate([
                     'start_date_time' => 'required|date',
                     'end_date_time' => 'required|date',
+                    'presence_start_date_time' => 'required|date',
+                    'presence_end_date_time' => 'required|date',
                 ]);
 
             if ($request->input('fkPresence_group_id'))
@@ -276,9 +285,13 @@ class PresenceController extends Controller
             if ($request->input('is_date_time_limited')) {
                 $presence->start_date_time = $request->input('start_date_time');
                 $presence->end_date_time = $request->input('end_date_time');
+                $presence->presence_start_date_time = $request->input('presence_start_date_time');
+                $presence->presence_end_date_time = $request->input('presence_end_date_time');
             } else {
                 $presence->start_date_time = null;
                 $presence->end_date_time = null;
+                $presence->presence_start_date_time = null;
+                $presence->presence_end_date_time = null;
             }
 
             $updated = $presence->save();
@@ -300,9 +313,12 @@ class PresenceController extends Controller
         $presence = Presence::find($id);
 
         if ($presence) {
-            $deleted = $presence->delete();
+            $presence->is_deleted = 1;
+            $presence->deleted_by = auth()->user()->fullname;
+            $presence->save();
+            // $deleted = $presence->delete();
 
-            if (!$deleted)
+            if (!$presence)
                 return redirect()->route('presence tm')->withErrors(['failed_deleting_presence', 'Gagal menghapus presensi.']);
         }
 
@@ -335,7 +351,9 @@ class PresenceController extends Controller
         }
         $presence = Presence::find($id);
         if ($presence == null) {
-            return redirect()->route('dashboard');
+            return redirect()->route('index');
+        } elseif ($presence->is_deleted) {
+            return redirect()->route('presence tm')->with('success', 'Presensi ' . $presence->name . ' telah dihapus oleh ' . $presence->deleted_by);
         }
 
         $for = '';
@@ -550,12 +568,16 @@ class PresenceController extends Controller
             $request->validate([
                 'start_date_time' => 'required|date',
                 'end_date_time' => 'required|date',
+                'presence_start_date_time' => 'required|date',
+                'presence_end_date_time' => 'required|date',
             ]);
 
         $inserted = Presence::create([
             'name' => $request->input('name'),
             'start_date_time' => $request->input('start_date_time') ? $request->input('start_date_time') : null,
             'end_date_time' => $request->input('end_date_time') ? $request->input('end_date_time') : null,
+            'presence_start_date_time' => $request->input('presence_start_date_time') ? $request->input('presence_start_date_time') : null,
+            'presence_end_date_time' => $request->input('presence_end_date_time') ? $request->input('presence_end_date_time') : null,
             'fkPresence_group_id' => $request->route('id'),
             'total_mhs' => CountDashboard::total_mhs('all'),
             'event_date' => $request->input('event_date')
@@ -989,19 +1011,35 @@ class PresenceController extends Controller
                 $lorong = Lorong::where('fkSantri_leaderId', $santri->id)->first();
         }
 
+        $rangedPermitGenerator = null;
         // get current santri
         if ($status == 'all') {
             $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
+                ->whereNull('santris.exit_at')
                 ->select('permits.*', 'permits.updated_at')
                 ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
                 ->orderBy('permits.created_at', 'DESC')
                 ->get();
+            $rangedPermitGenerator = RangedPermitGenerator::leftJoin('santris', 'santris.id', '=', 'ranged_permit_generators.fkSantri_id')
+                ->whereNull('santris.exit_at')
+                ->select('ranged_permit_generators.*')
+                ->orderBy('ranged_permit_generators.created_at', 'DESC')
+                ->get();
         } else {
             $permits = Permit::join('presences', 'presences.id', '=', 'permits.fkPresence_id')
+                ->join('santris', 'santris.id', '=', 'permits.fkSantri_id')
+                ->whereNull('santris.exit_at')
                 ->select('permits.*', 'permits.updated_at')
                 ->where('presences.event_date', 'LIKE', '%' . $tb . '%')
                 ->where('permits.status', $status)
                 ->orderBy('permits.created_at', 'DESC')
+                ->get();
+            $rangedPermitGenerator = RangedPermitGenerator::leftJoin('santris', 'santris.id', '=', 'ranged_permit_generators.fkSantri_id')
+                ->whereNull('santris.exit_at')
+                ->select('ranged_permit_generators.*')
+                ->where('ranged_permit_generators.status', $status)
+                ->orderBy('ranged_permit_generators.created_at', 'DESC')
                 ->get();
         }
         if ($lorong) {
@@ -1027,8 +1065,6 @@ class PresenceController extends Controller
                         ->get();
                 }
         }
-
-        $rangedPermitGenerator = RangedPermitGenerator::where('status', 'pending')->get();
 
         return view(
             'presence.permit_approval',
@@ -1088,7 +1124,7 @@ class PresenceController extends Controller
                 }
 
                 WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
-                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui', 'is_present' => $is_present]);
+                return json_encode(['status' => true, 'message' => 'Ijin berhasil disetujui', 'is_present' => $is_present]);
             }
         } else {
             $presenceId = $request->get('presenceId');
@@ -1124,34 +1160,50 @@ class PresenceController extends Controller
 
     public function approve_range_permit(Request $request)
     {
-        $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan berjangka dari:
-';
+        try {
+            $data_json = json_decode($request->get('data_json_berjangka'));
+            foreach ($data_json as $dt) {
+                $rpgId = $dt[0];
+                $santriId = $dt[1];
 
-        $rpgId = $request->get('rpgId');
-        $santriId = $request->get('santriId');
-
-        $permit = RangedPermitGenerator::where('id', $rpgId)->where('fkSantri_id', $santriId)->whereNot('status', 'approved')->first();
-        if ($permit) {
-            PresenceGroupsChecker::checkPermitGenerators();
-            $permit->status = 'approved';
-            $permit->approved_by = auth()->user()->fullname;
-            if ($permit->save()) {
-                $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presenceGroup->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-                WaSchedules::save('Range Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
-                return json_encode(['status' => true, 'message' => 'Izin berhasil disetujui']);
-            } else {
-                return json_encode(['status' => false, 'message' => 'Gagal, sedang terjadi kesalahan sistem']);
+                $permit = RangedPermitGenerator::where('id', $rpgId)->where('fkSantri_id', $santriId)->whereNot('status', 'approved')->first();
+                if ($permit) {
+                    PresenceGroupsChecker::checkPermitGenerators();
+                    $permit->status = 'approved';
+                    $permit->approved_by = auth()->user()->fullname;
+                    $permit->save();
+                }
             }
-        } else {
-            return json_encode(['status' => false, 'message' => 'IJin berjangka tidak ditemukan']);
+
+            return json_encode(['status' => true, 'message' => 'Ijin berhasil disetujui']);
+        } catch (Exception $err) {
+            return json_encode(['status' => false, 'message' => 'Gagal, sedang terjadi kesalahan sistem']);
         }
     }
 
-    /**
-     * Show and control requested permits from current user's Lorong members.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    public function reject_range_permit(Request $request)
+    {
+        try {
+            $data_json = json_decode($request->get('data_json_berjangka'));
+            foreach ($data_json as $dt) {
+                $rpgId = $dt[0];
+                $santriId = $dt[1];
+
+                $permit = RangedPermitGenerator::where('id', $rpgId)->where('fkSantri_id', $santriId)->whereNot('status', 'rejected')->first();
+                if ($permit) {
+                    PresenceGroupsChecker::checkPermitGenerators();
+                    $permit->status = 'rejected';
+                    $permit->approved_by = auth()->user()->fullname;
+                    $permit->save();
+                }
+            }
+
+            return json_encode(['status' => true, 'message' => 'Ijin berhasil ditolak']);
+        } catch (Exception $err) {
+            return json_encode(['status' => false, 'message' => 'Gagal, sedang terjadi kesalahan sistem']);
+        }
+    }
+
     public function reject_permit(Request $request)
     {
         // get current santri

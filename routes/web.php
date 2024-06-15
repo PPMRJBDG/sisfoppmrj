@@ -12,11 +12,24 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 
+NEW MODEL:
+- tingkatans
+- banks
+- poses
+- rabs (update)
+
+ENHANCHEMENT:
 - in out ku
+- rab kegiatan
+- rab pengadaan barang (non rutin)
+- hasil musya
+- field niat tes muballigh
+- role dewan guru
+- rumusan target materi
 
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 // Route::get('/{tb}', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
@@ -31,6 +44,7 @@ Auth::routes(['register' => false]);
 Route::get('/profil', [App\Http\Controllers\UserController::class, 'my_profile'])->name('my profile');
 Route::get('/profil/edit', [App\Http\Controllers\UserController::class, 'edit_my_profile'])->name('edit my profile');
 Route::post('/profile/update', [App\Http\Controllers\UserController::class, 'update_my_profile'])->name('update my profile');
+Route::get('/profil/version', [App\Http\Controllers\UserController::class, 'edit_version'])->name('edit version');
 
 Route::get('/presensi/barcode', [App\Http\Controllers\PresenceController::class, 'barcode'])->name('barcode');
 Route::post('/presensi/barcode/check', [App\Http\Controllers\PresenceController::class, 'check_barcode'])->name('check barcode')->middleware('role:superadmin|barcode');
@@ -55,6 +69,7 @@ Route::get('/presensi/izin/saya/delete', [App\Http\Controllers\PresenceControlle
 Route::get('/presensi/izin/saya/berjangka/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_my_ranged_permit'])->name('delete my ranged presence permit')->middleware('role:santri|superadmin');
 Route::get('/presensi/izin/saya/approve', [App\Http\Controllers\PresenceController::class, 'approve_permit'])->name('approve presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::get('/presensi/izin/pengajuan/berjangka/approve', [App\Http\Controllers\PresenceController::class, 'approve_range_permit'])->name('approve presence range permit')->middleware('role:superadmin|rj1');
+Route::get('/presensi/izin/pengajuan/berjangka/reject', [App\Http\Controllers\PresenceController::class, 'reject_range_permit'])->name('reject presence range permit')->middleware('role:superadmin|rj1');
 Route::get('/presensi/izin/pengajuan/delete_and_present', [App\Http\Controllers\PresenceController::class, 'delete_and_present'])->name('delete and present permit')->middleware('role:superadmin|rj1');
 Route::get('/presensi/izin/saya/reject', [App\Http\Controllers\PresenceController::class, 'reject_permit'])->name('reject presence permit')->middleware('role:koor lorong|superadmin|rj1|wk');
 Route::get('/presensi/izin/list', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk');
@@ -173,16 +188,16 @@ Route::get('/list_sodaqoh/{periode}', [App\Http\Controllers\KeuanganController::
 Route::get('/list_sodaqoh/{periode}/{angkatan}', [App\Http\Controllers\KeuanganController::class, 'list_sodaqoh'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::get('/list_sodaqoh/{periode}/{angkatan}/{status}', [App\Http\Controllers\KeuanganController::class, 'list_sodaqoh'])->name('list periode sodaqoh')->middleware('role:ku|superadmin');
 Route::post('/list_sodaqoh/store', [App\Http\Controllers\KeuanganController::class, 'store_sodaqoh'])->name('store sodaqoh')->middleware('role:ku|superadmin');
-Route::get('/receipt', [App\Http\Controllers\KeuanganController::class, 'receipt'])->name('view receipt')->middleware('role:superadmin|ku|rj1');
-Route::get('/rab', [App\Http\Controllers\KeuanganController::class, 'rab'])->name('view rab')->middleware('role:superadmin|ku|rj1');
-Route::get('/rab/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'rab'])->name('view rab')->middleware('role:superadmin|ku|rj1');
-Route::post('/rab/store', [App\Http\Controllers\KeuanganController::class, 'rab_store'])->name('store rab')->middleware('role:superadmin|ku|rj1');
-Route::get('/rab/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'rab_delete'])->name('delete rab')->middleware('role:superadmin|ku|rj1');
-Route::get('/keuangan/in-out', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
-Route::get('/keuangan/in-out/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
-Route::get('/keuangan/in-out/{select_periode}/{select_bulan}', [App\Http\Controllers\KeuanganController::class, 'inout'])->name('view inout')->middleware('role:superadmin|ku|rj1');
-Route::get('/keuangan/in-out/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'inout_delete'])->name('delete inout')->middleware('role:superadmin|ku|rj1');
-Route::post('/keuangan/in-out/store', [App\Http\Controllers\KeuanganController::class, 'inout_store'])->name('store inout')->middleware('role:superadmin|ku|rj1');
+
+Route::get('/keuangan/rab-tahunan', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan'])->name('view rab tahunan')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/rab-tahunan/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan'])->name('view rab tahunan')->middleware('role:superadmin|ku|rj1');
+Route::post('/keuangan/rab-tahunan/store', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan_store'])->name('store rab tahunan')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/rab-tahunan/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan_delete'])->name('delete rab tahunan')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/jurnal', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/jurnal/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/jurnal/{select_periode}/{select_bulan}', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
+Route::get('/keuangan/jurnal/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'jurnal_delete'])->name('delete jurnal')->middleware('role:superadmin|ku|rj1');
+Route::post('/keuangan/jurnal/store', [App\Http\Controllers\KeuanganController::class, 'jurnal_store'])->name('store jurnal')->middleware('role:superadmin|ku|rj1');
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');

@@ -1,4 +1,3 @@
-@include('base.start', ['path' => 'list_sodaqoh', 'title' => 'Daftar Sodaqoh', 'breadcrumbs' => ['Daftar Sodaqoh']])
 <?php
 $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
 ?>
@@ -292,6 +291,12 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 </div>
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table').DataTable({
         order: [
             [4, 'desc']
@@ -301,18 +306,18 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     $('.select_angkatan').change((e) => {
         var periode = $('#select_periode').val()
         var lunas = $('#select_lunas').val()
-        window.location.replace(`{{ url("/") }}/list_sodaqoh/` + periode + `/${$(e.currentTarget).val()}/` + lunas)
-    })
+        getPage(`{{ url("/") }}/list_sodaqoh/` + periode + `/${$(e.currentTarget).val()}/` + lunas)
+    });
     $('.select_periode').change((e) => {
         var angkatan = $('#select_angkatan').val()
         var lunas = $('#select_lunas').val()
-        window.location.replace(`{{ url("/") }}/list_sodaqoh/${$(e.currentTarget).val()}/` + angkatan + `/` + lunas)
-    })
+        getPage(`{{ url("/") }}/list_sodaqoh/${$(e.currentTarget).val()}/` + angkatan + `/` + lunas)
+    });
     $('.select_lunas').change((e) => {
         var angkatan = $('#select_angkatan').val()
         var periode = $('#select_periode').val()
-        window.location.replace(`{{ url("/") }}/list_sodaqoh/` + periode + `/` + angkatan + `/${$(e.currentTarget).val()}`)
-    })
+        getPage(`{{ url("/") }}/list_sodaqoh/` + periode + `/` + angkatan + `/${$(e.currentTarget).val()}`)
+    });
 
     function openSodaqoh(data, nm, bulan) {
         $('#modalSodaqoh').fadeIn();
@@ -444,4 +449,3 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         })
     }
 </script>
-@include('base.end')

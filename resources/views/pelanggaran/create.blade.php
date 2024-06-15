@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'pelanggaran/create', 'title' => 'Input Pelanggaran', 'breadcrumbs' => ['Input Pelanggaran'], 'backRoute' => route('pelanggaran tm1')
-])
 @if ($errors->any())
 <div class="alert alert-danger text-white">
     <ul>
@@ -139,4 +137,11 @@
         </form>
     </div>
 </div>
-@include('base.end')
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+</script>

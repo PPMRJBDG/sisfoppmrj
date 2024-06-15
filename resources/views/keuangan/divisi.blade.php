@@ -74,3 +74,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+</script>

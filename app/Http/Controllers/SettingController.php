@@ -28,7 +28,7 @@ class SettingController extends Controller
         $list_liburan = Liburan::orderBy('id', 'DESC')->limit(10)->get();
         $list_jenis_pelanggaran = JenisPelanggaran::get();
         $list_setting = Settings::first();
-        $list_wa_user = SpUsers::where('username', 'ppmhs.roudhotuljannah')->get();
+        $list_wa_user = SpUsers::where('username', $list_setting->wa_username)->get();
         $list_wa_team = null;
         $list_wa_account = null;
         $list_wa_group = null;
@@ -90,29 +90,38 @@ class SettingController extends Controller
 
     public function store_settings(Request $request)
     {
-        $request->validate([
-            'host_url' => 'required',
-            'wa_team_id' => 'required',
-            'wa_sender_account_id' => 'required',
-            'wa_type' => 'required',
-            'wa_template' => 'required',
-            'wa_min_delay' => 'required',
-            'wa_max_delay' => 'required',
-            'wa_ketertiban_group_id' => 'required',
-            'wa_ortu_group_id' => 'required',
-            'wa_header' => 'required',
-            'wa_footer' => 'required',
-            'wa_info_alpha_ortu' => 'required',
-            'wa_info_jaga_malam' => 'required',
-            'wa_info_lulus' => 'required',
-            'status_perijinan' => 'required',
-            'wa_link_presensi_koor' => 'required',
-            'auto_generate_hadir' => 'required',
-        ]);
         $setting = Settings::find(1);
+        if ($setting->wa_username == '') {
+            $request->validate([
+                'host_url' => 'required',
+                'wa_username' => 'required',
+            ]);
+        } else {
+            $request->validate([
+                'host_url' => 'required',
+                'wa_username' => 'required',
+                'wa_team_id' => 'required',
+                'wa_sender_account_id' => 'required',
+                'wa_type' => 'required',
+                'wa_template' => 'required',
+                'wa_min_delay' => 'required',
+                'wa_max_delay' => 'required',
+                'wa_ketertiban_group_id' => 'required',
+                'wa_ortu_group_id' => 'required',
+                'wa_header' => 'required',
+                'wa_footer' => 'required',
+                'wa_info_alpha_ortu' => 'required',
+                'wa_info_jaga_malam' => 'required',
+                'wa_info_lulus' => 'required',
+                'status_perijinan' => 'required',
+                'wa_link_presensi_koor' => 'required',
+                'auto_generate_hadir' => 'required',
+            ]);
+        }
         if ($setting == null) {
             Settings::create([
                 'host_url' => $request->input('host_url'),
+                'wa_username' => $request->input('wa_username'),
                 'wa_team_id' => $request->input('wa_team_id'),
                 'wa_sender_account_id' => $request->input('wa_sender_account_id'),
                 'wa_type' => $request->input('wa_type'),
@@ -133,6 +142,7 @@ class SettingController extends Controller
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
+            $setting->wa_username = $request->input('wa_username');
             $setting->wa_team_id = $request->input('wa_team_id');
             $setting->wa_sender_account_id = $request->input('wa_sender_account_id');
             $setting->wa_type = $request->input('wa_type');

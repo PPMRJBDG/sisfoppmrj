@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'catatan-penghubung', 'title' => 'Catatan Penghubung', 'breadcrumbs' => ['Catatan Penghubung']])
-
 @if ($errors->any())
 <div class="alert alert-danger text-white">
     <ul>
@@ -34,7 +32,7 @@
                 @foreach($cat_penghubung as $cp)
                 <tr class="text-sm">
                     <td>
-                        <a onclick="openCatatan('{{$cp->id}}','{{$cp->santri_id}}','[{{$cp->angkatan}}] {{$cp->fullname}}','{{$cp->cat_kepribadian}}','{{$cp->cat_sholat}}','{{$cp->cat_kbm}}','{{$cp->cat_asmara}}','{{$cp->cat_akhlaq}}','{{$cp->cat_umum}}')" class="btn btn-primary btn-xs mb-0">INPUT</a>
+                        <a href="#" onclick="openCatatan('{{$cp->id}}','{{$cp->santri_id}}','[{{$cp->angkatan}}] {{$cp->fullname}}','{{$cp->cat_kepribadian}}','{{$cp->cat_sholat}}','{{$cp->cat_kbm}}','{{$cp->cat_asmara}}','{{$cp->cat_akhlaq}}','{{$cp->cat_umum}}')" class="btn btn-primary btn-xs mb-0">INPUT</a>
                         [{{$cp->angkatan}}] {{$cp->fullname}}
                     </td>
                     <td id="kepribadian{{$cp->santri_id}}">{{substr($cp->cat_kepribadian,0,20);}}</td>
@@ -61,45 +59,40 @@
                 </div>
             </div>
             <div class="modal-body">
-                <div class="p-2" style="background:#f9f9ff;border:1px #ddd solid;">
+                <div class="p-2">
                     <input class="form-control" readonly type="hidden" id="cat_id" name="cat_id" value="">
                     <input class="form-control" readonly type="hidden" id="santri_id" name="santri_id" value="">
-                    <br>
 
                     <label class="form-control-label">Kepribadian</label>
                     <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="kepribadian{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                     <textarea class="form-control" type="text" id="cat_kepribadian" name="cat_kepribadian"></textarea>
-                    <br>
 
                     <label class="form-control-label">Sholat 5 Waktu</label>
                     <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="sholat{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                     <textarea class="form-control" type="text" id="cat_sholat" name="cat_sholat"></textarea>
-                    <br>
 
                     <label class="form-control-label">KBM</label>
                     <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="kbm{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                     <textarea class="form-control" type="text" id="cat_kbm" name="cat_kbm"></textarea>
-                    <br>
 
                     <label class="form-control-label">Asmara</label>
                     <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="asmara{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                     <textarea class="form-control" type="text" id="cat_asmara" name="cat_asmara"></textarea>
-                    <br>
 
                     <label class="form-control-label">Akhlaq</label>
                     <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="akhlaq{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                     <textarea class="form-control" type="text" id="cat_akhlaq" name="cat_akhlaq"></textarea>
-                    <br>
 
                     <label class="form-control-label">Umum</label>
                     <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="umum{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                     <textarea class="form-control" type="text" id="cat_umum" name="cat_umum"></textarea>
-
+                    @if(auth()->user()->hasRole('superadmin'))
                     <hr>
                     <div class="form-group form-check">
-                        <label class="custom-control-label">Kirim melalui WA</label>
                         <input class="form-check-input" type="checkbox" id="info-wa" name="info-wa">
+                        <label class="form-check-label" for="info-wa">Kirim melalui WA</label>
                     </div>
+                    @endif
                 </div>
                 <div class="card-header p-0 mt-2" id="info-update-catatan" style="display:none;border-radius:4px;">
                     <h6 id="bg-warning" class="mb-0 bg-warning p-1 text-white" style="display:none;">
@@ -119,6 +112,12 @@
 </div>
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table').DataTable({
         order: [],
         pageLength: 25
@@ -220,4 +219,3 @@
         $("#cat_umum").val('');
     });
 </script>
-@include('base.end')

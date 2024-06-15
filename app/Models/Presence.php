@@ -15,13 +15,17 @@ class Presence extends Model
         'name',
         'start_date_time',
         'end_date_time',
+        'presence_start_date_time',
+        'presence_end_date_time',
         'fkPresence_group_id',
         'event_date',
         'total_mhs',
         'fkDewan_pengajar_1',
         'fkDewan_pengajar_2',
         'is_hasda',
-        'is_put_together'
+        'is_put_together',
+        'is_deleted',
+        'deleted_by'
     ];
 
     /**

@@ -1,4 +1,3 @@
-@include('base.start', ['path' => 'user/list/alumni', 'title' => 'Daftar Alumni', 'breadcrumbs' => ['Daftar Alumni']])
 <div class="card">
   <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
     <div class="p-2">
@@ -101,7 +100,14 @@
     </div>
   </div>
 </div>
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('#table').DataTable({
     order: [
       // [1, 'desc']
@@ -109,7 +115,6 @@
     pageLength: 25
   });
   $('.angkatan-list').change((e) => {
-    window.location.replace(`{{ url("/") }}/user/list/alumni/${$(e.currentTarget).val()}`)
+    getPage(`{{ url("/") }}/user/list/alumni/${$(e.currentTarget).val()}`)
   })
 </script>
-@include('base.end')

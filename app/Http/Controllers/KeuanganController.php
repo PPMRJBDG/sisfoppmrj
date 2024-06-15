@@ -12,6 +12,8 @@ use App\Models\SpWhatsappPhoneNumbers;
 use App\Helpers\WaSchedules;
 use App\Helpers\CommonHelpers;
 use App\Models\RabInouts;
+use App\Models\Banks;
+use App\Models\Poses;
 use Illuminate\Support\Facades\DB;
 
 class KeuanganController extends Controller
@@ -216,21 +218,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
     }
 
-    public function receipt($periode = null)
-    {
-        if ($periode == null) {
-            $rabs = [];
-        } else {
-            $rabs = Rabs::where('periode_tahun', $periode)->get();
-        }
-
-        return view('keuangan.receipt', [
-            'rabs' => $rabs,
-            'periode' => $periode,
-        ]);
-    }
-
-    public function rab($select_periode = null)
+    public function rab_tahunan($select_periode = null)
     {
         if ($select_periode == null) {
             $select_periode = CommonHelpers::periode();
@@ -247,7 +235,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         ]);
     }
 
-    public function rab_store(Request $request)
+    public function rab_tahunan_store(Request $request)
     {
         if ($request->input('rab_id') == '') {
             $data = Rabs::create([
@@ -298,7 +286,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
     }
 
-    public function rab_delete($id)
+    public function rab_tahunan_delete($id)
     {
         $data = Rabs::find($id);
         if ($data) {
@@ -312,7 +300,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
     }
 
-    public function inout($select_periode = null, $select_bulan = null)
+    public function jurnal($select_periode = null, $select_bulan = null)
     {
         $bulans = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
@@ -331,13 +319,17 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         $rabs = Rabs::where('periode_tahun', $select_periode)->get();
         $sodaqohs = Sodaqoh::where('periode', $select_periode)->get();
         $divisis = Divisies::where('active', 1)->get();
+        $banks = Banks::get();
+        $poses = Poses::get();
         $periodes = Periode::get();
 
-        return view('keuangan.inout', [
+        return view('keuangan.jurnal', [
             'rabs' => $rabs,
             'rabinouts' => $rabinout,
             'sodaqohs' => $sodaqohs,
             'divisis' => $divisis,
+            'banks' => $banks,
+            'poses' => $poses,
             'periodes' => $periodes,
             'bulans' => $bulans,
             'select_periode' => $select_periode,
@@ -345,7 +337,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         ]);
     }
 
-    public function inout_store(Request $request)
+    public function jurnal_store(Request $request)
     {
         if ($request->input('inout_id') == '') {
             if ($request->input('jenis') == 'out') {
@@ -434,23 +426,23 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 '</a>' .
                 '</td>' .
                 '</tr>';
-            return json_encode(array("status" => true, "message" => 'Berhasil menyimpan catatan keuangan', "content" => $content));
+            return json_encode(array("status" => true, "message" => 'Berhasil menyimpan jurnal', "content" => $content));
         } else {
-            return json_encode(array("status" => false, "message" => 'Gagal menyimpan catatan keuangan'));
+            return json_encode(array("status" => false, "message" => 'Gagal menyimpan jurnal'));
         }
     }
 
-    public function inout_delete($id)
+    public function jurnal_delete($id)
     {
         $data = RabInouts::find($id);
         if ($data) {
             if ($data->delete()) {
-                return json_encode(array("status" => true, "message" => 'Berhasil menghapus catatan keuangan'));
+                return json_encode(array("status" => true, "message" => 'Berhasil menghapus jurnal'));
             } else {
-                return json_encode(array("status" => false, "message" => 'Gagal menghapus catatan keuangan'));
+                return json_encode(array("status" => false, "message" => 'Gagal menghapus jurnal'));
             }
         } else {
-            return json_encode(array("status" => false, "message" => 'Catatan keuangan tidak ditemukan'));
+            return json_encode(array("status" => false, "message" => 'Jurnal tidak ditemukan'));
         }
     }
 }

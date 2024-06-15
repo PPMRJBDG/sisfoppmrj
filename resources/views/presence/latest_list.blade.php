@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'presensi/terbaru', 'title' => 'Daftar Presensi Terbaru', 'breadcrumbs' => ['Daftar Presensi Terbaru']])
-
 <?php
 function build_presence_label_button($presence, $today)
 {
@@ -239,6 +237,12 @@ function build_calendar($month, $year, $presences, $today)
 </div>
 
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('.presence-label').click(e => {
     let presenceTitle = $(e.currentTarget).attr('data-presence-title');
     let presenceId = $(e.currentTarget).attr('data-presence-id');
@@ -272,4 +276,3 @@ function build_calendar($month, $year, $presences, $today)
 
   })
 </script>
-@include('base.end')

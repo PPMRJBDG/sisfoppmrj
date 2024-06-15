@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'jadwal-kbm', 'title' => 'Jadwal KBM', 'breadcrumbs' => ['Jadwal KBM']])
-
 <div class="row">
     <div class="col-md-12">
         <div class="card shadow-lg mb-2">
@@ -8,12 +6,12 @@
                     <p class="mb-0">Silahkan memilih jam KBM, setiap sesi: <b>Durasinya -+ 1 Jam 30 Menit</b></p>
                 </div>
                 <div class="table-responsive">
-                    <table class="table align-items-center mb-2" style="background:#e0e5ed;border:1px solid #ddd;">
+                    <table class="table align-items-center mb-2">
                         <thead>
                             <tr class="text-center">
                                 <th></th>
                                 @foreach($day_kbm as $dn)
-                                <th class="text-sm">
+                                <th class="text-sm font-weight-bolder">
                                     {{$dn->day_name}}
                                 </th>
                                 @endforeach
@@ -23,7 +21,7 @@
                                 <th></th>
                                 @foreach($day_kbm as $dn)
                                 <th class="text-sm">
-                                    <span class="badge bg-gradient-primary" id="total-day-{{$dn->id}}"></span>
+                                    <span class="badge badge-primary" id="total-day-{{$dn->id}}"></span>
                                 </th>
                                 @endforeach
                             </tr>
@@ -68,15 +66,21 @@
 
                                     @if($hn->is_break || $hn->is_disable)
                                     @if($hn->is_break)
-                                    <span class="text-warning"><small>break</small></span>
+                                    <span class="badge badge-warning"><small>break</small></span>
                                     @else
-                                    <input style="background: grey;" disabled class="form-check-input" type="checkbox">
+                                    <div class="form-check">
+                                        <input style="background: grey;" disabled class="form-check-input" id="jdwl-{{$dn->id}}-{{$hn->id}}-disabled" type="checkbox">
+                                        <label class="form-check-label" for="jdwl-{{$dn->id}}-{{$hn->id}}-disabled"></label>
+                                    </div>
                                     @endif
                                     @else
                                     @if(auth()->user()->hasRole('superadmin'))
                                     <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge bg-gradient-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
                                     @else
-                                    <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">
+                                    <div class="form-check">
+                                        <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">
+                                        <label class="form-check-label" for="jdwl-{{$dn->id}}-{{$hn->id}}"></label>
+                                    </div>
                                     @endif
                                     @endif
                                 </th>
@@ -113,6 +117,12 @@
 </div>
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     function viewMahasiswa(data, day, hour) {
         $('#modalMahasiswa').fadeIn();
         $('#modalMahasiswa').css('background', 'rgba(0, 0, 0, 0.7)');
@@ -215,4 +225,3 @@
     checkDay();
     countHourPerDay();
 </script>
-@include('base.end')

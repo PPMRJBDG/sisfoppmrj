@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'rab', 'title' => 'RAB', 'breadcrumbs' => ['RAB']])
-
 <style>
     .new-td {
         padding: 5px 10px !important;
@@ -201,11 +199,16 @@
         </div>
     </div>
 </div>
-@include('base.end')
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#periode_tahun').change((e) => {
-        window.location.replace(`{{ url("/") }}/rab/${$(e.currentTarget).val()}`)
+        getPage(`{{ url("/") }}/keuangan/rab-tahunan/${$(e.currentTarget).val()}`)
     })
 
     $('#close_1').click(function() {
@@ -320,7 +323,7 @@
             datax['bulan_' + i] = JSON.stringify(ival);
         }
 
-        $.post("{{ route('store rab') }}", datax,
+        $.post("{{ route('store rab tahunan') }}", datax,
             function(data, status) {
                 var return_data = JSON.parse(data);
                 $("#status").fadeIn();
@@ -340,7 +343,7 @@
 
     function hapusRab(id) {
         if (confirm('Apakah RAB ini yakin akan dihapus ?')) {
-            $.get(`{{ url("/") }}/rab/delete/` + id,
+            $.get(`{{ url("/") }}/keuangan/rab-tahunan/delete/` + id,
                 function(data, status) {
                     var return_data = JSON.parse(data);
                     $("#status").fadeIn();

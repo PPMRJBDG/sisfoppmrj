@@ -48,7 +48,6 @@ class PresenceGroupsChecker
 
                 if (isset($presenceInThisDate)) {
                     array_push($results['already_created_presences'], $presenceInThisDate);
-
                     continue;
                 }
 

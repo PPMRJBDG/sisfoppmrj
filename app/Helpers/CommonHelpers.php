@@ -89,7 +89,7 @@ class CommonHelpers
                     $nohp = '62' . substr($nohp, 1);
                 }
                 $nomor_hp[0]['nohp'] = $nohp;
-                $nomor_hp[0]['name'] = 'PPM ' . $request->input('fullname');
+                $nomor_hp[0]['name'] = $team_id->org_name . ' ' . $request->input('fullname');
             }
             if ($request->input('nohp_ortu') != null) {
                 $nohp = $request->input('nohp_ortu');
@@ -98,9 +98,9 @@ class CommonHelpers
                 }
                 $nomor_hp[1]['nohp'] = $nohp;
                 if ($request->input('nama_ortu') == '') {
-                    $nomor_hp[1]['name'] = 'Ortu PPM ' . $request->input('fullname');
+                    $nomor_hp[1]['name'] = 'Ortu ' . $team_id->org_name . ' ' . $request->input('fullname');
                 } else {
-                    $nomor_hp[1]['name'] = 'Ortu PPM ' . $request->input('nama_ortu');
+                    $nomor_hp[1]['name'] = 'Ortu ' . $team_id->org_name . ' ' . $request->input('nama_ortu');
                 }
             }
             if (count($nomor_hp) > 0) {

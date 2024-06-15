@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'receipt', 'title' => 'Penerimaan', 'breadcrumbs' => ['Penerimaan']])
-
 <div class="card shadow-lg">
     <div class="card-header">
         <div class="d-flex">
@@ -42,4 +40,11 @@
         </div>
     </div>
 </div>
-@include('base.end')
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+</script>

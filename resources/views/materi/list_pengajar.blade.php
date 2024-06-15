@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'dewan-pengajar', 'title' => 'Dewan Pengajar', 'breadcrumbs' => ['Dewan Pengajar']])
-
 <div class="row">
     <div class="col-md-12">
         <div class="card shadow-lg">
@@ -80,7 +78,14 @@
         </div>
     </div>
 </div>
+
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table').DataTable({
         order: [
             // [1, 'desc']
@@ -151,4 +156,3 @@
         }
     }
 </script>
-@include('base.end')

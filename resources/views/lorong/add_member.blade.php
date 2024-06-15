@@ -1,10 +1,3 @@
-@include('base.start', [
-'path' => 'lorong/list',
-'title' => 'Tambah Anggota Lorong Balkon',
-'breadcrumbs' => ['Daftar Lorong', isset($lorong) ? $lorong->name : 'Tidak ditemukan', 'Tambah Anggota'],
-'backRoute' => url()->previous() ? url()->previous() : route('view lorong', isset($lorong) ? $lorong->id : '-1')
-])
-
 @if(isset($lorong))
 <div class="card">
   <div class="card-body pt-4 p-3 d-flex">
@@ -58,7 +51,14 @@
   </div>
 </div>
 @endif
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('#with-schedule').click(() => {
     if ($('#with-schedule').is(':checked')) {
       $('#schedule-list').show();
@@ -83,4 +83,3 @@
     }
   })
 </script>
-@include('base.end')

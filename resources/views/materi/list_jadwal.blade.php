@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'dewan-pengajar/jadwal', 'title' => 'Jadwal Pengajar', 'breadcrumbs' => ['Jadwal Pengajar']])
-
 <div class="row">
     <div class="col-md-12">
         @for($x=1; $x<=2; $x++) <div class="card shadow-lg mb-2">
@@ -54,8 +52,14 @@
     </div>
     @endfor
 </div>
-</div>
+
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     async function savePengajar(pengajar, presence, day, ppm) {
         var datax = {};
         datax['pengajar'] = pengajar.value;
@@ -74,4 +78,3 @@
         );
     }
 </script>
-@include('base.end')

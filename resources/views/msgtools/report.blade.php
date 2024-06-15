@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'msgtools/report', 'title' => 'Msgtools - Report', 'breadcrumbs' => ['Msgtools - Report']])
-
 <div class="card">
     <div class="card-body">
         <div class="alert alert-success text-white">
@@ -45,6 +43,11 @@
 </div>
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table-report').DataTable();
 </script>
-@include('base.end')

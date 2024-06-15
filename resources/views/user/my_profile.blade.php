@@ -1,10 +1,8 @@
-@include('base.start', ['path' => 'profile', 'title' => 'Profil User', 'breadcrumbs' => ['Profil User']])
 <div class="card">
-  <div class="card-header pb-0 p-3 d-flex justify-content-between align-items-center">
-    <h6 class="mb-0">Profil User</h6>
-    <a href="{{ route('edit my profile') }}" class="btn btn-primary">
-      <i class="fas fa-pen" aria-hidden="true"></i>
-      Ubah profil
+  <div class="card-header p-3 d-flex justify-content-between align-items-center">
+    <a href="#" class="font-weight-bolder m-0 btn btn-secondary">PROFILE USER</a>
+    <a href="{{ route('edit my profile') }}" class="btn btn-primary m-0">
+      <i class="fas fa-pen" aria-hidden="true"></i> Ubah profil
     </a>
   </div>
   <div class="card-body pt-4 p-3">
@@ -86,9 +84,10 @@
         </div>
       </div>
     </div>
+
     <section id="santri-data-section" style="display: {{ $user->hasRole(['santri']) ? '' : 'none' }}">
       <hr class="horizontal dark">
-      <p class="text-uppercase text-sm">Data Santri</p>
+      <a href="#" class="text-uppercase btn btn-sm btn-secondary">Data Santri</a>
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
@@ -121,4 +120,11 @@
     @endif
   </div>
 </div>
-@include('base.end')
+
+<script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+</script>

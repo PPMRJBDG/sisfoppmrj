@@ -1,6 +1,3 @@
-@include('base.start', ['path' => 'presensi/list', 'title' => 'Ubah Grup Presensi' . (isset($presenceGroup) ? $presenceGroup->name : ''), 'breadcrumbs' => ['Daftar Presensi', 'Ubah Grup Presensi'],
-'backRoute' => route('view presence group', isset($presenceGroup) ? $presenceGroup->id : '')
-])
 <div class="card">
   <div class="card-body pt-4 p-3">
     @if ($errors->any())
@@ -151,7 +148,14 @@
     @endif
   </div>
 </div>
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('[name="is_date_time_limited"]').click(() => {
     if ($('[name="is_date_time_limited"]').is(':checked')) {
       $('[name="start_date_time"], [name="end_date_time"]').attr('required', true);
@@ -162,4 +166,3 @@
     }
   })
 </script>
-@include('base.end')

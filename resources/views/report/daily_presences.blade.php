@@ -1,4 +1,3 @@
-@include('base.start_without_bars', ['path' => 'presensi/list', 'containerClass' => 'p-0', 'title' => "Lihat Rekap Presensi $date/$month/$year", 'breadcrumbs' => ['Rekap Presensi', "$date/$month/$year"]])
 <style>
   @media only screen and (max-width: 600px) {
 
@@ -13,8 +12,6 @@
     padding-bottom: 0 !important;
   }
 </style>
-<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <div class="p-2">
   @if($presence)
@@ -97,6 +94,14 @@
   @endif
 </div>
 
+<script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+</script>
+
 @if($presence)
 <script>
   $('#recap-table').DataTable({
@@ -108,4 +113,3 @@
   });
 </script>
 @endif
-@include('base.end')

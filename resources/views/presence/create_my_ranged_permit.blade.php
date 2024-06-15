@@ -1,9 +1,5 @@
-@include('base.start', ['path' => 'presensi/izin/saya', 'title' => 'Pengajuan Izin Berjangka', 'breadcrumbs' => ['Daftar Izin Saya', 'Pegajuan Izin'],
-'backRoute' => url()->previous() ? url()->previous() : route('my presence permits')
-])
-
-<div class="card">
-  <div class="card-body pt-4 p-3">
+<div class="card" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
+  <div class="card-body p-3">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -29,16 +25,15 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-2 mb-2">
         <div class="col-md-12">
-          <div class="form-group" style="border:solid 1px #ddd;padding:5px 8px;border-radius:4px;background:#f9f9f9;">
-            Estimasi Jumlah KBM bulan ini: <b>{{ $data_kbm_ijin['kbm'] }}</b>
-            <br>
-            Jumlah kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100),0) }} (30% dari total KBM)</b>
-            <br>
-            Jumlah ijin saat ini: <b>{{ $data_kbm_ijin['ijin'] }}</b>
-            <br>
-            Sisa kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100) - $data_kbm_ijin['ijin'],0) }}</b>
+          <div class="card p-3 bg-secondary text-white">
+            <div class="col-md-12">
+              Estimasi Jumlah KBM bulan ini: <b>{{ $data_kbm_ijin['kbm'] }}</b><br>
+              Jumlah kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100),0) }} (30% dari total KBM)</b><br>
+              Jumlah ijin saat ini: <b>{{ $data_kbm_ijin['ijin'] }}</b><br>
+              Sisa kuota ijin: <b>{{ number_format(($data_kbm_ijin['kbm'] * 30 / 100) - $data_kbm_ijin['ijin'],0) }}</b>
+            </div>
           </div>
         </div>
       </div>
@@ -48,7 +43,7 @@
           <div class="form-group">
             <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
             <select name="fkPresenceGroup_id" class="form-control" required>
-              <option selected disabled>Pilih presensi</option>
+              <option value="">Pilih presensi</option>
               <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam, MM Drh)</option>
               @foreach($presenceGroups as $presenceGroup)
               <option value="{{ $presenceGroup->id }}">Hanya {{ $presenceGroup->name }} Saja</option>
@@ -61,13 +56,13 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Dari tanggal</label>
-            <input name="from_date" type="date" class="form-control" id="from-date" value="{{ isset($fromDate) ? $fromDate : '' }}">
+            <input name="from_date" type="date" class="form-control" required id="from-date" value="{{ isset($fromDate) ? $fromDate : '' }}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Sampai tanggal</label>
-            <input name="to_date" type="date" class="form-control" id="to-date" value="{{ isset($toDate) ? $toDate : '' }}">
+            <input name="to_date" type="date" class="form-control" required id="to-date" value="{{ isset($toDate) ? $toDate : '' }}">
           </div>
         </div>
       </div>
@@ -111,7 +106,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input disabled id="btn-prsc" class="btn btn-primary form-control" type="submit" value="Ajukan atas {{ auth()->user()->fullname }}">
+            <input id="btn-prsc" class="btn btn-primary form-control" type="submit" value="Ajukan atas {{ auth()->user()->fullname }}">
           </div>
         </div>
       </div>
@@ -127,4 +122,11 @@
     </form>
   </div>
 </div>
-@include('base.end')
+
+<script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+</script>

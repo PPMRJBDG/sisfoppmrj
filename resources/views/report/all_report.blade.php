@@ -1,8 +1,5 @@
 @include('base.start_without_bars', ['path' => 'presensi/list', 'containerClass' => 'p-0', 'title' => "Laporan Mahasiswa"])
 
-<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
 <style>
     @media only screen and (max-width: 600px) {
 
@@ -20,7 +17,7 @@
     /* Style the tab */
     .tab {
         overflow: hidden;
-        background-color: #f1f1f1;
+        background-color: transparent;
         border-radius: 8px 8px 0 0;
     }
 
@@ -48,7 +45,7 @@
 
     /* Create an active/current tablink class */
     .tab button.active {
-        background-color: #ccc;
+        background-color: transparent;
         border-bottom: solid 4px #5e72e4;
     }
 
@@ -73,7 +70,7 @@
     </div>
 </div>
 @else
-<div class="p-2">
+<div class="p-2 pb-0">
     <div class="card mb-2">
         <div class="card-body p-2">
             <center>
@@ -83,15 +80,17 @@
     </div>
 
     @if(count($sodaqoh)>0)
-    <h4 class="text-white text-center mb-0">Pembayaran Sodaqoh</h4>
-    <div class="card mb-2">
-        <div class="card-body p-2">
+    <div class="card mb-2 p-2">
+        <h5 class="text-center mb-1">Pembayaran Sodaqoh</h5>
+        <div class="card-body p-0">
             <div class="table-responsive p-0">
                 <table id="recap-table" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
-                            <th class="text-uppercase text-center font-weight-bolder">Periode<br>Nominal</th>
-                            <th class="text-uppercase text-center font-weight-bolder">Status<br>Kekurangan</th>
+                            <th class="text-uppercase text-center font-weight-bolder">Periode</th>
+                            <th class="text-uppercase text-center font-weight-bolder">Nominal</th>
+                            <th class="text-uppercase text-center font-weight-bolder">Status</th>
+                            <th class="text-uppercase text-center font-weight-bolder">Kekurangan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,15 +106,17 @@
                         }
                         $kekurangan = $sdq->nominal - $terbayar;
                         ?>
-                        <tr class="text-center">
+                        <tr class="text-center font-weight-bolder">
                             <td>
                                 {{ $sdq->periode }}
-                                <br>
-                                <b>{{ number_format($sdq->nominal,0) }}</b>
                             </td>
                             <td>
-                                <b>{{ ($sdq->status_lunas==1) ? 'Lunas' : 'Belum Lunas' }}</b>
-                                <br>
+                                {{ number_format($sdq->nominal,0) }}
+                            </td>
+                            <td>
+                                {{ ($sdq->status_lunas==1) ? 'Lunas' : 'Belum Lunas' }}
+                            </td>
+                            <td>
                                 {{ ($sdq->status_lunas==1) ? 'Alhamdulillah' : 'Kurang '.number_format($kekurangan,0) }}
                             </td>
                         </tr>
@@ -133,19 +134,19 @@
     $all_ijin = 0;
     $all_alpha = 0;
     ?>
-    <h4 class="text-white text-center mb-0">Presensi Kehadiran</h4>
     @if($datapg!=null)
-    <div class="card mb-2">
-        <div class="card-body p-2 text-center">
+    <div class="card mb-2 p-2">
+        <h5 class="text-center mb-1">Presensi Kehadiran</h5>
+        <div class="card-body p-0 text-center">
             <th class="text-center p-1">Total Keseluruhan</th>
-            <table class=" table align-items-center mb-0">
+            <table class="table align-items-center mb-1">
                 <thead>
                     <tr style="background-color:#f6f9fc;">
-                        <th class="text-center p-1">KBM</th>
-                        <th class="text-center p-1">H</th>
-                        <th class="text-center p-1">I</th>
-                        <th class="text-center p-1">A</th>
-                        <th class="text-center p-1">%</th>
+                        <th class="font-weight-bolder text-center p-1">KBM</th>
+                        <th class="font-weight-bolder text-center p-1">H</th>
+                        <th class="font-weight-bolder text-center p-1">I</th>
+                        <th class="font-weight-bolder text-center p-1">A</th>
+                        <th class="font-weight-bolder text-center p-1">%</th>
                     </tr>
                 </thead>
                 <tbody id="total-all">
@@ -176,16 +177,16 @@
             $display = 'block';
         }
         ?>
-        <div class="table-responsive p-0 tabcontent" id="th{{$th->y}}" style="display:{{$display}};">
-            <table id="recap-table" class="table align-items-center mb-0">
+        <div class="table-responsive p-0 mt-1 tabcontent" id="th{{$th->y}}" style="display:{{$display}};">
+            <table id="recap-kehadiran" class="table align-items-center mb-0">
                 <thead>
                     <tr style="background-color:#f6f9fc;">
-                        <th class="text-center p-1">BULAN</th>
-                        <th class="text-center p-1">KBM</th>
-                        <th class="text-center p-1">H</th>
-                        <th class="text-center p-1">I</th>
-                        <th class="text-center p-1">A</th>
-                        <th class="text-center p-1">%</th>
+                        <th class="font-weight-bolder text-center p-1">BULAN</th>
+                        <th class="font-weight-bolder text-center p-1">KBM</th>
+                        <th class="font-weight-bolder text-center p-1">H</th>
+                        <th class="font-weight-bolder text-center p-1">I</th>
+                        <th class="font-weight-bolder text-center p-1">A</th>
+                        <th class="font-weight-bolder text-center p-1">%</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -217,7 +218,7 @@
                         } else {
                             $persentase = ($total_hadir + $total_ijin) / $total_kbm * 100;
                         }
-                        $color = 'primary';
+                        $color = '';
                         if ($persentase < 80) {
                             $color = 'danger';
                         }
@@ -260,16 +261,16 @@
     </div>
     @endif
 
-    <h4 class="text-white text-center mb-0">Pencapaian Materi</h4>
-    <div class="card mb-2">
-        <div class="card-body p-2">
-            <div class="table-responsive p-0">
-                <table id="recap-table" class="table align-items-center mb-0">
+    <div class="card mb-2 p-2">
+        <h5 class="text-center mb-1">Pencapaian Materi</h5>
+        <div class="card-body p-0">
+            <div class="table-responsive p-2">
+                <table id="recap-materi" class="table align-items-center mb-0">
                     <thead>
                         <tr>
-                            <th class="text-uppercase font-weight-bolder ps-0">MATERI</th>
-                            <th class="text-uppercase font-weight-bolder ps-0">PENCAPAIAN</th>
-                            <th class="text-uppercase font-weight-bolder ps-0">%</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">MATERI</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">PENCAPAIAN</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">%</th>
                         </tr>
                     </thead>
                     <tbody id="contentMateri">
@@ -282,25 +283,25 @@
 
 
     @if(count($pelanggaran)>0)
-    <h4 class="text-white text-center mb-0">Riwayat Pelanggaran</h4>
-    <div class="card mb-2">
-        <div class="card-body p-2">
+    <div class="card mb-2 p-2">
+        <h5 class="text-center mb-1">Riwayat Pelanggaran</h5>
+        <div class="card-body p-0">
             <h6>Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
             <div class="table-responsive p-0">
-                <table id="recap-table" class="table align-items-center mb-0">
+                <table id="recap-pelanggaran" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
-                            <th class="text-uppercase ps-0 font-weight-bolder">[SP] Pelanggaran</th>
-                            <th class="text-uppercase text-center font-weight-bolder">Tanggal SP</th>
+                            <th class="text-uppercase ps-2 font-weight-bolder">[SP] Pelanggaran</th>
+                            <th class="text-uppercase ps-2 text-center font-weight-bolder">Tanggal SP</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pelanggaran as $plg)
                         <tr>
-                            <td class="ps-0">
+                            <td class="p-1 ps-2">
                                 <h6 class="mb-0">[SP {{ $plg->keringanan_sp }}] {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small></h6>
                             </td>
-                            <td class="text-center">
+                            <td class="p-1 ps-2 text-center">
                                 @if($plg->is_surat_peringatan!='')
                                 <h6 class="mb-0">{{ date_format(date_create($plg->is_surat_peringatan),'d M Y') }}</h6>
                                 @endif
@@ -334,7 +335,7 @@ if ($all_kbm > 0) {
         document.getElementById(tahun).style.display = "block";
         evt.currentTarget.className += " active";
     }
-    $('main.main-content').attr('class', 'main-content position-relative border-radius-lg bg-primary');
+    $('main.main-content').attr('class', 'main-content position-relative border-radius-lg');
     var all_percent = <?php echo $all_percent; ?>;
     $('#total-all').html(
         '<tr>' +
@@ -376,8 +377,23 @@ if ($all_kbm > 0) {
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">ClKeluarose</button>
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
             </div>
         </div>
     </div>
 </div>
+</main>
+</body>
+
+<!-- New Material Design -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ asset('ui-kit/js/mdb.umd.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('ui-kit/js/mdb.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('ui-kit/js/mdb-v2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('ui-kit/js/modules/wow.min.js') }}"></script>
+
+<script>
+    $(document).ready(() => {
+        new WOW().init();
+    });
+</script>

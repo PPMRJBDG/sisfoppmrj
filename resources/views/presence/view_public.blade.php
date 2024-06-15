@@ -1,11 +1,3 @@
-@include('base.start_without_bars', [
-'path' => 'dwngr/list',
-'title' => 'Presensi ' . (isset($presence) ? $presence->name : '')
-])
-
-<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
 <style>
     @media only screen and (max-width: 600px) {
 
@@ -109,9 +101,9 @@
 </div>
 
 <div class="tab mt-2">
-    <button class="tablinks active" onclick="openTab(event, 'hadir')">Hadir <span id="c-hdr">{{count($presents)}}</span></button>
-    <button class="tablinks" onclick="openTab(event, 'ijin')">Ijin {{count($permits)}}</button>
-    <button class="tablinks" onclick="openTab(event, 'alpha')">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></button>
+    <button class="tablinks active">Hadir <span id="c-hdr">{{count($presents)}}</span></button>
+    <button class="tablinks">Ijin {{count($permits)}}</button>
+    <button class="tablinks">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></button>
 </div>
 
 <div class="card tabcontent" id="hadir" style="display:block;">
@@ -268,7 +260,14 @@ try {
         width: 100% !important;
     }
 </style>
+
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table-hadir').DataTable({
         "paging": false,
         "ordering": false,
@@ -391,7 +390,6 @@ try {
     }
 
     $('.select_lorong').change((e) => {
-        window.location.replace(`{{ url("/") }}/dwngr/list/<?php echo $id; ?>?lorong=${$(e.currentTarget).val()}`)
+        getPage(`{{ url("/") }}/dwngr/list/<?php echo $id; ?>?lorong=${$(e.currentTarget).val()}`)
     })
 </script>
-@include('base.end')

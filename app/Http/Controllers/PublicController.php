@@ -73,11 +73,11 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                         }
 
                         if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
-                            $infodp_xxz = 'PPM 1 dan 2';
+                            $infodp_xxz = $setting->org_name . ' 1 dan 2';
                             if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
-                                $infodp_xxz = 'PPM 2';
+                                $infodp_xxz = $setting->org_name . ' 2';
                             } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
-                                $infodp_xxz = 'PPM 1';
+                                $infodp_xxz = $setting->org_name . ' 1';
                             }
                             $infodp = '*[' . $setting->apps_name . ']* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
                             WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
@@ -493,8 +493,8 @@ NB:
                     $pemateri1 = 'Penyampai Dalil / PPG';
                     $pemateri2 = 'Penyampai Teks / Naslis';
                 } else {
-                    $pemateri1 = 'Pengajar PPM 1';
-                    $pemateri2 = 'Pengajar PPM 2';
+                    $pemateri1 = 'Pengajar ' . $setting->org_name . ' 1';
+                    $pemateri2 = 'Pengajar ' . $setting->org_name . ' 2';
                 }
 
                 $caption = 'Link Presensi *' . $get_presence_today->name . '*:
@@ -639,9 +639,9 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
                 if ($totalPages > 0) {
                     $data_materi = $data_materi . '
                     <tr class="text-sm">
-                        <td class="p-0"><h6 class="mb-0">' . ucfirst(strtolower($materi->name)) . '</h6></td>
-                        <td class="p-0"><h6 class="mb-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</h6></td>
-                        <td class="p-0"><h6 class="mb-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</h6></td>
+                        <td class="p-1 ps-2"><h6 class="mb-0">' . ucfirst(strtolower($materi->name)) . '</h6></td>
+                        <td class="p-1 ps-2"><h6 class="mb-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</h6></td>
+                        <td class="p-1 ps-2"><h6 class="mb-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</h6></td>
                     </tr>';
                 }
             }

@@ -1,4 +1,3 @@
-@include('base.start', ['path' => 'profil/edit', 'title' => 'Ubah Profil', 'breadcrumbs' => ['Profile User', 'Ubah']])
 <div class="card">
   <div class="card-body pt-4 p-3">
     @if ($errors->any())
@@ -101,7 +100,14 @@
     @endif
   </div>
 </div>
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('#role-santri').click(() => {
     if ($('#role-santri').is(':checked')) {
       $('#santri-data-section').show();
@@ -116,4 +122,3 @@
     }
   });
 </script>
-@include('base.end')

@@ -69,8 +69,8 @@ class CountDashboard
         $content_body = '
                     <div class="table-responsive">
                         <table class="table align-items-center mb-0">
-                            <thead class="thead-light">
-                                <tr style="background-color:#f6f9fc;">
+                            <thead>
+                                <tr>
                                     <th class="text-uppercase text-center text-sm font-weight-bolder">ANGKATAN</th>
                                     <th class="text-uppercase text-center text-sm font-weight-bolder">MT (L)</th>
                                     <th class="text-uppercase text-center text-sm font-weight-bolder">MT (P)</th>
@@ -83,7 +83,7 @@ class CountDashboard
                             ' . $content_tr . '
                             </tbody>
                             <tfooter>                            
-                            <tr style="background-color:#f6f9fc;">
+                            <tr>
                                 <th class="text-uppercase text-center text-sm font-weight-bolder"></th>
                                 <th class="text-uppercase text-center text-sm font-weight-bolder">' . $total_muballigh_laki . '</th>
                                 <th class="text-uppercase text-center text-sm font-weight-bolder">' . $total_muballigh_perempuan . '</th>
@@ -304,10 +304,15 @@ class CountDashboard
                         $mhs_alpha[$mhs->santri_id]['nohp_ortu'] = $mhs->nohp_ortu;
                         $mhs_alpha[$mhs->santri_id]['fkLorong_id'] = $mhs->fkLorong_id;
                         $lorong = Lorong::find($mhs->fkLorong_id);
+                        // var_dump($lorong->leader->user->fullname);
                         if ($lorong == '-') {
                             $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
                         } else {
-                            $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                            if ($lorong == null) {
+                                $mhs_alpha[$mhs->santri_id]['lorong'] = '-';
+                            } else {
+                                $mhs_alpha[$mhs->santri_id]['lorong'] = $lorong->leader->user->fullname . ' - ' . $lorong->leader->user->nohp;
+                            }
                         }
                     }
                 }

@@ -50,6 +50,15 @@ class UserController extends Controller
         return view('user.edit_my_profile', ['user' => $user, 'lorongs' => $lorongs]);
     }
 
+    public function edit_version()
+    {
+        $user = User::find(auth()->user()->id);
+        $user->themes = (auth()->user()->themes == 'dark') ? 'light' : 'dark';
+        $user->save();
+
+        return 'reload';
+    }
+
     /**
      * Show the list and manage table of lorongs.
      *

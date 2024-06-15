@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'setting', 'title' => 'Setting', 'breadcrumbs' => ['Setting']])
-
 <?php
 $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 'nov', 'des'];
 ?>
@@ -18,7 +16,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 </div>
 @endif
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 p-2">
         <div class="col-md-12 mb-2">
             <div class="card shadow-lg">
                 <div class="card-body">
@@ -308,7 +306,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 p-2">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
             <div class="card shadow-lg">
@@ -324,6 +322,11 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 Host URL
                                             </label>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->host_url : '' }}" name="host_url" required>
+                                            <label class="form-control-label">
+                                                Akun Studio
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->wa_username : '' }}" name="wa_username" required>
+                                            @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
                                                 WA - Team Account
                                             </label>
@@ -411,6 +414,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
                                                         } ?> value="1">Ya</option>
                                             </select>
+                                            @endif
+
                                             <label class="form-control-label">
                                                 Auto Generate Hadir
                                             </label>
@@ -437,6 +442,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->status_perijinan) ? 'selected' : '';
                                                         } ?> value="1">Diaktifkan</option>
                                             </select>
+                                            @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
                                                 WA - Type
                                             </label>
@@ -461,9 +467,11 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 WA - Footer
                                             </label>
                                             <textarea rows="3" class="form-control" name="wa_footer" required>{{ ($list_setting) ? $list_setting->wa_footer : '' }}</textarea>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="col-md-12">
+                                        @if($list_setting->wa_username!='')
                                         <label class="form-control-label">
                                             WA - Info Jaga Malam
                                         </label>
@@ -473,6 +481,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             WA - Info Untuk Mahasiswa yang Sudah Lulus
                                         </label>
                                         <textarea rows="6" class="form-control mb-2" name="wa_info_lulus" required>{{ ($list_setting) ? $list_setting->wa_info_lulus : '' }}</textarea>
+                                        @endif
 
                                         <div class="form-group">
                                             <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Update Setting">
@@ -487,11 +496,17 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
     </div>
 </div>
+
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table-pelanggaran').DataTable({
         order: [
             // [1, 'desc']
         ],
     });
 </script>
-@include('base.end')

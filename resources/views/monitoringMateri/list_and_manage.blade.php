@@ -1,5 +1,3 @@
-@include('base.start', ['path' => 'materi/monitoring/list', 'title' => 'Daftar Monitoring Materi', 'breadcrumbs' => ['Daftar Monitoring Materi']])
-
 <?php
 function printMateriOptions($materis, $santri)
 {
@@ -13,9 +11,9 @@ function printMateriOptions($materis, $santri)
         $totalPages = $completedPages + ($partiallyCompletedPages / 2);
 ?>
         <tr class="text-sm">
-            <td class="p-0">{{ $materi->name }}</td>
-            <td class="p-0">{{ $totalPages."/".$materi->pageNumbers." page = ".number_format((float) $totalPages / $materi->pageNumbers * 100, 2, '.', '') }}%</td>
-            <td class="p-0">
+            <td class="p-1 ps-2">{{ $materi->name }}</td>
+            <td class="p-1 ps-2">{{ $totalPages."/".$materi->pageNumbers." page = ".number_format((float) $totalPages / $materi->pageNumbers * 100, 2, '.', '') }}%</td>
+            <td class="p-1 ps-2">
                 <a {{ (!auth()->user()->santri) ? 'target="_blank"' : '' }}' href="{{ route('edit monitoring materi', [$materi->id, $santri->id])}}" class="btn btn-success btn-xs mb-0">Lihat</a>
             </td>
         </tr>
@@ -35,7 +33,7 @@ function printMateriOptions($materis, $santri)
     }
 </style>
 
-<div class="card mb-3">
+<div class="card bg-primary text-light mb-3">
     <div class="card-body p-3 d-flex justify-content-between align-items-center">
         <h6 class="mb-0">Daftar Monitoring Materi</h6>
         @if(!auth()->user()->hasRole('santri'))
@@ -113,7 +111,7 @@ function printMateriOptions($materis, $santri)
 </div>
 @else
 <div class="card mb-3">
-    <div class="card-body pt-0 p-3">
+    <div class="card-body p-3">
         @if (session('success'))
         <div class="alert alert-success text-white">
             {{ session('success') }}
@@ -126,9 +124,9 @@ function printMateriOptions($materis, $santri)
                 <table class="table align-items-center mb-0">
                     <thead>
                         <tr>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI SAYA</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">MATERI SAYA</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">PENCAPAIAN</th>
+                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -179,6 +177,12 @@ function printMateriOptions($materis, $santri)
 </div>
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     function getMateri(santri_id, nama) {
         $('#exampleModal').fadeIn();
         $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
@@ -211,4 +215,3 @@ function printMateriOptions($materis, $santri)
         pageLength: 25
     });
 </script>
-@include('base.end')

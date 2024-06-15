@@ -21,11 +21,11 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the list table of latest presences.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    public function index()
+    {
+        return view('base.app');
+    }
+
     public function dashboard($tb = null, $select_angkatan = null, $select_periode = null, $json = false)
     {
         if ($tb == null && $select_angkatan == null && $select_periode == null) {

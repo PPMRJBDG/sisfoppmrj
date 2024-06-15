@@ -1,6 +1,3 @@
-@include('base.start', ['path' => 'presensi/list', 'title' => 'Presensi ' . (isset($presence) ? $presence->name : ''), 'breadcrumbs' => ['Daftar Presensi', 'Presensi ' . (isset($presence) ? $presence->name : '')],
-'backRoute' => url()->previous() ? url()->previous() : route('view presence', $presence->id)
-])
 <style>
   .list-group-item-warning {
     background: lightyellow !important;
@@ -120,7 +117,14 @@
   </div>
 </div>
 @endif
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('#with-schedule').click(() => {
     if ($('#with-schedule').is(':checked')) {
       $('#schedule-list').show();
@@ -208,4 +212,3 @@
     $('#late-santri-ids').val(lateSelectedSantris.map(e => $(e).attr('santri-id')).join(','));
   });
 </script>
-@include('base.end')

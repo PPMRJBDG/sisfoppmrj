@@ -12,6 +12,7 @@ class Settings extends Model
         'apps_name',
         'profileImgUrl',
         'bgImage',
+        'wa_username',
         'wa_sender_account_id',
         'wa_team_id',
         'wa_type',

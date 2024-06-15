@@ -1,4 +1,3 @@
-@include('base.start', ['path' => 'presensi/izin/list', 'title' => 'Daftar Izin', 'breadcrumbs' => ['Daftar Izin']])
 <div class="card">
   <div class="card-header pb-1 align-items-center" style="background-color:#f6f9fc;">
     <div class="row">
@@ -49,13 +48,20 @@
   </div>
 </div>
 </div>
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('.select_tb').change((e) => {
-    window.location.replace(`{{ url("/") }}/presensi/izin/list/${$(e.currentTarget).val()}`)
+    getPage(`{{ url("/") }}/presensi/izin/list/${$(e.currentTarget).val()}`)
   })
+
   $('#table').DataTable({
     order: [],
     pageLength: 25
   });
 </script>
-@include('base.end')

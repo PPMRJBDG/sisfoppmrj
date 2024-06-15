@@ -1,6 +1,3 @@
-@include('base.start', ['path' => 'presensi/izin/saya', 'title' => 'Ubah Izin', 'breadcrumbs' => ['Daftar Izin Saya', 'Ubah Izin']
-,'backRoute' => route('my presence permits')
-])
 <div class="card">
   <div class="card-body pt-4 p-3">
     @if ($errors->any())
@@ -60,4 +57,11 @@
     @endif
   </div>
 </div>
-@include('base.end')
+
+<script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+</script>

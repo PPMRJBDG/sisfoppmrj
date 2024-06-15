@@ -1,4 +1,3 @@
-@include('base.start', ['path' => 'pelanggaran', 'title' => 'Daftar Pelanggaran', 'breadcrumbs' => ['Daftar Pelanggaran']])
 @if ($errors->any())
 <div class="alert alert-danger text-white">
     <ul>
@@ -155,11 +154,17 @@
         </div>
     </div>
 </div>
+
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     $('#table').DataTable({
         order: [
             // [1, 'desc']
         ]
     });
 </script>
-@include('base.end')

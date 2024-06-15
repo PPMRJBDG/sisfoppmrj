@@ -1,5 +1,3 @@
-@include('base.start_without_bars', ['path' => 'permit', 'containerClass' => 'p-0', 'title' => "Link Approve / Reject"])
-
 @if($permit)
 <div class="card m-2">
     <div class="card-body">
@@ -71,4 +69,11 @@
     </div>
 </div>
 @endif
-@include('base.footer')
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+</script>

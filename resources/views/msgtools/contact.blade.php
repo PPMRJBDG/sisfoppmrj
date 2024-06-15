@@ -1,4 +1,3 @@
-@include('base.start', ['path' => 'msgtools/contact', 'title' => 'Msgtools - Contact', 'breadcrumbs' => ['Msgtools - Contact']])
 @if ($errors->any())
 <div class="alert alert-danger text-white">
     <ul>
@@ -201,6 +200,12 @@
 </div>
 
 <script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
     function changeBulk(id, name, contact) {
         $('#exampleModal').fadeIn();
         $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
@@ -308,4 +313,3 @@
     $('#table-contact').DataTable();
     $('#table-user').DataTable();
 </script>
-@include('base.end')

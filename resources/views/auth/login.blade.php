@@ -1,22 +1,8 @@
-<!--
-=========================================================
-* Argon Dashboard 2 - v2.0.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
-<!DOCTYPE html>
-<html lang="en">
 <?php
 $setting = App\Models\Settings::first();
 ?>
+<!DOCTYPE html>
+<html lang="en" data-mdb-theme="light">
 
 <head>
   <meta charset="utf-8" />
@@ -26,107 +12,196 @@ $setting = App\Models\Settings::first();
   <title>
     {{$setting->apps_name}} - LOGIN
   </title>
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="{{ asset('css/nucleo-icons.css') }}" rel="stylesheet" />
-  <link href="{{ asset('css/nucleo-svg.css') }}" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js') }}" crossorigin="anonymous"></script>
-  <link href="{{ asset('css/nucleo-svg.css') }}" rel="stylesheet" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="{{ asset('css/argon-dashboard.css?v=2.0.2') }}" rel="stylesheet" />
+  <!-- New Material Design -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="{{ asset('ui-kit/js/jquery.min.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('css/argon-dashboard.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb-free.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb.min.css') }}" />
 </head>
 
-<body class="">
-  <div class="container position-sticky z-index-sticky top-0">
-    <div class="row">
-      <div class="col-12">
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
-          <div class="container-fluid">
-            <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="">
-              {{$setting->apps_name}}
-            </a>
-          </div>
-        </nav>
-        <!-- End Navbar -->
-      </div>
-    </div>
-  </div>
-  <main class="main-content  mt-0">
-    <section>
-      <div class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
-              <div class="card card-plain">
-                <div class="card-header pb-0 text-start">
-                  <h4 class="font-weight-bolder">Sign In</h4>
-                  <p class="mb-0">Enter your email and password to sign in</p>
+<style>
+  html,
+  body,
+  header,
+  .view {
+    height: 100vh;
+  }
+
+  @media (max-width: 740px) {
+
+    html,
+    body,
+    header,
+    .view {
+      height: 815px;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 850px) {
+
+    html,
+    body,
+    header,
+    .view {
+      height: 650px;
+    }
+  }
+
+  .waves-input-wrapper {
+    width: 100%;
+  }
+
+  INPUT:-webkit-autofill,
+  SELECT:-webkit-autofill,
+  TEXTAREA:-webkit-autofill {
+    animation-name: onautofillstart
+  }
+
+  INPUT:not(:-webkit-autofill),
+  SELECT:not(:-webkit-autofill),
+  TEXTAREA:not(:-webkit-autofill) {
+    animation-name: onautofillcancel
+  }
+
+  @keyframes onautofillstart {
+    from {}
+  }
+
+  @keyframes onautofillcancel {
+    from {}
+  }
+
+  .btn-primary,
+  .text-primary,
+  .bg-primary {
+    background: #48c6ef;
+    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5));
+    background: linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5))
+  }
+
+  .btn-danger,
+  .text-danger,
+  .bg-danger {
+    background: #f093fb;
+    background: -webkit-linear-gradient(to right, rgba(240, 147, 251, 0.5), rgba(245, 87, 108, 0.5));
+    background: linear-gradient(to right, rgba(240, 147, 251, 0.5), rgba(245, 87, 108, 0.5))
+  }
+
+  .btn-warning,
+  .text-warning,
+  .bg-warning {
+    background: #f6d365;
+    background: -webkit-linear-gradient(to right, rgba(246, 211, 101, 0.5), rgba(253, 160, 133, 0.5));
+    background: linear-gradient(to right, rgba(246, 211, 101, 0.5), rgba(253, 160, 133, 0.5))
+  }
+
+  @media (max-width: 576px) {
+
+    .pl-4,
+    .pr-4 {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+
+    body,
+    h6 {
+      font-size: 0.8rem !important;
+    }
+  }
+
+  .btn {
+    border-radius: 1.875rem;
+    font-weight: 700;
+  }
+
+  .font-weight-bolder {
+    font-weight: 700 !important
+  }
+</style>
+
+<body>
+  <section class="h-100 gradient-form">
+    <div class="mask h-100 d-flex justify-content-center align-items-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card wow fadeIn" data-wow-delay="0.3s">
+              <div class="card-body">
+                <!-- <div class="text-center">
+                  <img src="" style="width: 185px;margin-top:-20px;" alt="logo">
+                </div> -->
+
+                <div class="card form-header bg-danger">
+                  <h5 class="mb-0">Welcome back! <b>User</b></h5>
                 </div>
-                <div class="card-body">
-                  <form role="form" action="{{ route('login') }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                      <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email">
-                      <div>
-                        @error('email')
-                        <span class="invalid-feedback" role="alert" style="display:block">
-                          <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password">
-                      @error('password')
-                      <span class="invalid-feedback" role="alert" style="display:block">
-                        <strong>{{ $message }}</strong>
-                      </span>
-                      @enderror
-                    </div>
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
-                      <label class="form-check-label" for="rememberMe">Remember me</label>
-                    </div>
-                    <div class="text-center">
-                      <input type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0" value="Sign in">
-                    </div>
-                  </form>
-                </div>
+
+                <form role="form" action="{{ route('login') }}" method="POST">
+                  @csrf
+                  <div data-mdb-input-init class="mb-4 form-outline">
+                    <input autocomplete="off" type="email" name="email" id="orangeForm-email" class="form-control" placeholder="Email">
+                    <label class="form-label" for="orangeForm-email">Email</label>
+                  </div>
+
+                  <div data-mdb-input-init class="mb-4 form-outline">
+                    <input autocomplete="off" type="password" id="orangeForm-pass" name="password" class="form-control" placeholder="Password">
+                    <label class="form-label" for="orangeForm-pass">Password</label>
+                  </div>
+
+                  <div class="form-check form-switch text-light">
+                    <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                  </div>
+
+                  <div class="text-center">
+                    <input type="submit" class="btn btn-primary font-weight-bold btn-block btn-rounded mt-4 mb-0" value="Sign in">
+                  </div>
+                </form>
+
               </div>
             </div>
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background: url('{{ url('storage/logo-apps/' . $setting->bgImage) }}');background-size: cover;background-position: center;">
-                <span class="mask bg-gradient-primary opacity-6"></span>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">{{$setting->apps_name}}</h4>
-                <p class="text-white position-relative"></p>
+          </div>
+          <div class="card col-lg-6 d-flex align-items-center bg-primary d-none d-md-block d-sm-none">
+            <div class="text-white p-4 text-center">
+              <h4 class="mb-0">Pondok Pesantren Mahasiswa</h4>
+              <p class="mb-4">
+                "Roudhotul Jannah" - Kabupaten Bandung
+              </p>
+              <div class="row">
+                <div class="col-md-6">
+                  <b>VISI</b><br>
+                  Membentuk generasi penerus yang profesional dan religius.
+                </div>
+                <div class="col-md-6">
+                  <b>MISI</b><br>
+                  Melaksanakan program pembinaan secara intensif dan berkesinambungan. Meningkatkan softskill santri dan melancarkan kuliah santri.
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  </main>
-  <!--   Core JS Files   -->
-  <script src="{{ asset('js/core/popper.min.js') }}"></script>
-  <script src="{{ asset('js/core/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('js/plugins/perfect-scrollbar.min.js') }}"></script>
-  <script src="{{ asset('js/plugins/smooth-scrollbar.min.js') }}"></script>
+    </div>
+  </section>
+
+  <!-- New Material Design -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ asset('ui-kit/js/mdb.umd.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('ui-kit/js/mdb.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('ui-kit/js/mdb-v2.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('ui-kit/js/modules/wow.min.js') }}"></script>
   <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
+    $(document).ready(() => {
+      new WOW().init();
+    });
   </script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="{{ asset('js/argon-dashboard.min.js?v=2.0.2') }}"></script>
 </body>
 
 </html>

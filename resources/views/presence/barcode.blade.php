@@ -34,127 +34,168 @@
             <a href="{{ url('/') }}" class="btn btn-primary mb-2" id="btn-act">Kembali</a>
         </div>
     </div>
-    <script type="text/javascript">
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#interactive'),
-                constraints: {
-                    width: screen.width,
-                    height: 300,
-                    facingMode: "environment",
-                },
+
+    <div class="modal" id="modalReason" tabindex="-1" role="dialog" aria-labelledby="modalReasonLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h6 class="modal-title" id="modalReasonLabel">Alasan Pulang Sebelum Selesai KBM</h6>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="hidden" id="code" name="code" value="">
+                    <input class="form-control" type="text" id="reason" name="reason" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close" class="btn btn-secondary mb-0" data-dismiss="modal">Batal</button>
+                    <button type="button" id="save" class="btn btn-primary mb-0" data-dismiss="modal">Submit Alasan</button>
+                </div>
+            </div>
+        </div>
+</body>
+
+<script type="text/javascript">
+    $('#close').click(function() {
+        $('#modalReason').fadeOut();
+        $("#code").val('');
+        $("#reason").val('');
+        Quagga.start();
+    });
+
+    $('#save').click(function() {
+        storePresent($("#code").val());
+    });
+
+    function openReason(code) {
+        $('#modalReason').fadeIn();
+        $('#modalReason').css('background', 'rgba(0, 0, 0, 0.7)');
+        $('#modalReason').css('z-index', '10000');
+        $("#code").val(code);
+    }
+
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#interactive'),
+            constraints: {
+                width: screen.width,
+                height: 300,
+                facingMode: "environment",
             },
-            numOfWorkers: navigator.hardwareConcurrency,
-            locate: true,
-            frequency: 1,
+        },
+        numOfWorkers: navigator.hardwareConcurrency,
+        locate: true,
+        frequency: 1,
+        debug: {
+            drawBoundingBox: true,
+            showFrequency: true,
+            drawScanline: true,
+            showPattern: true
+        },
+        multiple: false,
+        locator: {
+            halfSample: false,
+            patchSize: "large", // x-small, small, medium, large, x-large
             debug: {
-                drawBoundingBox: true,
-                showFrequency: true,
-                drawScanline: true,
-                showPattern: true
-            },
-            multiple: false,
-            locator: {
-                halfSample: false,
-                patchSize: "large", // x-small, small, medium, large, x-large
-                debug: {
-                    showCanvas: false,
-                    showPatches: false,
-                    showFoundPatches: false,
-                    showSkeleton: false,
-                    showLabels: false,
-                    showPatchLabels: false,
-                    showRemainingPatchLabels: false,
-                    boxFromPatches: {
-                        showTransformed: false,
-                        showTransformedBox: false,
-                        showBB: false
-                    }
+                showCanvas: false,
+                showPatches: false,
+                showFoundPatches: false,
+                showSkeleton: false,
+                showLabels: false,
+                showPatchLabels: false,
+                showRemainingPatchLabels: false,
+                boxFromPatches: {
+                    showTransformed: false,
+                    showTransformedBox: false,
+                    showBB: false
                 }
-            },
-            decoder: {
-                readers: ["code_128_reader"]
-
             }
-        }, function(err) {
-            if (err) {
-                $("#log-result").html("Message: " + JSON.stringify(err));
-            }
+        },
+        decoder: {
+            readers: ["code_128_reader"]
 
-            Quagga.start();
-        });
+        }
+    }, function(err) {
+        if (err) {
+            $("#log-result").html("Message: " + JSON.stringify(err));
+        }
 
-        Quagga.onProcessed(function(result) {
-            var drawingCtx = Quagga.canvas.ctx.overlay,
-                drawingCanvas = Quagga.canvas.dom.overlay;
+        Quagga.start();
+    });
 
-            if (result) {
-                $("#btn-act").html('Processing...');
-                $("#log-result").html("processing: " + JSON.stringify(result));
-                if (result.boxes) {
-                    drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
-                    result.boxes.filter(function(box) {
-                        return box !== result.box;
-                    }).forEach(function(box) {
-                        Quagga.ImageDebug.drawPath(box, {
-                            x: 0,
-                            y: 1
-                        }, drawingCtx, {
-                            color: "green",
-                            lineWidth: 2
-                        });
-                    });
-                }
+    Quagga.onProcessed(function(result) {
+        var drawingCtx = Quagga.canvas.ctx.overlay,
+            drawingCanvas = Quagga.canvas.dom.overlay;
 
-                if (result.box) {
-                    Quagga.ImageDebug.drawPath(result.box, {
+        if (result) {
+            $("#btn-act").html('Processing...');
+            $("#log-result").html("processing: " + JSON.stringify(result));
+            if (result.boxes) {
+                drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                result.boxes.filter(function(box) {
+                    return box !== result.box;
+                }).forEach(function(box) {
+                    Quagga.ImageDebug.drawPath(box, {
                         x: 0,
                         y: 1
                     }, drawingCtx, {
-                        color: "#00F",
+                        color: "green",
                         lineWidth: 2
                     });
-                }
+                });
+            }
 
-                if (result.codeResult && result.codeResult.code) {
-                    Quagga.ImageDebug.drawPath(result.line, {
-                        x: 'x',
-                        y: 'y'
-                    }, drawingCtx, {
-                        color: 'red',
-                        lineWidth: 3
-                    });
+            if (result.box) {
+                Quagga.ImageDebug.drawPath(result.box, {
+                    x: 0,
+                    y: 1
+                }, drawingCtx, {
+                    color: "#00F",
+                    lineWidth: 2
+                });
+            }
+
+            if (result.codeResult && result.codeResult.code) {
+                Quagga.ImageDebug.drawPath(result.line, {
+                    x: 'x',
+                    y: 'y'
+                }, drawingCtx, {
+                    color: 'red',
+                    lineWidth: 3
+                });
+            }
+        }
+    });
+
+    Quagga.onDetected(function(result) {
+        var code = result.codeResult.code;
+        $("#log-result").html("Detected: " + code);
+        $("#btn-act").html('Kembali');
+        storePresent(code);
+        Quagga.stop();
+    });
+
+    async function storePresent(code) {
+        var datax = {};
+        datax['barcode'] = code;
+        datax['reason'] = $("#reason").val();
+        $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
+            function(data, status) {
+                var return_data = JSON.parse(data);
+                if (return_data.sign == 'confirm_out') {
+                    openReason(code);
+                } else if (return_data.status) {
+                    alert(return_data.message);
+                    getPage(`{{ url("/") }}/home`)
+                } else {
+                    $("#log-result").html("Message: " + JSON.stringify(return_data.message));
+                    Quagga.start();
                 }
             }
-        });
-
-        Quagga.onDetected(function(result) {
-            var code = result.codeResult.code;
-            $("#log-result").html("Detected: " + code);
-            $("#btn-act").html('Kembali');
-            storePresent(code);
-            Quagga.stop();
-        });
-
-        async function storePresent(code) {
-            var datax = {};
-            datax['barcode'] = code;
-            $.post(`{{ url("/") }}/presensi/barcode/store_present`, datax,
-                function(data, status) {
-                    var return_data = JSON.parse(data);
-                    if (return_data.status) {
-                        alert(return_data.message);
-                        window.location.replace(`{{ url("/") }}/home`)
-                    } else {
-                        $("#log-result").html("Message: " + JSON.stringify(return_data.message));
-                        Quagga.start();
-                    }
-                }
-            )
-        }
-    </script>
-</body>
+        )
+    }
+</script>
 
 </html>

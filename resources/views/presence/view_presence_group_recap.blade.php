@@ -1,8 +1,3 @@
-@include('base.start', ['path' => 'presensi/list', 'title' => 'Lihat Rekap Grup Presensi ' . $presenceGroup->name, 'breadcrumbs' => ['Daftar Presensi', 'Presensi Maghrib', 'Lihat Rekap'],
-'backRoute' => route('view presence group', isset($presenceGroup) ? $presenceGroup->id : '')
-])
-<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 @if(isset($presenceGroup))
 <div class="card">
   <div class="card-body pt-4 p-3 d-flex">
@@ -141,6 +136,14 @@
 </div>
 @endif
 
+<script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+</script>
+
 @if(isset($presenceGroup))
 <script>
   $('#recap-table').DataTable({
@@ -193,4 +196,3 @@
   }
 </script>
 @endif
-@include('base.end')

@@ -1,6 +1,3 @@
-@include('base.start', ['path' => 'user/list', 'title' => 'Ubah User', 'breadcrumbs' => ['Daftar User', 'Ubah User']
-,'backRoute' => url()->previous() ? (url()->previous() != url()->current() ? url()->previous() : route('user tm')) : route('user tm')
-])
 <div class="card">
   <div class="card-body pt-4 p-3">
     @if ($errors->any())
@@ -321,7 +318,14 @@
     @endif
   </div>
 </div>
+
 <script>
+  try {
+    $(document).ready();
+  } catch (e) {
+    window.location.replace(`{{ url("/") }}`)
+  }
+
   $('#role-santri').click(() => {
     if ($('#role-santri').is(':checked')) {
       $('#santri-data-section').show();
@@ -336,4 +340,3 @@
     }
   });
 </script>
-@include('base.end')

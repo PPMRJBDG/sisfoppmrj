@@ -1,22 +1,8 @@
-<!--
-=========================================================
-* Argon Dashboard 2 - v2.0.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
-<!DOCTYPE html>
-<html lang="en">
 <?php
 $setting = App\Models\Settings::first();
 ?>
+<!DOCTYPE html>
+<html lang="en" data-mdb-theme="{{auth()->user()->themes}}">
 
 <head>
   <meta charset="utf-8" />
@@ -25,29 +11,39 @@ $setting = App\Models\Settings::first();
   <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
   <title>
     {{ $title }} - {{$setting->apps_name}}
-  </title>
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="{{ asset('css/nucleo-icons.css') }}" rel="stylesheet" />
-  <link href="{{ asset('css/nucleo-svg.css') }}" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <link href="{{ asset('css/nucleo-svg.css') }}" rel="stylesheet" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="{{ asset('css/argon-dashboard.css') }}" rel="stylesheet" />
-  <link id="pagestyle" href="{{ asset('css/argon-dashboard.min.css') }}" rel="stylesheet" />
-  <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  </title><!-- New Material Design -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="{{ asset('ui-kit/js/jquery.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('ui-kit/js/addons/datatables.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('ui-kit/js/addons/datatables-select.min.js') }}"></script>
 
-  <!--   Core JS Files   -->
-  <script src="{{ asset('js/core/popper.min.js') }}"></script>
-  <script src="{{ asset('js/core/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('js/plugins/perfect-scrollbar.min.js') }}"></script>
-  <script src="{{ asset('js/plugins/smooth-scrollbar.min.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('css/argon-dashboard.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb-free.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb.min.css') }}" />
+  <!-- <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb-v2.min.css') }}" /> -->
+
+  <!-- addons -->
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/addons/datatables.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/addons/datatables-select.min.css') }}" />
 </head>
 
-<body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100" style="min-height:100% !important;"></div>
+<Style>
+  .bg-primary {
+    background: #48c6ef;
+    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5));
+    background: linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5))
+  }
+
+  .font-weight-bolder {
+    font-weight: 700 !important
+  }
+</style>
+
+<body class="g-sidenav-show bg-primary">
+  <div class="min-height-300 position-absolute w-100" style="min-height:100% !important;"></div>
   <main class="main-content position-relative border-radius-lg ">
     <div class="container-fluid py-4 {{ isset($containerClass) ? $containerClass : '' }}">
