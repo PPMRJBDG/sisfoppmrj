@@ -237,7 +237,8 @@ if (auth()->user()->hasRole('barcode')) {
   <!-- Custom JS -->
   <script type="text/javascript" src="{{ asset('js/app-custom.js') }}"></script>
   <script>
-    $(document.body).on('click', 'a', function(e) {
+    // $(document.body).on('click', 'a', function(e) {
+    $('body').on('click', 'a', function(e) {
       var list_tab = ['return-false', 'nav-mahasiswa-tab', 'nav-table-tab', 'nav-grafik-tab', 'nav-harian-tab', 'nav-berjangka-tab', 'nav-hadir-tab', 'nav-ijin-tab', 'nav-alpha-tab'];
       if (!matchArray(list_tab, e.target.id)) {
         e.preventDefault();
