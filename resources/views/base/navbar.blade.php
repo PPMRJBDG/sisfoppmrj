@@ -1,7 +1,11 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-{{auth()->user()->themes}} bg-body-tertiary shadow-5 border-bottom">
   <div class="container-fluid">
     <a class="navbar-brand ps-2" href="{{ url('') }}">
+      @if($setting->logoImgUrl!='')
       <img src="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}" height="24" alt="PPM Logo" loading="lazy" />
+      @else
+      No Logo
+      @endif
     </a>
 
     <button data-mdb-collapse-init class="navbar-toggler" type="button" data-mdb-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

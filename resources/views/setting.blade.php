@@ -16,18 +16,18 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 </div>
 @endif
 <div class="row">
-    <div class="col-md-6 p-2">
+    <div class="col-md-6">
         <div class="col-md-12 mb-2">
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form action="{{ route('store apps') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('store apps') }}" id="upload-file" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
                                         Nama Organisasi
                                     </label>
-                                    <input class="form-control" type="text" name="org" value="{{$list_setting->org_name}}" required>
+                                    <input class="form-control" id="org" type="text" name="org" value="{{$list_setting->org_name}}" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -35,35 +35,38 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     <label class="form-control-label">
                                         Nama Aplikasi
                                     </label>
-                                    <input class="form-control" type="text" name="apps" value="{{$list_setting->apps_name}}" required>
+                                    <input class="form-control" id="apps" type="text" name="apps" value="{{$list_setting->apps_name}}" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="example-text-input" class="form-control-label">Logo Aplikasi</label>
-                                    @if(isset($list_setting->logoImgUrl))
-                                    <div class="">
+                                    @if($list_setting->logoImgUrl!='')
+                                    <div class="mb-2">
                                         <center>
                                             <img style="width: 120px" src="{{ url('storage/logo-apps/' . $list_setting->logoImgUrl) }}" alt="">
                                         </center>
                                     </div>
                                     @endif
-                                    <input class="form-control" type="file" name="logoImg">
+                                    <input class="form-control" type="file" name="logoImg" id="logoImg">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <!-- <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="example-text-input" class="form-control-label">Backgroun Aplikasi</label>
                                     @if(isset($list_setting->logoImgUrl))
                                     <div class="">
                                         <center>
-                                            <img style="width: 100%" src="{{ url('storage/logo-apps/' . $list_setting->bgImage) }}" alt="">
+                                            <?php
+                                            // {{ url('storage/logo-apps/' . $list_setting->bgImage) }} 
+                                            ?>
+                                            <img style="width: 100%" src="" alt="">
                                         </center>
                                     </div>
                                     @endif
                                     <input class="form-control" type="file" name="bgImg">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <input class="btn btn-primary btn-sm form-control mb-0" type="submit" value="Simpan Aplikasi">
@@ -306,7 +309,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             </div>
         </div>
     </div>
-    <div class="col-md-6 p-2">
+    <div class="col-md-6">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
             <div class="card shadow-lg">
@@ -505,8 +508,6 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     }
 
     $('#table-pelanggaran').DataTable({
-        order: [
-            // [1, 'desc']
-        ],
+        order: [],
     });
 </script>

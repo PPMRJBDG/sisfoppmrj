@@ -12,7 +12,9 @@ if (auth()->user()->hasRole('barcode')) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  @if($setting->logoImgUrl!='')
   <link rel="icon" type="image/png" href="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}">
+  @endif
   <title>
     {{$setting->apps_name}}
   </title>
