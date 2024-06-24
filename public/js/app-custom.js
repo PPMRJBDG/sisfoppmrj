@@ -44,7 +44,11 @@ function getCookie(cname) {
             c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
+            if (c.substring(name.length, c.length) == "") {
+                return "/home";
+            } else {
+                return c.substring(name.length, c.length);
+            }
         }
     }
     return "/home";

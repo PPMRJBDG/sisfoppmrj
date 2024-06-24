@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-body pt-4 p-2">
+  <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -15,6 +15,7 @@
     </div>
     @endif
     @if(isset($user))
+    <br>
     <form action="{{ route('update my profile') }}" method="post" enctype="multipart/form-data">
       @csrf
       <div class="row">

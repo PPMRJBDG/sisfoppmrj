@@ -115,7 +115,7 @@ $setting = App\Models\Settings::first();
 
     body,
     h6 {
-      font-size: 0.8rem !important;
+      font-size: 1rem !important;
     }
   }
 
@@ -130,75 +130,38 @@ $setting = App\Models\Settings::first();
 </style>
 
 <body>
-  <section class="h-100 gradient-form">
-    <div class="mask h-100 d-flex justify-content-center align-items-center">
-      <div class="container">
-        <section>
-          <div class="bg-image bg-fixed text-center" style="
-            background-image: url('img/bg.jpg');
-            height: 460px;
-          ">
-            <div class="d-flex align-items-center h-100 mask" style="
-              background: linear-gradient(
-                45deg,
-                rgba(255, 88, 88, 0.7),
-                rgba(238, 66, 146, 0.8) 100%
-              );
-            ">
-              <div class="container text-white">
-                <p class="h1 mb-5 text-white">Some facts about us</p>
-                <div class="row">
-                  <div class="col-md-3">
-                    <h2 class="h1 text-white">+350</h2>
-                    <p class="mb-md-0">Alumni PPM</p>
-                  </div>
-                  <div class="col-md-3">
-                    <h2 class="h1 text-white">+56</h2>
-                    <p class="mb-md-0">Muballigh Lulusan PPM</p>
-                  </div>
-                  <div class="col-md-3">
-                    <h2 class="h1 text-white">{{ count(Illuminate\Support\Facades\DB::table('v_user_santri')->where('gender','male')->get()) }}</h2>
-                    <p class="mb-md-0">Mahasiswa</p>
-                  </div>
-                  <div class="col-md-3">
-                    <h2 class="h1 text-white">{{ count(Illuminate\Support\Facades\DB::table('v_user_santri')->where('gender','female')->get()) }}</h2>
-                    <p class="mb-0">Mahasiswi</p>
-                  </div>
-                </div>
+  <section class="vh-100 bg-primary">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+
+              <div class="p-3 ps-0">
+                <h5 class="mb-0">Welcome back! <b>User</b></h5>
               </div>
-            </div>
-          </div>
-        </section>
-        <div class="card border wow fadeIn shadow-lg" data-wow-delay="0.3s">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-4"></div>
-              <div class="col-md-4">
-                <div class="p-3 ps-0">
-                  <h5 class="mb-0">Welcome back! <b>User</b></h5>
+              <form role="form" action="{{ route('login') }}" method="POST">
+                @csrf
+                <div data-mdb-input-init class="mb-4 form-outline">
+                  <input autocomplete="off" type="email" required name="email" id="orangeForm-email" class="form-control" placeholder="Email">
+                  <label class="form-label" for="orangeForm-email">Email</label>
                 </div>
-                <form role="form" action="{{ route('login') }}" method="POST">
-                  @csrf
-                  <div data-mdb-input-init class="mb-4 form-outline">
-                    <input autocomplete="off" type="email" required name="email" id="orangeForm-email" class="form-control" placeholder="Email">
-                    <label class="form-label" for="orangeForm-email">Email</label>
-                  </div>
 
-                  <div data-mdb-input-init class="mb-4 form-outline">
-                    <input autocomplete="off" type="password" required id="orangeForm-pass" name="password" class="form-control" placeholder="Password">
-                    <label class="form-label" for="orangeForm-pass">Password</label>
-                  </div>
+                <div data-mdb-input-init class="mb-4 form-outline">
+                  <input autocomplete="off" type="password" required id="orangeForm-pass" name="password" class="form-control" placeholder="Password">
+                  <label class="form-label" for="orangeForm-pass">Password</label>
+                </div>
 
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
-                    <label class="form-check-label" for="rememberMe">Remember me</label>
-                  </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
+                  <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
 
-                  <div class="text-center">
-                    <input type="submit" class="btn btn-primary font-weight-bold btn-lg btn-block btn-rounded mt-4 mb-0" value="Sign in">
-                  </div>
-                </form>
-              </div>
+                <div class="text-center">
+                  <input type="submit" class="btn btn-primary font-weight-bold btn-lg btn-block btn-rounded mt-4 mb-0" value="Sign in">
+                </div>
+              </form>
+
             </div>
           </div>
         </div>

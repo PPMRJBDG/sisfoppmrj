@@ -33,7 +33,7 @@
       {{ session('success') }}
     </div>
     @endif
-    <div class="datatable table-responsive p-0">
+    <div class="datatable datatable-sm p-0">
       <table class="table align-items-center mb-0">
         <thead>
           <tr>
@@ -49,14 +49,7 @@
           @foreach($lorong->members as $member)
           <tr>
             <td>
-              <div class="d-flex px-2 py-1">
-                <div>
-                  <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
-                </div>
-                <div class="d-flex flex-column justify-content-center">
-                  <h6 class="mb-0 text-sm">{{ $member->user->fullname }}</h6>
-                </div>
-              </div>
+              <h6 class="mb-0 text-sm">{{ $member->user->fullname }}</h6>
             </td>
             <td>
               {{ $member->angkatan }}

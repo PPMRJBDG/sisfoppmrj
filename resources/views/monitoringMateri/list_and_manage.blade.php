@@ -35,7 +35,7 @@ function printMateriOptions($materis, $santri)
 
 <div class="card border mb-2">
     <div class="card-body p-2 d-flex justify-content-between align-items-center">
-        <h6 class="mb-0">Daftar Monitoring Materi</h6>
+        <h6 class="mb-0 font-weight-bolder">Daftar Monitoring Materi</h6>
         @if(!auth()->user()->hasRole('santri'))
         <a href="{{ route('create materi') }}" class="btn btn-primary btn-sm">
             <i class="fas fa-plus" aria-hidden="true"></i>
@@ -137,21 +137,19 @@ function printMateriOptions($materis, $santri)
         @endif
 
         @if(sizeof($lorongs) >= 0)
-        <div class="row">
-            <div class="datatable datatable-sm">
-                <table class="table align-items-center mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">MATERI SAYA</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">PENCAPAIAN</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php printMateriOptions($materis, auth()->user()->santri) ?>
-                    </tbody>
-                </table>
-            </div>
+        <div class="datatable datatable-sm">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">MATERI SAYA</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">PENCAPAIAN</th>
+                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php printMateriOptions($materis, auth()->user()->santri) ?>
+                </tbody>
+            </table>
         </div>
         @endif
     </div>
