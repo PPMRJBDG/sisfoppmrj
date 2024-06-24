@@ -13,8 +13,8 @@
 </div>
 @endif
 
-<div class="card shadow-lg p-2">
-    <div class="table-responsive">
+<div class="card border shadow-lg p-2">
+    <div class="datatable datatable-sm">
         <table id="table" class="table align-items-center mb-0">
             <thead style="background-color:#f6f9fc;">
                 <tr>

@@ -67,8 +67,8 @@ class CountDashboard
         }
 
         $content_body = '
-                    <div class="table-responsive">
-                        <table class="table align-items-center mb-0">
+                    <div class="datatable datatable-sm" data-mdb-pagination="false" data-mdb-fixed-header="true">
+                        <table id="table-dashboard" class="table align-items-center mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-uppercase text-center text-sm font-weight-bolder">ANGKATAN</th>
@@ -80,18 +80,16 @@ class CountDashboard
                                 </tr>
                             </thead>
                             <tbody>
-                            ' . $content_tr . '
+                                ' . $content_tr . '              
+                                <tr>
+                                    <td class="text-uppercase text-center text-sm font-weight-bolder"></td>
+                                    <td class="text-uppercase text-center text-sm font-weight-bolder"><strong>' . $total_muballigh_laki . '</strong></td>
+                                    <td class="text-uppercase text-center text-sm font-weight-bolder"><strong>' . $total_muballigh_perempuan . '</strong></td>
+                                    <td class="text-uppercase text-center text-sm font-weight-bolder"><strong>' . $total_reguler_laki . '</strong></td>
+                                    <td class="text-uppercase text-center text-sm font-weight-bolder"><strong>' . $total_reguler_perempuan . '</strong></td>
+                                    <td class="text-uppercase text-center text-sm font-weight-bolder"><strong>' . ($total_muballigh_laki + $total_muballigh_perempuan + $total_reguler_laki + $total_reguler_perempuan) . '</strong></td>
+                                </tr>
                             </tbody>
-                            <tfooter>                            
-                            <tr>
-                                <th class="text-uppercase text-center text-sm font-weight-bolder"></th>
-                                <th class="text-uppercase text-center text-sm font-weight-bolder">' . $total_muballigh_laki . '</th>
-                                <th class="text-uppercase text-center text-sm font-weight-bolder">' . $total_muballigh_perempuan . '</th>
-                                <th class="text-uppercase text-center text-sm font-weight-bolder">' . $total_reguler_laki . '</th>
-                                <th class="text-uppercase text-center text-sm font-weight-bolder">' . $total_reguler_perempuan . '</th>
-                                <th class="text-uppercase text-center text-sm font-weight-bolder">' . ($total_muballigh_laki + $total_muballigh_perempuan + $total_reguler_laki + $total_reguler_perempuan) . '</th>
-                            </tr>
-                            </tfooter>
                         </table>
                     </div>';
 

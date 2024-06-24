@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-3 col-sm-6">
         Pilih Tahun-Bulan
-        <select class="select_tb form-control mb-3" name="select_tb" id="select_tb">
+        <select data-mdb-filter="true" class="select select_tb form-control mb-3" name="select_tb" id="select_tb">
           <option value="-">Silahkan Pilih</option>
           @foreach($tahun_bulan as $tbx)
           <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="card-body p-2">
-    <div class="table-responsive p-2">
+    <div class="datatable table-responsive p-2">
       <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>

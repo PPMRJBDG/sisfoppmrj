@@ -1,16 +1,5 @@
-<div class="card">
-  @if($count_dashboard!='')
-  <div class="card shadow-lg mb-0">
-    <div class="card-body p-2">
-      <p class="mb-0 text-sm font-weight-bolder btn btn-primary" onclick="showHideCacah()">Tampilkan Cacah Jiwa</p>
-      <div id="toggle-cacahjiwa" style="display:none;">
-        <?php echo $count_dashboard; ?>
-      </div>
-    </div>
-  </div>
-  @endif
-
-  <div class="card-header pb-0 p-2">
+<div class="card shadow border">
+  <div class="card-header p-2">
     @can('create users')
     <a href="{{ route('create user') }}" class="btn btn-primary form-control mb-2">
       <i class="fas fa-plus" aria-hidden="true"></i>
@@ -20,7 +9,7 @@
     <h6 class="mt-1 mb-2 text-center text-sm">Data Mahasiswa {{$select_angkatan}}</h6>
     <div class="row">
       <div class="col-6 col-sm-6">
-        <select class="angkatan-list form-control" name="" id="angkatan-list">
+        <select data-mdb-filter="true" class="select angkatan-list form-control" name="" id="angkatan-list">
           <option value="-">Filter angkatan</option>
           @foreach($list_angkatan as $angkatan)
           <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
@@ -28,7 +17,7 @@
         </select>
       </div>
       <div class="col-6 col-sm-6">
-        <select class="role-list form-control" name="" id="role-list">
+        <select data-mdb-filter="true" class="select role-list form-control" name="" id="role-list">
           <option value="-">Filter role</option>
           @foreach($list_role as $vrole)
           <option {{ ($select_role == $vrole->id) ? 'selected' : '' }} value="{{$vrole->id}}">{{$vrole->name}}</option>
@@ -37,6 +26,7 @@
       </div>
     </div>
   </div>
+
   <div class="card-body p-2">
     @if (session('success'))
     <div class="alert alert-success text-white">
@@ -52,7 +42,8 @@
       </ul>
     </div>
     @endif
-    <div class="table-responsive p-0">
+
+    <div class="datatable datatable-sm p-0">
       <table id="table" class="table align-items-center mb-0">
         <thead class="thead-light" style="background-color:#f6f9fc;">
           <tr class="list">
@@ -81,9 +72,6 @@
             </td>
             <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')" style="cursor:pointer;">
               <div class="d-flex px-2 py-1">
-                <div>
-                  <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
-                </div>
                 <div class="d-flex flex-column justify-content-center">
                   <?php
                   $is_kl = false;
@@ -154,16 +142,11 @@
     window.location.replace(`{{ url("/") }}`)
   }
 
-  $('#table').DataTable({
-    order: [
-      // [1, 'desc']
-    ],
-    pageLength: 25
-  });
   $('.angkatan-list').change((e) => {
     var role = $('#role-list').val()
     getPage(`{{ url("/") }}/user/list/santri/${$(e.currentTarget).val()}/` + role)
   })
+
   $('.role-list').change((e) => {
     var angkatan = $('#angkatan-list').val()
     getPage(`{{ url("/") }}/user/list/santri/` + angkatan + `/${$(e.currentTarget).val()}`)

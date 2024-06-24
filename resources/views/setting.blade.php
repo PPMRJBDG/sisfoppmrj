@@ -18,7 +18,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 <div class="row">
     <div class="col-md-6">
         <div class="col-md-12 mb-2">
-            <div class="card p-2 shadow-lg">
+            <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('store apps') }}" id="upload-file" method="POST" enctype="multipart/form-data">
                         <div class="row">
@@ -79,7 +79,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Periode Tahun -->
         <div class="col-md-12 mb-2">
-            <div class="card p-2 shadow-lg">
+            <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
                         <div class="col-md-5">
@@ -105,8 +105,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </form>
                         </div>
                         <div class="col-md-7">
-                            <div class="table-responsive">
-                                <table class="table table-sm align-items-center mb-0">
+                            <div class="datatable datatable-sm">
+                                <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Angkatan</th>
@@ -136,7 +136,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Generate Sodaqoh -->
         <div class="col-md-12 mb-2">
-            <div class="card p-2 shadow-lg">
+            <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('store generate sodaqoh') }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -144,7 +144,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Pilih Periode Tahunan</label>
-                                    <select class="periode form-control" name="periode" id="periode">
+                                    <select data-mdb-filter="true" class="select periode form-control" name="periode" id="periode">
                                         <option value="">Periode</option>
                                         @if(count($list_periode)>0)
                                         @foreach($list_periode as $per)
@@ -172,7 +172,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Calendar Liburan -->
         <div class="col-md-12 mb-2">
-            <div class="card p-2 shadow-lg">
+            <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
                         <div class="col-md-5">
@@ -187,10 +187,14 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 Awal Liburan
                                             </label>
                                             <input class="form-control" type="date" name="liburan_from" placeholder="Contoh: 27/03/2000" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 Akhir Liburan
                                             </label>
                                             <input class="form-control" type="date" name="liburan_to" placeholder="Contoh: 27/03/2000" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 Keterangan
                                             </label>
@@ -206,8 +210,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </form>
                         </div>
                         <div class="col-md-7">
-                            <div class="table-responsive">
-                                <table class="table table-sm align-items-center mb-0">
+                            <div class="datatable datatable-sm">
+                                <table class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Dari</th>
@@ -245,7 +249,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Jenis Pelanggaran -->
         <div class="col-md-12 mb-2">
-            <div class="card p-2 shadow-lg">
+            <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
                         <div class="col-md-5">
@@ -258,10 +262,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 Jenis Pelanggaran
                                             </label>
                                             <input class="form-control" type="text" name="jenis_pelanggaran" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 Kategori Pelanggaran
                                             </label>
-                                            <select class="kategori_pelanggaran form-control" name="kategori_pelanggaran" id="kategori_pelanggaran">
+                                            <select data-mdb-filter="true" class="select kategori_pelanggaran form-control" name="kategori_pelanggaran" id="kategori_pelanggaran">
                                                 <option value="">Kategori Pelanggaran</option>
                                                 <option value="ringan">Ringan</option>
                                                 <option value="sedang">Sedang</option>
@@ -278,8 +284,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             </form>
                         </div>
                         <div class="col-md-7">
-                            <div class="table-responsive">
-                                <table id="table-pelanggaran" class="table table-sm align-items-center mb-0">
+                            <div class="datatable datatable-sm">
+                                <table id="table-pelanggaran" class="table align-items-center mb-0">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
@@ -312,7 +318,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     <div class="col-md-6">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
-            <div class="card p-2 shadow-lg">
+            <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
                         <div class="col-md-12">
@@ -325,15 +331,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 Host URL
                                             </label>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->host_url : '' }}" name="host_url" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 Akun Studio
                                             </label>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->wa_username : '' }}" name="wa_username" required>
+                                        </div>
+                                        <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
                                                 WA - Team Account
                                             </label>
-                                            <select class="wa_team_id form-control" name="wa_team_id" id="wa_team_id">
+                                            <select data-mdb-filter="true" class="select wa_team_id form-control" name="wa_team_id" id="wa_team_id">
                                                 <option value="">--pilih--</option>
                                                 @if(count($list_wa_team)>0)
                                                 @foreach($list_wa_team as $wt)
@@ -343,10 +353,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Sender Account
                                             </label>
-                                            <select class="wa_sender_account_id form-control" name="wa_sender_account_id" id="wa_sender_account_id">
+                                            <select data-mdb-filter="true" class="select wa_sender_account_id form-control" name="wa_sender_account_id" id="wa_sender_account_id">
                                                 <option value="">--pilih--</option>
                                                 @if(count($list_wa_account)>0)
                                                 @foreach($list_wa_account as $waac)
@@ -356,10 +368,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Grup Dewan Guru
                                             </label>
-                                            <select class="wa_dewanguru_group_id form-control" name="wa_dewanguru_group_id" id="wa_dewanguru_group_id">
+                                            <select data-mdb-filter="true" class="select wa_dewanguru_group_id form-control" name="wa_dewanguru_group_id" id="wa_dewanguru_group_id">
                                                 <option value="">--pilih--</option>
                                                 @if(count($list_wa_group)>0)
                                                 @foreach($list_wa_group as $wg)
@@ -369,10 +383,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Grup Ketertiban
                                             </label>
-                                            <select class="wa_ketertiban_group_id form-control" name="wa_ketertiban_group_id" id="wa_ketertiban_group_id">
+                                            <select data-mdb-filter="true" class="select wa_ketertiban_group_id form-control" name="wa_ketertiban_group_id" id="wa_ketertiban_group_id">
                                                 <option value="">--pilih--</option>
                                                 @if(count($list_wa_group)>0)
                                                 @foreach($list_wa_group as $wg)
@@ -382,10 +398,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Grup Ortu
                                             </label>
-                                            <select class="wa_ortu_group_id form-control" name="wa_ortu_group_id" id="wa_ortu_group_id">
+                                            <select data-mdb-filter="true" class="select wa_ortu_group_id form-control" name="wa_ortu_group_id" id="wa_ortu_group_id">
                                                 <option value="">--pilih--</option>
                                                 @if(count($list_wa_group)>0)
                                                 @foreach($list_wa_group as $wg)
@@ -395,10 +413,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Info Alpha ke Ortu
                                             </label>
-                                            <select class="wa_info_alpha_ortu form-control" name="wa_info_alpha_ortu" id="wa_info_alpha_ortu">
+                                            <select data-mdb-filter="true" class="select wa_info_alpha_ortu form-control" name="wa_info_alpha_ortu" id="wa_info_alpha_ortu">
                                                 <option <?php if ($list_setting != null) {
                                                             echo (0 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
                                                         } ?> value="0">Tidak</option>
@@ -406,10 +426,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
                                                         } ?> value="1">Ya</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Link Presensi ke Koor Lorong
                                             </label>
-                                            <select class="wa_link_presensi_koor form-control" name="wa_link_presensi_koor" id="wa_link_presensi_koor">
+                                            <select data-mdb-filter="true" class="select wa_link_presensi_koor form-control" name="wa_link_presensi_koor" id="wa_link_presensi_koor">
                                                 <option <?php if ($list_setting != null) {
                                                             echo (0 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
                                                         } ?> value="0">Tidak</option>
@@ -419,10 +441,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             </select>
                                             @endif
 
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 Auto Generate Hadir
                                             </label>
-                                            <select class="auto_generate_hadir form-control" name="auto_generate_hadir" id="auto_generate_hadir">
+                                            <select data-mdb-filter="true" class="select auto_generate_hadir form-control" name="auto_generate_hadir" id="auto_generate_hadir">
                                                 <option <?php if ($list_setting != null) {
                                                             echo (0 == $list_setting->auto_generate_hadir) ? 'selected' : '';
                                                         } ?> value="0">Tidak</option>
@@ -437,7 +461,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             <label class="form-control-label">
                                                 Status Perijinan 30%
                                             </label>
-                                            <select class="status_perijinan form-control" name="status_perijinan" id="status_perijinan">
+                                            <select data-mdb-filter="true" class="select status_perijinan form-control" name="status_perijinan" id="status_perijinan">
                                                 <option <?php if ($list_setting != null) {
                                                             echo (0 == $list_setting->status_perijinan) ? 'selected' : '';
                                                         } ?> value="0">Tidak Diaktifkan</option>
@@ -445,27 +469,39 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->status_perijinan) ? 'selected' : '';
                                                         } ?> value="1">Diaktifkan</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
                                                 WA - Type
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_type : '' }}" name="wa_type" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Template
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_template : '' }}" name="wa_template" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Min Delay
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_min_delay : '' }}" name="wa_min_delay" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Max Delay
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_max_delay : '' }}" name="wa_max_delay" required>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Header
                                             </label>
                                             <textarea rows="3" class="form-control" name="wa_header" required>{{ ($list_setting) ? $list_setting->wa_header : '' }}</textarea>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Footer
                                             </label>
@@ -474,17 +510,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        @if($list_setting->wa_username!='')
-                                        <label class="form-control-label">
-                                            WA - Info Jaga Malam
-                                        </label>
-                                        <textarea rows="6" class="form-control mb-2" name="wa_info_jaga_malam" required>{{ ($list_setting) ? $list_setting->wa_info_jaga_malam : '' }}</textarea>
+                                        <div class="form-group">
+                                            @if($list_setting->wa_username!='')
+                                            <label class="form-control-label">
+                                                WA - Info Jaga Malam
+                                            </label>
+                                            <textarea rows="6" class="form-control mb-2" name="wa_info_jaga_malam" required>{{ ($list_setting) ? $list_setting->wa_info_jaga_malam : '' }}</textarea>
 
-                                        <label class="form-control-label">
-                                            WA - Info Untuk Mahasiswa yang Sudah Lulus
-                                        </label>
-                                        <textarea rows="6" class="form-control mb-2" name="wa_info_lulus" required>{{ ($list_setting) ? $list_setting->wa_info_lulus : '' }}</textarea>
-                                        @endif
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                WA - Info Untuk Mahasiswa yang Sudah Lulus
+                                            </label>
+                                            <textarea rows="6" class="form-control mb-2" name="wa_info_lulus" required>{{ ($list_setting) ? $list_setting->wa_info_lulus : '' }}</textarea>
+                                            @endif
+                                        </div>
 
                                         <div class="form-group">
                                             <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Update Setting">
@@ -506,8 +546,4 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     } catch (e) {
         window.location.replace(`{{ url("/") }}`)
     }
-
-    $('#table-pelanggaran').DataTable({
-        order: [],
-    });
 </script>

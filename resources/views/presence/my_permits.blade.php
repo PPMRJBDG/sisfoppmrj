@@ -8,7 +8,7 @@
 
  <div class="card">
    <nav>
-     <div class="nav nav-tabs" id="nav-tab" role="tablist">
+     <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
        <a data-mdb-ripple-init class="nav-link active" id="nav-harian-tab" data-bs-toggle="tab" href="#nav-harian" role="tab" aria-controls="nav-harian" aria-selected="true">Harian</a>
        <a data-mdb-ripple-init class="nav-link" id="nav-berjangka-tab" data-bs-toggle="tab" href="#nav-berjangka" role="tab" aria-controls="nav-berjangka" aria-selected="false">Berjangka</a>
      </div>
@@ -22,7 +22,7 @@
            </a>
          </div>
 
-         <div class="table-responsive p-2">
+         <div class="datatable table-responsive p-2">
            <table id="table-izin" class="table align-items-center mb-0">
              <thead style="background-color:#f6f9fc;">
                <tr>
@@ -69,7 +69,7 @@
              Buat izin berjangka
            </a>
          </div>
-         <div class="table-responsive p-2">
+         <div class="datatable table-responsive p-2">
            <table id="table-generator" class="table align-items-center mb-0">
              <thead>
                <tr>
@@ -118,17 +118,17 @@
      window.location.replace(`{{ url("/") }}`)
    }
 
-   $('#table-izin').DataTable({
-     order: [
-       // [1, 'desc']
-     ],
-     pageLength: 25
-   });
+   //  $('#table-izin').DataTable({
+   //    order: [
+   //      // [1, 'desc']
+   //    ],
+   //    pageLength: 25
+   //  });
 
-   $('#table-generator').DataTable({
-     order: [
-       // [1, 'desc']
-     ],
-     pageLength: 25
-   });
+   //  $('#table-generator').DataTable({
+   //    order: [
+   //      // [1, 'desc']
+   //    ],
+   //    pageLength: 25
+   //  });
  </script>

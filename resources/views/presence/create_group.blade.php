@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow border">
   <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
@@ -9,6 +9,7 @@
       </ul>
     </div>
     @endif
+
     <form action="{{ route('store presence group') }}" method="post">
       @csrf
       <div class="row">
@@ -20,15 +21,13 @@
         </div>
       </div>
 
-      <hr class="horizontal dark">
-
       <div class="row">
         <label class="custom-control-label">Jadwal</label>
       </div>
       <div class="row ms-4">
         <div class="row">
           <div class="col-md-4">
-            <div class="form-check">
+            <div class="form-group form-check">
               <input class="form-check-input" id="cc-monday" name="days[]" type="checkbox" value="monday">
               <label class="custom-control-label" for="cc-monday">Senin</label>
             </div>
@@ -74,7 +73,6 @@
         </div>
       </div>
 
-      <hr class="horizontal dark">
       <div class="row">
         <div class="col-md-12">
           <div class="form-group form-check">
@@ -97,7 +95,7 @@
           </div>
         </div>
       </div>
-      <hr class="horizontal dark">
+
       <div class="row">
         <div class="col-md-12">
           <div class="form-group form-check">
@@ -107,13 +105,11 @@
         </div>
       </div>
 
-      <hr class="horizontal dark">
-
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Status</label>
-            <select class="form-control" name="status">
+            <select data-mdb-filter="true" class="select form-control" name="status">
               <option value="active">Aktif</option>
               <option value="inactive">Non Aktif</option>
             </select>

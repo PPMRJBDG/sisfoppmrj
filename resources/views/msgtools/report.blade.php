@@ -3,7 +3,7 @@
         <div class="alert alert-success text-white">
             Daftar Link Laporan untuk Orang Tua
         </div>
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table id="table-report" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>

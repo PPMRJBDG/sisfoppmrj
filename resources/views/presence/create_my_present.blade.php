@@ -25,7 +25,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-4">
+<div class="card shadow border mt-4">
   <div class="card-body pt-4 p-2">
     <form action="{{ route('store my present', $presence->id) }}" method="post">
       @csrf

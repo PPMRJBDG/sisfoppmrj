@@ -77,7 +77,7 @@ $setting = App\Models\Settings::first();
         <div class="container">
           <div class="row">
             <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
-              <div class="card card-plain">
+              <div class="card border card-plain">
                 <div class="card-header pb-0 text-start">
                   <h4 class="font-weight-bolder">Registrate new Santri</h4>
                   <p class="mb-0">Fill up the available fields</p>
@@ -117,7 +117,7 @@ $setting = App\Models\Settings::first();
                     </div>
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
-                      <select class="form-control" name="gender" required>
+                      <select data-mdb-filter="true" class="select form-control" name="gender" required>
                         <option selected disabled>Jenis Kelamin</option>
                         <option value="female">Perempuan</option>
                         <option value="male">Laki-laki</option>
@@ -125,7 +125,7 @@ $setting = App\Models\Settings::first();
                     </div>
                     <div class="mb-3">
                       <label for="example-text-input" class="form-control-label">Lorong</label>
-                      <select class="form-control" name="fkLorong_id">
+                      <select data-mdb-filter="true" class="select form-control" name="fkLorong_id">
                         @foreach($lorongs as $lorong)
                         <option value="{{ $lorong->id }}">{{ $lorong->name }}</option>
                         @endforeach

@@ -1,9 +1,9 @@
 <div>
   @if(isset($presenceGroup))
-  <div class="card">
+  <div class="card shadow border">
     <div class="card-body p-2">
       <div class="">
-        <h6 class="text-sm font-weight-bolder">Grup Presensi {{ $presenceGroup->name }}</h6>
+        <h6 class="mb-0 text-sm font-weight-bolder">Grup Presensi {{ $presenceGroup->name }}</h6>
         <span class="mb-2 text-xs font-weight-bolder">Jadwal:</span> <span class="font-weight-bold ms-sm-2">{{ ucwords($presenceGroup->days_in_bahasa()) }}</span>
         <br>
         <span class="mb-2 text-xs font-weight-bolder">Jam buka:</span> <span class="ms-sm-2 badge badge-secondary font-weight-bold">{{ $presenceGroup->start_hour }}</span>
@@ -28,7 +28,7 @@
   </div>
   @endif
 
-  <div class="card mt-2 mb-2 p-2">
+  <div class="card shadow border mt-2 mb-2 p-2">
     <a href="{{ route('create presence in group', $presenceGroup->id) }}" class="btn btn-primary btn-block btn-sm m-0">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Buat presensi di grup ini
@@ -36,7 +36,7 @@
   </div>
 
   <?php if (sizeof($presenceGroup->presences()->paginate(13)) <= 0) { ?>
-    <div class="card">
+    <div class="card shadow border">
       <div class="card-body p-2">
         <div class="alert alert-danger">Tidak ada hasil.</div>
       </div>
@@ -44,7 +44,7 @@
   <?php } ?>
 
   @foreach($presenceGroup->presences()->where('is_deleted',0)->orderBy('event_date', 'DESC')->paginate(13) as $presence)
-  <div class="card mb-2 p-2">
+  <div class="card shadow border mb-2 p-2">
     <div class="">
       <h6 class=" mb-0 text-sm font-weight-bolder">{{ $presence->name }}</h6>
       @include('components.presence_summary', ['presence' => $presence])

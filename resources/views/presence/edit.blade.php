@@ -37,7 +37,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Grup presensi (opsional)</label>
-            <select class="form-control" type="text" name="fkPresence_group_id" value="{{ $presence->fkPresence_group_id }}">
+            <select data-mdb-filter="true" class="select form-control" type="text" name="fkPresence_group_id" value="{{ $presence->fkPresence_group_id }}">
               <option value="" selected>Tidak masuk grup manapun</option>
               @foreach($presenceGroups as $presenceGroup)
               <option value="{{ $presenceGroup->id }}" {{ $presence->fkPresence_group_id == $presenceGroup->id ? 'selected' : '' }}>{{ $presenceGroup->name }}</option>

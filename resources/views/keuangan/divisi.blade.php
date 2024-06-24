@@ -1,4 +1,4 @@
-<div class="card shadow-lg">
+<div class="card border shadow-lg">
     <div class="card-body">
         <div class="row">
             <div class="col-md-5">
@@ -22,7 +22,7 @@
                 </form>
             </div>
             <div class="col-md-12">
-                <div class="table-responsive">
+                <div class="datatable datatable-sm">
                     <table id="table" class="table align-items-center mb-0">
                         <thead>
                             <tr>

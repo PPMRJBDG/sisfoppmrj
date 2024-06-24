@@ -9,7 +9,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-4">
+<div class="card shadow border mt-4">
   <div class="card-header pb-0">
     <h6>Pilih bulan dan tahun</h6>
   </div>
@@ -30,7 +30,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label for="example-text-input" class="form-control-label">Lorong</label>
-          <select class="form-control" id="lorongId">
+          <select data-mdb-filter="true" class="select form-control" id="lorongId">
             <option value="all">Semua</option>
             @foreach($lorongs as $lorong)
             <option value="{{ $lorong->id }}" {{ isset($lorongId) ? ($lorong->id == $lorongId ? 'selected' : '') : '' }}>{{ $lorong->name }}</option>
@@ -48,7 +48,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-4">
+<div class="card shadow border mt-4">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
     <h6>Rekap Umum {{ isset($fromDate, $toDate) ? $fromDate . ' - ' . $toDate : '' }}</h6>
     <button href="" onclick="download_table_as_csv('recap-table-general')" class="btn btn-primary">
@@ -57,7 +57,7 @@
     </button>
   </div>
   <div class="card-body px-0 pt-0 pb-2">
-    <div class="table-responsive p-0">
+    <div class="datatable table-responsive p-0">
       <table class="table align-items-center mb-0" id="recap-table-general">
         <thead>
           <tr>
@@ -82,7 +82,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-4">
+<div class="card shadow border mt-4">
   <div class="card-header pb-0 d-flex justify-content-between align-items-center">
     <h6>Rekap Per Orang {{ isset($fromDate, $toDate) ? $fromDate . ' - ' . $toDate : '' }}</h6>
     <button href="" onclick="download_table_as_csv('recap-table')" class="btn btn-primary">
@@ -91,7 +91,7 @@
     </button>
   </div>
   <div class="card-body px-0 pt-0 pb-2">
-    <div class="table-responsive p-4">
+    <div class="datatable table-responsive p-4">
       <table class="table align-items-center mb-0" id="recap-table">
         <thead>
           <tr>

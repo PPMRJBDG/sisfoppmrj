@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow border">
   @if ($errors->any())
   <div class="alert alert-danger text-white">
     <ul>
@@ -10,7 +10,7 @@
   @endif
 
   <nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
       <a data-mdb-ripple-init class="nav-link active" id="nav-harian-tab" data-bs-toggle="tab" href="#nav-harian" role="tab" aria-controls="nav-harian" aria-selected="true">Harian</a>
       <a data-mdb-ripple-init class="nav-link" id="nav-berjangka-tab" data-bs-toggle="tab" href="#nav-berjangka" role="tab" aria-controls="nav-berjangka" aria-selected="false">Berjangka</a>
     </div>
@@ -23,8 +23,8 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="fkPresence_id" class="form-control-label">Santri</label>
-                  <select name="fkSantri_id" required class="form-control">
+                  <label for="fkSantri_id" class="form-control-label">Santri</label>
+                  <select data-mdb-filter="true" id="fkSantri_id" name="fkSantri_id" required class="select form-control">
                     <option value="">Pilih santri</option>
                     @foreach($usersWithSantri as $userWithSantri)
                     <option value="{{ $userWithSantri->santri->id }}">{{ $userWithSantri->fullname }}</option>
@@ -37,7 +37,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
-                  <select name="fkPresence_id" required class="form-control">
+                  <select data-mdb-filter="true" name="fkPresence_id" required class="select form-control">
                     <option value="">Pilih pengajian</option>
                     @foreach($openPresences as $openPresence)
                     <option value="{{ $openPresence->id }}" {{ isset($presenceId) ? ($presenceId == $openPresence->id ? 'selected' : '') : '' }}>{{ $openPresence->name }}</option>
@@ -49,8 +49,8 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
-                  <select name="reason_category" id="reason_category" class="form-control" required onchange="checkSS(this)">
+                  <label for="reason_category" class="form-control-label">Kategori alasan</label>
+                  <select data-mdb-filter="true" name="reason_category" id="reason_category" class="select form-control" required onchange="checkSS(this)">
                     <option value="">Pilih kategori alasan</option>
                     @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
                     <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
@@ -63,7 +63,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="form-control-label">Apakah sudah meminta SS ?</label>
-                  <select name="status_ss" id="status_ss" disabled class="form-control" onchange="infoSS(this)">
+                  <select data-mdb-filter="true" name="status_ss" id="status_ss" disabled class="select form-control" onchange="infoSS(this)">
                     <option value="Setelah ini mau meminta">Setelah ini mau meminta</option>
                     <option value="Belum, maaf mendadak tidak sempat">Belum, maaf mendadak tidak sempat</option>
                     <option value="Belum, maaf posisi sudah di tempat tujuan">Belum, maaf posisi sudah di tempat tujuan</option>
@@ -77,9 +77,9 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <div class="form-group">
-                  <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas <span style="color:#4d4d4d;">(minimal 10 karakter)</span></label>
-                  <textarea class="form-control" name="reason" minlength="10" required placeholder="Cth: Sakit"></textarea>
+                <div data-mdb-input-init class="form-outline form-group">
+                  <textarea class="form-control" id="reason1" name="reason" rows="4" minlength="10" required></textarea>
+                  <label for="reason1" class="form-label">Berikan Alasan yg Jelas</label>
                 </div>
               </div>
             </div>
@@ -91,14 +91,14 @@
                 <div class="col-md-4">
                   <div class="form-check">
                     <input class="form-check-input" type="radio" checked name="status" id="customCheck1" value="pending">
-                    <label class="form-check-label fs-6" for="customCheck1"><span class="badge bg-gradient-secondary">Pending</span></label>
+                    <label class="form-check-label fs-6" for="customCheck1"><span class="badge badge-secondary">Pending</span></label>
                   </div>
                 </div>
                 @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
                 <div class="col-md-4">
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="status" id="customCheck2" value="approved">
-                    <label class="form-check-label fs-6" for="customCheck2"><span class="badge bg-gradient-success">Approved</span></label>
+                    <label class="form-check-label fs-6" for="customCheck2"><span class="badge badge-success">Approved</span></label>
                   </div>
                 </div>
                 @endif
@@ -123,7 +123,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="fkPresence_id" class="form-control-label">Santri</label>
-                  <select name="fkSantri_id" required class="form-control">
+                  <select data-mdb-filter="true" name="fkSantri_id" required class="select form-control">
                     <option value="">Pilih santri</option>
                     @foreach($usersWithSantri as $userWithSantri)
                     <option value="{{ $userWithSantri->santri->id }}">{{ $userWithSantri->fullname }}</option>
@@ -136,7 +136,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
-                  <select name="fkPresenceGroup_id" required class="form-control" required>
+                  <select data-mdb-filter="true" name="fkPresenceGroup_id" required class="select form-control" required>
                     <option value="">Pilih presensi</option>
                     <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam, MM Drh)</option>
                     @foreach($presenceGroups as $presenceGroup)
@@ -164,7 +164,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
-                  <select name="reason_category" id="reason_category_jangka" class="form-control" required onchange="checkSS(this)">>
+                  <select data-mdb-filter="true" name="reason_category" id="reason_category_jangka" class="select form-control" required onchange="checkSS(this)">>
                     <option value="">Pilih kategori alasan</option>
                     @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
                     <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
@@ -177,7 +177,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="form-control-label">Apakah sudah meminta SS ?</label>
-                  <select name="status_ss" id="status_ss_berjangka" disabled class="form-control" onchange="infoSS(this)">
+                  <select data-mdb-filter="true" name="status_ss" id="status_ss_berjangka" disabled class="select form-control" onchange="infoSS(this)">
                     <option value="Setelah ini mau meminta">Setelah ini mau meminta</option>
                     <option value="Belum, maaf mendadak tidak sempat">Belum, maaf mendadak tidak sempat</option>
                     <option value="Belum, maaf posisi sudah di tempat tujuan">Belum, maaf posisi sudah di tempat tujuan</option>
@@ -205,14 +205,14 @@
                 <div class="col-md-4">
                   <div class="form-check">
                     <input class="form-check-input" type="radio" checked name="status" id="customCheck3" value="pending">
-                    <label class="form-check-label fs-6" for="customCheck3"><span class="badge bg-gradient-secondary">Pending</span></label>
+                    <label class="form-check-label fs-6" for="customCheck3"><span class="badge badge-secondary">Pending</span></label>
                   </div>
                 </div>
                 @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
                 <div class="col-md-4">
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="status" id="customCheck4" value="approved">
-                    <label class="form-check-label fs-6" for="customCheck4"><span class="badge bg-gradient-success">Approved</span></label>
+                    <label class="form-check-label fs-6" for="customCheck4"><span class="badge badge-success">Approved</span></label>
                   </div>
                 </div>
                 @endif

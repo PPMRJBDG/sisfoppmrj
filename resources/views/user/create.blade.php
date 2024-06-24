@@ -1,5 +1,5 @@
-<div class="card">
-  <div class="card-body pt-4 p-2">
+<div class="card shadow border">
+  <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -28,7 +28,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
-            <select class="form-control" name="gender" required>
+            <select data-mdb-filter="true" class="select form-control" name="gender" required>
               <option value="female">Perempuan</option>
               <option value="male">Laki-laki</option>
             </select>
@@ -239,7 +239,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Lorong</label>
-              <select class="form-control" name="fkLorong_id">
+              <select data-mdb-filter="true" class="select form-control" name="fkLorong_id">
                 <option value="" selected>Tidak masuk lorong manapun.</option>
                 @foreach($lorongs as $lorong)
                 <option value="{{ $lorong->id }}">{{ $lorong->name }}</option>

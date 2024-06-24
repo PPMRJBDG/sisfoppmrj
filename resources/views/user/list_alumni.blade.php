@@ -1,22 +1,17 @@
-<div class="card">
-  <div class="card-header pb-0 p-2 d-flex justify-content-between align-items-center">
+<div class="card shadow border">
+  <div class="card-header p-2 d-flex justify-content-between align-items-center">
     <div class="p-2">
-      <select class="angkatan-list form-control" name="" id="">
+      <select data-mdb-filter="true" class="select angkatan-list form-control" name="" id="">
         <option value="">Filter angkatan</option>
         @foreach($list_angkatan as $angkatan)
         <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
         @endforeach
       </select>
     </div>
-    <h6 class="mb-0 text-sm">{{ count($users) }} Data Alumni {{ $select_angkatan }}</h6>
-    <!-- @can('create users')
-    <a href="{{ route('create user') }}" class="btn btn-primary">
-      <i class="fas fa-plus" aria-hidden="true"></i>
-      Buat user
-    </a>
-    @endcan -->
+    <h6 class="mb-0 text-sm p-1">{{ count($users) }} Alumni {{ $select_angkatan }}</h6>
   </div>
-  <div class="card-body pt-4 p-2">
+
+  <div class="card-body p-2">
     @if (session('success'))
     <div class="alert alert-success text-white">
       {{ session('success') }}
@@ -31,9 +26,10 @@
       </ul>
     </div>
     @endif
-    <div class="table-responsive p-0">
+
+    <div class="datatable datatable-sm p-0">
       <table id="table" class="table align-items-center mb-0">
-        <thead style="background-color:#f6f9fc;">
+        <thead>
           <tr>
             <th class="text-uppercase text-xxs font-weight-bolder">Nama</th>
             <th class="text-uppercase text-xxs font-weight-bolder ps-2">No HP</th>
@@ -51,9 +47,6 @@
           <tr>
             <td class="text-sm">
               <div class="d-flex px-2 py-1">
-                <div>
-                  <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
-                </div>
                 <div class="d-flex flex-column justify-content-center">
                   <h6 class="mb-0 text-sm">{{ $user->fullname }}</h6>
                 </div>
@@ -108,12 +101,6 @@
     window.location.replace(`{{ url("/") }}`)
   }
 
-  $('#table').DataTable({
-    order: [
-      // [1, 'desc']
-    ],
-    pageLength: 25
-  });
   $('.angkatan-list').change((e) => {
     getPage(`{{ url("/") }}/user/list/alumni/${$(e.currentTarget).val()}`)
   })

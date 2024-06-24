@@ -13,19 +13,19 @@
 </div>
 @endif
 
-<div class="card p-2 mb-2">
+<div class="card shadow border p-2 mb-2">
     @if($id!=null)
     <a href="/pelanggaran/s/{{$is_archive}}/param/all" class="btn btn-primary btn-sm col-12 col-md-2 mb-1">Tampilkan Semua</a>
     @endif
     <div class="row">
         @foreach($count_pelanggaran as $key=>$cp)
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <div class="card mb-1 mt-1 shadow-sm">
+            <div class="card shadow border mb-1 mt-1 shadow-sm">
                 <div class="card-body p-2">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-12">
                             <div class="numbers">
-                                <h5 class="text-sm mb-0 text-uppercase font-weight-bolder">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bolder">
                                     <?php
                                     $color = 'success';
                                     if ($cp['kategori'] == 'Berat') {
@@ -40,18 +40,13 @@
                                         </span>
                                         {{ $cp['pelanggaran'] }}
                                     </a>
-                                </h5>
-                                <h6 class="font-weight-bolder mb-0">
+                                </p>
+                                <p class="font-weight-bolder mb-0">
                                     Sudah SP: {{$cp['fix']}}
-                                </h6>
-                                <h6 class="font-weight-bolder mb-0">
+                                </p>
+                                <p class="font-weight-bolder mb-0">
                                     {{ ($is_archive) ? 'Saat Dipantau' : 'Sedang Dipantau' }}: {{$cp['pemantauan']}}
-                                </h6>
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -71,9 +66,9 @@
         </div>
     </div>
 </div>
-<div class="card">
+<div class="card shadow border p-2">
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-    <div class="card-header p-2">
+    <div class="card-header">
         <div class="row">
             <div class="col-md-6 col-sm-12 text-primary font-weight-bold mb-2">
                 Daftar Pelanggaran {{ ($is_archive) ? 'Arsip' : 'Aktif' }}
@@ -105,7 +100,7 @@
     </div>
     @endif
     <div class="card-body p-2 pt-0">
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table id="table" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
@@ -162,9 +157,9 @@
         window.location.replace(`{{ url("/") }}`)
     }
 
-    $('#table').DataTable({
-        order: [
-            // [1, 'desc']
-        ]
-    });
+    // $('#table').DataTable({
+    //     order: [
+    //         // [1, 'desc']
+    //     ]
+    // });
 </script>

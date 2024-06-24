@@ -23,7 +23,8 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('base.app');
+
+        return view('base.app', ['count_dashboard' => CountDashboard::index()]);
     }
 
     public function dashboard($tb = null, $select_angkatan = null, $select_periode = null, $json = false)
@@ -66,7 +67,6 @@ class HomeController extends Controller
         }
 
         if ($bfjkah) {
-            $count_dashboard = CountDashboard::index();
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
                 // ->where('event_date', '>=', $select_angkatan . '-09-01')
@@ -266,7 +266,6 @@ class HomeController extends Controller
                 'sign_in_out' => $sign_in_out,
                 'my_sign' => $my_sign,
                 'periode_tahun' => $periode_tahun,
-                'count_dashboard' => $count_dashboard,
                 'presences' => $presences,
                 'presence_group' => $presence_group,
                 'datapg' => $datapg,

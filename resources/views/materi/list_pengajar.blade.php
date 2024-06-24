@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="card shadow-lg">
+        <div class="card border shadow-lg">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-5">
@@ -17,14 +17,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <a onclick="return savePengajar();" class="btn btn-primary btn-sm form-control mb-0">Tambah Pengajar</a>
+                                        <a block-id="return-false" onclick="return savePengajar();" class="btn btn-primary btn-sm form-control mb-0">Tambah Pengajar</a>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="col-md-12">
-                        <div class="table-responsive">
+                        <div class="datatable datatable-sm">
                             <table id="table" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
@@ -63,8 +63,8 @@
                                             {{App\Helpers\CountDashboard::sumPresentByPengajar('persentase',null, $data->id)}}%
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <a href="#" onclick="return ubahPengajar(<?php echo $data->id; ?>)" class="btn btn-primary btn-xs mb-0">Ubah</a>
-                                            <a href="#" onclick="return deletePengajar(<?php echo $data->id; ?>)" class="btn btn-danger btn-xs mb-0">Hapus</a>
+                                            <a block-id="return-false" href="#" onclick="return ubahPengajar(<?php echo $data->id; ?>)" class="btn btn-primary btn-xs mb-0">Ubah</a>
+                                            <a block-id="return-false" href="#" onclick="return deletePengajar(<?php echo $data->id; ?>)" class="btn btn-danger btn-xs mb-0">Hapus</a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -86,12 +86,6 @@
         window.location.replace(`{{ url("/") }}`)
     }
 
-    $('#table').DataTable({
-        order: [
-            // [1, 'desc']
-        ],
-    });
-
     async function savePengajar() {
         if ($("#pengajar").val() == '') {
             alert("Nama pengajar masih kosong")
@@ -103,15 +97,16 @@
             function(data, status) {
                 var return_data = JSON.parse(data);
                 if (return_data.status) {
-                    var body_pengajar = $("#list-pengajar").html();
-                    var add_pengajar = '<tr class="text-sm" id="p' + return_data.id + '">' +
-                        '<td><input tytpe="text" class="form-control" disabled value="' + $("#pengajar").val() + '" id="data-name' + return_data.id + '"></td>' +
-                        '<td class="align-middle text-center text-sm">' +
-                        '<a href="#" onclick="return ubahPengajar(' + return_data.id + ')" class="btn btn-primary btn-xs mb-0">Ubah</a>' +
-                        '<a href="#" onclick="return deletePengajar(' + return_data.id + ')" class="btn btn-danger btn-xs mb-0">Hapus</a>' +
-                        '</td></tr>';
-                    body_pengajar = add_pengajar + body_pengajar;
-                    $("#list-pengajar").html(body_pengajar);
+                    // var body_pengajar = $("#list-pengajar").html();
+                    // var add_pengajar = '<tr class="text-sm" id="p' + return_data.id + '">' +
+                    //     '<td><input tytpe="text" class="form-control" disabled value="' + $("#pengajar").val() + '" id="data-name' + return_data.id + '"></td>' +
+                    //     '<td class="align-middle text-center text-sm">' +
+                    //     '<a href="#" onclick="return ubahPengajar(' + return_data.id + ')" class="btn btn-primary btn-xs mb-0">Ubah</a>' +
+                    //     '<a href="#" onclick="return deletePengajar(' + return_data.id + ')" class="btn btn-danger btn-xs mb-0">Hapus</a>' +
+                    //     '</td></tr>';
+                    // body_pengajar = add_pengajar + body_pengajar;
+                    // $("#list-pengajar").html(body_pengajar);
+                    refreshCurrentUrl()
                 }
                 return false
             }
@@ -145,8 +140,9 @@
                 function(data, status) {
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
-                        const element = document.getElementById("p" + id);
-                        element.remove();
+                        // const element = document.getElementById("p" + id);
+                        // element.remove();
+                        refreshCurrentUrl()
                     }
                     return false
                 }

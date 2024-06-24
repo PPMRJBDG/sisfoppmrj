@@ -19,9 +19,9 @@
       @csrf
       <div class="row">
         <div class="col-md-12">
-          <div class="form-group">
-            <label for="example-text-input" class="form-control-label">Nama Lengkap</label>
-            <input class="form-control" type="text" name="fullname" value="{{ $user->fullname }}" required>
+          <div class="form-outline" data-mdb-input-init>
+            <input class="form-control" id="fullname" type="text" name="fullname" value="{{ $user->fullname }}" required>
+            <label for="fullname" class="form-label">Nama Lengkap</label>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
-            <select class="form-control" name="gender" required>
+            <select data-mdb-filter="true" class="select form-control" name="gender" required>
               <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Perempuan</option>
               <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>Laki-laki</option>
             </select>

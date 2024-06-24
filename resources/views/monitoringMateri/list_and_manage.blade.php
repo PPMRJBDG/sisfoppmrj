@@ -14,7 +14,7 @@ function printMateriOptions($materis, $santri)
             <td class="p-1 ps-2">{{ $materi->name }}</td>
             <td class="p-1 ps-2">{{ $totalPages."/".$materi->pageNumbers." page = ".number_format((float) $totalPages / $materi->pageNumbers * 100, 2, '.', '') }}%</td>
             <td class="p-1 ps-2">
-                <a {{ (!auth()->user()->santri) ? 'target="_blank"' : '' }}' href="{{ route('edit monitoring materi', [$materi->id, $santri->id])}}" class="btn btn-success btn-xs mb-0">Lihat</a>
+                <a {{ (!auth()->user()->santri) ? 'target="_blank"' : '' }}' href="{{ route('edit monitoring materi', [$materi->id, $santri->id])}}" class="btn btn-success btn-sm mb-0">Lihat</a>
             </td>
         </tr>
 <?php
@@ -33,11 +33,11 @@ function printMateriOptions($materis, $santri)
     }
 </style>
 
-<div class="card bg-primary text-light mb-3">
+<div class="card border mb-2">
     <div class="card-body p-2 d-flex justify-content-between align-items-center">
         <h6 class="mb-0">Daftar Monitoring Materi</h6>
         @if(!auth()->user()->hasRole('santri'))
-        <a href="{{ route('create materi') }}" class="btn btn-primary">
+        <a href="{{ route('create materi') }}" class="btn btn-primary btn-sm">
             <i class="fas fa-plus" aria-hidden="true"></i>
             Buat Materi
         </a>
@@ -47,25 +47,34 @@ function printMateriOptions($materis, $santri)
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum'))
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-2">
         <div class="card">
+            <div class="card-header">
+                <h6 class="text-center text-lg text-primary mb-0">Kelas Reguler</h6>
+            </div>
             <div class="card-body p-2">
-                <h6 class="text-center text-lg text-primary">Kelas Reguler</h6>
                 @can('view monitoring materis list')
-                <div class="table-responsive">
+                <div class="datatable datatable-sm" data-mdb-pagination="false">
                     <table id="table-mhs-reg" class="table align-items-center mb-0">
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">LORONG</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($users as $user)
                             @if(!$user->santri->user->hasRole('mubalegh'))
-                            <tr onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" style="cursor:pointer;">
-                                <td>{{$user->fullname}}</td>
-                                <td>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</td>
+                            <tr style="cursor:pointer;">
+                                <td>
+                                    {{$user->fullname}}
+                                    <br><small>
+                                        <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
+                                    </small>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-warning" onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" block-id="return-false">Cari</a>
+                                </td>
                             </tr>
                             @endif
                             @endforeach
@@ -79,24 +88,33 @@ function printMateriOptions($materis, $santri)
 
     <div class="col-md-6">
         <div class="card">
+            <div class="card-header">
+                <h6 class="text-center text-lg text-primary mb-0">Kelas Muballigh</h6>
+            </div>
             <div class="card-body p-2">
-                <h6 class="text-center text-lg text-primary">Kelas MT</h6>
                 <ul class="list-group">
                     @can('view monitoring materis list')
-                    <div class="table-responsive">
+                    <div class="datatable datatable-sm" data-mdb-pagination="false">
                         <table id="table-mhs-mt" class="table align-items-center mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
-                                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">LORONG</th>
+                                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
                                 @if($user->santri->user->hasRole('mubalegh'))
-                                <tr onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" style="cursor:pointer;">
-                                    <td>{{$user->fullname}}</td>
-                                    <td>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</td>
+                                <tr>
+                                    <td>
+                                        {{$user->fullname}}
+                                        <br><small>
+                                            <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-warning" onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" block-id="return-false">Cari</a>
+                                    </td>
                                 </tr>
                                 @endif
                                 @endforeach
@@ -110,7 +128,7 @@ function printMateriOptions($materis, $santri)
     </div>
 </div>
 @else
-<div class="card mb-3">
+<div class="card shadow border mb-3">
     <div class="card-body p-2">
         @if (session('success'))
         <div class="alert alert-success text-white">
@@ -120,7 +138,7 @@ function printMateriOptions($materis, $santri)
 
         @if(sizeof($lorongs) >= 0)
         <div class="row">
-            <div class="table-responsive">
+            <div class="datatable datatable-sm">
                 <table class="table align-items-center mb-0">
                     <thead>
                         <tr>
@@ -141,7 +159,7 @@ function printMateriOptions($materis, $santri)
 @endif
 
 <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">
+    <div class="modal-dialog" role="document" style="max-width:650px !important;">
         <div class="modal-content">
             <div class="modal-header">
                 <div>
@@ -150,24 +168,26 @@ function printMateriOptions($materis, $santri)
                 </div>
             </div>
             <div class="modal-body">
-                <table class="table align-items-center mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                            <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody id="contentMateri">
-                        <tr>
-                            <td colspan="3">
-                                <span class="text-center">
-                                    Loading...
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="datatablex datatable-sm">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contentMateri">
+                            <tr>
+                                <td colspan="3">
+                                    <span class="text-center">
+                                        Loading...
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
@@ -200,18 +220,5 @@ function printMateriOptions($materis, $santri)
     $('#close').click(function() {
         $('#exampleModal').fadeOut();
         $('#contentMateri').html('<td colspan="3"><span class="text-center">Loading...</span></td>');
-    });
-
-    $('#table-mhs-reg').DataTable({
-        order: [
-            // [1, 'desc']
-        ],
-        pageLength: 25
-    });
-    $('#table-mhs-mt').DataTable({
-        order: [
-            // [1, 'desc']
-        ],
-        pageLength: 25
     });
 </script>

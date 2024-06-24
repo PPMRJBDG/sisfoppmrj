@@ -13,7 +13,7 @@
 </div>
 @endif
 
-<div class="card mb-2">
+<div class="card shadow border mb-2">
     <div class="card-body">
         <div class="d-flex">
             <a href="{{ route('msgtools generate bulk') }}" id="generate-contact" class="btn btn-primary mb-0">
@@ -21,7 +21,7 @@
                 Generate Contact
             </a>
         </div>
-        <!-- <div class="table-responsive">
+        <!-- <div class="datatable datatable-sm">
             <table id="table-bulk" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
@@ -54,7 +54,7 @@
     </div>
 </div>
 
-<div class="card mb-2">
+<div class="card shadow border mb-2">
     <div class="card-body">
         <div class="d-flex">
             <a id="modal-create-group" class="btn btn-primary">
@@ -63,7 +63,7 @@
             </a>
         </div>
 
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table id="table-group" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
@@ -99,7 +99,7 @@
 
 <div class="card">
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table id="table-contact" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>

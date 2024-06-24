@@ -31,7 +31,7 @@
           <i class="ni ni-fat-remove text-danger text-sm opacity-10"></i> Alpha
         </div>
       </div>
-      <div class="table-responsive p-0">
+      <div class="datatable table-responsive p-0">
         <table id="recap-table" class="table align-items-center mb-0">
           <thead style="background-color:#f6f9fc;">
             <tr>
@@ -85,7 +85,7 @@
   </div>
   @else
   @if(sizeof($presencesInDate) > 0)
-  <div class="card m-1">
+  <div class="card shadow border m-1">
     <div class="card-body p-2">
       <div class="alert alert-info text-white">Pilih presensi untuk mulai melihat.</div>
     </div>

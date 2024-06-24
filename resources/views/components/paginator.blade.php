@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow border p-2">
   <div class="d-flex justify-content-end gap-4 align-items-center">
     @if($page > 1)
     <button class="btn btn-primary btn-sm" onclick="previousPage()">
@@ -13,6 +13,7 @@
     </button>
   </div>
 </div>
+
 <script>
   function nextPage() {
     getPage($("#current-url").val() + `?page={{ $page + 1 }}`)

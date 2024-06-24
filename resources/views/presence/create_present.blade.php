@@ -12,7 +12,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-4">
+<div class="card shadow border mt-4">
   <div class="card-body pt-4 p-2">
     @if ($errors != null)
     <div class="alert alert-danger text-white">
@@ -96,7 +96,7 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="example-text-input" class="form-control-label">Atas nama</label>
-                <select class="form-control" name="fkSantri_id">
+                <select  data-mdb-filter="true" class="select form-control" name="fkSantri_id">
                   @foreach($usersWithSantri as $user)
                     <option value="{{ $user->santri->id }}">{{ $user->fullname }} - {{ $user->santri->angkatan }}</option>
                   @endforeach

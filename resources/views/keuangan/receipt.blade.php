@@ -1,4 +1,4 @@
-<div class="card shadow-lg">
+<div class="card border shadow-lg">
     <div class="card-header">
         <div class="d-flex">
             <a href="{{ route('create update rab') }}" class="btn btn-primary btn-sm">
@@ -6,8 +6,8 @@
                 RAB
             </a>
         </div>
-        <div class="card shadow-lg">
-            <div class="table-responsive">
+        <div class="card border shadow-lg">
+            <div class="datatable datatable-sm">
                 <table class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
                         <tr>

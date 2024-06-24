@@ -37,7 +37,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Santri ketua</label>
-            <select class="form-control" name="fkSantri_leaderId">
+            <select data-mdb-filter="true" class="select form-control" name="fkSantri_leaderId">
               @foreach($users as $user)
               <option value="{{ $user->santri->id }}" {{ $user->santri->id == $lorong->leader->id ? 'selected' : '' }}>{{ $user->santri->user->fullname }} - {{ $user->santri->angkatan }}</option>
               @endforeach

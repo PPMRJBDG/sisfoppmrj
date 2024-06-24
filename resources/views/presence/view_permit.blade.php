@@ -1,11 +1,11 @@
 @if($permit)
-<div class="card m-2">
+<div class="card shadow border m-2">
     <div class="card-body">
         <h6 class="font-weight-bold mb-0 text-center text-bold">Perijinan dari {{ $permit->santri->user->fullname}}</h6>
     </div>
 </div>
 
-<div class="card m-2">
+<div class="card shadow border m-2">
     <div class="card-body p-0">
         <div>
             <table class="table text-md mb-0">
@@ -63,7 +63,7 @@
     </div>
 </div>
 @else
-<div class="card m-2">
+<div class="card shadow border m-2">
     <div class="card-body">
         <h6 class="font-weight-bold mb-0 text-center">Perijinan tidak ditemukan</h6>
     </div>

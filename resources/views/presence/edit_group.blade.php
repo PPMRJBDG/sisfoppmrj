@@ -124,7 +124,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Status</label>
-              <select class="form-control" name="status">
+              <select data-mdb-filter="true" class="select form-control" name="status">
                 <option value="active" {{ $presenceGroup->status == 'active' ? 'selected' : '' }}>Aktif</option>
                 <option value="inactive" {{ $presenceGroup->status == 'inactive' ? 'selected' : '' }}>Non Aktif</option>
               </select>

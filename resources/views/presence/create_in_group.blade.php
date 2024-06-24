@@ -1,5 +1,5 @@
 @if(isset($presenceGroup))
-<div class="card p-2">
+<div class="card shadow border p-2">
   <div class="">
     <div class="">
       <h6>Tujuan Grup Presensi: {{ $presenceGroup->name }}</h6>
@@ -11,7 +11,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-2">
+<div class="card shadow border mt-2">
   <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">

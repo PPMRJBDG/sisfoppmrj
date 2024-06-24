@@ -1,17 +1,17 @@
 <div class="row">
     <div class="col-md-12">
-        @for($x=1; $x<=2; $x++) <div class="card shadow-lg mb-2">
+        @for($x=1; $x<=2; $x++) <div class="card border shadow-lg mb-2">
             <div class="card-body">
                 <div class="card-header p-2">
                     <h5>PPM {{$x}}</h5>
                 </div>
                 @if(isset($presence_group))
                 @foreach($presence_group as $data)
-                <div class="table-responsive">
+                <div class="datatable datatable-sm" data-mdb-pagination="false">
                     <?php
                     $explode_day = explode(',', $data->days);
                     ?>
-                    <table class="table align-items-center mb-2" style="background:#f8f9fa;">
+                    <table class="table align-items-center mb-2">
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Nama KBM</th>
@@ -23,11 +23,11 @@
                         <tbody id="presence-group">
                             <tr class="text-sm" id="p{{$data->id}}">
                                 <td>
-                                    <input tytpe="text" class="form-control btn-primary text-white text-bold" disabled value="{{ $data->name }}" id="data-name{{$data->id}}">
+                                    <button tytpe="button" class="btn btn-primary text-white text-bold" disabled id="data-name{{$data->id}}">{{ $data->name }}</button>
                                 </td>
                                 @foreach($explode_day as $ed)
                                 <td class="align-middle text-center text-sm">
-                                    <select name="dewan_pengajar" id="dewan_pengajar{{$data->id}}{{trim($ed)}}{{$x}}" class="form-control" onchange="return savePengajar(this, '{{$data->id}}','{{trim($ed)}}', '{{$x}}')">
+                                    <select data-mdb-filter="true" name="dewan_pengajar" id="dewan_pengajar{{$data->id}}{{trim($ed)}}{{$x}}" class="form-control cursor-pointer" onchange="return savePengajar(this, '{{$data->id}}','{{trim($ed)}}', '{{$x}}')">
                                         <option value="">-</option>
                                         @foreach($pengajar as $dp)
                                         <?php

@@ -60,7 +60,7 @@ class MonitoringMateriController extends Controller
                 <td class="p-0">' . $materi->name . '</td>
                 <td class="p-0">' . $totalPages . '/' . $materi->pageNumbers . ' page = ' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
                 <td class="p-0">
-                    <a target="_blank" href="' . route('edit monitoring materi', [$materi->id, $santri->id]) . '" class="btn btn-success btn-xs mb-0">Lihat</a>
+                    <a href="' . route('edit monitoring materi', [$materi->id, $santri->id]) . '" class="btn btn-success btn-sm mb-0">Lihat</a>
                 </td>
             </tr>';
         }

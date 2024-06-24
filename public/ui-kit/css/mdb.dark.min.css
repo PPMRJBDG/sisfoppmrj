@@ -15070,7 +15070,7 @@ fieldset:disabled .btn {
 
 :root,
 [data-mdb-theme=light] {
-    --mdb-font-roboto: "Titillium Web", sans-serif;
+    --mdb-font-roboto: "Varela Round", sans-serif;
     --mdb-bg-opacity: 1;
     --mdb-text-hover-opacity: 0.8;
     --mdb-surface-color: #4f4f4f;

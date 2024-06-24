@@ -1,7 +1,7 @@
 <div class="row flex-nowrap overflow-scroll">
   @foreach($listedPresenceGroups as $listedPresenceGroup)
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card h-100">
+    <div class="card shadow border h-100">
       <div class="card-body p-2">
         <div class="row">
           <div class="numbers">
@@ -22,7 +22,7 @@
 
   @foreach($listedPresenceGroups as $listedPresenceGroup)
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card h-100">
+    <div class="card shadow border h-100">
       <div class="card-body p-2">
         <div class="row">
           <div class="numbers">
@@ -43,7 +43,7 @@
 <div class="row mt-4">
   @endif
   <div class="col-lg-6 mb-lg-0 mb-4">
-    <div class="card z-index-2 h-100">
+    <div class="card shadow border z-index-2 h-100">
       <div class="card-header pb-0 pt-3 bg-transparent">
         <h6 class="text-capitalize">Rata-rata Kehadiran {{ $presenceGroup->name }} Sepanjang Tahun </h6>
         <p class="text-sm mb-0">
@@ -69,7 +69,7 @@
 <div class="row mt-4">
   @endif
   <div class="col-lg-6 mb-lg-0 mb-4">
-    <div class="card z-index-2 h-100">
+    <div class="card shadow border z-index-2 h-100">
       <div class="card-header pb-0 pt-3 bg-transparent">
         <h6 class="text-capitalize">Kehadiran {{ $presenceGroup->name }} Sepanjang Bulan</h6>
       </div>
@@ -182,7 +182,7 @@
             color: '#fbfbfb',
             font: {
               size: 11,
-              family: "Titillium Web",
+              family: "Varela Round",
               style: 'normal',
               lineHeight: 2
             },
@@ -202,7 +202,7 @@
             padding: 20,
             font: {
               size: 11,
-              family: "Titillium Web",
+              family: "Varela Round",
               style: 'normal',
               lineHeight: 2
             },
@@ -303,7 +303,7 @@
             color: '#fbfbfb',
             font: {
               size: 11,
-              family: "Titillium Web",
+              family: "Varela Round",
               style: 'normal',
               lineHeight: 2
             },
@@ -323,7 +323,7 @@
             padding: 20,
             font: {
               size: 11,
-              family: "Titillium Web",
+              family: "Varela Round",
               style: 'normal',
               lineHeight: 2
             },

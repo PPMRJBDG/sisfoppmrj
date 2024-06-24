@@ -1,5 +1,5 @@
 const base_url = $("#base-url").val();
-getPage("/home");
+// getPage("/home");
 
 $('#close').click(function () {
     $('#exampleModal').fadeOut();
@@ -26,6 +26,30 @@ function refreshCurrentUrl() {
     getPage(current_url);
 }
 
+function getPrevPage() {
+    if (getCookie('prev_url') == "") {
+        getPage("/home");
+    } else {
+        getPage(getCookie('prev_url'));
+    }
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "/home";
+}
+
 function getPage(url) {
     $('#content-app').html('');
     $("#loading").fadeIn();
@@ -40,10 +64,16 @@ function getPage(url) {
             if (data == 'reload') {
                 window.location.reload();
             } else {
+                $("#loadingSubmit").hide();
                 $("#loading").fadeOut();
 
-                var include_start = '';
-                var include_end = '<script type="text/javascript" src="./../js/app-custom-form.js"></script>';
+                document.cookie = "prev_url=" + getCookie('current_url');
+                document.cookie = "current_url=" + url;
+
+                var include_start = '<div data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">';
+                var include_end = '</div>' +
+                    '<script type="text/javascript" src="./../ui-kit/js/mdb-v2.min.js"></script>' +
+                    '<script type="text/javascript" src="./../js/app-custom-form.js"></script>';
                 $('#content-app').html(include_start + data + include_end);
 
                 setTimeout(function () {
@@ -59,8 +89,18 @@ function getPage(url) {
     });
 }
 
-function showHideCacah() {
-    $("#toggle-cacahjiwa").toggle('slide-out-down');
+function showCacahJiwa() {
+    $("#sidenav-1").css('transform', 'translateX(-100%)');
+    var sidenav = document.querySelectorAll(".sidenav-backdrop");
+    if (sidenav != null) {
+        for (var i = 0; i < sidenav.length; i++) {
+            sidenav[i].remove();
+        }
+    }
+
+    $('#cacahJiwaModal').fadeIn();
+    $('#cacahJiwaModal').css('background', 'rgba(0, 0, 0, 0.7)');
+    $('#cacahJiwaModal').css('z-index', '10000');
 }
 
 function openTabGraf(tahun, data_presence_group) {
@@ -188,7 +228,7 @@ function openTabGraf(tahun, data_presence_group) {
                                         color: '#b2b9bf',
                                         font: {
                                             size: 11,
-                                            family: "Titillium Web",
+                                            family: "Varela Round",
                                             style: 'normal',
                                             lineHeight: 2
                                         },
@@ -208,7 +248,7 @@ function openTabGraf(tahun, data_presence_group) {
                                         padding: 10,
                                         font: {
                                             size: 11,
-                                            family: "Titillium Web",
+                                            family: "Varela Round",
                                             style: 'normal',
                                             lineHeight: 2
                                         },
@@ -413,6 +453,7 @@ function promptDeleteAndPresent(id, presence_id = null, santri_id = null) {
 }
 
 function actionSavePermit(action) {
+    $("#loadingSubmit").show();
     var datax = {};
     datax['json'] = true;
 
@@ -470,10 +511,13 @@ function actionSavePermit(action) {
                             $("#contentAlert").html(return_data.is_present + ' telah hadir di presensi ini');
                         }
 
-                        ival.forEach(function (iv) {
-                            const element = document.getElementById("prmt-" + iv[0] + "-" + iv[1]);
-                            element.remove();
-                        })
+                        refreshCurrentUrl()
+                        // ival.forEach(function (iv) {
+                        //     var element = document.getElementById("prmt-" + iv[0] + "-" + iv[1]);
+                        //     if (element != null) {
+                        //         element.remove();
+                        //     }
+                        // })
                     }
                 }
             )
@@ -496,10 +540,13 @@ function actionSavePermit(action) {
                 function (data, status) {
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
-                        ival_berjangka.forEach(function (iv) {
-                            const element = document.getElementById("rpg-" + iv[0]);
-                            element.remove();
-                        })
+                        refreshCurrentUrl()
+                        // ival_berjangka.forEach(function (iv) {
+                        //     var element = document.getElementById("rpg-" + iv[0]);
+                        //     if (element != null) {
+                        //         element.remove();
+                        //     }
+                        // })
                     } else {
                         $("#alertModal").fadeIn();
                         $("#contentAlert").html(return_data.message);

@@ -15,109 +15,113 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     {{ session('success') }}
 </div>
 @endif
-<div class="card shadow-lg">
-    <div class="card-header p-2">
-        <small><i>Last update: {{date_format(date_create($last_update->updated_at), 'd M Y H:i:s')}}</i></small>
-        <div class="card shadow-lg">
-            <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                    <thead style="background-color:#f6f9fc;">
-                        <tr>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Periode</th>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Mahasiswa</th>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Sudah Lunas</th>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Belum Lunas</th>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Penerimaan</th>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Kekurangan</th>
-                            <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Total Estimasi</th>
-                        </tr>
-                    </thead>
-                    <?php
-                    $total_vlunas = 0;
-                    $total_xlunas = 0;
-                    $total_penerimaan = 0;
-                    $total_kekurangan = 0;
-                    $total_estimasi_penerimaan = 0;
-                    ?>
-                    <tbody>
-                        @if(count($list_periode)>0)
+
+<small><i>Last update: {{date_format(date_create($last_update->updated_at), 'd M Y H:i:s')}}</i></small>
+<div class="card border py-2">
+    <div class="datatable datatable-sm">
+        <table class="table align-items-center mb-0">
+            <thead>
+                <tr>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Periode</th>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Mahasiswa</th>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Sudah Lunas</th>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Belum Lunas</th>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Penerimaan</th>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Kekurangan</th>
+                    <th class="text-uppercase text-sm text-center text-secondary font-weight-bolder">Total Estimasi</th>
+                </tr>
+            </thead>
+            <?php
+            $total_vlunas = 0;
+            $total_xlunas = 0;
+            $total_penerimaan = 0;
+            $total_kekurangan = 0;
+            $total_estimasi_penerimaan = 0;
+            ?>
+            <tbody>
+                @if(count($list_periode)>0)
+                <?php
+                foreach ($list_periode as $per) {
+                ?>
+                    <tr class="text-center text-bold text-sm">
                         <?php
-                        foreach ($list_periode as $per) {
-                        ?>
-                            <tr class="text-center text-bold text-sm">
-                                <?php
-                                $v = App\Models\Sodaqoh::where('status_lunas', 1)->where('periode', $per->periode)->get();
-                                $x = App\Models\Sodaqoh::whereNull('status_lunas')->where('periode', $per->periode)->get();
-                                $total = 0;
-                                $total_x = 0;
-                                $total_nominal = 0;
-                                foreach ($v as $data_vlunas) {
-                                    foreach ($bulan as $b) {
-                                        $total = $total + $data_vlunas->$b;
-                                    }
-                                }
-                                foreach ($x as $data_xlunas) {
-                                    foreach ($bulan as $b) {
-                                        $total = $total + $data_xlunas->$b;
-                                        $total_x = $total_x + $data_xlunas->$b;
-                                    }
-                                    $total_nominal = $data_vlunas->nominal + $total_nominal;
-                                }
-                                ?>
-                                <td>{{ $per->periode }}</td>
-                                <td>{{ count($v)+count($x) }}</td>
-                                <td>
-                                    {{ count($v) }}
-                                </td>
-                                <td>
-                                    {{ count($x) }}
-                                </td>
-                                <td class="font-weight-bolder text-right">
-                                    {{ number_format($total, 0) }}
-                                </td>
-                                <td class="font-weight-bolder text-right">
-                                    {{ number_format($total_nominal-$total_x, 0) }}
-                                </td>
-                                <td class="font-weight-bolder text-right">
-                                    {{ number_format($total+($total_nominal-$total_x), 0) }}
-                                </td>
-                            </tr>
-                        <?php
-                            $total_vlunas += count($v);
-                            $total_xlunas += count($x);
-                            $total_penerimaan = $total_penerimaan + $total;
-                            $total_kekurangan = $total_kekurangan + ($total_nominal - $total_x);
-                            $total_estimasi_penerimaan = ($total_penerimaan + $total_kekurangan);
+                        $v = App\Models\Sodaqoh::where('status_lunas', 1)->where('periode', $per->periode)->get();
+                        $x = App\Models\Sodaqoh::whereNull('status_lunas')->where('periode', $per->periode)->get();
+                        $total = 0;
+                        $total_x = 0;
+                        $total_nominal = 0;
+                        foreach ($v as $data_vlunas) {
+                            foreach ($bulan as $b) {
+                                $total = $total + $data_vlunas->$b;
+                            }
+                        }
+                        foreach ($x as $data_xlunas) {
+                            foreach ($bulan as $b) {
+                                $total = $total + $data_xlunas->$b;
+                                $total_x = $total_x + $data_xlunas->$b;
+                            }
+                            $total_nominal = $data_vlunas->nominal + $total_nominal;
                         }
                         ?>
-                        @endif
-                        <tr>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_vlunas }}</td>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_xlunas }}</td>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_penerimaan, 0) }}</td>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_kekurangan, 0) }}</td>
-                            <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_estimasi_penerimaan, 0) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        <td>{{ $per->periode }}</td>
+                        <td>{{ count($v)+count($x) }}</td>
+                        <td>
+                            {{ count($v) }}
+                        </td>
+                        <td>
+                            {{ count($x) }}
+                        </td>
+                        <td class="font-weight-bolder text-right">
+                            {{ number_format($total, 0) }}
+                        </td>
+                        <td class="font-weight-bolder text-right">
+                            {{ number_format($total_nominal-$total_x, 0) }}
+                        </td>
+                        <td class="font-weight-bolder text-right">
+                            {{ number_format($total+($total_nominal-$total_x), 0) }}
+                        </td>
+                    </tr>
+                <?php
+                    $total_vlunas += count($v);
+                    $total_xlunas += count($x);
+                    $total_penerimaan = $total_penerimaan + $total;
+                    $total_kekurangan = $total_kekurangan + ($total_nominal - $total_x);
+                    $total_estimasi_penerimaan = ($total_penerimaan + $total_kekurangan);
+                }
+                ?>
+                @endif
+                <tr>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder"></td>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_vlunas }}</td>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder">{{ $total_xlunas }}</td>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_penerimaan, 0) }}</td>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_kekurangan, 0) }}</td>
+                    <td class="text-uppercase text-sm text-center font-weight-bolder">{{ number_format($total_estimasi_penerimaan, 0) }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</div>
 
-    <div class="card-body p-2">
-        @if(count($datax)>0)
-        <center><b>Periode {{ isset($periode) ? $periode : '' }}</b></center><br>
-        @endif
-        <div class="d-flex">
-            <select class="select_angkatan form-control" name="" id="select_angkatan">
+@if(count($datax)>0)
+<div class="p-2">
+    <center><b>Periode {{ isset($periode) ? $periode : '' }}</b></center>
+</div>
+@endif
+
+<div class="card border p-2 mb-2">
+    <div class="row">
+        <div class="col-md-4 mb-2">
+            <select data-mdb-filter="true" class="select select_angkatan form-control" name="" id="select_angkatan">
                 <option value="-">Filter Angkatan</option>
                 @foreach($list_angkatan as $angkatan)
                 <option {{ ($select_angkatan == $angkatan->angkatan) ? 'selected' : '' }} value="{{$angkatan->angkatan}}">{{$angkatan->angkatan}}</option>
                 @endforeach
             </select>
-            <select class="select_periode form-control" name="select_periode" id="select_periode">
+        </div>
+        <div class="col-md-4 mb-2">
+            <select data-mdb-filter="true" class="select select_periode form-control" name="select_periode" id="select_periode">
                 <option value="-">Filter Periode</option>
                 @if(count($list_periode)>0)
                 @foreach($list_periode as $per)
@@ -125,83 +129,91 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 @endforeach
                 @endif
             </select>
-            <select class="select_lunas form-control" name="select_lunas" id="select_lunas">
+        </div>
+        <div class="col-md-4">
+            <select data-mdb-filter="true" class="select select_lunas form-control" name="select_lunas" id="select_lunas">
                 <option {{ ($select_lunas == 2) ? 'selected' : '' }} value="2">Semua</option>
                 <option {{ ($select_lunas == 1) ? 'selected' : '' }} value="1">Sudah Lunas</option>
                 <option {{ ($select_lunas == 0) ? 'selected' : '' }} value="0">Belum Lunas (sama sekali)</option>
                 <option {{ ($select_lunas == 3) ? 'selected' : '' }} value="3">Belum Lunas (baru dicicil)</option>
             </select>
         </div>
-        <div class="table-responsive mt-2">
-            <table id="table" class="table align-items-center mb-0">
-                <thead style="background-color:#f6f9fc;">
-                    <tr>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">Nama</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">Periode</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">Nominal</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">Terbayar</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder">Kekurangan</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(isset($datax))
-                    @foreach($datax as $data)
-                    <?php
-                    $st = 0;
-                    foreach ($bulan as $b) {
-                        $st = $st + intval($data->$b);
-                    }
-                    ?>
-                    @if(($st==0 && $select_lunas==0) || ($st>0 && $select_lunas==3) || $select_lunas==1 || $select_lunas==2)
-                    <tr class="text-sm" id="data{{$data->fkSantri_id}}">
-                        <td>
-                            <a onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($bulan)}})" class="btn btn-primary btn-xs mb-0">Bayar</a>
-                            <b>[{{ $data->santri->angkatan }}]</b> {{ $data->santri->user->fullname }}
-                        </td>
-                        <td>
-                            {{ $data->periode }}
-                        </td>
-                        <td>
-                            {{ number_format($data->nominal,0) }}
-                        </td>
-                        <?php
-                        $status_lunas = 0;
-                        $kekurangan = 0;
-                        foreach ($bulan as $bl) {
-                            $status_lunas = $status_lunas + intval($data->$bl);
-                        }
-                        $kekurangan = $data->nominal - $status_lunas;
-                        $text_error = '';
-                        if (isset($data->periode)) {
-                            if ($status_lunas < $data->nominal) {
-                                $text_error = 'text-warning';
-                            }
-                        }
-                        ?>
-                        <td id="terbayar{{$data->fkSantri_id}}" class="{{ $text_error }}">
-                            <b>{{ $text_error == '' ? 'Lunas' : number_format($status_lunas,0) }}</b>
-                        </td>
-                        <td id="kekurangan{{$data->fkSantri_id}}" class="{{ $text_error }}">
-                            <b>{{ number_format($kekurangan,0) }}</b>
-                        </td>
-                        <td>
-                            <a href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan, $select_lunas])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
-                            @if($data->status_lunas=='')
-                            <a onclick="reminderSodaqoh({{$data}})" id="ingatkan{{$data->id}}" class="btn btn-warning btn-xs mb-0">Ingatkan</a>
-                            @endif
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                    @endif
-                </tbody>
-            </table>
-        </div>
     </div>
 </div>
 
-<div class="modal" id="modalSodaqoh" tabindex="-1" role="dialog" aria-labelledby="modalSodaqohLabel" aria-hidden="true">
+<div class="card shadow border py-2">
+    <div class="datatable datatable-sm align-items-center justify-content-center">
+        <table id="table" class="table mb-0">
+            <thead>
+                <tr>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder"></th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder">Nama</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder">Periode</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder">Nominal</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder">Terbayar</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder">Kekurangan</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(isset($datax))
+                @foreach($datax as $data)
+                <?php
+                $st = 0;
+                foreach ($bulan as $b) {
+                    $st = $st + intval($data->$b);
+                }
+                ?>
+                @if(($st==0 && $select_lunas==0) || ($st>0 && $select_lunas==3) || $select_lunas==1 || $select_lunas==2)
+                <tr class="text-sm" id="data{{$data->fkSantri_id}}">
+                    <td>
+                        <a block-id="return-false" onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($bulan)}})" class="btn btn-primary btn-sm mb-0">Bayar</a>
+                    </td>
+                    <td>
+                        <b>[{{ $data->santri->angkatan }}]</b> {{ $data->santri->user->fullname }}
+                    </td>
+                    <td>
+                        {{ $data->periode }}
+                    </td>
+                    <td>
+                        {{ number_format($data->nominal,0) }}
+                    </td>
+                    <?php
+                    $status_lunas = 0;
+                    $kekurangan = 0;
+                    foreach ($bulan as $bl) {
+                        $status_lunas = $status_lunas + intval($data->$bl);
+                    }
+                    $kekurangan = $data->nominal - $status_lunas;
+                    $text_error = '';
+                    if (isset($data->periode)) {
+                        if ($status_lunas < $data->nominal) {
+                            $text_error = 'text-warning';
+                        }
+                    }
+                    ?>
+                    <td id="terbayar{{$data->fkSantri_id}}" class="{{ $text_error }}">
+                        <b>{{ $text_error == '' ? 'Lunas' : number_format($status_lunas,0) }}</b>
+                    </td>
+                    <td id="kekurangan{{$data->fkSantri_id}}" class="{{ $text_error }}">
+                        <b>{{ number_format($kekurangan,0) }}</b>
+                    </td>
+                    <td>
+                        <a block-id="return-false" href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan, $select_lunas])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                        @if($data->status_lunas=='')
+                        <a block-id="return-false" onclick="reminderSodaqoh({{$data}})" id="ingatkan{{$data->id}}" class="btn btn-warning btn-sm mb-0">Ingatkan</a>
+                        @endif
+                    </td>
+                </tr>
+                @endif
+                @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalSodaqoh" tabindex="-1" role="dialog" aria-labelledby="modalSodaqohLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">
         <div class="modal-content">
             <div class="modal-header">
@@ -210,7 +222,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                     <h5 class="modal-title" id="modalSodaqohLabel"><span id="nm"></span></h5>
                 </div>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pb-0">
                 <div class="p-2" style="background:#f9f9ff;border:1px #ddd solid;">
                     <input class="form-control" readonly type="hidden" id="sodaqoh_id" name="sodaqoh_id" value="">
                     <input class="form-control" readonly type="hidden" id="periode" name="periode" value="">
@@ -222,21 +234,29 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                                                 } ?> type="number" id="nominal" name="nominal" value="">
                     <hr>
 
-                    <label class="custom-control-label m-0">Periode Bulan</label>
-                    <select class="form-control" name="periode_bulan" id="periode_bulan">
-                        <?php foreach ($bulan as $bl) { ?>
-                            <option value="{{$bl}}">{{ucfirst($bl)}}</option>
-                        <?php } ?>
-                    </select>
+                    <div class="form-group">
+                        <label class="custom-control-label m-0">Periode Bulan</label>
+                        <select data-mdb-filter="true" class="select form-control" name="periode_bulan" id="periode_bulan">
+                            <?php foreach ($bulan as $bl) { ?>
+                                <option value="{{$bl}}">{{ucfirst($bl)}}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
 
-                    <label class="custom-control-label m-0">Tanggal</label>
-                    <input class="form-control" type="date" id="date" name="date">
+                    <div class="form-outline form-group">
+                        <input class="form-control" type="date" id="date" name="date">
+                        <label class="form-label m-0"></label>
+                    </div>
 
-                    <label class="custom-control-label m-0">Nominal</label>
-                    <input class="form-control" type="number" id="nominal_bayar" name="nominal_bayar" placeholder="0">
+                    <div class="form-outline form-group">
+                        <input class="form-control" type="number" id="nominal_bayar" name="nominal_bayar" placeholder="0">
+                        <label class="form-label m-0">Nominal</label>
+                    </div>
 
-                    <label class="form-control-label">Keterangan</label>
-                    <input class="form-control" type="text" id="ket" name="ket" value="">
+                    <div class="form-outline form-group">
+                        <input class="form-control" type="text" id="ket" name="ket" value="">
+                        <label class="form-label">Keterangan</label>
+                    </div>
 
                     <br>
                     <label class="form-control-label">*Jika terdapat pembayaran lebih dari 1x dalam 1 bulan, harap yang diinput adalah total dari jumlah pembayaran tersebut</label>
@@ -250,7 +270,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                         </tr>
                         <?php foreach ($bulan as $bl) {
                         ?>
-                            <tr class="text-sm" id="idx{{$bl}}">
+                            <tr class="text-sm m-1" id="idx{{$bl}}">
                                 <td class="p-0" style="border-bottom-width:0!important;width:20%;">
                                     <input class="form-control" disabled type="text" value="{{$bl}}">
                                 </td>
@@ -297,22 +317,18 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         window.location.replace(`{{ url("/") }}`)
     }
 
-    $('#table').DataTable({
-        order: [
-            [4, 'desc']
-        ],
-        pageLength: 25
-    });
     $('.select_angkatan').change((e) => {
         var periode = $('#select_periode').val()
         var lunas = $('#select_lunas').val()
         getPage(`{{ url("/") }}/list_sodaqoh/` + periode + `/${$(e.currentTarget).val()}/` + lunas)
     });
+
     $('.select_periode').change((e) => {
         var angkatan = $('#select_angkatan').val()
         var lunas = $('#select_lunas').val()
         getPage(`{{ url("/") }}/list_sodaqoh/${$(e.currentTarget).val()}/` + angkatan + `/` + lunas)
     });
+
     $('.select_lunas').change((e) => {
         var angkatan = $('#select_angkatan').val()
         var periode = $('#select_periode').val()

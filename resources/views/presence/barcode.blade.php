@@ -23,7 +23,7 @@
 
 <body class="bg-primary">
     <div class="col-12 p-2">
-        <div class="card shadow-lg p-2 text-center">
+        <div class="card border shadow-lg p-2 text-center">
             <span class="text-bold">{{ auth()->user()->fullname }}</span>
             <div id="interactive" class="viewport">
                 <center>

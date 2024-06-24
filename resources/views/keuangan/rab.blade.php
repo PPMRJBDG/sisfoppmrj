@@ -5,15 +5,15 @@
 </style>
 
 <input class="form-control" type="hidden" value="" id="rab_id" />
-<div class="card shadow-lg">
+<div class="card shadow border">
     <div class="card-header p-2">
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table class="table align-items-center mb-0 text-xs">
                 <tbody>
                     <tr class="">
                         <td>
                             <label>Periode Tahun</label>
-                            <select class="form-control" value="" id="periode_tahun" name="periode_tahun">
+                            <select data-mdb-filter="true" class="select form-control" value="" id="periode_tahun" name="periode_tahun">
                                 @foreach($periodes as $periode)
                                 <option {{ ($select_periode==$periode->periode_tahun) ? 'selected' : ''; }}>{{$periode->periode_tahun}}</option>
                                 @endforeach
@@ -38,7 +38,7 @@
                     <tr class="">
                         <td>
                             <label>Divisi</label>
-                            <select class="form-control" value="" id="divisi" name="divisi" required>
+                            <select data-mdb-filter="true" class="select form-control" value="" id="divisi" name="divisi" required>
                                 @foreach($divisis as $divisi)
                                 <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
                                 @endforeach
@@ -50,7 +50,7 @@
                         </td>
                         <td>
                             <label>Periode</label>
-                            <select class="form-control" value="" id="periode" name="periode" required>
+                            <select data-mdb-filter="true" class="select form-control" value="" id="periode" name="periode" required>
                                 <option value="tahunan">Tahunan</option>
                                 <option value="bulanan">Bulanan</option>
                                 <option value="mingguan">Mingguan</option>
@@ -80,7 +80,7 @@
         </div>
     </div>
     <div class="card-body shadow-lg p-0">
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table class="table align-items-center mb-4 text-xs text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
@@ -155,9 +155,9 @@
                 <?php
                 for ($i = 1; $i <= 12; $i++) {
                 ?>
-                    <div class="card tabcontent" id="bln_{{$i}}" style="{{($i==1) ? 'display:block;' : ''}}">
+                    <div class="card shadow border tabcontent" id="bln_{{$i}}" style="{{($i==1) ? 'display:block;' : ''}}">
                         <div class="card-body p-2">
-                            <div class="table-responsive">
+                            <div class="datatable datatable-sm">
                                 <table id="table" class="table align-items-center mb-4">
                                     <thead class="text-center">
                                         <tr>

@@ -1,5 +1,5 @@
-<div class="card">
-  <div class="card-body pt-4 p-2">
+<div class="card shadow border">
+  <div class="card-body p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
       <ul>
@@ -9,6 +9,7 @@
       </ul>
     </div>
     @endif
+
     <form action="{{ route('store presence') }}" method="post">
       @csrf
       <div class="row">
@@ -31,7 +32,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Grup presensi (opsional)</label>
-            <select class="form-control" type="text" name="fkPresence_group_id">
+            <select data-mdb-filter="true" class="select form-control" type="text" name="fkPresence_group_id">
               <option value="" selected>Tidak masuk grup manapun</option>
               @foreach($presenceGroups as $presenceGroup)
               <option value="{{ $presenceGroup->id }}">{{ $presenceGroup->name }}</option>

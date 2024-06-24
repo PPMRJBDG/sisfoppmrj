@@ -12,8 +12,8 @@
     {{ session('success') }}
 </div>
 @endif
-<div class="card">
-    <div class="card-body pt-4 p-2">
+<div class="card shadow border">
+    <div class="card-body p-2">
         <form action="{{ route('store pelanggaran') }}" method="post">
             @csrf
             <div class="row">
@@ -55,7 +55,7 @@
                             @endif
                         </label>
                         @if($c=='fkSantri_id')
-                        <select class="form-control" {{ (isset($datax)) ? 'readonly' : '' }} name="{{$c}}" required>
+                        <select data-mdb-filter="true" class="select form-control" {{ (isset($datax)) ? 'readonly' : '' }} name="{{$c}}" required>
                             <option value="">Pilih Mahasiswa</option>
                             @foreach($list_santri as $mhs)
                             <option <?php if (isset($datax)) {
@@ -64,7 +64,7 @@
                             @endforeach
                         </select>
                         @elseif($c=='fkJenis_pelanggaran_id')
-                        <select class="form-control" name="{{$c}}" required>
+                        <select data-mdb-filter="true" class="select form-control" name="{{$c}}" required>
                             <option value="">Pilih Pelanggaran</option>
                             @foreach($list_jenis_pelanggaran as $pln)
                             <option <?php if (isset($datax)) {
@@ -73,7 +73,7 @@
                             @endforeach
                         </select>
                         @elseif($c == 'is_peringatan_keras' || str_contains($c, 'info_ortu'))
-                        <select class="form-control" name="{{$c}}">
+                        <select data-mdb-filter="true" class="select form-control" name="{{$c}}">
                             <option <?php if (isset($datax)) {
                                         echo $datax->$c == 0 ? 'selected' : '';
                                     } ?> value="0">{{ $c == 'is_peringatan_keras' ? 'Tidak' : 'Belum' }}</option>
@@ -82,7 +82,7 @@
                                     } ?> value="1">{{ $c == 'is_peringatan_keras' ? 'Ya' : 'Sudah' }}</option>
                         </select>
                         @elseif(str_contains($c, '_sp'))
-                        <select class="form-control" name="{{$c}}">
+                        <select data-mdb-filter="true" class="select form-control" name="{{$c}}">
                             <option value="">-</option>
                             @for($i=1; $i<=3; $i++) <option <?php if (isset($datax)) {
                                                                 echo $datax->$c == $i ? 'selected' : '';
@@ -111,10 +111,10 @@
                 </div>
                 @endif
                 @endforeach
-                <div class="col-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label class="custom-control-label">INFO WA</label>
-                        <select class="form-control" name="is_wa">
+                        <select data-mdb-filter="true" class="select form-control" name="is_wa">
                             <option <?php if (isset($datax)) {
                                         echo $datax->is_wa == 0 ? 'selected' : '';
                                     } ?> value="0">Tidak</option>

@@ -61,7 +61,7 @@
 
 @if($santri==null)
 <div class="p-2">
-    <div class="card mb-2">
+    <div class="card shadow border mb-2">
         <div class="card-body p-2">
             <center>
                 <h6 class="m-0" style="font-size:16px!important;">Data Mahasiswa Tidak Ditemukan</h6>
@@ -71,7 +71,7 @@
 </div>
 @else
 <div class="p-2 pb-0">
-    <div class="card mb-2">
+    <div class="card shadow border mb-2">
         <div class="card-body p-2">
             <center>
                 <h4 class="m-0">{{ $santri->user->fullname }}</h4>
@@ -80,10 +80,10 @@
     </div>
 
     @if(count($sodaqoh)>0)
-    <div class="card mb-2 p-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Pembayaran Sodaqoh</h5>
         <div class="card-body p-0">
-            <div class="table-responsive p-0">
+            <div class="datatable table-responsive p-0">
                 <table id="recap-table" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
@@ -135,7 +135,7 @@
     $all_alpha = 0;
     ?>
     @if($datapg!=null)
-    <div class="card mb-2 p-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Presensi Kehadiran</h5>
         <div class="card-body p-0 text-center">
             <th class="text-center p-1">Total Keseluruhan</th>
@@ -177,7 +177,7 @@
             $display = 'block';
         }
         ?>
-        <div class="table-responsive p-0 mt-1 tabcontent" id="th{{$th->y}}" style="display:{{$display}};">
+        <div class="datatable table-responsive p-0 mt-1 tabcontent" id="th{{$th->y}}" style="display:{{$display}};">
             <table id="recap-kehadiran" class="table align-items-center mb-0">
                 <thead>
                     <tr style="background-color:#f6f9fc;">
@@ -254,17 +254,17 @@
         @endforeach
     </div>
     @else
-    <div class="card mb-2">
+    <div class="card shadow border mb-2">
         <div class="card-body p-2 text-center">
             Belum dimulai KBM
         </div>
     </div>
     @endif
 
-    <div class="card mb-2 p-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Pencapaian Materi</h5>
         <div class="card-body p-0">
-            <div class="table-responsive p-2">
+            <div class="datatable table-responsive p-2">
                 <table id="recap-materi" class="table align-items-center mb-0">
                     <thead>
                         <tr>
@@ -283,11 +283,11 @@
 
 
     @if(count($pelanggaran)>0)
-    <div class="card mb-2 p-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Riwayat Pelanggaran</h5>
         <div class="card-body p-0">
             <h6>Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
-            <div class="table-responsive p-0">
+            <div class="datatable table-responsive p-0">
                 <table id="recap-pelanggaran" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
                         <tr>

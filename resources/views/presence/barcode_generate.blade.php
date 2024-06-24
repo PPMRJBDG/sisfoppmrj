@@ -30,7 +30,7 @@
     <a href="#" id="presence-name" class="btn btn-warning mb-2 w-100">
 
     </a>
-    <div class="card shadow-lg p-2 text-center">
+    <div class="card border shadow-lg p-2 text-center">
         <div class="row">
             <div class="col-md-6 col-sm-12 p-0">
                 <br>

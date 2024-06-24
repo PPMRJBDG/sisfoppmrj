@@ -1,21 +1,23 @@
-<div class="card">
-  <div class="card-body pt-4 p-2">
-    @if ($errors->any())
-    <div class="alert alert-danger text-white">
-      <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-    @endif
-    @if (session('success'))
-    <div class="alert alert-success text-white">
-      {{ session('success') }}
-    </div>
-    @endif
+@if ($errors->any())
+<div class="alert alert-danger text-white">
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
+@endif
+@if (session('success'))
+<div class="alert alert-success text-white">
+  {{ session('success') }}
+</div>
+@endif
+
+<div class="card shadow border p-2">
+  <a type="button" class="btn btn-rounded btn-outline-warning btn-block m-0 mb-3" href="#" onclick="getPrevPage()">Kembali</a>
+  <div class="card-body p-2">
     @if(isset($user))
-    <form action="{{ route('update user', $user->id) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('update user', $user->id) }}" method="post" id="upload-file" enctype="multipart/form-data">
       @csrf
       <div class="row">
         <div class="col-md-12">
@@ -37,7 +39,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
-            <select class="form-control" name="gender" required>
+            <select data-mdb-filter="true" class="select form-control" name="gender" required>
               <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Perempuan</option>
               <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>Laki-laki</option>
             </select>
@@ -267,7 +269,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Alasan Keluar</label>
-              <select class="form-control" name="alasan_keluar" id="alasan_keluar">
+              <select data-mdb-filter="true" class="select form-control" name="alasan_keluar" id="alasan_keluar">
                 <option {{ isset($user->santri) && $user->santri->alasan_keluar=='0' ? 'selected' : '' }} value="0"></option>
                 <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Dikeluarkan Dengan Cara Hormat' ? 'selected' : '' }} value="Dikeluarkan Dengan Cara Hormat">Dikeluarkan Dengan Cara Hormat</option>
                 <option {{ isset($user->santri) && $user->santri->alasan_keluar=='Dikeluarkan Karena SP3' ? 'selected' : '' }} value="Dikeluarkan Karena SP3">Dikeluarkan Karena SP3</option>
@@ -291,7 +293,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Lorong</label>
-              <select class="form-control" name="fkLorong_id">
+              <select data-mdb-filter="true" class="select form-control" name="fkLorong_id">
                 <option value="" selected>Tidak masuk lorong manapun.</option>
                 @foreach($lorongs as $lorong)
                 <option value="{{ $lorong->id }}" {{ isset($user->santri) && $user->santri->fkLorong_id == $lorong->id ? 'selected' : '' }}>{{ $lorong->name }}</option>
@@ -305,7 +307,6 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input type="hidden" name="previous_url" value="{{ url()->previous() ? url()->previous() : '' }}">
             <input class="btn btn-primary form-control" type="submit" value="Ubah">
           </div>
         </div>

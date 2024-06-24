@@ -1,11 +1,11 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="card shadow-lg mb-2">
+        <div class="card border shadow-lg mb-2">
             <div class="card-body p-2">
                 <div class="card-header p-2 ps-0">
                     <p class="mb-0">Silahkan memilih jam KBM, setiap sesi: <b>Durasinya -+ 1 Jam 30 Menit</b></p>
                 </div>
-                <div class="table-responsive">
+                <div class="datatable datatable-sm">
                     <table class="table align-items-center mb-2">
                         <thead>
                             <tr class="text-center">
@@ -75,7 +75,7 @@
                                     @endif
                                     @else
                                     @if(auth()->user()->hasRole('superadmin'))
-                                    <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge bg-gradient-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
+                                    <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge badge-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
                                     @else
                                     <div class="form-check">
                                         <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">

@@ -30,13 +30,17 @@ $(document.body).ready(function () {
                 window.location.reload();
             } else {
                 $("#loadingSubmit").hide();
+                window.scrollTo(0, 0);
 
-                var js = '<script type="text/javascript" src="./../js/app-custom-form.js"></script>';
-                $('#content-app').html(data + js);
+                var include_start = '<div data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">';
+                var include_end = '</div>' +
+                    '<script type="text/javascript" src="./../ui-kit/js/mdb-v2.min.js"></script>' +
+                    '<script type="text/javascript" src="./../js/app-custom-form.js"></script>';
+                $('#content-app').html(include_start + data + include_end);
 
                 setTimeout(function () {
                     $(".alert").fadeOut();
-                }, 5000);
+                }, 8000);
             }
         });
     });

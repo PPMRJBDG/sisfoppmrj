@@ -18,7 +18,7 @@
 @endif
 
 @if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
-<div class="card p-2">
+<div class="card shadow border p-2">
   <div class="align-items-center">
     @role('superadmin|rj1|wk|koor lorong')
     <div class="row mb-2">
@@ -32,7 +32,7 @@
     <div class="row mb-2">
       <div class="col-6">
         <small>Pilih Tahun-Bulan</small>
-        <select class="select_tb form-control" name="select_tb" id="select_tb">
+        <select data-mdb-filter="true" class="select select_tb select form-control" name="select_tb" id="select_tb">
           <option value="-">Silahkan Pilih</option>
           @foreach($tahun_bulan as $tbx)
           <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
@@ -41,7 +41,7 @@
       </div>
       <div class="col-6">
         <small>Tampilkan</small>
-        <select class="select_show form-control" name="select_show" id="select_show">
+        <select data-mdb-filter="true" class="select select_show form-control" name="select_show" id="select_show">
           <option {{ ($status=='pending') ? 'selected': '' }} value="pending">Pending</option>
           <option {{ ($status=='rejected') ? 'selected': '' }} value="rejected">Rejected</option>
           <option {{ ($status=='approved') ? 'selected': '' }} value="approved">Approved</option>
@@ -54,20 +54,20 @@
     <div class="mt-2">
       <div class="d-flex">
         <div class="col-4 p-0">
-          <a style="width:100%;" href="#" class="btn btn-danger btn-xs m-0" onclick="return actionSavePermit('delete');">
+          <a style="width:100%;" href="#" class="btn btn-outline-danger btn-sm btn-xs m-0" onclick="return actionSavePermit('delete');">
             Delete
           </a>
         </div>
         @if($status=='pending' || $status=='approved')
         <div class="col-4 p-0">
-          <a style="width:100%;" href="#" class="btn btn-warning btn-xs m-0" onclick="return actionSavePermit('reject');">
+          <a style="width:100%;" href="#" class="btn btn-outline-warning btn-sm btn-xs m-0" onclick="return actionSavePermit('reject');">
             Reject
           </a>
         </div>
         @endif
         @if($status=='pending' || $status=='rejected')
         <div class="col-4 p-0">
-          <a style="width:100%;" href="#" class="btn btn-primary btn-xs m-0" onclick="return actionSavePermit('approve');">
+          <a style="width:100%;" href="#" class="btn btn-outline-primary btn-sm btn-xs m-0" onclick="return actionSavePermit('approve');">
             Approve
           </a>
         </div>
@@ -78,17 +78,15 @@
 </div>
 @endif
 
-<br>
-
 <div class="p-2 text-center font-weight-bolder">
-  Harian <span class="badge bg-gradient-secondary">{{$status}}</span>
+  Harian <span class="badge badge-secondary">{{$status}}</span>
 </div>
-<div class="card p-2">
-  <div class="table-responsive">
+<div class="card shadow border p-2">
+  <div class="datatable datatable-sm">
     <table id="table-harian" class="table align-items-center mb-0">
       <thead>
         <tr>
-          <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder">
+          <th data-mdb-sort="false" class="text-uppercase text-center text-secondary text-xxs font-weight-bolder">
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="all-ids" onclick="selectAllCheckbox(this)">
               <label class="form-check-label" for="all-ids"></label>
@@ -129,8 +127,10 @@
             </div>
             <div id="asd-b-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}" style="display:none;">
               @if($permit->status!='rejected')
-              <span class="text-danger">Jika ditolak, berikan alasannya</span>
-              <input type="text" class="form-control" id="alasan-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}">
+              <div class="form-outline">
+                <input type="text" class="form-control" id="alasan-{{$permit->fkPresence_id}}-{{$permit->fkSantri_id}}">
+                <label class="form-label">Jika ditolak, berikan alasannya</label>
+              </div>
               @endif
             </div>
           </td>
@@ -146,18 +146,15 @@
 </div>
 
 @if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
-@if(isset($rangedPermitGenerator))
-@if(count($rangedPermitGenerator)>0)
-<br>
 <div class="p-2 text-center font-weight-bolder">
-  Berjangka <span class="badge bg-gradient-secondary">{{$status}}</span>
+  Berjangka <span class="badge badge-secondary">{{$status}}</span>
 </div>
-<div class="card p-2">
-  <div class="table-responsive">
+<div class="card shadow border p-2">
+  <div class="datatable datatable-sm">
     <table id="table-berjangka" class="table align-items-center mb-0">
       <thead>
         <tr>
-          <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder">
+          <th data-mdb-sort="false" class="text-uppercase text-center text-secondary text-xxs font-weight-bolder">
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="all-ids-berjangka" onclick="selectAllCheckboxBerjangka(this)">
               <label class="form-check-label" for="all-ids-berjangka"></label>
@@ -210,8 +207,6 @@
   </div>
 </div>
 @endif
-@endif
-@endif
 @else
 <div class="card">
   <div class="card-body p-2">
@@ -239,13 +234,13 @@
     getPage(`{{ url("/") }}/presensi/izin/persetujuan/` + tb + `/${$(e.currentTarget).val()}`)
   })
 
-  $('#table-harian').DataTable({
-    order: [],
-    paging: false
-  });
+  // $('#table-harian').DataTable({
+  //   order: [],
+  //   paging: false
+  // });
 
-  $('#table-berjangka').DataTable({
-    order: [],
-    paging: false,
-  });
+  // $('#table-berjangka').DataTable({
+  //   order: [],
+  //   paging: false,
+  // });
 </script>

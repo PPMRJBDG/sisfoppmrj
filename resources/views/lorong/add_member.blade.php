@@ -8,7 +8,7 @@
     </div>
   </div>
 </div>
-<div class="card mt-4">
+<div class="card shadow border mt-4">
   <div class="card-body pt-4 p-2">
     @if ($errors->any())
     <div class="alert alert-danger text-white">
@@ -25,7 +25,7 @@
         <div class="col-md-12">
           <div class="form-group">
             <label for="example-text-input" class="form-control-label">Nama</label>
-            <select name="santri_id" class="form-control">
+            <select data-mdb-filter="true" name="santri_id" class="select form-control">
               @foreach($santris as $santri)
               <option value="{{ $santri->id }}">{{ $santri->user->fullname }}</option>
               @endforeach

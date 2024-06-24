@@ -1,7 +1,5 @@
-<div class="card">
-    <div class="card-header pb-0 p-2 d-flex justify-content-between align-items-center">
-        <div class="p-2 d-flex">
-        </div>
+<div class="card shadow border">
+    <div class="card-header p-2 d-flex justify-content-between align-items-center">
         @can('create users')
         <a href="{{ route('create user') }}" class="btn btn-primary mb-0">
             <i class="fas fa-plus" aria-hidden="true"></i>
@@ -9,7 +7,7 @@
         </a>
         @endcan
     </div>
-    <div class="card-body pt-4 p-2">
+    <div class="card-body p-2">
         @if (session('success'))
         <div class="alert alert-success text-white">
             {{ session('success') }}
@@ -24,9 +22,10 @@
             </ul>
         </div>
         @endif
-        <div class="table-responsive p-0">
+
+        <div class="datatable datatable-sm p-0">
             <table id="table" class="table align-items-center mb-0">
-                <thead style="background-color:#f6f9fc;">
+                <thead>
                     <tr>
                         <th class="text-uppercase text-xxs font-weight-bolder">Nama</th>
                         <th class="text-uppercase text-xxs font-weight-bolder ps-2">Email</th>
@@ -40,9 +39,6 @@
                     <tr>
                         <td class="text-sm">
                             <div class="d-flex px-2 py-1">
-                                <div>
-                                    <img src="{{ asset('img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user1">
-                                </div>
                                 <div class="d-flex flex-column justify-content-center">
                                     <h6 class="mb-0 text-sm">{{ $user->fullname }}</h6>
                                 </div>
@@ -56,7 +52,7 @@
                         </td>
                         <td class="text-sm">
                             @foreach ($user->getRoleNames() as $role)
-                            <span class="badge bg-gradient-success">{{ $role }}</span>
+                            <span class="badge badge-success">{{ $role }}</span>
                             @endforeach
                         </td>
                         <td class="align-middle text-center text-sm">
@@ -82,11 +78,4 @@
     } catch (e) {
         window.location.replace(`{{ url("/") }}`)
     }
-
-    $('#table').DataTable({
-        order: [
-            // [1, 'desc']
-        ],
-        pageLength: 25
-    });
 </script>

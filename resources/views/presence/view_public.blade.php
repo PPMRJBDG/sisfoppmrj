@@ -91,7 +91,7 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12 mt-2">
-        <select class="select_lorong form-control" name="select_lorong" id="select_lorong">
+        <select data-mdb-filter="true" class="select select_lorong form-control" name="select_lorong" id="select_lorong">
             <option value="-">Semua Lorong</option>
             @foreach($data_lorong as $l)
             <option {{ ($lorong==$l->id) ? 'selected' : '' }} value="{{$l->id}}">{{$l->name}}</option>
@@ -106,10 +106,10 @@
     <button class="tablinks">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></button>
 </div>
 
-<div class="card tabcontent" id="hadir" style="display:block;">
+<div class="card shadow border tabcontent" id="hadir" style="display:block;">
     <div class="card-body px-0 pt-0 pb-2">
         <small style="font-size:11px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></small>
-        <div class="table-responsive">
+        <div class="datatable datatable-sm">
             <table id="table-hadir" class="table align-items-center mb-0">
                 <thead>
                     <tr>
@@ -146,7 +146,7 @@
     </div>
 </div>
 
-<div class="card tabcontent" id="ijin" style="display:none;">
+<div class="card shadow border tabcontent" id="ijin" style="display:none;">
     @if(count($permits)>0 || count($need_approval)>0)
     <div class="card-header p-2 pb-0">
         <h6 class="mb-0 bg-warning p-1 text-white">
@@ -154,7 +154,7 @@
         </h6>
     </div>
 
-    <div class="table-responsive">
+    <div class="datatable datatable-sm">
         <table class="table align-items-center mb-0">
             <thead>
                 <tr>
@@ -196,9 +196,9 @@
     @endif
 </div>
 
-<div class="card tabcontent" id="alpha" style="display:none;">
+<div class="card shadow border tabcontent" id="alpha" style="display:none;">
     @if(count($mhs_alpha)>0)
-    <div class="table-responsive">
+    <div class="datatable datatable-sm">
         <table id="table-alpha" class="table align-items-center mb-0">
             <thead>
                 <tr>

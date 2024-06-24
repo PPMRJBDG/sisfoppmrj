@@ -78,7 +78,7 @@
           <label class="custom-control-label">Role</label>
           <div class="form-control">
             @foreach($user->getRoleNames() as $roleName)
-            <span class="badge bg-gradient-success">{{ $roleName }}</span>
+            <span class="badge badge-success">{{ $roleName }}</span>
             @endforeach
           </div>
         </div>
