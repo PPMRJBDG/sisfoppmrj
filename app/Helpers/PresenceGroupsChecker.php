@@ -66,7 +66,8 @@ class PresenceGroupsChecker
                     'presence_start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour)),
                     'presence_end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour)),
                     'fkDewan_pengajar_1' => ($getPengajar1 != null) ? $getPengajar1->fkDewan_pengajar_id : null,
-                    'fkDewan_pengajar_2' => ($getPengajar2 != null) ? $getPengajar2->fkDewan_pengajar_id : null
+                    'fkDewan_pengajar_2' => ($getPengajar2 != null) ? $getPengajar2->fkDewan_pengajar_id : null,
+                    'is_deleted' => 0
                 ]);
 
                 if (!$newPresenceInThisDate) {
