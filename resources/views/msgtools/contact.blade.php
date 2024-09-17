@@ -21,36 +21,6 @@
                 Generate Contact
             </a>
         </div>
-        <!-- <div class="datatable datatable-sm">
-            <table id="table-bulk" class="table align-items-center mb-0">
-                <thead style="background-color:#f6f9fc;">
-                    <tr>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ID</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Bulk</th>
-                        <th class="text-uppercase text-sm text-secondary align-middle text-center font-weight-bolder">Contact</th>
-                        <th class="text-uppercase text-sm text-secondary align-middle text-center font-weight-bolder"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($bulk_user as $bu)
-                    <tr class="text-sm">
-                        <td>
-                            {{ $bu['bulk_id'] }}
-                        </td>
-                        <td>
-                            {{ $bu['bulk_name'] }}
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                            <a class="btn btn-secondary btn-xs mb-0">{{ count($bu['data']) }}</a>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                            <a class="btn btn-primary btn-xs mb-0" onclick="changeBulk('<?php echo $bu['bulk_id']; ?>','<?php echo $bu['bulk_name']; ?>','Bulk')">Kirim Pesan</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div> -->
     </div>
 </div>
 
