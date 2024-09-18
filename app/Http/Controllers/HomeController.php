@@ -244,7 +244,7 @@ class HomeController extends Controller
         $my_sign = null;
         if ($sign_in_out != null) {
             $santriIdToInsert = auth()->user()->santri;
-            $my_sign = Present::where('is_deleted', 0)->where('fkPresence_id', $sign_in_out->id)
+            $my_sign = Present::where('fkPresence_id', $sign_in_out->id)
                 ->where('fkSantri_id', $santriIdToInsert)->first();
         }
 
