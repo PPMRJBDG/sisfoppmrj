@@ -239,12 +239,12 @@ class HomeController extends Controller
         }
 
         $datetime = date("Y-m-d H:i:s");
-        $sign_in_out = Presence::where('start_date_time', '<=', $datetime)
+        $sign_in_out = Presence::where('is_deleted', 0)->where('start_date_time', '<=', $datetime)
             ->where('end_date_time', '>=', $datetime)->first();
         $my_sign = null;
         if ($sign_in_out != null) {
             $santriIdToInsert = auth()->user()->santri;
-            $my_sign = Present::where('fkPresence_id', $sign_in_out->id)
+            $my_sign = Present::where('is_deleted', 0)->where('fkPresence_id', $sign_in_out->id)
                 ->where('fkSantri_id', $santriIdToInsert)->first();
         }
 

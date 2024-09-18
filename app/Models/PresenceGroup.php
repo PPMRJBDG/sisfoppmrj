@@ -72,7 +72,7 @@ class PresenceGroup extends Model
             'presences' => [],
         ];
 
-        $presencesInRange = Presence::where('fkPresence_group_id', $this->id)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate)->orderBy('event_date', 'ASC')->get();
+        $presencesInRange = Presence::where('is_deleted', 0)->where('fkPresence_group_id', $this->id)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate)->orderBy('event_date', 'ASC')->get();
 
         if (sizeof($presencesInRange) > 0) {
             // getting avg present percentage
@@ -124,7 +124,7 @@ class PresenceGroup extends Model
             'presences' => [],
         ];
 
-        $presencesInRange = Presence::where('fkPresence_group_id', $this->id)->whereMonth('event_date', $month)->whereYear('event_date', $year)->orderBy('event_date', 'ASC')->get();
+        $presencesInRange = Presence::where('is_deleted', 0)->where('fkPresence_group_id', $this->id)->whereMonth('event_date', $month)->whereYear('event_date', $year)->orderBy('event_date', 'ASC')->get();
 
         if (sizeof($presencesInRange) > 0) {
             // getting avg present percentage

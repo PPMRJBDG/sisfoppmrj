@@ -322,10 +322,10 @@ class CountDashboard
     public static function sumPresentByPengajar($st, $presence_id, $pengajar_id)
     {
         if ($st == 'sum_kbm') {
-            $get_presence = Presence::where('fkPresence_group_id', $presence_id)->where('fkDewan_pengajar_1', $pengajar_id)->orWhere('fkDewan_pengajar_2', $pengajar_id)->get();
+            $get_presence = Presence::where('is_deleted', 0)->where('fkPresence_group_id', $presence_id)->where('fkDewan_pengajar_1', $pengajar_id)->orWhere('fkDewan_pengajar_2', $pengajar_id)->get();
             return count($get_presence);
         } elseif ($st == 'persentase') {
-            $get_presence = Presence::where('fkDewan_pengajar_1', $pengajar_id)->orWhere('fkDewan_pengajar_2', $pengajar_id)->get();
+            $get_presence = Presence::where('is_deleted', 0)->where('fkDewan_pengajar_1', $pengajar_id)->orWhere('fkDewan_pengajar_2', $pengajar_id)->get();
             $persentase = 0;
             if ($get_presence != null) {
                 $total_present = 0;

@@ -52,7 +52,7 @@ class PresenceController extends Controller
             ->whereOr('barcode_out', $request->input('barcode2'))->first();
 
         $datetime = date("Y-m-d H:i:s");
-        $presence = Presence::where('presence_start_date_time', '<=', $datetime)
+        $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
             ->where('presence_end_date_time', '>=', $datetime)->first();
 
         $barcode1 = false;
@@ -78,7 +78,7 @@ class PresenceController extends Controller
             $santriIdToInsert = auth()->user()->santri->id;
 
             $datetime = date("Y-m-d H:i:s");
-            $presence = Presence::where('presence_start_date_time', '<=', $datetime)
+            $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
                 ->where('presence_end_date_time', '>=', $datetime)->first();
             if ($presence == null) {
                 return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
@@ -159,7 +159,7 @@ class PresenceController extends Controller
     {
         PresenceGroupsChecker::checkPresenceGroups();
 
-        $presences = Presence::where('fkPresence_group_id', null)->get();
+        $presences = Presence::where('is_deleted', 0)->where('fkPresence_group_id', null)->get();
         $presenceGroups = PresenceGroup::all();
 
         return view('presence.list_and_manage', ['presences' => $presences, 'presenceGroups' => $presenceGroups]);

@@ -73,7 +73,7 @@ class Santri extends Model
             });
         })->count();
 
-        $totalPresencesInDate = Presence::where('fkPresence_group_id', $presenceGroupId)->whereMonth('event_date', $month)->whereYear('event_date', $year)->count();
+        $totalPresencesInDate = Presence::where('is_deleted', 0)->where('fkPresence_group_id', $presenceGroupId)->whereMonth('event_date', $month)->whereYear('event_date', $year)->count();
 
         $totalPermitsInDate = Permit::whereHas('presence', function ($query) use ($presenceGroupId, $month, $year) {
             $query->where('fkPresence_group_id', $presenceGroupId)->whereMonth('event_date', $month)->whereYear('event_date', $year);
@@ -107,7 +107,7 @@ class Santri extends Model
             });
         })->count();
 
-        $totalPresencesInDate = Presence::where('fkPresence_group_id', $presenceGroupId)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate)->count();
+        $totalPresencesInDate = Presence::where('is_deleted', 0)->where('fkPresence_group_id', $presenceGroupId)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate)->count();
 
         $totalPermitsInDate = Permit::whereHas('presence', function ($query) use ($presenceGroupId, $fromDate, $toDate) {
             $query->where('fkPresence_group_id', $presenceGroupId)->whereDate('event_date', '>=', $fromDate)->whereDate('event_date', '<=', $toDate);
