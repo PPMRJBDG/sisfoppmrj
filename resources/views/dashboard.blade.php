@@ -227,7 +227,7 @@
                                                                 <span class="badge badge-primary">Hadir</span>
                                                                 @else
                                                                 <?php
-                                                                $check_permit = Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->whereIn('fkSantri_id', auth()->user()->santri->id)->first();
+                                                                $check_permit = App\Models\Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->where('fkSantri_id', auth()->user()->santri->id)->first();
                                                                 ?>
                                                                 @if($check_permit!=null)
                                                                 <span class="badge badge-secondary">Ijin</span>
