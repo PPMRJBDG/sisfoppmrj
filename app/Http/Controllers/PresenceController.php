@@ -371,8 +371,19 @@ class PresenceController extends Controller
 
         // ijin berdasarkan lorong masing2
         $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
+
         // need approval
-        $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
+        if($for == 'lorong'){
+            $arr_santri = [];
+            if (auth()->user()->santri->lorongUnderLead) {
+                foreach (auth()->user()->santri->lorongUnderLead->members as $santri) {
+                    $arr_santri[] = $santri->id;
+                }
+            }
+            $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->whereIn('fkSantri_id', $arr_santri)->get();
+        }else{
+            $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
+        }
 
         // alpha
         $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
