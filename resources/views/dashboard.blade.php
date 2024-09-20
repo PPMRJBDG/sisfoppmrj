@@ -212,7 +212,6 @@
                                                         <tr class="text-xs">
                                                             <th class="text-uppercase font-weight-bolder">TANGGAL</th>
                                                             <th class="text-uppercase font-weight-bolder">STATUS</th>
-                                                            <!-- <th class="text-uppercase font-weight-bolder">TELAT</th> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -227,16 +226,16 @@
                                                                 @if($prs->fkSantri_id!="")
                                                                 <span class="badge badge-primary">Hadir</span>
                                                                 @else
+                                                                <?php
+                                                                $check_permit = Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->whereIn('fkSantri_id', auth()->user()->santri->id)->first();
+                                                                ?>
+                                                                @if($check_permit!=null)
+                                                                <span class="badge badge-secondary">Ijin</span>
+                                                                @else
                                                                 <span class="badge badge-warning">Alpha</span>
                                                                 @endif
+                                                                @endif
                                                             </td>
-                                                            <!-- <td>
-                                                            @if($prs->fkSantri_id!="")
-                                                            @if($prs->is_late)
-                                                            <i class="ni ni-check-bold text-warning"></i>
-                                                            @endif
-                                                            @endif
-                                                        </td> -->
                                                         </tr>
                                                         @endif
                                                         @endforeach
