@@ -163,7 +163,7 @@ class HomeController extends Controller
                         $all_presences[$vu->santri_id][$pg->id] = DB::select(
                             "SELECT COUNT(*) as c_all 
                             FROM presences
-                            WHERE fkPresence_group_id=" . $pg->id . $like_tb_a
+                            WHERE is_deleted = 0 AND fkPresence_group_id=" . $pg->id . $like_tb_a
                         );
 
                         $presences[$vu->santri_id][$pg->id] = DB::select(
@@ -180,7 +180,7 @@ class HomeController extends Controller
                         $permit = DB::select(
                             "SELECT a.fkSantri_id, count(a.fkSantri_id) as approved 
                             FROM `permits` a 
-                            JOIN `presences` b ON a.fkPresence_id=b.id 
+                            JOIN `presences` b ON a.fkPresence_id=b.id AND b.is_deleted = 0
                             WHERE a.status='approved' " . $like_tb_c . " 
                             AND b.fkPresence_group_id = " . $pg->id . " 
                             AND a.fkSantri_id = " . $vu->santri_id . " 
