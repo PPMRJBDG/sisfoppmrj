@@ -116,64 +116,66 @@
               <input class="form-check-input" type="checkbox" name="role-wk">
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Sekretaris</label>
-              <input class="form-check-input" type="checkbox" name="role-sekretaris">
+          <div style="display:none;">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Sekretaris</label>
+                <input class="form-check-input" type="checkbox" name="role-sekretaris">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi IT</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-it">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi IT</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-it">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Kurikulum</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-kurikulum">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Kurikulum</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-kurikulum">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Kebersihan</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-kebersihan">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Kebersihan</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-kebersihan">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Sarpras</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-sarpras">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Sarpras</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-sarpras">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Olahraga</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-olahraga">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Olahraga</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-olahraga">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Kreatif</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-kreatif">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Kreatif</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-kreatif">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi PT</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-pt">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi PT</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-pt">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Asad</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-asad">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Asad</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-asad">
+              </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Divisi Keamanan</label>
-              <input class="form-check-input" type="checkbox" name="role-divisi-keamanan">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Divisi Keamanan</label>
+                <input class="form-check-input" type="checkbox" name="role-divisi-keamanan">
+              </div>
             </div>
           </div>
           <div class="col-md-4">

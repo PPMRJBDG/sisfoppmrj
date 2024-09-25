@@ -8,6 +8,7 @@ use App\Models\RangedPermitGenerator;
 use App\Models\Permit;
 use App\Models\Present;
 use App\Models\Liburan;
+use App\Models\Santri;
 use App\Models\JadwalPengajars;
 use App\Helpers\CountDashboard;
 
@@ -101,30 +102,35 @@ class PresenceGroupsChecker
             $createdPresences = Presence::whereDate('event_date', '>=', $rangedPermitGenerator->from_date)
                 ->whereDate('event_date', '<=', $rangedPermitGenerator->to_date)
                 ->where('fkPresence_group_id', $rangedPermitGenerator->fkPresenceGroup_id)
+                ->where('is_deleted', 0)
                 ->get();
 
             foreach ($createdPresences as $presence) {
-                // check whether permit already exists
-                $existingPermit = Permit::where('fkPresence_id', $presence->id)->where('fkSantri_id', $rangedPermitGenerator->fkSantri_id)->first();
+                $check_santri = Santri::where('id',$rangedPermitGenerator->fkSantri_id)->where('exit_at', null)->first();
 
-                if (isset($existingPermit))
-                    continue;
+                if($check_santri!=null){
+                    // check whether permit already exists
+                    $existingPermit = Permit::where('fkPresence_id', $presence->id)->where('fkSantri_id', $rangedPermitGenerator->fkSantri_id)->first();
 
-                // check whether the person is present at that presence
-                $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $rangedPermitGenerator->fkSantri_id);
-                if (isset($existingPresent)) {
-                    $existingPresent->delete();
+                    if (isset($existingPermit))
+                        continue;
+
+                    // check whether the person is present at that presence
+                    $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $rangedPermitGenerator->fkSantri_id);
+                    if (isset($existingPresent)) {
+                        $existingPresent->delete();
+                    }
+
+                    $inserted = Permit::create([
+                        'fkSantri_id' => $rangedPermitGenerator->fkSantri_id,
+                        'fkPresence_id' => $presence->id,
+                        'reason' => $rangedPermitGenerator->reason,
+                        'reason_category' => $rangedPermitGenerator->reason_category,
+                        'status' => 'approved',
+                        'approved_by' => 'system',
+                        'ids' => uniqid()
+                    ]);
                 }
-
-                $inserted = Permit::create([
-                    'fkSantri_id' => $rangedPermitGenerator->fkSantri_id,
-                    'fkPresence_id' => $presence->id,
-                    'reason' => $rangedPermitGenerator->reason,
-                    'reason_category' => $rangedPermitGenerator->reason_category,
-                    'status' => 'approved',
-                    'approved_by' => 'system',
-                    'ids' => uniqid()
-                ]);
             }
         }
     }

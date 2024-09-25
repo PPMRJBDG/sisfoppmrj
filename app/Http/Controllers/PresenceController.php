@@ -593,6 +593,8 @@ class PresenceController extends Controller
             'total_mhs' => CountDashboard::total_mhs('all'),
             'event_date' => $request->input('event_date')
         ]);
+        
+        PresenceGroupsChecker::checkPermitGenerators();
 
         if (!$inserted)
             return redirect()->route('create presence in group', $request->route('id'))->withErrors(['failed_creating_presence_in_group', 'Gagal menambah presensi pada grup.']);
