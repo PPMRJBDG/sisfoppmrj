@@ -201,6 +201,7 @@ class HomeController extends Controller
                     $join->on('a.id', '=', 'b.fkPresence_id');
                     $join->where('b.fkSantri_id', auth()->user()->santri->id);
                 })
+                ->where('is_deleted', 0)
                 ->where('a.event_date', 'like', '%' . $tb . '%')
                 ->orderBy('a.event_date', 'ASC')
                 ->get();
