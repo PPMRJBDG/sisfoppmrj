@@ -116,6 +116,12 @@
               <input class="form-check-input" type="checkbox" name="role-wk">
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Kurikulum</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-kurikulum" {{ $user->hasRole(['divisi kurikulum']) ? 'checked' : '' }}>
+            </div>
+          </div>
           <div style="display:none;">
             <div class="col-md-4">
               <div class="form-group form-check">
