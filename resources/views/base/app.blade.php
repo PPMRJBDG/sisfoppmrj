@@ -188,6 +188,44 @@ if (auth()->user()->hasRole('barcode')) {
       </div>
     </div>
 
+    <div class="modal" id="exampleModalMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelMateri" aria-hidden="true">
+      <div class="modal-dialog" role="document" style="max-width:650px !important;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div>
+              <h6 class="modal-title" id="exampleModalLabelMateri">Pencapaian Materi</h6>
+              <h5 class="modal-title" id="exampleModalLabelMateri"><span id="nm"></span></h5>
+            </div>
+          </div>
+          <div class="modal-body" style="height:500px;overflow:auto;">
+            <div class="datatablex datatable-sm">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
+                    <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="contentMateri">
+                  <tr>
+                    <td colspan="3">
+                      <span class="text-center">
+                        Loading...
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="closeMateri" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" style="background:rgba(0, 0, 0, 0.7);z-index:999;" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -243,7 +281,7 @@ if (auth()->user()->hasRole('barcode')) {
       var list_tab = ['return-false', 'nav-mahasiswa-tab', 'nav-table-tab', 'nav-grafik-tab', 'nav-harian-tab', 'nav-berjangka-tab', 'nav-hadir-tab', 'nav-ijin-tab', 'nav-alpha-tab'];
       if (!matchArray(list_tab, e.target.id) && !matchArray(list_tab, e.target.getAttribute('block-id'))) {
         e.preventDefault();
-        if (this.href != $("#base-url").val() + '/#') {
+        if (this.href != $("#base-url").val() + '/#' && !this.href.match("#")) {
           $("#sidenav-1").css('transform', 'translateX(-100%)');
           var sidenav = document.querySelectorAll(".sidenav-backdrop");
           if (sidenav != null) {
@@ -251,6 +289,7 @@ if (auth()->user()->hasRole('barcode')) {
               sidenav[i].remove();
             }
           }
+
           getPage(this.href);
           $("#breadcrumb-item").html(e.target.innerText)
           return false;

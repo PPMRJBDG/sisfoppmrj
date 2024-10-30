@@ -1,5 +1,4 @@
 const base_url = $("#base-url").val();
-// getPage("/home");
 
 $('body').on('click', '#close', function (e) {
     $('#exampleModal').fadeOut();
@@ -58,8 +57,11 @@ function getPage(url) {
     $('#content-app').html('');
     $("#loading").fadeIn();
     $("#al-danger").hide();
+    $(".modal").fadeOut();
+    if (url == 'undefined') {
+        url = '/home'
+    }
     $("#current-url").val(url);
-
     $.ajax({
         type: "GET",
         url: url,
@@ -560,6 +562,20 @@ function actionSavePermit(action) {
             // }
         }
     }
+}
+
+function getMateri(santri_id, nama) {
+    $('#exampleModalMateri').fadeIn();
+    $('#exampleModalMateri').css('background', 'rgba(0, 0, 0, 0.7)');
+    $('#exampleModalMateri').css('z-index', '10000');
+    $('#exampleModalLabelMateri span#nm').text(nama);
+    $.post(base_url + `/materi/monitoring/materi_santri`, {
+        santri_id: santri_id
+    },
+        function (data) {
+            $('#contentMateri').html(data);
+        }
+    );
 }
 
 // function actionSaveRangePermit(rpgId, santriId) {

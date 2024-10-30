@@ -33,7 +33,7 @@
     @endif
 
     @if(isset($materi))
-    <a type="button" class="btn btn-rounded btn-outline-warning btn-block m-0 mb-3" onclick="getPrevPage()">Kembali</a>
+    <a type="button" block-id="return-false" class="btn btn-rounded btn-outline-warning btn-block m-0 mb-3" onclick="getPage('/materi/monitoring/list')">Kembali</a>
 
     <form action="{{ route('update monitoring materi', $materi->id) }}" method="post">
       @csrf

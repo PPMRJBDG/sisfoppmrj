@@ -156,44 +156,6 @@ function printMateriOptions($materis, $santri)
 </div>
 @endif
 
-<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="max-width:650px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>
-                    <h6 class="modal-title" id="exampleModalLabel">Pencapaian Materi</h6>
-                    <h5 class="modal-title" id="exampleModalLabel"><span id="nm"></span></h5>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="datatablex datatable-sm">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">MATERI</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">PENCAPAIAN</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contentMateri">
-                            <tr>
-                                <td colspan="3">
-                                    <span class="text-center">
-                                        Loading...
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     try {
         $(document).ready();
@@ -201,22 +163,8 @@ function printMateriOptions($materis, $santri)
         window.location.replace(`{{ url("/") }}`)
     }
 
-    function getMateri(santri_id, nama) {
-        $('#exampleModal').fadeIn();
-        $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
-        $('#exampleModal').css('z-index', '10000');
-        $('#exampleModalLabel span#nm').text(nama);
-        $.post("{{ route('materi santri') }}", {
-                santri_id: santri_id
-            },
-            function(data) {
-                $('#contentMateri').html(data);
-            }
-        );
-    }
-
-    $('#close').click(function() {
-        $('#exampleModal').fadeOut();
+    $('#closeMateri').click(function() {
+        $('#exampleModalMateri').fadeOut();
         $('#contentMateri').html('<td colspan="3"><span class="text-center">Loading...</span></td>');
     });
 </script>

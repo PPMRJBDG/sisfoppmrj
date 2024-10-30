@@ -56,10 +56,10 @@ class MonitoringMateriController extends Controller
             $partiallyCompletedPages = $santri->monitoringMateris->where('fkMateri_id', $materi->id)->where('status', 'partial')->count();
             $totalPages = $completedPages + ($partiallyCompletedPages / 2);
             $data = $data . '
-            <tr class="text-sm">
-                <td class="p-0">' . $materi->name . '</td>
-                <td class="p-0">' . $totalPages . '/' . $materi->pageNumbers . ' page = ' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
-                <td class="p-0">
+            <tr>
+                <td class="p-2">' . $materi->name . '</td>
+                <td class="p-2">' . $totalPages . '/' . $materi->pageNumbers . ' page = ' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
+                <td class="p-2">
                     <a href="' . route('edit monitoring materi', [$materi->id, $santri->id]) . '" class="btn btn-success btn-sm mb-0">Lihat</a>
                 </td>
             </tr>';
