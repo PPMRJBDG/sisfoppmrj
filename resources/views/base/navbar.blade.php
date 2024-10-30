@@ -38,20 +38,20 @@
   </div>
   <ul class="sidenav-menu">
     <li class="sidenav-item">
-      <a class="sidenav-link" aria-current="page" href="{{ url('/home') }}">
+      <a class="sidenav-link d-flex" aria-current="page" href="{{ url('/home') }}">
         <i class="fa fa-home pe-3"></i>Home
       </a>
     </li>
 
     <li class="sidenav-item">
-      <a class="sidenav-link" aria-current="page" href="#" onclick="showCacahJiwa()">
+      <a class="sidenav-link d-flex" aria-current="page" href="#" onclick="showCacahJiwa()">
         <i class="fa fa-bar-chart pe-3"></i>Cacah Jiwa
       </a>
     </li>
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" href="#" block-id="return-false" id="navbarDropdownMenuLink-pengurus" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" href="#" block-id="return-false" id="navbarDropdownMenuLink-pengurus" role="button" aria-expanded="false">
         <i class="fa fa-cog pe-3"></i>Pengurus
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-pengurus">
@@ -78,7 +78,7 @@
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-keuangan" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-keuangan" role="button" aria-expanded="false">
         <i class="fa fa-money pe-3"></i>Keuangan
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-keuangan">
@@ -113,7 +113,7 @@
 
     @if(auth()->user()->hasRole('superadmin'))
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-msgtools" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-msgtools" role="button" aria-expanded="false">
         <i class="fa fa-envelope pe-3"></i>Message Tools
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-msgtools">
@@ -137,7 +137,7 @@
     @endif
 
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-jadwalkbm" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-jadwalkbm" role="button" aria-expanded="false">
         <i class="fa fa-calendar pe-3"></i>Jadwal KBM
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-jadwalkbm">
@@ -150,7 +150,7 @@
     </li>
 
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-presensi" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-presensi" role="button" aria-expanded="false">
         <i class="fa fa-file-text pe-3"></i>Presensi
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-presensi">
@@ -188,7 +188,7 @@
     </li>
 
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-lorong" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-lorong" role="button" aria-expanded="false">
         <i class="fa fa-users pe-3"></i>Lorong
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-lorong">
@@ -211,7 +211,7 @@
 
     @can('view users list')
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-user" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-user" role="button" aria-expanded="false">
         <i class="fa fa-user pe-3"></i>User
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-user">
@@ -250,7 +250,7 @@
 
     @if(auth()->user()->hasRole('santri') || auth()->user()->hasRole('superadmin'))
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-kurikulum" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-kurikulum" role="button" aria-expanded="false">
         <i class="fa fa-book pe-3"></i>Kurikulum
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-kurikulum">
@@ -286,7 +286,7 @@
     @endif
 
     <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link" block-id="return-false" href="#" id="navbarDropdownMenuLink-profile" role="button" aria-expanded="false">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-profile" role="button" aria-expanded="false">
         <i class="fa fa-user-circle pe-3"></i>Profile
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-profile">

@@ -141,7 +141,7 @@ if (auth()->user()->hasRole('barcode')) {
     </footer>
 
     <div class="modal" id="cacahJiwaModal" tabindex="-1" role="dialog" aria-labelledby="cacahJiwaModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
-      <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:600px !important;">
+      <div class="modal-dialog" role="document" style="max-width:600px !important;">
         <div class="modal-content">
           <div class="modal-header">
             <div>
@@ -161,18 +161,18 @@ if (auth()->user()->hasRole('barcode')) {
       </div>
     </div>
 
-    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
-      <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:600px !important;">
+    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document" style="max-width:600px !important;">
         <div class="modal-content">
           <div class="modal-header">
             <div>
-              <h6 class="modal-title" id="exampleModalLabel">Report</h6>
+              <h6 class="modal-title font-weight-bolder" id="exampleModalLabel">Report</h6>
             </div>
             <div>
-              <a style="cursor:pointer;" id="close"><i class="ni ni-fat-remove text-lg"></i></a>
+              <a block-id="return-false" href="#" style="cursor:pointer;" id="close"><i class="fa fa-times text-lg"></i></a>
             </div>
           </div>
-          <div class="modal-body" id="contentReport" style="height:600px!important;">
+          <div class="modal-body p-1" id="contentReport" style="height:500px!important;">
             <tr>
               <td colspan="3">
                 <span class="text-center">
@@ -189,7 +189,7 @@ if (auth()->user()->hasRole('barcode')) {
     </div>
 
     <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" style="background:rgba(0, 0, 0, 0.7);z-index:999;" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <div>

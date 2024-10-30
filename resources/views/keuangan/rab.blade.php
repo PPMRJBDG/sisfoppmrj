@@ -1,14 +1,8 @@
-<style>
-    .new-td {
-        padding: 5px 10px !important;
-    }
-</style>
-
 <input class="form-control" type="hidden" value="" id="rab_id" />
 <div class="card shadow border">
     <div class="card-header p-2">
-        <div class="datatable datatable-sm">
-            <table class="table align-items-center mb-0 text-xs">
+        <div class="">
+            <table class="table align-items-center mb-0">
                 <tbody>
                     <tr class="">
                         <td>
@@ -67,12 +61,12 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="ms-auto text-end p-2 pt-0">
-                <a href="#" id="btn-batal" class="btn btn-danger btn-sm" onclick="clearAll()" style="display:none;">
+            <div class="ms-auto text-end p-2">
+                <a href="#" id="btn-batal" class="btn btn-danger" onclick="clearAll()" style="display:none;">
                     <i class="fas fa-trash" aria-hidden="true"></i>
                     BATAL
                 </a>
-                <a href="#" class="btn btn-primary btn-sm" onclick="simpanRab()">
+                <a href="#" class="btn btn-primary" onclick="simpanRab()">
                     <i class="fas fa-save" aria-hidden="true"></i>
                     SIMPAN
                 </a>
@@ -81,7 +75,7 @@
     </div>
     <div class="card-body shadow-lg p-0">
         <div class="datatable datatable-sm">
-            <table class="table align-items-center mb-4 text-xs text-uppercase">
+            <table class="table align-items-center mb-4 text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase text-start text-secondary font-weight-bolder ps-2">Divisi</th>
@@ -112,11 +106,11 @@
                     }
                     ?>
                     <tr id="rab-{{$rab->id}}">
-                        <td class="new-td">{{strtoupper($rab->divisi->divisi)}}</td>
-                        <td class="new-td">{{$rab->keperluan}}</td>
-                        <td class="new-td text-center">{{$rab->periode}}</td>
-                        <td class="new-td text-center">
-                            <a class="btn btn-warning btn-sm mb-0" style="padding:5px 15px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
+                        <td>{{strtoupper($rab->divisi->divisi)}}</td>
+                        <td>{{$rab->keperluan}}</td>
+                        <td class="text-center">{{$rab->periode}}</td>
+                        <td class="text-center">
+                            <a block-id="return-false" class="btn btn-warning btn-sm mb-0" style="padding:5px 15px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
                                 ({{$jumlah}})
                             </a>
                         </td>
@@ -125,11 +119,11 @@
                             {{number_format($total,0)}}
                         </td>
                         <!-- <td></td> -->
-                        <td class="new-td text-center">
-                            <a class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
+                        <td class="text-center">
+                            <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
                                 <i class="fas fa-edit" aria-hidden="true"></i>
                             </a>
-                            <a class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
+                            <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
                                 <i class="fas fa-trash" aria-hidden="true"></i>
                             </a>
                         </td>
@@ -143,7 +137,7 @@
 </div>
 
 <div class="modal" id="modalPeriode" tabindex="-1" role="dialog" aria-labelledby="modalPeriodeLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered p-4" role="document" style="max-width:100% !important;">
+    <div class="modal-dialog p-4" role="document" style="max-width:100% !important;">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="modalPeriodeLabel">Set Periode</h6>
@@ -157,7 +151,7 @@
                 ?>
                     <div class="card shadow border tabcontent" id="bln_{{$i}}" style="{{($i==1) ? 'display:block;' : ''}}">
                         <div class="card-body p-2">
-                            <div class="datatable datatable-sm">
+                            <div class="table-responsive">
                                 <table id="table" class="table align-items-center mb-4">
                                     <thead class="text-center">
                                         <tr>

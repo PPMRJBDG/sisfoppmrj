@@ -639,9 +639,9 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
                 if ($totalPages > 0) {
                     $data_materi = $data_materi . '
                     <tr class="text-sm">
-                        <td class="p-1 ps-2"><h6 class="mb-0">' . ucfirst(strtolower($materi->name)) . '</h6></td>
-                        <td class="p-1 ps-2"><h6 class="mb-0">' . $totalPages . ' / ' . $materi->pageNumbers . '</h6></td>
-                        <td class="p-1 ps-2"><h6 class="mb-0">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</h6></td>
+                        <td class="p-1 ps-2">' . ucfirst(strtolower($materi->name)) . '</td>
+                        <td class="p-1 ps-2">' . $totalPages . ' / ' . $materi->pageNumbers . '</td>
+                        <td class="p-1 ps-2">' . number_format((float) $totalPages / $materi->pageNumbers * 100, 2, ".", "") . '%</td>
                     </tr>';
                 }
             }

@@ -119,9 +119,11 @@
                             <tbody>
                                 @if($view_usantri!=null)
                                 @foreach($view_usantri as $vu)
-                                <tr data-toggle="tooltip" data-placement="top" title="Klik untuk melihat report | koor lorong : {{ App\Helpers\CommonHelpers::lorong($vu->fkLorong_id) }}" class="text-sm" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')" style="cursor:pointer;">
+                                <tr>
                                     <td>
-                                        [{{ $vu->angkatan }}] {{ $vu->fullname }}
+                                        <a href="#" block-id="return-false" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')">
+                                            [{{ $vu->angkatan }}] {{ $vu->fullname }}
+                                        </a>
                                     </td>
                                     <?php
                                     $all_persentase = 0;
@@ -177,9 +179,9 @@
                         </table>
                     </div>
                     @elseif(auth()->user()->hasRole('santri'))
-                    <div class="row mt-2 mb-2">
+                    <div class="row">
                         <div class="col-12">
-                            <div class="card shadow border p-2">
+                            <div class="p-2">
                                 <label class="m-0 text-sm">Filter</label>
                                 <div class="p-0">
                                     <select data-mdb-filter="true" class="select select_tb form-control" name="select_tb" id="select_tb">
@@ -194,7 +196,7 @@
                                 @foreach($presence_group as $pg)
                                 @if($pg->id!=7)
                                 <div class="col-12 mb-2">
-                                    <div class="card shadow border">
+                                    <div class="">
                                         <div class="card-body p-2 text-center">
                                             <h6 class="text-sm font-weight-bolder">
                                                 {{$pg->name}}

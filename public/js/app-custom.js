@@ -1,7 +1,7 @@
 const base_url = $("#base-url").val();
 // getPage("/home");
 
-$('#close').click(function () {
+$('body').on('click', '#close', function (e) {
     $('#exampleModal').fadeOut();
     $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
     $('#alertModal').fadeOut();

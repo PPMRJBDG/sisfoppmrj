@@ -18,7 +18,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 
 <small><i>Last update: {{date_format(date_create($last_update->updated_at), 'd M Y H:i:s')}}</i></small>
 <div class="card border py-2">
-    <div class="datatable datatable-sm">
+    <div class="datatable datatable-sm" data-mdb-pagination="false">
         <table class="table align-items-center mb-0">
             <thead>
                 <tr>
@@ -214,7 +214,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 </div>
 
 <div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalSodaqoh" tabindex="-1" role="dialog" aria-labelledby="modalSodaqohLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:650px !important;">
+    <div class="modal-dialog" role="document" style="max-width:650px !important;">
         <div class="modal-content">
             <div class="modal-header">
                 <div>

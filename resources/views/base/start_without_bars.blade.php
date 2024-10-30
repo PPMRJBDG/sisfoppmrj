@@ -7,39 +7,104 @@ $setting = App\Models\Settings::first();
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}">
-  <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+  @if($setting->logoImgUrl!='')
+  <link rel="icon" type="image/png" href="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}">
+  @endif
   <title>
-    {{ $title }} - {{$setting->apps_name}}
-  </title><!-- New Material Design -->
+    {{$setting->apps_name}}
+  </title>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-  <script type="text/javascript" src="{{ asset('ui-kit/js/jquery.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('ui-kit/js/addons/datatables.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('ui-kit/js/addons/datatables-select.min.js') }}"></script>
-
-  <link rel="stylesheet" href="{{ asset('css/argon-dashboard.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb-free.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb.min.css') }}" />
-  <!-- <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb-v2.min.css') }}" /> -->
-
-  <!-- addons -->
-  <link rel="stylesheet" href="{{ asset('ui-kit/css/addons/datatables.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('ui-kit/css/addons/datatables-select.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('ui-kit/css/mdb-v2.min.css') }}" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
-<Style>
-  .bg-primary {
-    background: #48c6ef;
-    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5));
-    background: linear-gradient(to right, rgba(72, 198, 239, 0.5), rgba(111, 134, 214, 0.5))
+<style>
+  body {
+    font-size: .9rem !important;
+  }
+
+  .btn {
+    font-size: .7rem !important;
+  }
+
+  .form-group {
+    margin-bottom: 15px !important;
+  }
+
+  .navbar {
+    min-height: 60px !important;
+  }
+
+  /* .btn-primary, */
+  .bg-primary,
+  .badge-primary {
+    background: #48c6ef !important;
+    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
+    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
+  }
+
+  /* .btn-danger, */
+  .badge-danger,
+  .alert-danger,
+  .bg-danger {
+    background: #f093fb !important;
+    background: -webkit-linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important;
+    background: linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important
+  }
+
+  /* .btn-warning, */
+  .badge-warning,
+  .alert-warning,
+  .partial,
+  .bg-warning {
+    background: #f6d365 !important;
+    background: -webkit-linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important;
+    background: linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important
+  }
+
+  /* .btn-success, */
+  .complete,
+  .badge-success,
+  .alert-success,
+  .bg-success {
+    background-color: #00c851 !important;
+    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
+    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
+  }
+
+  /* .btn-secondary, */
+  .bg-secondary,
+  .badge-secondary {
+    background-color: #a6c !important;
+    background: -webkit-linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important;
+    background: linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important
+  }
+
+  .nav-tabs .nav-link {
+    font-weight: 600 !important;
+  }
+
+  .btn {
+    border-radius: 1.875rem !important;
+    font-weight: 700 !important;
   }
 
   .font-weight-bolder {
     font-weight: 700 !important
+  }
+
+  .dropdown-menu {
+    --mdb-dropdown-min-width: 12rem !important;
+  }
+
+  .dataTables_wrapper .dataTables_filter input {
+    margin-bottom: 10px !important;
   }
 </style>
 
