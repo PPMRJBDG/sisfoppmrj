@@ -303,17 +303,17 @@
     window.location.replace(`{{ url("/") }}`)
   }
 
-  $("#table-hadir").DataTable({
-    pagination: false,
-    info: false,
-    bPaginate: false
-  })
+  // $("#table-hadir").DataTable({
+  //   pagination: false,
+  //   info: false,
+  //   bPaginate: false
+  // })
 
-  $("#table-alpha").DataTable({
-    pagination: false,
-    info: false,
-    bPaginate: false
-  })
+  // $("#table-alpha").DataTable({
+  //   pagination: false,
+  //   info: false,
+  //   bPaginate: false
+  // })
 
   cekKoorLorong();
 

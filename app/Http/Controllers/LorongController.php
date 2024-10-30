@@ -232,10 +232,10 @@ class LorongController extends Controller
             return redirect()->route('add lorong member', $lorongId)->withErrors(['santri_not_found' => 'Santri tidak ditemukan.']);
 
         // validate that picked santri is not a leader
-        $lorongsUnderLead = Lorong::where('fkSantri_leaderId', $request->input('santri_id'))->get();
+        // $lorongsUnderLead = Lorong::where('fkSantri_leaderId', $request->input('santri_id'))->get();
 
-        if (sizeof($lorongsUnderLead) >= 1)
-            return redirect()->route('add lorong member', $lorongId)->withErrors(['santri_already_a_leader' => 'Santri sudah menjadi koor di lorong ini atau lorong lain.']);
+        // if (sizeof($lorongsUnderLead) >= 1)
+        //     return redirect()->route('add lorong member', $lorongId)->withErrors(['santri_already_a_leader' => 'Santri sudah menjadi koor di lorong ini atau lorong lain.']);
 
         $santri->fkLorong_id = $request->route('id');
 

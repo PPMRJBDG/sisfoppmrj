@@ -44,7 +44,7 @@ class PublicController extends Controller
             if (count($check_liburan) == 0) {
                 $caption = '*[Preview]*
 *Amshol Cek Daftar Kehadiran Kemarin:*';
-                $get_presence = Presence::where('event_date', $yesterday)->get();
+                $get_presence = Presence::where('event_date', $yesterday)->where('is_deleted', 0)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
                         // hadir
@@ -132,7 +132,7 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                 $caption = 'Berikut kami informasikan daftar kehadiran pada hari *' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '*.
 
 *Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
-                $get_presence = Presence::where('event_date', $yesterday)->get();
+                $get_presence = Presence::where('event_date', $yesterday)->where('is_deleted', 0)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
                         // hadir
@@ -460,7 +460,7 @@ NB:
         // LINK PRESENSI
         elseif ($time == 'presence') {
             PresenceGroupsChecker::checkPresenceGroups();
-            $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->first();
+            $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
             if ($get_presence_today != null) {
                 $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
                 foreach ($view_usantri as $mhs) {

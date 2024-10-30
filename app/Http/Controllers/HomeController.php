@@ -39,7 +39,7 @@ class HomeController extends Controller
         $count_dashboard = '';
         $periode_tahun = Periode::get();
         $presence_group = PresenceGroup::get();
-        $get_presence_today = Presence::where('event_date', date("Y-m-d"))->get();
+        $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('is_deleted', 0)->get();
         $list_angkatan = DB::table('santris')
             ->select('angkatan')
             ->whereNull('exit_at')
@@ -163,7 +163,7 @@ class HomeController extends Controller
                         $all_presences[$vu->santri_id][$pg->id] = DB::select(
                             "SELECT COUNT(*) as c_all 
                             FROM presences
-                            WHERE fkPresence_group_id=" . $pg->id . $like_tb_a
+                            WHERE is_deleted = 0 AND fkPresence_group_id=" . $pg->id . $like_tb_a
                         );
 
                         $presences[$vu->santri_id][$pg->id] = DB::select(
@@ -180,7 +180,7 @@ class HomeController extends Controller
                         $permit = DB::select(
                             "SELECT a.fkSantri_id, count(a.fkSantri_id) as approved 
                             FROM `permits` a 
-                            JOIN `presences` b ON a.fkPresence_id=b.id 
+                            JOIN `presences` b ON a.fkPresence_id=b.id AND b.is_deleted = 0
                             WHERE a.status='approved' " . $like_tb_c . " 
                             AND b.fkPresence_group_id = " . $pg->id . " 
                             AND a.fkSantri_id = " . $vu->santri_id . " 
@@ -201,6 +201,7 @@ class HomeController extends Controller
                     $join->on('a.id', '=', 'b.fkPresence_id');
                     $join->where('b.fkSantri_id', auth()->user()->santri->id);
                 })
+                ->where('is_deleted', 0)
                 ->where('a.event_date', 'like', '%' . $tb . '%')
                 ->orderBy('a.event_date', 'ASC')
                 ->get();
@@ -239,7 +240,7 @@ class HomeController extends Controller
         }
 
         $datetime = date("Y-m-d H:i:s");
-        $sign_in_out = Presence::where('start_date_time', '<=', $datetime)
+        $sign_in_out = Presence::where('is_deleted', 0)->where('start_date_time', '<=', $datetime)
             ->where('end_date_time', '>=', $datetime)->first();
         $my_sign = null;
         if ($sign_in_out != null) {
@@ -318,16 +319,19 @@ class HomeController extends Controller
                 $get_presence = Presence::where('event_date', '>=', $split_periode[0] . '-09-01')
                     ->where('event_date', '<=', $split_periode[1] . '-08-31')
                     ->where('fkPresence_group_id', $pg->id)
+                    ->where('is_deleted', 0)
                     ->orderBy('id', 'DESC')
                     ->get();
             } elseif ($tb == null) {
                 $get_presence = Presence::where('event_date', '>=', $tahun_bulan[count($tahun_bulan) - 1]->ym . '-01')
                     ->where('fkPresence_group_id', $pg->id)
+                    ->where('is_deleted', 0)
                     ->orderBy('id', 'DESC')
                     ->get();
             } else {
                 $get_presence = Presence::where('event_date', '>=', $tb . '-01')->where('event_date', '<=', $tb . '-31')
                     ->where('fkPresence_group_id', $pg->id)
+                    ->where('is_deleted', 0)
                     ->orderBy('id', 'DESC')
                     ->get();
             }

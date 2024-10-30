@@ -52,7 +52,7 @@ class PresenceController extends Controller
             ->whereOr('barcode_out', $request->input('barcode2'))->first();
 
         $datetime = date("Y-m-d H:i:s");
-        $presence = Presence::where('presence_start_date_time', '<=', $datetime)
+        $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
             ->where('presence_end_date_time', '>=', $datetime)->first();
 
         $barcode1 = false;
@@ -78,7 +78,7 @@ class PresenceController extends Controller
             $santriIdToInsert = auth()->user()->santri->id;
 
             $datetime = date("Y-m-d H:i:s");
-            $presence = Presence::where('presence_start_date_time', '<=', $datetime)
+            $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
                 ->where('presence_end_date_time', '>=', $datetime)->first();
             if ($presence == null) {
                 return json_encode(['status' => false, 'message' => 'Presensi KBM tidak ditemukan']);
@@ -159,7 +159,7 @@ class PresenceController extends Controller
     {
         PresenceGroupsChecker::checkPresenceGroups();
 
-        $presences = Presence::where('fkPresence_group_id', null)->get();
+        $presences = Presence::where('is_deleted', 0)->where('fkPresence_group_id', null)->get();
         $presenceGroups = PresenceGroup::all();
 
         return view('presence.list_and_manage', ['presences' => $presences, 'presenceGroups' => $presenceGroups]);
@@ -371,8 +371,19 @@ class PresenceController extends Controller
 
         // ijin berdasarkan lorong masing2
         $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
+
         // need approval
-        $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
+        if($for == 'lorong'){
+            $arr_santri = [];
+            if (auth()->user()->santri->lorongUnderLead) {
+                foreach (auth()->user()->santri->lorongUnderLead->members as $santri) {
+                    $arr_santri[] = $santri->id;
+                }
+            }
+            $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->whereIn('fkSantri_id', $arr_santri)->get();
+        }else{
+            $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
+        }
 
         // alpha
         $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
@@ -582,6 +593,8 @@ class PresenceController extends Controller
             'total_mhs' => CountDashboard::total_mhs('all'),
             'event_date' => $request->input('event_date')
         ]);
+        
+        PresenceGroupsChecker::checkPermitGenerators();
 
         if (!$inserted)
             return redirect()->route('create presence in group', $request->route('id'))->withErrors(['failed_creating_presence_in_group', 'Gagal menambah presensi pada grup.']);

@@ -120,7 +120,7 @@ Route::get('/lorong/list', [App\Http\Controllers\LorongController::class, 'list_
 Route::get('/lorong/list/create', [App\Http\Controllers\LorongController::class, 'create'])->name('create lorong')->middleware('permission:create lorongs');
 Route::get('/lorong/list/{id}', [App\Http\Controllers\LorongController::class, 'view'])->name('view lorong')->middleware('permission:view lorongs list');
 Route::get('/lorong/list/{id}/add-member', [App\Http\Controllers\LorongController::class, 'add_member'])->name('add lorong member')->middleware('permission:add lorong members');
-Route::get('/lorong/list/{id}/add-member/store', [App\Http\Controllers\LorongController::class, 'store_member'])->name('store lorong member')->middleware('permission:add lorong members');
+Route::post('/lorong/list/{id}/add-member/store', [App\Http\Controllers\LorongController::class, 'store_member'])->name('store lorong member')->middleware('permission:add lorong members');
 Route::get('/lorong/list/{id}/delete-member/{santriId}', [App\Http\Controllers\LorongController::class, 'delete_member'])->name('delete lorong member')->middleware('permission:remove lorong members');
 Route::post('/lorong/list/store', [App\Http\Controllers\LorongController::class, 'store'])->name('store lorong')->middleware('permission:create lorongs');
 Route::post('/lorong/list/update/{id}', [App\Http\Controllers\LorongController::class, 'update'])->name('update lorong')->middleware('permission:update lorongs');
