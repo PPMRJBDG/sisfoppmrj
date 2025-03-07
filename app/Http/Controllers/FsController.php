@@ -17,25 +17,37 @@ class FsController extends Controller
     {
         $original_data  = file_get_contents('php://input');
         $decoded_data   = json_decode($original_data, true);
-        WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
+        // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
 
-        if (isset($decoded_data['type']) AND isset($decoded_data['cloud_id'])){
-            $type       = $decoded_data['type'];
-            $cloud_id   = $decoded_data['cloud_id'];
-            $created_at = date('Y-m-d H:i:s');
+        #ambil data body
+        $body = file_get_contents('php://input');
 
-            if($type=='attlog'){
-                echo "OK";
-            }elseif($type=='set_userinfo'){
-                echo "OK";
-            }elseif($type=='get_userinfo'){
-                $pin_santri_id   = $decoded_data['data']['pin'];
-                $santri = Santri::find($pin_santri_id);
-                $santri->template_fs = $decoded_data['data']['template'];
-                $santri->save();
-                echo "OK";
-            }
-        }
+        #simpan data body ke file .txt
+        $file = "data.txt";
+        $data = file_get_contents($file);
+        $data .= $body."\n";
+        file_put_contents($file, $data);
+
+        #respon
+        echo "OK";
+
+        // if (isset($decoded_data['type']) AND isset($decoded_data['cloud_id'])){
+        //     $type       = $decoded_data['type'];
+        //     $cloud_id   = $decoded_data['cloud_id'];
+        //     $created_at = date('Y-m-d H:i:s');
+
+        //     if($type=='attlog'){
+        //         echo "OK";
+        //     }elseif($type=='set_userinfo'){
+        //         echo "OK";
+        //     }elseif($type=='get_userinfo'){
+        //         $pin_santri_id   = $decoded_data['data']['pin'];
+        //         $santri = Santri::find($pin_santri_id);
+        //         $santri->template_fs = $decoded_data['data']['template'];
+        //         $santri->save();
+        //         echo "OK";
+        //     }
+        // }
     }
 }
 ?>
