@@ -32,6 +32,7 @@ ENHANCHEMENT:
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 // Route::get('/{tb}', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 
+Route::get('/fs01', [App\Http\Controllers\FsController::class, 'fs01']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/home/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/tabgraf/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'tabgraf']);
@@ -86,7 +87,7 @@ Route::get('/presensi/list/{id}', [App\Http\Controllers\PresenceController::clas
 // Route::get('/presensi/list/{id}/{lorong}', [App\Http\Controllers\PresenceController::class, 'view'])->name('view presence lorong')->middleware('permission:view presences list');
 Route::get('/presensi/list/{id}/present/create', [App\Http\Controllers\PresenceController::class, 'create_present'])->name('create present')->middleware('permission:create presents');
 Route::post('/presensi/list/store', [App\Http\Controllers\PresenceController::class, 'store'])->name('store presence')->middleware('permission:create presents');
-Route::post('/presensi/list/update/{id}', [App\Http\Controllers\PresenceController::class, 'update'])->name('update presence')->middleware('permission:update presences');
+Route::post('/presensi/list/update/{id}', [App\Http\Controllers\PresenceController::class, 'update'])->name('update presence')->middleware('role:superadmin|rj1|wk');
 Route::get('/presensi/list/edit/{id}', [App\Http\Controllers\PresenceController::class, 'edit'])->name('edit presence')->middleware('permission:update presences');
 Route::get('/presensi/list/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete'])->name('delete presence')->middleware('permission:delete presences');
 Route::get('/presensi/{id}', [App\Http\Controllers\PresenceController::class, 'create_my_present'])->name('create my present')->middleware('role:santri');

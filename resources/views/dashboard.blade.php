@@ -198,7 +198,7 @@
                                 <div class="col-12 mb-2">
                                     <div class="">
                                         <div class="card-body p-2 text-center">
-                                            <h6 class="text-sm font-weight-bolder">
+                                            <h6 class="text-sm font-weight-bolder bg-primary p-2 text-white">
                                                 {{$pg->name}}
                                                 (<?php
                                                     if ($datapg[$pg->id]['loopr'] != 0) {
@@ -212,7 +212,7 @@
                                                 <table class="table align-items-center mb-0">
                                                     <thead>
                                                         <tr class="text-xs">
-                                                            <th class="text-uppercase font-weight-bolder">TANGGAL</th>
+                                                            <th class="text-uppercase font-weight-bolder bg-grey">TANGGAL</th>
                                                             <th class="text-uppercase font-weight-bolder">STATUS</th>
                                                         </tr>
                                                     </thead>

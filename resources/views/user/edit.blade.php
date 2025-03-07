@@ -22,7 +22,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="example-text-input" class="form-control-label">ID</label>
+            <label for="example-text-input" class="form-control-label">ID User</label>
             <input class="form-control" type="text" value="{{ $user->id }}" required readonly>
           </div>
         </div>
@@ -220,7 +220,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label for="example-text-input" class="form-control-label">ID Santri</label>
+              <label for="example-text-input" class="form-control-label">ID Santri & Fingerprint</label>
               <input class="form-control" type="text" name="santri_id" value="{{ $user->santri->id }}" required readonly>
             </div>
           </div>
