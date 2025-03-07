@@ -7,6 +7,7 @@ use App\Models\PresenceGroup;
 use App\Models\Presence;
 use App\Models\Present;
 use App\Models\Santri;
+use App\Helpers\WaSchedules;
 
 // Set UserInfo
 
@@ -22,6 +23,7 @@ class FsController extends Controller
             $type       = $decoded_data['type'];
             $cloud_id   = $decoded_data['cloud_id'];
             $created_at = date('Y-m-d H:i:s');
+            WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
 
             if($type=='set_userinfo'){
                 echo "OK - SET USER INFO";
