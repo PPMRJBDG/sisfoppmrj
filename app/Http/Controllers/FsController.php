@@ -26,9 +26,9 @@ class FsController extends Controller
             if($type=='set_userinfo'){
                 echo "OK - SET USER INFO";
             }elseif($type=='get_userinfo'){
-                $pin_santri_id   = $decoded_data['data']['pin'];
+                $pin_santri_id   = 136; //$decoded_data['data']['pin'];
                 $santri = Santri::find($pin_santri_id);
-                $santri->template_fs = $decoded_data['data']['template'];
+                $santri->template_fs = 'djagfjdhagfjhdgfj'; //$decoded_data['data']['template'];
                 $santri->save();
                 echo "OK - GET USER INFO";
             }
