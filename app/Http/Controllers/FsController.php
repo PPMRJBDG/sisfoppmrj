@@ -24,7 +24,9 @@ class FsController extends Controller
             $cloud_id   = $decoded_data['cloud_id'];
             $created_at = date('Y-m-d H:i:s');
 
-            if($type=='set_userinfo'){
+            if($type=='attlog'){
+                echo "OK";
+            }elseif($type=='set_userinfo'){
                 echo "OK";
             }elseif($type=='get_userinfo'){
                 $pin_santri_id   = $decoded_data['data']['pin'];
