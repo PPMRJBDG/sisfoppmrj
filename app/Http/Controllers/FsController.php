@@ -17,7 +17,6 @@ class FsController extends Controller
     {
         $original_data  = file_get_contents('php://input');
         $decoded_data   = json_decode($original_data, true);
-        $encoded_data   = json_encode($decoded_data);
         WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
 
         if (isset($decoded_data['type']) AND isset($decoded_data['cloud_id'])){
@@ -26,13 +25,13 @@ class FsController extends Controller
             $created_at = date('Y-m-d H:i:s');
 
             if($type=='set_userinfo'){
-                echo "OK - SET USER INFO";
+                echo "OK";
             }elseif($type=='get_userinfo'){
-                $pin_santri_id   = 136; //$decoded_data['data']['pin'];
+                $pin_santri_id   = $decoded_data['data']['pin'];
                 $santri = Santri::find($pin_santri_id);
-                $santri->template_fs = 'djagfjdhagfjhdgfj'; //$decoded_data['data']['template'];
+                $santri->template_fs = $decoded_data['data']['template'];
                 $santri->save();
-                echo "OK - GET USER INFO";
+                echo "OK";
             }
         }
     }
