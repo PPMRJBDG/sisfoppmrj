@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PresenceGroup;
 use App\Models\Presence;
 use App\Models\Present;
+use App\Models\Santri;
 
 // Set UserInfo
 
@@ -24,6 +25,11 @@ class FsController extends Controller
 
             if($type=='set_userinfo'){
                 echo "OK - SET USER INFO";
+            }elseif($type=='get_userinfo'){
+                $pin_santri_id   = $decoded_data['data']['pin'];
+                $santri = Santri::find($pin_santri_id);
+                $santri->template_fs = $decoded_data['data']['template'];
+                echo "OK - GET USER INFO";
             }
         }
     }

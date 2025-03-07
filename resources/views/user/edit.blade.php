@@ -229,6 +229,14 @@
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
+              <label for="example-text-input" class="form-control-label">Template Fingerprint</label>
+              <input class="form-control" type="text" name="template_fs" value="{{ isset($user->santri) ? $user->santri->template_fs : ''}}" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
               <label for="example-text-input" class="form-control-label">Nama Ortu (Bapak/Ibu)</label>
               <input class="form-control" type="text" name="nama_ortu" value="{{ isset($user->santri) ? $user->santri->nama_ortu : ''}}" placeholder="Contoh: Tamara Zayya">
             </div>

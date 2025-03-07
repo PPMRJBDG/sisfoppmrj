@@ -20,7 +20,8 @@ class Santri extends Model
         'join_at',
         'exit_at',
         'alasan_keluar',
-        'ids'
+        'ids',
+        'template_fs'
     ];
 
     public function monitoringMateris()

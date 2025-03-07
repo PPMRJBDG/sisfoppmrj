@@ -307,7 +307,7 @@ class UserController extends Controller
         $url = 'https://developer.fingerspot.io/api/set_userinfo';
         $data_fs = '{
                 "trans_id":"1", 
-                "cloud_id":"'.env('CLOUD_FS_ID').'", 
+                "cloud_id":"'.env('CLOUD_FS_ID01').'", 
                 "data":{
                     "pin":"'.$inserted_santri->id.'", 
                     "name":"'.$request->input('fullname').'", 
@@ -519,14 +519,14 @@ class UserController extends Controller
         $url = 'https://developer.fingerspot.io/api/set_userinfo';
         $data_fs = '{
                 "trans_id":"1", 
-                "cloud_id":"'.env('CLOUD_FS_ID').'", 
+                "cloud_id":"'.env('CLOUD_FS_ID01').'", 
                 "data":{
                     "pin":"'.$updated_santri->id.'", 
                     "name":"'.$request->input('fullname').'", 
                     "privilege":"1", 
                     "password":"159", 
                     "rfid": "0", 
-                    "template":""
+                    "template":"'.$request->input('template_fs').'"
                     }
                 }';
         $authorization = "Authorization: Bearer ".env('TOKEN_FS');
