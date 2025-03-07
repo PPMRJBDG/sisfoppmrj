@@ -29,6 +29,7 @@ class FsController extends Controller
                 $pin_santri_id   = $decoded_data['data']['pin'];
                 $santri = Santri::find($pin_santri_id);
                 $santri->template_fs = $decoded_data['data']['template'];
+                $santri->save();
                 echo "OK - GET USER INFO";
             }
         }
