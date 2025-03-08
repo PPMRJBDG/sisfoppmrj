@@ -18,31 +18,38 @@ class FsController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
-        
-            // Logika untuk memproses data webhook
-            echo "Data webhook diterima:\n";
-            print_r($data);
-        
-            // ...
+            $decoded_data   = json_decode($data, true);
+            WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
+
+            $type       = $decoded_data['type'];
+            $cloud_id   = $decoded_data['cloud_id'];
+            $created_at = date('Y-m-d H:i:s');
+
+            FsLogs::create([
+                'cloud_id' => $cloud_id,
+                'type' => $type,
+                'created_at' => $created_at,
+                'original_data' => json_encode($decoded_data)
+            ]);
         } else {
             echo "Permintaan bukan POST";
         }
         exit;
 
-        $original_data  = file_get_contents('php://input');
-        $decoded_data   = json_decode($original_data, true);
+        // $original_data  = file_get_contents('php://input');
+        // $decoded_data   = json_decode($original_data, true);
         // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
 
-        $type       = $decoded_data['type'];
-        $cloud_id   = $decoded_data['cloud_id'];
-        $created_at = date('Y-m-d H:i:s');
+        // $type       = $decoded_data['type'];
+        // $cloud_id   = $decoded_data['cloud_id'];
+        // $created_at = date('Y-m-d H:i:s');
 
-        FsLogs::create([
-            'cloud_id' => $cloud_id,
-            'type' => $type,
-            'created_at' => $created_at,
-            'original_data' => json_encode($decoded_data)
-        ]);
+        // FsLogs::create([
+        //     'cloud_id' => $cloud_id,
+        //     'type' => $type,
+        //     'created_at' => $created_at,
+        //     'original_data' => json_encode($decoded_data)
+        // ]);
 
         // if($type=='attlog'){
         //     echo "OK";
