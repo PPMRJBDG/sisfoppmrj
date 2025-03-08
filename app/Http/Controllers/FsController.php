@@ -16,10 +16,10 @@ class FsController extends Controller
 {
     public function fs01(Request $request)
     {
+        WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
             $decoded_data   = json_decode($data, true);
-            WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
 
             $type       = $decoded_data['type'];
             $cloud_id   = $decoded_data['cloud_id'];
