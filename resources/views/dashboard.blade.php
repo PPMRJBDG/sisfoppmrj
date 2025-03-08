@@ -1,4 +1,4 @@
-@if($sign_in_out!=null)
+<!-- @if($sign_in_out!=null)
 @if($sign_in_out->sign_out=='')
 <div class="col-12 p-0 mb-2">
     <div class="card shadow border p-2">
@@ -13,7 +13,7 @@
     </div>
 </div>
 @endif
-@endif
+@endif -->
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
 <div class="col-12 p-0 mb-2">

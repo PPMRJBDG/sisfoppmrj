@@ -303,35 +303,6 @@ class UserController extends Controller
             }
         }
 
-        // START FINGERSPOT
-        $url = 'https://developer.fingerspot.io/api/set_userinfo';
-        $data_fs = '{
-                "trans_id":"'.date("YmdHis").'", 
-                "cloud_id":"'.env('CLOUD_FS_ID01').'", 
-                "data":{
-                    "pin":"'.$inserted_santri->id.'", 
-                    "name":"'.$request->input('fullname').'", 
-                    "privilege":"1", 
-                    "password":"159", 
-                    "rfid": "0", 
-                    "template":""
-                    }
-                }';
-        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        // print_r ($result);
-        // END FINGERSPOT
-
         if ($request->input('role-santri'))
             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('create user'))->with('success', 'Berhasil menambah user baru dengan role santri.');
         else
@@ -349,26 +320,6 @@ class UserController extends Controller
 
         $user = User::find($id);
         $lorongs = Lorong::all();
-
-        $santri = Santri::where('fkUser_id',$id)->first();
-        if($santri!=null){
-            $url = 'https://developer.fingerspot.io/api/get_userinfo';
-            $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.env('CLOUD_FS_ID01').'", "pin":"'.$santri->id.'"}';
-            $authorization = "Authorization: Bearer ".env('TOKEN_FS');
-
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            // print_r ($result);
-            // exit;
-        }
 
         return view('user.edit', ['user' => $user, 'lorongs' => $lorongs]);
     }
@@ -534,34 +485,6 @@ class UserController extends Controller
             $caption = CommonHelpers::settings()->wa_info_lulus;
             WaSchedules::save($request->input('fullname') . ' Lulus', $caption, WaSchedules::getContactId($request->input('nohp')));
         }
-
-        // START FINGERSPOT
-        $url = 'https://developer.fingerspot.io/api/set_userinfo';
-        $data_fs = '{
-                "trans_id":"'.date("YmdHis").'", 
-                "cloud_id":"'.env('CLOUD_FS_ID01').'", 
-                "data":{
-                    "pin":"'.$updated_santri->id.'", 
-                    "name":"'.$request->input('fullname').'", 
-                    "privilege":"1", 
-                    "password":"159", 
-                    "rfid": "0", 
-                    "template":"'.$request->input('template_fs').'"
-                    }
-                }';
-        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        // END FINGERSPOT
 
         if ($request->input('role-santri'))
             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->with('success', 'Berhasil mengubah user dan data santri.');

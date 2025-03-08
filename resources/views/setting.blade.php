@@ -77,6 +77,29 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                 </div>
             </div>
         </div>
+        <!-- sync fingerspot -->
+        <div class="col-md-12 mb-2">
+            <div class="card border p-2 shadow-lg">
+                <div class="">
+                    <form action="{{ route('sync fs') }}" id="upload-file" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        Sinkroniasi dengan Fingerprint
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- Periode Tahun -->
         <div class="col-md-12 mb-2">
             <div class="card border p-2 shadow-lg">

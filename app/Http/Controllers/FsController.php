@@ -2,67 +2,179 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 // use App\Models\PresenceGroup;
-// use App\Models\Presence;
-// use App\Models\Present;
+use App\Models\Presence;
+use App\Models\Settings;
+use App\Models\Present;
 use App\Models\Santri;
 use App\Models\FsLogs;
+use App\Models\SpWhatsappPhoneNumbers;
 use App\Helpers\WaSchedules;
 
 // Set UserInfo
 
 class FsController extends Controller
 {
+    public function sync(){
+        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
+        $cloud_fs = env('CLOUD_FS_ID01');
+        $split_cloud_fs = explode(",", $cloud_fs);
+
+        foreach($split_cloud_fs as $cfs){
+            // SET USERINFO
+            $set_santri = DB::table('v_user_santri')->get();
+            foreach ($set_santri as $vs) {
+                $url = 'https://developer.fingerspot.io/api/set_userinfo';
+                $data_fs = '{
+                        "trans_id":"'.date("YmdHis").'", 
+                        "cloud_id":"'.$cfs.'", 
+                        "data":{
+                            "pin":"'.$vs->santri_id.'", 
+                            "name":"'.$vs->fullname.'", 
+                            "privilege":"1", 
+                            "password":"159", 
+                            "rfid": "0", 
+                            "template":"'.$vs->template_fs.'"
+                            }
+                        }';
+
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                $result = curl_exec($ch);
+                curl_close($ch);
+            }
+
+            // GET USERINFO
+            foreach ($set_santri as $vs) {
+                $url = 'https://developer.fingerspot.io/api/get_userinfo';
+                $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", "pin":"'.$vs->santri_id.'"}';
+
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                $result = curl_exec($ch);
+                curl_close($ch);
+            }
+        }
+
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi.');
+    }
+
     public function fs01(Request $request)
     {
-        // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
-        
         $decoded_data   = $request->all();
 
         if($decoded_data!=null){
             $type       = $decoded_data['type'];
             $cloud_id   = $decoded_data['cloud_id'];
+            $trans_id   = $decoded_data['trans_id'];
+            $santri_id  = $decoded_data['data']['pin'];
+            $scan_verify  = $decoded_data['data']['verify'];
             $created_at = date('Y-m-d H:i:s');
 
-            FsLogs::create([
-                'cloud_id' => $cloud_id,
-                'type' => $type,
-                'created_at' => $created_at,
-                'original_data' => json_encode($decoded_data)
-            ]);
+            if($type=='attlog'){
+                FsLogs::create([
+                    'cloud_id' => $cloud_id,
+                    'type' => $type,
+                    'trans_id' => $trans_id,
+                    'created_at' => $created_at,
+                    'original_data' => json_encode($decoded_data)
+                ]);
+
+                try {
+                    $datetime = date("Y-m-d H:i:s");
+                    $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
+                        ->where('presence_end_date_time', '>=', $datetime)->first();
+                    $setting = Settings::find(1);
+                    $get_santri = Santri::find($santri_id);
+                    if ($presence == null) {
+                        // kirim WA ke mahasiswa
+                        $nohp = $get_santri->user->nohp;
+                        if ($nohp != '') {
+                            if ($nohp[0] == '0') {
+                                $nohp = '62' . substr($nohp, 1);
+                            }
+                            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                $query->where('name', 'NOT LIKE', '%Bulk%');
+                            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                            if ($wa_phone != null) {
+                                WaSchedules::save('Presensi: Null', 'Maaf, saat ini belum ada KBM', $wa_phone->pid);
+                            }
+                        }
+                    } else {
+                        $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri_id)->first();
+                        if ($existingPresent == null) {
+                            // sign in
+                            $sign_in = date("Y-m-d H:i:s");
+                            $is_late = 0;
+                            if ($sign_in > $presence->start_date_time) {
+                                $is_late = 1;
+                            }
+                            $inserted = Present::create([
+                                'fkSantri_id' => $santri_id,
+                                'fkPresence_id' => $presence->id,
+                                'sign_in' => $sign_in,
+                                'updated_by' => 'Fingerprint',
+                                'is_late' => $is_late
+                            ]);
+
+                            // kirim WA ke mahasiswa
+                            if ($inserted) {
+                                $nohp_ortu = $get_santri->nohp_ortu;
+                                if ($nohp_ortu != '') {
+                                    if ($nohp_ortu[0] == '0') {
+                                        $nohp_ortu = '62' . substr($nohp_ortu, 1);
+                                    }
+                                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+                                    if ($wa_phone != null) {
+                                        WaSchedules::save('Presensi: Berhasil', $get_santri->user->fullname.' saat ini telah hadir pada KBM '.$presence->name, $wa_phone->pid);
+                                    }
+                                }
+                            }else{
+                                $nohp = $get_santri->user->nohp;
+                                if ($nohp != '') {
+                                    if ($nohp[0] == '0') {
+                                        $nohp = '62' . substr($nohp, 1);
+                                    }
+                                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                        $query->where('name', 'NOT LIKE', '%Bulk%');
+                                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                                    if ($wa_phone != null) {
+                                        WaSchedules::save('Presensi: Gagal', 'Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception $err) {
+                    WaSchedules::save('Fingerprint Error', 'Fingerprint Error, segera lakukan perbaikan, dan jika masih terkendala silahkan koor lorong melakukan input presensi melalui Sisfo', 'wa_ketertiban_group_id');
+                }
+            }elseif($type=='get_userinfo'){
+                $get_santri = Santri::find($santri_id);
+                $get_santri->template_fs = $decoded_data['data']['template'];
+                $get_santri->save();
+            }
+
             echo "Ok";
         }else{
             echo "Null";
         }
         exit;
-
-        // $original_data  = file_get_contents('php://input');
-        // $decoded_data   = json_decode($original_data, true);
-        // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
-
-        // $type       = $decoded_data['type'];
-        // $cloud_id   = $decoded_data['cloud_id'];
-        // $created_at = date('Y-m-d H:i:s');
-
-        // FsLogs::create([
-        //     'cloud_id' => $cloud_id,
-        //     'type' => $type,
-        //     'created_at' => $created_at,
-        //     'original_data' => json_encode($decoded_data)
-        // ]);
-
-        // if($type=='attlog'){
-        //     echo "OK";
-        // }elseif($type=='set_userinfo'){
-        //     echo "OK";
-        // }elseif($type=='get_userinfo'){
-        //     $pin_santri_id   = $decoded_data['data']['pin'];
-        //     $santri = Santri::find($pin_santri_id);
-        //     $santri->template_fs = $decoded_data['data']['template'];
-        //     $santri->save();
-        //     echo "OK";
-        // }
     }
 }
 ?>
