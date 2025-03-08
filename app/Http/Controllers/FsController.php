@@ -18,18 +18,23 @@ class FsController extends Controller
     {
         // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
         
-        $decoded_data   = json_decode($request->all(), true);
+        $decoded_data   = $request->all();
 
-        $type       = $decoded_data['type'];
-        $cloud_id   = $decoded_data['cloud_id'];
-        $created_at = date('Y-m-d H:i:s');
+        if($decoded_data!=null){
+            $type       = $decoded_data['type'];
+            $cloud_id   = $decoded_data['cloud_id'];
+            $created_at = date('Y-m-d H:i:s');
 
-        FsLogs::create([
-            'cloud_id' => $cloud_id,
-            'type' => $type,
-            'created_at' => $created_at,
-            'original_data' => json_encode($decoded_data)
-        ]);
+            FsLogs::create([
+                'cloud_id' => $cloud_id,
+                'type' => $type,
+                'created_at' => $created_at,
+                'original_data' => json_encode($decoded_data)
+            ]);
+            echo "Ok";
+        }else{
+            echo "Null";
+        }
         exit;
 
         // $original_data  = file_get_contents('php://input');
