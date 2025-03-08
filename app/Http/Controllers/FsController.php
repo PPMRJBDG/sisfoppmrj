@@ -17,7 +17,7 @@ use App\Helpers\WaSchedules;
 
 class FsController extends Controller
 {
-    public function sync(){
+    public function sync(Request $request){
         $authorization = "Authorization: Bearer ".env('TOKEN_FS');
         $cloud_fs = env('CLOUD_FS_ID01');
         $split_cloud_fs = explode(",", $cloud_fs);
