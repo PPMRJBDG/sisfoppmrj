@@ -16,24 +16,20 @@ class FsController extends Controller
 {
     public function fs01(Request $request)
     {
-        WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = $_POST;
-            $decoded_data   = json_decode($data, true);
+        // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
+        $data = $_POST;
+        $decoded_data   = json_decode($data, true);
 
-            $type       = $decoded_data['type'];
-            $cloud_id   = $decoded_data['cloud_id'];
-            $created_at = date('Y-m-d H:i:s');
+        $type       = $decoded_data['type'];
+        $cloud_id   = $decoded_data['cloud_id'];
+        $created_at = date('Y-m-d H:i:s');
 
-            FsLogs::create([
-                'cloud_id' => $cloud_id,
-                'type' => $type,
-                'created_at' => $created_at,
-                'original_data' => json_encode($decoded_data)
-            ]);
-        } else {
-            echo "Permintaan bukan POST";
-        }
+        FsLogs::create([
+            'cloud_id' => $cloud_id,
+            'type' => $type,
+            'created_at' => $created_at,
+            'original_data' => json_encode($decoded_data)
+        ]);
         exit;
 
         // $original_data  = file_get_contents('php://input');
