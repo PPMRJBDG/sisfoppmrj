@@ -32,7 +32,7 @@ ENHANCHEMENT:
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 // Route::get('/{tb}', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 
-Route::get('/fs01', [App\Http\Controllers\FsController::class, 'fs01']);
+Route::post('/fs01', [App\Http\Controllers\FsController::class, 'fs01']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/home/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/tabgraf/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'tabgraf']);

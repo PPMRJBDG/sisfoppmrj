@@ -13,10 +13,23 @@ use App\Helpers\WaSchedules;
 
 class FsController extends Controller
 {
-    public function fs01()
+    public function fs01(Request $request)
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST;
+        
+            // Logika untuk memproses data webhook
+            echo "Data webhook diterima:\n";
+            print_r($data);
+        
+            // ...
+        } else {
+            echo "Permintaan bukan POST";
+        }
+        exit;
+
         $original_data  = file_get_contents('php://input');
-        $decoded_data   = json_decode($original_data);
+        $decoded_data   = json_decode($original_data, true);
         // WaSchedules::save('Testing', 'Masuk FS01 - Fingerprint', 'wa_ketertiban_group_id');
 
         $type       = $decoded_data['type'];
