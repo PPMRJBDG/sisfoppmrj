@@ -81,7 +81,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <div class="col-md-12 mb-2">
             <div class="card border p-2 shadow-lg">
                 <div class="">
-                    <form action="{{ route('sync fs') }}" id="upload-file" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('sync fs') }}" id="sync-fs" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">

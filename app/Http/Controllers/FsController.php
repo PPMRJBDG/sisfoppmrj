@@ -82,10 +82,10 @@ class FsController extends Controller
             $cloud_id   = $decoded_data['cloud_id'];
             $trans_id   = $decoded_data['trans_id'];
             $santri_id  = $decoded_data['data']['pin'];
-            $scan_verify  = $decoded_data['data']['verify'];
             $created_at = date('Y-m-d H:i:s');
 
             if($type=='attlog'){
+                $scan_verify  = $decoded_data['data']['verify'];
                 FsLogs::create([
                     'cloud_id' => $cloud_id,
                     'type' => $type,
