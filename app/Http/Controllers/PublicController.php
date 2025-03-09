@@ -72,17 +72,17 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                             }
                         }
 
-                        if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
-                            $infodp_xxz = $setting->org_name . ' 1 dan 2';
-                            if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
-                                $infodp_xxz = $setting->org_name . ' 2';
-                            } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
-                                $infodp_xxz = $setting->org_name . ' 1';
-                            }
-                            $infodp = '*[' . $setting->apps_name . ']* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
-                            WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
-                            $time_post++;
-                        }
+                        // if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
+                        //     $infodp_xxz = $setting->org_name . ' 1 dan 2';
+                        //     if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
+                        //         $infodp_xxz = $setting->org_name . ' 2';
+                        //     } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
+                        //         $infodp_xxz = $setting->org_name . ' 1';
+                        //     }
+                        //     $infodp = '*[' . $setting->apps_name . ']* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
+                        //     WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
+                        //     $time_post++;
+                        // }
                     }
                 }
 
@@ -103,28 +103,28 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
         } else if ($time == 'daily') {
             $time_post = 1;
             // update pemutihan
-            $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
-            foreach ($get_pelanggaran as $gp) {
-                $today = date("Y-m-d");
-                $first_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($gp->is_surat_peringatan)) . " + 1 year"));
-                if ($first_date == $today) {
-                    $set_archive = Pelanggaran::find($gp->id);
-                    $set_archive->is_archive = 1;
-                    if ($set_archive->save()) {
-                        $caption = 'Pemutihan SP ' . $gp->keringanan_sp . ' an. ' . $gp->santri->user->fullname;
-                        WaSchedules::save($caption, $caption, 'wa_dewanguru_group_id', $time_post, true);
-                        $time_post++;
-                    }
-                }
-                // khusus KBM status masih dipantau
-                if ($gp->fkJenis_pelanggaran_id == 14) {
-                    if ($gp->periode_tahun != CommonHelpers::periode() && $gp->is_surat_peringatan == '') {
-                        $set_archive = Pelanggaran::find($gp->id);
-                        $set_archive->is_archive = 1;
-                        $set_archive->save();
-                    }
-                }
-            }
+            // $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
+            // foreach ($get_pelanggaran as $gp) {
+            //     $today = date("Y-m-d");
+            //     $first_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($gp->is_surat_peringatan)) . " + 1 year"));
+            //     if ($first_date == $today) {
+            //         $set_archive = Pelanggaran::find($gp->id);
+            //         $set_archive->is_archive = 1;
+            //         if ($set_archive->save()) {
+            //             $caption = 'Pemutihan SP ' . $gp->keringanan_sp . ' an. ' . $gp->santri->user->fullname;
+            //             WaSchedules::save($caption, $caption, 'wa_dewanguru_group_id', $time_post, true);
+            //             $time_post++;
+            //         }
+            //     }
+            //     // khusus KBM status masih dipantau
+            //     if ($gp->fkJenis_pelanggaran_id == 14) {
+            //         if ($gp->periode_tahun != CommonHelpers::periode() && $gp->is_surat_peringatan == '') {
+            //             $set_archive = Pelanggaran::find($gp->id);
+            //             $set_archive->is_archive = 1;
+            //             $set_archive->save();
+            //         }
+            //     }
+            // }
 
             // bulk presensi harian ke wa group ortu
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
@@ -157,25 +157,26 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
 ';
                                 // info ke ortu
-                                if ($setting->wa_info_alpha_ortu == 1) {
-                                    $caption_ortu = 'Assalamualaikum Wr Wb,
-Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
+//                                 if ($setting->wa_info_alpha_ortu == 1) {
+//                                     $caption_ortu = 'Assalamualaikum Wr Wb,
+// Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
 
-Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
-*' . $d['lorong'] . '*.
+// Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
+// *' . $d['lorong'] . '*.
 
-Ajzkh 🙏🏻';
-                                    WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, true);
-                                    $time_post++;
-                                }
+// Alhamdulillahi Jazaakumullaahu Khoiro 🙏🏻';
+//                                     WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, true);
+//                                     $time_post++;
+//                                 }
                             }
                         }
                     }
                 }
                 $caption = $caption . '
 NB:
-- Jika ada keperluan, dapat melakukan input ijin melalui sisfo
-- Apabila terdapat ketidaksesuaian, amalsholih menghubungi pengurus atau koor lorong';
+- Jika ada keperluan, dapat melakukan input ijin melalui Sisfo
+- Jika dalam 1 bulan kehadiran < 80%, akan ada pemanggilan dan kafaroh
+- Apabila terdapat ketidaksesuaian, amalsholih menghubungi Pengurus atau Koor Lorong';
 
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
                 if ($contact_id != '' && count($get_presence) > 0) {
@@ -260,7 +261,7 @@ NB:
             }
 
             if (count($data_mhs) > 0) {
-                WaSchedules::save('Weekly Report', $data_presensi_weekly, 'wa_ketertiban_group_id', 1);
+                WaSchedules::save('Weekly Report', $data_presensi_weekly, WaSchedules::getContactId('120363393787316837@g.us'), 1);
 
                 // kirim ke ortu
                 $time_post = 2;
@@ -399,7 +400,7 @@ NB:
                     }
                 }
             }
-            $contact_id = 'wa_ketertiban_group_id';
+            $contact_id = WaSchedules::getContactId('120363393787316837@g.us');
             WaSchedules::save('Amrin Jami Tanpa Ijin Bulan ' . $last_month, $caption, $contact_id, $time_post);
             $time_post++;
 
@@ -450,7 +451,7 @@ NB:
 ' . $nox . ' *' . $casp->santri->user->fullname . '*: ' . $casp->jenis->jenis_pelanggaran . ' (SP ' . $casp->keringanan_sp . ')';
                 $nox++;
             }
-            $contact_id = 'wa_ketertiban_group_id';
+            $contact_id = WaSchedules::getContactId('120363393787316837@g.us');
             WaSchedules::save('Data Pelanggaran Aktif', $caption_pelanggaran, $contact_id, $time_post);
             $time_post++;
 
@@ -462,66 +463,42 @@ NB:
             PresenceGroupsChecker::checkPresenceGroups();
             $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
             if ($get_presence_today != null) {
-                $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
-                foreach ($view_usantri as $mhs) {
-                    $permit = Permit::where('fkPresence_id', $get_presence_today->id)->where('fkSantri_id', $mhs->santri_id)->where('status', 'approved')->first();
-                    if (!$permit) {
-                        $existingPresent = Present::where('fkPresence_id', '=', $get_presence_today->id, 'and')->where('fkSantri_id', '=', $mhs->santri_id)->first();
-                        if (!$existingPresent) {
-                            if ($setting->auto_generate_hadir) {
-                                $inserted = Present::create([
-                                    'fkSantri_id' => $mhs->santri_id,
-                                    'fkPresence_id' => $get_presence_today->id,
-                                    'is_late' => 0
-                                ]);
-                            }
+                // if ($setting->auto_generate_hadir) {
+                //     $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
+                //     foreach ($view_usantri as $mhs) {
+                //         $permit = Permit::where('fkPresence_id', $get_presence_today->id)->where('fkSantri_id', $mhs->santri_id)->where('status', 'approved')->first();
+                //         if (!$permit) {
+                //             $existingPresent = Present::where('fkPresence_id', '=', $get_presence_today->id, 'and')->where('fkSantri_id', '=', $mhs->santri_id)->first();
+                //             if (!$existingPresent) {
+                //                 $inserted = Present::create([
+                //                     'fkSantri_id' => $mhs->santri_id,
+                //                     'fkPresence_id' => $get_presence_today->id,
+                //                     'is_late' => 0
+                //                 ]);
+                //             }
+                //         }
+                //     }
+                // }
+
+                // alpha
+                $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
+                if (count($mhs_alpha) > 0) {
+                    foreach ($mhs_alpha as $d) {
+                        // info ke ortu
+                        if ($setting->wa_info_alpha_ortu == 1) {
+                            $caption_ortu = 'Menginformasikan bahwa *' . $d['name'] . '* tadi tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
+
+Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
+*' . $d['lorong'] . '*.';
+                            WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, false);
+                            $time_post++;
                         }
                     }
-                }
-
-                $contact_id = 'wa_ketertiban_group_id';
-                $pengajar_1 = '-';
-                if ($get_presence_today->fkDewan_pengajar_1 != '') {
-                    $pengajar_1 = $get_presence_today->dewanPengajar1->name;
-                }
-                $pengajar_2 = '-';
-                if ($get_presence_today->fkDewan_pengajar_2 != '') {
-                    $pengajar_2 = $get_presence_today->dewanPengajar2->name;
-                }
-
-                if ($get_presence_today->is_hasda) {
-                    $pemateri1 = 'Penyampai Dalil / PPG';
-                    $pemateri2 = 'Penyampai Teks / Naslis';
-                } else {
-                    $pemateri1 = 'Pengajar ' . $setting->org_name . ' 1';
-                    $pemateri2 = 'Pengajar ' . $setting->org_name . ' 2';
-                }
-
-                $caption = 'Link Presensi *' . $get_presence_today->name . '*:
-' . $setting->host_url . '/presensi/list/' . $get_presence_today->id . '
-
-' . $pemateri1 . ': *' . $pengajar_1 . '*
-' . $pemateri2 . ': *' . $pengajar_2 . '*
-
-Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar, silahkan disesuaikan lagi';
-                WaSchedules::save('Link Presensi Ketertiban', $caption, $contact_id, 1, true);
-
-                $contact_id = 'wa_dewanguru_group_id';
-                $caption = 'Link Presensi *' . $get_presence_today->name . '*:
-' . $setting->host_url . '/dwngr/list/' . $get_presence_today->id . '
-
-' . $pemateri1 . ': *' . $pengajar_1 . '*
-' . $pemateri2 . ': *' . $pengajar_2 . '*';
-                WaSchedules::save('Link Presensi Dewan Guru', $caption, $contact_id, 2, true);
-
-                if ($setting->wa_link_presensi_koor) {
-                    WaSchedules::save('Link Presensi Koor Lorong', $caption, 'Bulk Koor Lorong', 3, true);
                 }
             }
 
             echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
         } elseif ($time == 'jam-malam') {
-            // $contact_id = 'wa_ketertiban_group_id';
             $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
             if ($contact_id != null) {
                 WaSchedules::save('Jam Malam ' . date('d-m-Y'), $setting->wa_info_jaga_malam, $contact_id->id, 1, true);
@@ -742,7 +719,7 @@ Amalsholih segera mengabsen agar tidak lupa, jika ada penyesuaian dewan pengajar
             if ($permit->save()) {
                 $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
 *Alasan Ditolak:* Karena ' . $permit->alasan_rejected;
-                WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', null, true);
+                WaSchedules::save('Permit Rejected', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
 
                 $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
                 // kirim ke yg ijin

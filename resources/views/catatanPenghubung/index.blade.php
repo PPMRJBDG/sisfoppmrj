@@ -175,7 +175,7 @@
 
         var checkBox = document.getElementById("info-wa");
         if (checkBox.checked == true) {
-            datax['info_wa'] = true;
+            datax['info-wa'] = true;
         }
 
         $.post("{{ route('store catatan') }}", datax,

@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Divisies;
 use App\Models\Rabs;
+use App\Models\Banks;
 
 class RabInouts extends Model
 {
     protected $fillable = [
-        'posisi',
+        'fkBank_id',
         'pos',
         'fkDivisi_id',
         'fkRab_id',
@@ -35,5 +36,10 @@ class RabInouts extends Model
     public function rab()
     {
         return $this->belongsTo(Rabs::class, 'fkRab_id');
+    }
+
+    public function bank()
+    {
+        return $this->belongsTo(Banks::class, 'fkBank_id');
     }
 }

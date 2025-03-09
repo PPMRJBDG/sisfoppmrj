@@ -98,7 +98,7 @@ class WaSchedules
         $setting = Settings::first();
 
         // kirim ke group koor lorong
-        WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, 'wa_ketertiban_group_id', null, true);
+        WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
 
         // kirim ke ortu
         if ($caption_ortu != null) {

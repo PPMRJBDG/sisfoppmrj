@@ -342,7 +342,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         if ($request->input('inout_id') == '') {
             if ($request->input('jenis') == 'out') {
                 $data = RabInouts::create([
-                    'posisi' => $request->input('posisi'),
+                    'fkBank_id' => $request->input('fkBank_id'),
                     'pos' => $request->input('pos'),
                     'periode_tahun' => $request->input('periode_tahun'),
                     'fkDivisi_id' => $request->input('fkDivisi_id'),
@@ -356,7 +356,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 ]);
             } elseif ($request->input('jenis') == 'in') {
                 $data = RabInouts::create([
-                    'posisi' => $request->input('posisi'),
+                    'fkBank_id' => $request->input('fkBank_id'),
                     'pos' => $request->input('pos'),
                     'periode_tahun' => $request->input('periode_tahun'),
                     'fkDivisi_id' => $request->input('fkDivisi_id'),
@@ -369,7 +369,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 ]);
             } elseif ($request->input('jenis') == 'kuop') {
                 $data = RabInouts::create([
-                    'posisi' => $request->input('posisi'),
+                    'fkBank_id' => $request->input('fkBank_id'),
                     'pos' => $request->input('pos'),
                     'periode_tahun' => $request->input('periode_tahun'),
                     'tanggal' => $request->input('tanggal'),

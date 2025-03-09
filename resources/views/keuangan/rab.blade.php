@@ -220,6 +220,7 @@
         $('#modalPeriode').fadeIn();
         $('#modalPeriode').css('background', 'rgba(0, 0, 0, 0.7)');
         $('#modalPeriode').css('z-index', '10000');
+        // $('#modalPeriode').css('display', 'inline-table');
 
         for (var i = 1; i <= 12; i++) {
             for (var x = 1; x <= 5; x++) {

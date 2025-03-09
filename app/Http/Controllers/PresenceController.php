@@ -1136,7 +1136,7 @@ class PresenceController extends Controller
                     }
                 }
 
-                WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
+                WaSchedules::save('Permit Approval', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
                 return json_encode(['status' => true, 'message' => 'Ijin berhasil disetujui', 'is_present' => $is_present]);
             }
         } else {
@@ -1163,7 +1163,7 @@ class PresenceController extends Controller
 
             if ($updated) {
                 $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-                WaSchedules::save('Permit Approval', $caption, 'wa_ketertiban_group_id', null, true);
+                WaSchedules::save('Permit Approval', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
             } else {
                 return redirect()->back()->withErrors('failed_updating_permit', 'Izin gagal disetujui.');
             }
@@ -1285,7 +1285,7 @@ class PresenceController extends Controller
                     }
                 }
 
-                WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', $time_post, true);
+                WaSchedules::save('Permit Rejected', $caption, WaSchedules::getContactId('120363393787316837@g.us'), $time_post, true);
 
                 return json_encode(['status' => true, 'message' => 'Izin berhasil ditolak']);
             }
@@ -1307,7 +1307,7 @@ class PresenceController extends Controller
 
             if ($updated) {
                 $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-                WaSchedules::save('Permit Rejected', $caption, 'wa_ketertiban_group_id', 1, true);
+                WaSchedules::save('Permit Rejected', $caption, WaSchedules::getContactId('120363393787316837@g.us'), 1, true);
 
                 $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
                 // kirim ke yg ijin
@@ -2152,7 +2152,7 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
                     }
                 }
 
-                WaSchedules::save('Permit Delete', $caption, 'wa_ketertiban_group_id', null, true);
+                WaSchedules::save('Permit Delete', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
                 return json_encode(['status' => true, 'message' => 'Izin berhasil dihapus']);
             }
         } else {

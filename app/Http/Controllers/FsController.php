@@ -160,6 +160,18 @@ class FsController extends Controller
                                         $text_late = '';
                                         if($is_late){
                                             $text_late = 'terlambat';
+                                            $nohp = $get_santri->user->nohp;
+                                            if ($nohp != '') {
+                                                if ($nohp[0] == '0') {
+                                                    $nohp = '62' . substr($nohp, 1);
+                                                }
+                                                $wa_phone_santri = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                                    $query->where('name', 'NOT LIKE', '%Bulk%');
+                                                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                                                if ($wa_phone_santri != null) {
+                                                    WaSchedules::save('Presensi Terlambat', '*[Terlambat KBM]* Silahkan istighfar sebanyak 30x.', $wa_phone_santri->pid, null, true);
+                                                }
+                                            }
                                         }else{
                                             $text_late = 'tepat waktu';
                                         }
