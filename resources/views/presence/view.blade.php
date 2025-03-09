@@ -92,14 +92,14 @@
 <div class="row">
   <div class="col-sm-12 col-md-12">
     @if (session('santri_is_present'))
-    <div class="p-0 mt-2">
+    <div class="p-0 mt-2 mb-2">
       <div class="alert alert-warning text-white mb-0">
         {{ session('santri_is_present') }}
       </div>
     </div>
     @endif
     @if (session('success'))
-    <div class="p-0 mt-2">
+    <div class="p-0 mt-2 mb-2">
       <div class="alert alert-success text-white mb-0">
         {{ session('success') }}
       </div>

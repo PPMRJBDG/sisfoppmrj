@@ -164,7 +164,7 @@ class FsController extends Controller
                                             $text_late = 'tepat waktu';
                                         }
 
-                                        WaSchedules::save('Presensi: Berhasil', '*'.$get_santri->user->fullname.'* telah hadir '.$text_late.' pada '.$presence->name, $wa_phone->pid.' pukul '.$sign_in.'.');
+                                        WaSchedules::save('Presensi: Berhasil', '*'.$get_santri->user->fullname.'* telah hadir '.$text_late.' pada '.$presence->name.' | Tanggal & Jam: '.$sign_in.'.', $wa_phone->pid);
                                     }
                                 }
                             }else{

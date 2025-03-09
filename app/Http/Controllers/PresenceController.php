@@ -299,7 +299,7 @@ class PresenceController extends Controller
             if (!$updated)
                 return redirect()->back()->withErrors(['failed_updating_presence']);
 
-            return redirect()->route('view presence', $request->route('id'))->with('success', 'Berhasil menghapus presensi');
+            return redirect()->route('view presence', $request->route('id'))->with('success', 'Berhasil mengubah presensi');
         }
     }
 
