@@ -55,6 +55,7 @@ class FsController extends Controller
 
         return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - set user info.');
     }
+
     public function sync_getuserinfo(Request $request){
         $authorization = "Authorization: Bearer ".env('TOKEN_FS');
         $cloud_fs = env('CLOUD_FS_ID01');
@@ -62,6 +63,7 @@ class FsController extends Controller
 
         foreach($split_cloud_fs as $cfs){
             // GET USERINFO
+            $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
                 $url = 'https://developer.fingerspot.io/api/get_userinfo';
                 $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", "pin":"'.$vs->santri_id.'"}';
