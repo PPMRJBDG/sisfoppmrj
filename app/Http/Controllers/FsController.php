@@ -87,10 +87,12 @@ class FsController extends Controller
         $decoded_data   = $request->all();
 
         if($decoded_data!=null){
+            $created_at = date('Y-m-d H:i:s');
             $type       = $decoded_data['type'];
             $cloud_id   = $decoded_data['cloud_id'];
-            $trans_id   = $decoded_data['trans_id'];
-            $created_at = date('Y-m-d H:i:s');
+            if($type!='attlog'){
+                $trans_id   = $decoded_data['trans_id'];
+            }
             if($type=='attlog' || $type=='get_userinfo'){
                 $santri_id  = $decoded_data['data']['pin'];
             }
@@ -98,7 +100,7 @@ class FsController extends Controller
             FsLogs::create([
                 'cloud_id' => $cloud_id,
                 'type' => $type,
-                'trans_id' => $trans_id,
+                'trans_id' => ($type!='attlog') ? $trans_id : null,
                 'created_at' => $created_at,
                 'original_data' => json_encode($decoded_data)
             ]);
@@ -122,7 +124,7 @@ class FsController extends Controller
                                 $query->where('name', 'NOT LIKE', '%Bulk%');
                             })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                             if ($wa_phone != null) {
-                                WaSchedules::save('Presensi: Null', 'Maaf, saat ini belum ada KBM', $wa_phone->pid);
+                                WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM', $wa_phone->pid, null, true);
                             }
                         }
                     } else {
@@ -166,14 +168,14 @@ class FsController extends Controller
                                         $query->where('name', 'NOT LIKE', '%Bulk%');
                                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                                     if ($wa_phone != null) {
-                                        WaSchedules::save('Presensi: Gagal', 'Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid);
+                                        WaSchedules::save('Presensi: Gagal', '*[Fingerpritn]* Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid, null, true);
                                     }
                                 }
                             }
                         }
                     }
                 } catch (Exception $err) {
-                    WaSchedules::save('Fingerprint Error', 'Fingerprint Error, segera lakukan perbaikan, dan jika masih terkendala silahkan koor lorong melakukan input presensi melalui Sisfo', 'wa_ketertiban_group_id');
+                    WaSchedules::save('Fingerprint Error', '*[Fingerprint Error]*, Segera lakukan perbaikan, dan jika masih terkendala silahkan koor lorong melakukan input presensi melalui Sisfo', 'wa_ketertiban_group_id', null, true);
                 }
             }elseif($type=='set_userinfo'){
                 echo "Sukses - Set User Info";
