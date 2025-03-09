@@ -175,7 +175,7 @@ class FsController extends Controller
                                         $query->where('name', 'NOT LIKE', '%Bulk%');
                                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                                     if ($wa_phone != null) {
-                                        // WaSchedules::save('Presensi: Gagal', '*[Fingerprint]* Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid, null, true);
+                                        WaSchedules::save('Presensi: Gagal', '*[Fingerprint]* Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid, null, true);
                                     }
                                 }
                             }
