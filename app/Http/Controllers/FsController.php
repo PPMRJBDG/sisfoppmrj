@@ -81,7 +81,9 @@ class FsController extends Controller
             $type       = $decoded_data['type'];
             $cloud_id   = $decoded_data['cloud_id'];
             $trans_id   = $decoded_data['trans_id'];
-            $santri_id  = $decoded_data['data']['pin'];
+            if($type=='attlog' || $type=='get_userinfo'){
+                $santri_id  = $decoded_data['data']['pin'];
+            }
             $created_at = date('Y-m-d H:i:s');
 
             if($type=='attlog'){
@@ -164,13 +166,17 @@ class FsController extends Controller
                 } catch (Exception $err) {
                     WaSchedules::save('Fingerprint Error', 'Fingerprint Error, segera lakukan perbaikan, dan jika masih terkendala silahkan koor lorong melakukan input presensi melalui Sisfo', 'wa_ketertiban_group_id');
                 }
+            }elseif($type=='set_userinfo'){
+                echo "Sukses - Set User Info";
             }elseif($type=='get_userinfo'){
                 $get_santri = Santri::find($santri_id);
                 $get_santri->template_fs = $decoded_data['data']['template'];
-                $get_santri->save();
+                if($get_santri->save()){
+                    echo "Sukses - Get User Info";
+                }else{
+                    echo "Gagal - Get User Info";
+                }
             }
-
-            echo "Ok";
         }else{
             echo "Null";
         }
