@@ -307,11 +307,11 @@
             Edit profil
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a href="{{ route('edit version') }}" class="sidenav-link">
             {{(auth()->user()->themes=='dark') ? 'Light version' : 'Dark version'}}
           </a>
-        </li>
+        </li> -->
         <li>
           <form id="form" action="{{ url('logout') }}" method="post">
             @csrf

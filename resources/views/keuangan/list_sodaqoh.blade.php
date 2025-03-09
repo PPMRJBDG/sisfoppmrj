@@ -339,6 +339,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $('#modalSodaqoh').fadeIn();
         $('#modalSodaqoh').css('background', 'rgba(0, 0, 0, 0.7)');
         $('#modalSodaqoh').css('z-index', '10000');
+        $('#modalSodaqoh').css('display', 'inline-table');
         $('#sodaqoh_id').val(data.id);
         $('#periode').val(data.periode);
         $('#nominal').val(data.nominal);

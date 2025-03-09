@@ -32,7 +32,7 @@
                 @foreach($cat_penghubung as $cp)
                 <tr class="text-sm">
                     <td>
-                        <a href="#" onclick="openCatatan('{{$cp->id}}','{{$cp->santri_id}}','[{{$cp->angkatan}}] {{$cp->fullname}}','{{$cp->cat_kepribadian}}','{{$cp->cat_sholat}}','{{$cp->cat_kbm}}','{{$cp->cat_asmara}}','{{$cp->cat_akhlaq}}','{{$cp->cat_umum}}')" class="btn btn-primary btn-xs mb-0">INPUT</a>
+                        <a href="#" onclick="openCatatan('{{$cp->id}}','{{$cp->santri_id}}','[{{$cp->angkatan}}] {{$cp->fullname}}','{{$cp->cat_kepribadian}}','{{$cp->cat_sholat}}','{{$cp->cat_kbm}}','{{$cp->cat_asmara}}','{{$cp->cat_akhlaq}}','{{$cp->cat_umum}}')" class="btn btn-primary btn-sm mb-0">INPUT</a>
                         [{{$cp->angkatan}}] {{$cp->fullname}}
                     </td>
                     <td id="kepribadian{{$cp->santri_id}}">{{substr($cp->cat_kepribadian,0,20);}}</td>
@@ -118,15 +118,11 @@
         window.location.replace(`{{ url("/") }}`)
     }
 
-    $('#table').DataTable({
-        order: [],
-        pageLength: 25
-    });
-
     function openCatatan(id, santri_id, nm, kepribadian, sholat, kbm, asmara, akhlaq, umum) {
         $('#modalCatatan').fadeIn();
         $('#modalCatatan').css('background', 'rgba(0, 0, 0, 0.7)');
         $('#modalCatatan').css('z-index', '10000');
+        $('#modalCatatan').css('display', 'inline-table');
         $('#nm').text(nm);
         $('#cat_id').val(id);
         $('#santri_id').val(santri_id);

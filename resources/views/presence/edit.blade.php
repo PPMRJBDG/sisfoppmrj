@@ -71,13 +71,13 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label for="example-text-input" class="form-control-label">Barcode Display (On)</label>
+            <label for="example-text-input" class="form-control-label">Fingerprint Display (On)</label>
             <input class="form-control" type="datetime-local" name="presence_start_date_time" value="{{ isset($presence->presence_start_date_time) ? Carbon\Carbon::parse($presence->presence_start_date_time)->format('Y-m-d\TH:i') : '' }}">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label for="example-text-input" class="form-control-label">Barcode Display (Off)</label>
+            <label for="example-text-input" class="form-control-label">Fingerprint Display (Off)</label>
             <input class="form-control" type="datetime-local" name="presence_end_date_time" value="{{ isset($presence->presence_end_date_time) ? Carbon\Carbon::parse($presence->presence_end_date_time)->format('Y-m-d\TH:i') : '' }}">
           </div>
         </div>

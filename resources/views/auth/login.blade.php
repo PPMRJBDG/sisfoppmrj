@@ -82,8 +82,8 @@ $setting = App\Models\Settings::first();
   .text-primary,
   .bg-primary {
     background: #48c6ef;
-    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1));
-    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1))
+    /* background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1));
+    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) */
   }
 
   /* .btn-danger, */
@@ -134,11 +134,11 @@ $setting = App\Models\Settings::first();
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
 
               <div class="p-3 ps-0">
-                <h5 class="mb-0">Welcome back! <b>User</b></h5>
+                <h5 class="mb-0">Assalaamu Alaikum! Santri PPM RJ</h5>
               </div>
               <form role="form" action="{{ route('login') }}" method="POST">
                 @csrf

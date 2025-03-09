@@ -299,7 +299,7 @@ class PresenceController extends Controller
             if (!$updated)
                 return redirect()->back()->withErrors(['failed_updating_presence']);
 
-            return redirect()->back()->with('success', 'Berhasil mengubah presensi');
+            return redirect()->route('view presence', $request->route('id'))->with('success', 'Berhasil menghapus presensi');
         }
     }
 
@@ -322,7 +322,7 @@ class PresenceController extends Controller
                 return redirect()->route('presence tm')->withErrors(['failed_deleting_presence', 'Gagal menghapus presensi.']);
         }
 
-        return redirect()->back()->with('success', 'Berhasil menghapus presensi');
+        return redirect()->route('presence tm')->with('success', 'Berhasil menghapus presensi');
     }
 
     /**

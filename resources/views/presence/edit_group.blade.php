@@ -95,7 +95,7 @@
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Mulai KBM</label>
               <input class="form-control" type="time" name="start_hour" value="{{ isset($presenceGroup->start_hour) ? $presenceGroup->start_hour : '' }}">
-              <label for="example-text-input" class="form-control-label">Display Barcode (On)</label>
+              <label for="example-text-input" class="form-control-label">Display Fingerprint (On)</label>
               <input class="form-control" type="time" name="presence_start_hour" value="{{ isset($presenceGroup->presence_start_hour) ? $presenceGroup->presence_start_hour : '' }}">
             </div>
           </div>
@@ -103,7 +103,7 @@
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Selesai KBM</label>
               <input class="form-control" type="time" name="end_hour" value="{{ isset($presenceGroup->end_hour) ? $presenceGroup->end_hour : '' }}">
-              <label for="example-text-input" class="form-control-label">Display Barcode (Off)</label>
+              <label for="example-text-input" class="form-control-label">Display Fingerprint (Off)</label>
               <input class="form-control" type="time" name="presence_end_hour" value="{{ isset($presenceGroup->presence_end_hour) ? $presenceGroup->presence_end_hour : '' }}">
             </div>
           </div>

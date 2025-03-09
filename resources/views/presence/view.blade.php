@@ -78,7 +78,7 @@
         <a class="btn btn-danger px-3 mb-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
         @endcan
         @can('update presences')
-        <!-- <a class="btn btn-primary text-white px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Ubah Lainnya</a> -->
+        <a class="btn btn-warning text-white px-3 mb-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Ubah Jam KBM</a>
         @endcan
       </div>
     </div>

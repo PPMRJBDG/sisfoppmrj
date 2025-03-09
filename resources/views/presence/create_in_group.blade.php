@@ -66,13 +66,13 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label for="example-text-input" class="form-control-label">Display Barcode (On)</label>
+            <label for="example-text-input" class="form-control-label">Display Fingerprint (On)</label>
             <input class="form-control" type="datetime-local" name="presence_start_date_time">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label for="example-text-input" class="form-control-label">Display Barcode (Off)</label>
+            <label for="example-text-input" class="form-control-label">Display Fingerprint (Off)</label>
             <input class="form-control" type="datetime-local" name="presence_end_date_time">
           </div>
         </div>

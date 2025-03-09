@@ -35,8 +35,8 @@
     <p class="text-sm mb-0">Jadwal: {{ ucwords($presenceGroup->days_in_bahasa()) }}</p>
     <p class="text-sm mb-0">Mulai KBM: {{ $presenceGroup->start_hour }}</p>
     <p class="text-sm mb-0">Selesai KBM: {{ $presenceGroup->end_hour }}</p>
-    <p class="text-sm mb-0">Display Barcode (On): {{ $presenceGroup->presence_start_hour }}</p>
-    <p class="text-sm mb-0">Display Barcode (Off): {{ $presenceGroup->presence_end_hour }}</p>
+    <p class="text-sm mb-0">Display Fingerprint (On): {{ $presenceGroup->presence_start_hour }}</p>
+    <p class="text-sm mb-0">Display Fingerprint (Off): {{ $presenceGroup->presence_end_hour }}</p>
   </div>
   <div class="card-footer text-end">
     <a class="btn btn-success btn-sm m-0" href="{{ route('view presence group', $presenceGroup->id) }}"><i class="far fa-eye me-2" aria-hidden="true"></i>Lihat</a>

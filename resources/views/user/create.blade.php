@@ -231,7 +231,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Tanggal Masuk</label>
-              <input class="form-control" type="date" name="join_at" placeholder="Contoh: 24/09/2022" required>
+              <input class="form-control" type="date" name="join_at" placeholder="Contoh: 24/09/2022">
             </div>
           </div>
         </div>
