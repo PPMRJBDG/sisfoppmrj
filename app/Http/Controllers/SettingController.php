@@ -29,6 +29,8 @@ class SettingController extends Controller
         $list_jenis_pelanggaran = JenisPelanggaran::get();
         $list_setting = Settings::first();
         $list_wa_user = SpUsers::where('username', $list_setting->wa_username)->get();
+        // $total_santri = DB::table('v_user_santri')->get();
+        $total_santri_tfs = DB::table('v_user_santri')->where('template_fs', null)->get();
         $list_wa_team = null;
         $list_wa_account = null;
         $list_wa_group = null;
@@ -56,6 +58,7 @@ class SettingController extends Controller
             'list_wa_team' => $list_wa_team,
             'list_wa_group' => $list_wa_group,
             'list_jenis_pelanggaran' => $list_jenis_pelanggaran,
+            'total_santri_tfs' => $total_santri_tfs,
         ]);
     }
 

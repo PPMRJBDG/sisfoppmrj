@@ -81,10 +81,10 @@ class FsController extends Controller
             $type       = $decoded_data['type'];
             $cloud_id   = $decoded_data['cloud_id'];
             $trans_id   = $decoded_data['trans_id'];
+            $created_at = date('Y-m-d H:i:s');
             if($type=='attlog' || $type=='get_userinfo'){
                 $santri_id  = $decoded_data['data']['pin'];
             }
-            $created_at = date('Y-m-d H:i:s');
 
             if($type=='attlog'){
                 $scan_verify  = $decoded_data['data']['verify'];

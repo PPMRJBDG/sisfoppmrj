@@ -86,7 +86,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
-                                        Sinkroniasi dengan Fingerprint
+                                        Sinkroniasi dengan Fingerprint | <i><small>{{count($total_santri_tfs)}} belum tersinkronisasi</small></i>
                                     </label>
                                 </div>
                             </div>
@@ -498,25 +498,25 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             <label class="form-control-label">
                                                 WA - Type
                                             </label>
-                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_type : '' }}" name="wa_type" required>
+                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_type : '' }}" name="wa_type" required readonly>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Template
                                             </label>
-                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_template : '' }}" name="wa_template" required>
+                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_template : '' }}" name="wa_template" required readonly>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Min Delay
                                             </label>
-                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_min_delay : '' }}" name="wa_min_delay" required>
+                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_min_delay : '' }}" name="wa_min_delay" required readonly>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 WA - Max Delay
                                             </label>
-                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_max_delay : '' }}" name="wa_max_delay" required>
+                                            <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_max_delay : '' }}" name="wa_max_delay" required readonly>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
