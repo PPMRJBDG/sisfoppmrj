@@ -81,18 +81,34 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <div class="col-md-12 mb-2">
             <div class="card border p-2 shadow-lg">
                 <div class="">
-                    <form action="{{ route('sync fs') }}" id="sync-fs" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('sync set fs') }}" id="sync-fs-set" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
-                                        Sinkroniasi dengan Fingerprint | <i><small>{{count($total_santri_tfs)}} belum tersinkronisasi</small></i>
+                                        Sinkroniasi dengan Fingerprint
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync">
+                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync - Set User Info">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <form action="{{ route('sync get fs') }}" id="sync-fs-get" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        <i><small>{{count($total_santri_tfs)}} belum tersinkronisasi</small></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync - Get User Info">
                                 </div>
                             </div>
                         </div>

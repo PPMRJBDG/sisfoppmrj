@@ -17,7 +17,7 @@ use App\Helpers\WaSchedules;
 
 class FsController extends Controller
 {
-    public function sync(Request $request){
+    public function sync_setuserinfo(Request $request){
         $authorization = "Authorization: Bearer ".env('TOKEN_FS');
         $cloud_fs = env('CLOUD_FS_ID01');
         $split_cloud_fs = explode(",", $cloud_fs);
@@ -51,7 +51,16 @@ class FsController extends Controller
                 $result = curl_exec($ch);
                 curl_close($ch);
             }
+        }
 
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - set user info.');
+    }
+    public function sync_getuserinfo(Request $request){
+        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
+        $cloud_fs = env('CLOUD_FS_ID01');
+        $split_cloud_fs = explode(",", $cloud_fs);
+
+        foreach($split_cloud_fs as $cfs){
             // GET USERINFO
             foreach ($set_santri as $vs) {
                 $url = 'https://developer.fingerspot.io/api/get_userinfo';
@@ -70,7 +79,7 @@ class FsController extends Controller
             }
         }
 
-        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi.');
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - get user info.');
     }
 
     public function fs01(Request $request)
@@ -86,16 +95,16 @@ class FsController extends Controller
                 $santri_id  = $decoded_data['data']['pin'];
             }
 
+            FsLogs::create([
+                'cloud_id' => $cloud_id,
+                'type' => $type,
+                'trans_id' => $trans_id,
+                'created_at' => $created_at,
+                'original_data' => json_encode($decoded_data)
+            ]);
+
             if($type=='attlog'){
                 $scan_verify  = $decoded_data['data']['verify'];
-                FsLogs::create([
-                    'cloud_id' => $cloud_id,
-                    'type' => $type,
-                    'trans_id' => $trans_id,
-                    'created_at' => $created_at,
-                    'original_data' => json_encode($decoded_data)
-                ]);
-
                 try {
                     $datetime = date("Y-m-d H:i:s");
                     $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
@@ -176,11 +185,12 @@ class FsController extends Controller
                 }else{
                     echo "Gagal - Get User Info";
                 }
+            }elseif($type=='delete_userinfo'){
+                echo "Sukses - Delete User Info";
             }
         }else{
             echo "Null";
         }
-        exit;
     }
 }
 ?>

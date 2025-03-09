@@ -397,6 +397,29 @@ class UserController extends Controller
 
         if ($request->input('exit_at'))
             $user->password = Hash::make('Bismillah@354');
+
+            // DELETE DATA DI FINGERPRINT
+            $cloud_fs = env('CLOUD_FS_ID01');
+            $split_cloud_fs = explode(",", $cloud_fs);
+
+            foreach($split_cloud_fs as $cfs){
+                $url = 'https://developer.fingerspot.io/api/delete_userinfo';
+                $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", pin":"'.$user->santri->id.'" }';
+                $authorization = "Authorization: Bearer ".env('TOKEN_FS');
+                
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                $result = curl_exec($ch);
+                curl_close($ch);
+            }
+            // END DELETE
+
         if ($request->input('password'))
             $user->password = Hash::make($request->input('password'));
 
