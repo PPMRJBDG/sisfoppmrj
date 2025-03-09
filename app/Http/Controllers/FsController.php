@@ -126,7 +126,7 @@ class FsController extends Controller
                                 $query->where('name', 'NOT LIKE', '%Bulk%');
                             })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                             if ($wa_phone != null) {
-                                WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM', $wa_phone->pid, null, true);
+                                // WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM', $wa_phone->pid, null, true);
                             }
                         }
                     } else {
@@ -157,7 +157,12 @@ class FsController extends Controller
                                         $query->where('name', 'NOT LIKE', '%Bulk%');
                                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                                     if ($wa_phone != null) {
-                                        WaSchedules::save('Presensi: Berhasil', $get_santri->user->fullname.' saat ini telah hadir pada KBM '.$presence->name, $wa_phone->pid);
+                                        $text_late = '';
+                                        if($is_late){
+                                            WaSchedules::save('Presensi: Berhasil', $get_santri->user->fullname.' saat ini pukul '.date("H:i:s").' terlambat hadir pada KBM '.$presence->name, $wa_phone->pid);
+                                        }else{
+                                            WaSchedules::save('Presensi: Berhasil', $get_santri->user->fullname.' saat ini pukul '.date("H:i:s").' telah hadir tepat waktu pada KBM '.$presence->name, $wa_phone->pid);
+                                        }
                                     }
                                 }
                             }else{
@@ -170,7 +175,7 @@ class FsController extends Controller
                                         $query->where('name', 'NOT LIKE', '%Bulk%');
                                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                                     if ($wa_phone != null) {
-                                        WaSchedules::save('Presensi: Gagal', '*[Fingerpritn]* Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid, null, true);
+                                        // WaSchedules::save('Presensi: Gagal', '*[Fingerprint]* Anda gagal melakukan scan presensi pada KBM '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid, null, true);
                                     }
                                 }
                             }
