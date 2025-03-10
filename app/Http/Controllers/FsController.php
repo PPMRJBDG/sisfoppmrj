@@ -126,7 +126,7 @@ class FsController extends Controller
                                 $query->where('name', 'NOT LIKE', '%Bulk%');
                             })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                             if ($wa_phone != null) {
-                                WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM', $wa_phone->pid, null, true);
+                                WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM.', $wa_phone->pid, null, true);
                             }
                         }
                     } else {

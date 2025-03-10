@@ -318,6 +318,9 @@ function checkSS(val) {
         elb.disabled = true
     }
     if (val.value.match("Pulang")) {
+        if (val.value.match("Pulang - Permintaan Ortu")) {
+            alert("Perhatian! Sesuai peraturan, diperbolehkan pulang hanya di minggu ke 3 atau 4 saja.");
+        }
         $("#show-ss").show();
         $("#show-ss-berjangka").show();
         el.disabled = false
