@@ -84,83 +84,205 @@
     </div>
   </div>
 </div>
-
-<div class="text-sm font-weight-bolder text-center p-2">
-  <span>Jumlah {{ (auth()->user()->hasRole('koor lorong')) ? 'Anggota' : 'Mahasiswa' }} {{ $jumlah_mhs }}</span>
-</div>
-
-<div class="row">
-  <div class="col-sm-12 col-md-12">
-    @if (session('santri_is_present'))
-    <div class="p-0 mt-2 mb-2">
-      <div class="alert alert-warning text-white mb-0">
-        {{ session('santri_is_present') }}
-      </div>
+@if(auth()->user()->hasRole('divisi kurikulum'))
+  <div class="card">
+    <div class="card-body pt-4 p-2">
+      <div class="alert alert-danger text-white">Anda tidak diperkenankan melihat presensi mahasiswa.</div>
+      <a class="btn btn-warning text-white px-3 mb-0" href="{{ route('presence tm') }}"><i class="fas fa-pencil-alt text-white me-2" aria-hidden="true"></i>Kembali ke Presensi</a>
     </div>
-    @endif
-    @if (session('success'))
-    <div class="p-0 mt-2 mb-2">
-      <div class="alert alert-success text-white mb-0">
-        {{ session('success') }}
-      </div>
-    </div>
-    @endif
   </div>
-</div>
+@else
+  <div class="text-sm font-weight-bolder text-center p-2">
+    <span>Jumlah {{ (auth()->user()->hasRole('koor lorong')) ? 'Anggota' : 'Mahasiswa' }} {{ $jumlah_mhs }}</span>
+  </div>
 
-<div class="card shadow border p-2 mb-2">
-  @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
   <div class="row">
     <div class="col-sm-12 col-md-12">
-      <select data-mdb-filter="true" class="select select_lorong form-control" name="select_lorong" id="select_lorong">
-        <option value="-">Semua Lorong</option>
-        @foreach($data_lorong as $l)
-        <option {{ ($lorong==$l->id) ? 'selected' : '' }} value="{{$l->id}}">{{$l->name}}</option>
-        @endforeach
-      </select>
+      @if (session('santri_is_present'))
+      <div class="p-0 mt-2 mb-2">
+        <div class="alert alert-warning text-white mb-0">
+          {{ session('santri_is_present') }}
+        </div>
+      </div>
+      @endif
+      @if (session('success'))
+      <div class="p-0 mt-2 mb-2">
+        <div class="alert alert-success text-white mb-0">
+          {{ session('success') }}
+        </div>
+      </div>
+      @endif
     </div>
   </div>
-  @endif
-</div>
 
-<div class="card shadow border p-2">
-  <nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <a data-mdb-ripple-init onclick="return false;" class="nav-link active font-weight-bolder" id="nav-hadir-tab" data-bs-toggle="tab" href="#nav-hadir" role="tab" aria-controls="nav-hadir" aria-selected="true">Hadir <span id="c-hdr">{{count($presents)}}</span></a>
-      <a data-mdb-ripple-init onclick="return false;" class="nav-link font-weight-bolder" id="nav-ijin-tab" data-bs-toggle="tab" href="#nav-ijin" role="tab" aria-controls="nav-ijin">Ijin {{count($permits)}}</a>
-      <a data-mdb-ripple-init onclick="return false;" class="nav-link font-weight-bolder" id="nav-alpha-tab" data-bs-toggle="tab" href="#nav-alpha" role="tab" aria-controls="nav-alpha">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></a>
+  <div class="card shadow border p-2 mb-2">
+    @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <select data-mdb-filter="true" class="select select_lorong form-control" name="select_lorong" id="select_lorong">
+          <option value="-">Semua Lorong</option>
+          @foreach($data_lorong as $l)
+          <option {{ ($lorong==$l->id) ? 'selected' : '' }} value="{{$l->id}}">{{$l->name}}</option>
+          @endforeach
+        </select>
+      </div>
     </div>
+    @endif
+  </div>
 
-    <div class="tab-content p-0 pt-2" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="nav-hadir" role="tabpanel" aria-labelledby="nav-hadir-tab">
-        <div class="card-body p-0">
-          <div style="font-size:11px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
-          @if($update)
-          <div class="card-body p-0 py-2">
-            <a id="btn-select-all" class="btn btn-danger btn-sm btn-block mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
+  <div class="card shadow border p-2">
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a data-mdb-ripple-init onclick="return false;" class="nav-link active font-weight-bolder" id="nav-hadir-tab" data-bs-toggle="tab" href="#nav-hadir" role="tab" aria-controls="nav-hadir" aria-selected="true">Hadir <span id="c-hdr">{{count($presents)}}</span></a>
+        <a data-mdb-ripple-init onclick="return false;" class="nav-link font-weight-bolder" id="nav-ijin-tab" data-bs-toggle="tab" href="#nav-ijin" role="tab" aria-controls="nav-ijin">Ijin {{count($permits)}}</a>
+        <a data-mdb-ripple-init onclick="return false;" class="nav-link font-weight-bolder" id="nav-alpha-tab" data-bs-toggle="tab" href="#nav-alpha" role="tab" aria-controls="nav-alpha">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></a>
+      </div>
+
+      <div class="tab-content p-0 pt-2" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-hadir" role="tabpanel" aria-labelledby="nav-hadir-tab">
+          <div class="card-body p-0">
+            <div style="font-size:11px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
+            @if($update)
+            <div class="card-body p-0 py-2">
+              <a id="btn-select-all" class="btn btn-danger btn-sm btn-block mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
+            </div>
+            @endif
+            <div class="table-responsive">
+              <table id="table-hadir" class="table table-sm align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($presents as $present)
+                  @if($present->santri->fkLorong_id==$lorong || $lorong=='-')
+                  <tr title="{{$present->metadata}}" id="trh{{$present->fkSantri_id}}" class="dtmhsh" val-id="{{$present->fkSantri_id}}" val-name="{{$present->santri->user->fullname}}" updated-by="{{$present->updated_by}}">
+                    <td class="text-sm">
+                      <b>{{ $present->santri->user->fullname }}</b>
+                      <br>
+                      <small>{{ $present->created_at }}</small>
+                    </td>
+                    <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
+                      @if($update)
+                      <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
+                      <a class="btn btn-danger btn-block btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
+                      @endif
+                    </td>
+                  </tr>
+                  @endif
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
           </div>
-          @endif
-          <div class="table-responsive">
-            <table id="table-hadir" class="table table-sm align-items-center mb-0">
+        </div>
+
+        <div class="tab-pane fade show" id="nav-ijin" role="tabpanel" aria-labelledby="nav-ijin-tab">
+          @if(count($permits)>0 || count($need_approval)>0)
+          <div class="text-center">
+            <h6 class="mb-0 bg-warning p-1 text-white">
+              Perlu persetujuan/ditolak: {{count($need_approval)}}
+            </h6>
+          </div>
+
+          <div class="datatable datatable-sm">
+            <table class="table align-items-center mb-0">
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Status</th>
+                  <!-- <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder"></th> -->
                 </tr>
               </thead>
               <tbody>
-                @foreach($presents as $present)
-                @if($present->santri->fkLorong_id==$lorong || $lorong=='-')
-                <tr title="{{$present->metadata}}" id="trh{{$present->fkSantri_id}}" class="dtmhsh" val-id="{{$present->fkSantri_id}}" val-name="{{$present->santri->user->fullname}}" updated-by="{{$present->updated_by}}">
-                  <td class="text-sm">
-                    <b>{{ $present->santri->user->fullname }}</b>
+                <!-- need approval -->
+                @foreach($need_approval as $na)
+                @if($na->santri->fkLorong_id==$lorong || $lorong=='-')
+                <tr title="{{ ($na->approved_by=='') ? '' : 'Approved by '.$na->approved_by}} {{ ($na->rejected_by=='') ? '' : ' | Rejected by '.$na->rejected_by }}">
+                  <td class="text-sm text-wrap">
+                    <span class="font-weight-bolder">{{ $na->santri->user->fullname }}</span>
                     <br>
-                    <small>{{ $present->created_at }}</small>
+                    <small>[{{ $na->reason_category }}] - {{ $na->reason }}</small>
                   </td>
-                  <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
+                    @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                    <br>
+
+                    <?php
+                    $url_promptApprovePermit = route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id, 'lorong' => $lorong]);
+                    ?>
+
+                    <a class="btn btn-primary btn-sm mb-0" id="return-false" onclick="promptApprovePermit('{{$url_promptApprovePermit}}','{{$na->ids}}','{{$na->fkPresence_id}}','{{$na->fkSantri_id}}')">Approve</a>
+                    <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$na->ids}}','{{$na->fkPresence_id}}','{{$na->fkSantri_id}}')">Hadir</a>
+                    @endif
+                  </td>
+                  <!-- <td class="align-middle text-xs">
+                    {{$na->alasan_rejected}}
+                  </td> -->
+                </tr>
+                @endif
+                @endforeach
+
+                @foreach($permits as $permit)
+                @if($permit->santri->fkLorong_id==$lorong || $lorong=='-')
+                <tr title="{{ ($permit->approved_by=='') ? '' : 'Approved by '.$permit->approved_by}} {{ ($permit->rejected_by=='') ? '' : ' | Rejected by '.$permit->rejected_by }}">
+                  <td class="text-sm text-wrap">
+                    <span class="font-weight-bolder">{{ $permit->santri->user->fullname }}</span>
+                    <br>
+                    <small>[{{ $permit->reason_category }}] - {{ $permit->reason }}</small>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-primary font-weight-bolder">{{ $permit->status }}</span>
+                    <br>
+
+                    <?php
+                    $url_promptRejectPermit = route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong, 'json' => true]);
+                    ?>
+
                     @if($update)
-                    <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
-                    <a class="btn btn-danger btn-block btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
+                    <a class="btn btn-warning btn-sm mb-0" id="return-false" onclick="promptRejectPermit('{{$url_promptRejectPermit}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Reject</a>
+                    <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Hadir</a>
+                    @endif
+                  </td>
+                  <!-- <td></td> -->
+                </tr>
+                @endif
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+          @else
+          <div class="p-2 text-center text-sm">Tidak ada yang ijin</div>
+          @endif
+        </div>
+
+        <div class="tab-pane fade show" id="nav-alpha" role="tabpanel" aria-labelledby="nav-alpha-tab">
+          @if($update)
+          <div class="card-body p-0">
+            <a id="btn-select-all" class="btn btn-primary btn-sm btn-block mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
+          </div>
+          @endif
+          <div class="table-responsive">
+            <table id="table-alpha" class="table table-sm align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($mhs_alpha as $mhs)
+                @if($mhs['fkLorong_id']==$lorong || $lorong=='-')
+                <tr id="tra{{$mhs['santri_id']}}" class="dtmhsa" val-id="{{$mhs['santri_id']}}" val-name="{{$mhs['name']}}">
+                  <td class="text-sm">
+                    <b>{{ $mhs['name'] }}</b>
+                  </td>
+                  <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
+                    @if($update)
+                    <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
                     @endif
                   </td>
                 </tr>
@@ -171,123 +293,9 @@
           </div>
         </div>
       </div>
-
-      <div class="tab-pane fade show" id="nav-ijin" role="tabpanel" aria-labelledby="nav-ijin-tab">
-        @if(count($permits)>0 || count($need_approval)>0)
-        <div class="text-center">
-          <h6 class="mb-0 bg-warning p-1 text-white">
-            Perlu persetujuan/ditolak: {{count($need_approval)}}
-          </h6>
-        </div>
-
-        <div class="datatable datatable-sm">
-          <table class="table align-items-center mb-0">
-            <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Status</th>
-                <!-- <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder"></th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <!-- need approval -->
-              @foreach($need_approval as $na)
-              @if($na->santri->fkLorong_id==$lorong || $lorong=='-')
-              <tr title="{{ ($na->approved_by=='') ? '' : 'Approved by '.$na->approved_by}} {{ ($na->rejected_by=='') ? '' : ' | Rejected by '.$na->rejected_by }}">
-                <td class="text-sm text-wrap">
-                  <span class="font-weight-bolder">{{ $na->santri->user->fullname }}</span>
-                  <br>
-                  <small>[{{ $na->reason_category }}] - {{ $na->reason }}</small>
-                </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
-                  @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-                  <br>
-
-                  <?php
-                  $url_promptApprovePermit = route('approve presence permit', ['presenceId' => $na->fkPresence_id, 'santriId' => $na->fkSantri_id, 'lorong' => $lorong]);
-                  ?>
-
-                  <a class="btn btn-primary btn-sm mb-0" id="return-false" onclick="promptApprovePermit('{{$url_promptApprovePermit}}','{{$na->ids}}','{{$na->fkPresence_id}}','{{$na->fkSantri_id}}')">Approve</a>
-                  <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$na->ids}}','{{$na->fkPresence_id}}','{{$na->fkSantri_id}}')">Hadir</a>
-                  @endif
-                </td>
-                <!-- <td class="align-middle text-xs">
-                  {{$na->alasan_rejected}}
-                </td> -->
-              </tr>
-              @endif
-              @endforeach
-
-              @foreach($permits as $permit)
-              @if($permit->santri->fkLorong_id==$lorong || $lorong=='-')
-              <tr title="{{ ($permit->approved_by=='') ? '' : 'Approved by '.$permit->approved_by}} {{ ($permit->rejected_by=='') ? '' : ' | Rejected by '.$permit->rejected_by }}">
-                <td class="text-sm text-wrap">
-                  <span class="font-weight-bolder">{{ $permit->santri->user->fullname }}</span>
-                  <br>
-                  <small>[{{ $permit->reason_category }}] - {{ $permit->reason }}</small>
-                </td>
-                <td class="align-middle text-center text-sm">
-                  <span class="text-primary font-weight-bolder">{{ $permit->status }}</span>
-                  <br>
-
-                  <?php
-                  $url_promptRejectPermit = route('reject presence permit', ['presenceId' => $permit->fkPresence_id, 'santriId' => $permit->fkSantri_id, 'lorong' => $lorong, 'json' => true]);
-                  ?>
-
-                  @if($update)
-                  <a class="btn btn-warning btn-sm mb-0" id="return-false" onclick="promptRejectPermit('{{$url_promptRejectPermit}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Reject</a>
-                  <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Hadir</a>
-                  @endif
-                </td>
-                <!-- <td></td> -->
-              </tr>
-              @endif
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-        @else
-        <div class="p-2 text-center text-sm">Tidak ada yang ijin</div>
-        @endif
-      </div>
-
-      <div class="tab-pane fade show" id="nav-alpha" role="tabpanel" aria-labelledby="nav-alpha-tab">
-        @if($update)
-        <div class="card-body p-0">
-          <a id="btn-select-all" class="btn btn-primary btn-sm btn-block mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
-        </div>
-        @endif
-        <div class="table-responsive">
-          <table id="table-alpha" class="table table-sm align-items-center mb-0">
-            <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach($mhs_alpha as $mhs)
-              @if($mhs['fkLorong_id']==$lorong || $lorong=='-')
-              <tr id="tra{{$mhs['santri_id']}}" class="dtmhsa" val-id="{{$mhs['santri_id']}}" val-name="{{$mhs['name']}}">
-                <td class="text-sm">
-                  <b>{{ $mhs['name'] }}</b>
-                </td>
-                <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
-                  @if($update)
-                  <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
-                  @endif
-                </td>
-              </tr>
-              @endif
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </nav>
-</div>
+    </nav>
+  </div>
+  @endif
 @else
 <div class="card">
   <div class="card-body pt-4 p-2">
