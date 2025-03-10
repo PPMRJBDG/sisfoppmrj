@@ -117,18 +117,18 @@ class FsController extends Controller
                     $get_santri = Santri::find($santri_id);
                     if ($presence == null) {
                         // kirim WA ke mahasiswa
-                        // $nohp = $get_santri->user->nohp;
-                        // if ($nohp != '') {
-                        //     if ($nohp[0] == '0') {
-                        //         $nohp = '62' . substr($nohp, 1);
-                        //     }
-                        //     $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                        //         $query->where('name', 'NOT LIKE', '%Bulk%');
-                        //     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                        //     if ($wa_phone != null) {
-                                // WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM', $wa_phone->pid, null, true);
-                        //     }
-                        // }
+                        $nohp = $get_santri->user->nohp;
+                        if ($nohp != '') {
+                            if ($nohp[0] == '0') {
+                                $nohp = '62' . substr($nohp, 1);
+                            }
+                            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                                $query->where('name', 'NOT LIKE', '%Bulk%');
+                            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                            if ($wa_phone != null) {
+                                WaSchedules::save('Presensi: Null', '*[Fingerprint]* Maaf, saat ini belum ada KBM', $wa_phone->pid, null, true);
+                            }
+                        }
                     } else {
                         $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri_id)->first();
                         if ($existingPresent == null) {

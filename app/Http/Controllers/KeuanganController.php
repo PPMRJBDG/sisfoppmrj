@@ -343,7 +343,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             if ($request->input('jenis') == 'out') {
                 $data = RabInouts::create([
                     'fkBank_id' => $request->input('fkBank_id'),
-                    'pos' => $request->input('pos'),
+                    'fkPos_id' => $request->input('fkPos_id'),
                     'periode_tahun' => $request->input('periode_tahun'),
                     'fkDivisi_id' => $request->input('fkDivisi_id'),
                     'fkRab_id' => $request->input('fkRab_id'),
@@ -357,7 +357,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             } elseif ($request->input('jenis') == 'in') {
                 $data = RabInouts::create([
                     'fkBank_id' => $request->input('fkBank_id'),
-                    'pos' => $request->input('pos'),
+                    'fkPos_id' => $request->input('fkPos_id'),
                     'periode_tahun' => $request->input('periode_tahun'),
                     'fkDivisi_id' => $request->input('fkDivisi_id'),
                     'fkSodaqoh_id' => $request->input('fkSodaqoh_id'),
@@ -370,7 +370,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             } elseif ($request->input('jenis') == 'kuop') {
                 $data = RabInouts::create([
                     'fkBank_id' => $request->input('fkBank_id'),
-                    'pos' => $request->input('pos'),
+                    'fkPos_id' => $request->input('fkPos_id'),
                     'periode_tahun' => $request->input('periode_tahun'),
                     'tanggal' => $request->input('tanggal'),
                     'jenis' => $request->input('status'),
@@ -406,8 +406,8 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             $masuk = ($data->jenis == 'in') ? number_format($data->nominal, 0) : '';
             $keluar = ($data->jenis == 'out') ? number_format($data->nominal, 0) : '';
             $content = '<tr id="inout-' . $data->id . '" style="background: #f3d4cd;">' .
-                '<td class="new-td text-uppercase">' . $data->posisi . '</td>' .
-                '<td class="new-td text-uppercase">' . $data->pos . '</td>' .
+                '<td class="new-td text-uppercase">' . $data->bank->name . '</td>' .
+                '<td class="new-td text-uppercase">' . $data->pos->name . '</td>' .
                 '<td class="new-td text-uppercase">' . $divisi . '</td>' .
                 '<td class="new-td">' . $rab . '</td>' .
                 '<td class="new-td">' . date_format(date_create($data->tanggal), "Y-m-d") . '</td>' .
@@ -417,7 +417,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 '<td class="new-td text-end">' . $masuk . '</td>' .
                 '<td class="new-td text-end">' . $keluar . '</td>' .
                 '<!-- <td></td> -->' .
-                '<td class="p-0 text-center" style="width:50px;">' .
+                '<td class="p-0 text-center">' .
                 '<a class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout(' . $data . ')">' .
                 '<i class="fas fa-edit" aria-hidden="true"></i>' .
                 '</a>' .

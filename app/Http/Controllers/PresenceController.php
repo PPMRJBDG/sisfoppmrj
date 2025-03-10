@@ -1520,8 +1520,7 @@ class PresenceController extends Controller
                 $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
 Presensi: ' . $presence->name . '
-Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '        
-Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids . '
+Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss_k;
 
@@ -1834,28 +1833,18 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
             } else {
                 $lorong = '*' . $santri->lorong->name . '*';
             }
-            if ($request->input('status') == 'pending') {
-                $sttijn = 'Link approve: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
-            } else {
-                $sttijn = 'Link reject: ' . CommonHelpers::settings()->host_url . '/permit/' . $ids;
-            }
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-' . $sttijn . '
 Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss_k;
 
-            if ($request->input('status') == 'pending') {
-                $sttijn = 'Status: *Pending*';
-            }
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 Presensi: ' . $presence->name . '
 Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-' . $sttijn . '
 Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss;
 
@@ -1986,7 +1975,7 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
 
             $sttijn = '';
             if ($request->input('status') == 'pending') {
-                $sttijn = 'Status: *Pending (Perlu persetujuan, amshol cek di SISFO)*';
+                $sttijn = 'Status: *Pending (Perlu persetujuan, amshol cek di Sisfo)*';
             }
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*

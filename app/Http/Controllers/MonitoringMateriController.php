@@ -130,7 +130,9 @@ class MonitoringMateriController extends Controller
 
     public function match_empty_pages(Request $request)
     {
-        $users = User::whereHas('santri')->orderBy('fullname')->get();
+        $users = User::whereHas('santri', function ($query) {
+            $query->whereNull('exit_at');
+        })->orderBy('fullname', 'asc')->get();
         $materis = Materi::all();
 
         $santriIds = $request->get('santri_ids');

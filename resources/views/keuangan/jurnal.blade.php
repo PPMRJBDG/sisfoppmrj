@@ -58,7 +58,7 @@
                                     <tr class="">
                                         <td class="m-0 p-0 pb-2" style="width:120px;">
                                             <label>Keluar Dari</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkBank_id_out" name="fkBank_id_out" required>
+                                            <select class="form-control" value="" id="fkBank_id_out" name="fkBank_id_out" required>
                                                 @foreach($banks as $bank)
                                                 <option value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
                                                 @endforeach
@@ -66,24 +66,24 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:80px;">
                                             <label>Pos</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="pos-out" name="pos-out" required>
+                                            <select class="form-control" value="" id="pos-out" name="pos-out" required>
                                                 @foreach($poses as $pos)
                                                 <option value="{{$pos->id}}">{{strtoupper($pos->name)}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;">
+                                        <td class="m-0 p-0 pb-2" style="width:150px;">
                                             <label>Divisi</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkDivisi_id-out" name="fkDivisi_id-out" required onchange="reloadKategori(this,'out')">
+                                            <select class="form-control" value="" id="fkDivisi_id-out" name="fkDivisi_id-out" required onchange="reloadKategori(this,'out')">
                                                 <option value="">--pilih divisi--</option>
                                                 @foreach($divisis as $divisi)
                                                 <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:180px;">
                                             <label>Kategori</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkRab_id-out" name="fkRab_id-out" required>
+                                            <select class="form-control" value="" id="fkRab_id-out" name="fkRab_id-out" required>
                                                 <option value="">--pilih kategori--</option>
                                                     @foreach($rabs as $rab)
                                                     <option value="{{$rab->id}}">{{strtoupper($rab->keperluan)}}</option>
@@ -100,7 +100,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:100px;">
                                             <label>Pengeluaran</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="tipe_pengeluaran-out" name="tipe_pengeluaran-out" required>
+                                            <select class="form-control" value="" id="tipe_pengeluaran-out" name="tipe_pengeluaran-out" required>
                                                 <option value="Rutin">Rutin</option>
                                                 <option value="Non Rutin">Non Rutin</option>
                                             </select>
@@ -147,7 +147,7 @@
                                     <tr class="">
                                         <td class="m-0 p-0 pb-2" style="width:120px;">
                                             <label>Masuk Ke</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkBank_id_in" name="fkBank_id_in" required>
+                                            <select class="form-control" value="" id="fkBank_id_in" name="fkBank_id_in" required>
                                                 @foreach($banks as $bank)
                                                 <option value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
                                                 @endforeach
@@ -155,7 +155,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:80px;">
                                             <label>Pos</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="pos-in" name="pos-in" required>
+                                            <select class="form-control" value="" id="pos-in" name="pos-in" required>
                                                 @foreach($poses as $pos)
                                                 <option value="{{$pos->id}}">{{strtoupper($pos->name)}}</option>
                                                 @endforeach
@@ -167,7 +167,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:100px;">
                                             <label>Penerimaan</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="tipe_penerimaan-in" name="tipe_penerimaan-in" required onchange="changeIfTahunan(this.value)">
+                                            <select class="form-control" value="" id="tipe_penerimaan-in" name="tipe_penerimaan-in" required onchange="changeIfTahunan(this.value)">
                                                 <option value="">--pilih penerimaan--</option>
                                                 <option value="Sodaqoh Tahunan">Sodaqoh Tahunan</option>
                                                 <option value="Sodaqoh Fasilitas">Sodaqoh Fasilitas</option>
@@ -178,7 +178,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:100px;display:none;" id="td_fkDivisi_id-in">
                                             <label>Divisi</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkDivisi_id-in" name="fkDivisi_id-in" required>
+                                            <select class="form-control" value="" id="fkDivisi_id-in" name="fkDivisi_id-in" required>
                                                 <option value="">--pilih divisi--</option>
                                                 @foreach($divisis as $divisi)
                                                 <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
@@ -238,7 +238,7 @@
                                     <tr class="">
                                         <td class="m-0 p-0 pb-2" style="width:80px;">
                                             <label>Pos</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="pos-kuop" name="pos-kuop" required>
+                                            <select class="form-control" value="" id="pos-kuop" name="pos-kuop" required>
                                                 @foreach($poses as $pos)
                                                 <option value="{{$pos->id}}">{{strtoupper($pos->name)}}</option>
                                                 @endforeach
@@ -286,7 +286,7 @@
 
     <div class="card shadow border mt-2">
         <div class="card-body p-0">
-            <div class="datatable datatable-sm">
+            <div class="datatablex datatable-sm">
                 <table class="table align-items-center mb-0 text-xs text-uppercase">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
@@ -309,7 +309,7 @@
                         @foreach ($rabinouts as $inout)
                         <tr id="inout-{{$inout->id}}">
                             <td class="new-td text-uppercase">{{$inout->bank->name}}</td>
-                            <td class="new-td text-uppercase">{{$inout->pos}}</td>
+                            <td class="new-td text-uppercase">{{$inout->pos->name}}</td>
                             <td class="new-td text-uppercase">{{($inout->fkDivisi_id=='') ? '' : strtoupper($inout->divisi->divisi)}}</td>
                             <td class="new-td">{{($inout->fkRab_id=='') ? '' : $inout->rab->keperluan}}</td>
                             <td class="new-td">{{date_format(date_create($inout->tanggal), "Y-m-d")}}</td>
@@ -319,7 +319,7 @@
                             <td class="new-td text-end">{{($inout->jenis=='in') ? number_format($inout->nominal,0) : ''}}</td>
                             <td class="new-td text-end">{{($inout->jenis=='out') ? number_format($inout->nominal,0) : ''}}</td>
                             <!-- <td></td> -->
-                            <td class="p-0 text-center" style="width:50px;">
+                            <td class="p-0 text-center">
                                 <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout({{$inout}})">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </a>
@@ -470,7 +470,7 @@
             }
 
             datax['fkBank_id'] = $("#fkBank_id_out").val();
-            datax['pos'] = $("#pos-out").val();
+            datax['fkPos_id'] = $("#pos-out").val();
             datax['fkDivisi_id'] = $("#fkDivisi_id-out").val();
             datax['fkRab_id'] = $("#fkRab_id-out").val();
             datax['tanggal'] = $("#tanggal-out").val();
@@ -494,7 +494,7 @@
             }
 
             datax['fkBank_id'] = $("#fkBank_id_in").val();
-            datax['pos'] = $("#pos-in").val();
+            datax['fkPos_id'] = $("#pos-in").val();
             datax['tanggal'] = $("#tanggal-in").val();
             datax['jenis'] = x;
             datax['tipe_penerimaan'] = $("#tipe_penerimaan-in").val();
@@ -525,7 +525,7 @@
                     datax['fkBank_id'] = 2;
                 }
                 datax['status'] = dt;
-                datax['pos'] = $("#pos-kuop").val();
+                datax['fkPos_id'] = $("#pos-kuop").val();
                 datax['tanggal'] = $("#tanggal-kuop").val();
                 datax['jenis'] = x;
                 datax['keterangan'] = $("#keterangan-kuop").val();
