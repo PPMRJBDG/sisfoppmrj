@@ -236,6 +236,7 @@ Route::post('/catatan-penghubung/store', [App\Http\Controllers\CatatanPenghubung
 // msgtools
 Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');
 Route::get('/msgtools/report', [App\Http\Controllers\MsgtoolsController::class, 'report'])->name('msgtools view report')->middleware('role:superadmin|rj1');
+Route::get('/msgtools/scheduler', [App\Http\Controllers\MsgtoolsController::class, 'scheduler'])->name('msgtools view scheduler')->middleware('role:superadmin|rj1');
 Route::get('/msgtools/generate_bulk', [App\Http\Controllers\MsgtoolsController::class, 'generate_bulk'])->name('msgtools generate bulk')->middleware('role:superadmin|rj1');
 Route::post('/msgtools/delete_contact', [App\Http\Controllers\MsgtoolsController::class, 'delete_contact'])->name('msgtools delete contact')->middleware('role:superadmin|rj1');
 Route::post('/msgtools/create_group', [App\Http\Controllers\MsgtoolsController::class, 'create_group'])->name('msgtools create group')->middleware('role:superadmin|rj1');

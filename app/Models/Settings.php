@@ -26,8 +26,10 @@ class Settings extends Model
         'wa_header',
         'wa_footer',
         'wa_info_alpha_ortu',
-        'wa_info_jaga_malam',
         'wa_info_lulus',
-        'wa_link_presensi_koor'
+        'wa_link_presensi_koor',
+        // scheduler
+        'wa_info_jaga_malam',
+        'wa_info_tatatertib',
     ];
 }

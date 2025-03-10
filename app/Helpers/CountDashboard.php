@@ -243,6 +243,7 @@ class CountDashboard
                         $mhs_alpha[$mhs->santri_id]['name'] = $mhs->fullname;
                         $mhs_alpha[$mhs->santri_id]['angkatan'] = $mhs->angkatan;
                         $mhs_alpha[$mhs->santri_id]['nohp_ortu'] = $mhs->nohp_ortu;
+                        $mhs_alpha[$mhs->santri_id]['nohp'] = $mhs->nohp;
                         $mhs_alpha[$mhs->santri_id]['fkLorong_id'] = $mhs->fkLorong_id;
                         $lorong = Lorong::find($mhs->fkLorong_id);
                         if ($lorong == '-') {

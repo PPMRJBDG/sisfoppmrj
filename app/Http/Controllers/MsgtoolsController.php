@@ -179,6 +179,17 @@ class MsgtoolsController extends Controller
         ]);
     }
 
+    public function scheduler()
+    {
+        $datax = ReportScheduler::whereHas('santri', function ($query) {
+            $query->whereNull('exit_at');
+        })->get();
+
+        return view('msgtools.report', [
+            'datax' => $datax
+        ]);
+    }
+
     public function delete_contact(Request $request)
     {
         $team_id = Settings::find(1);

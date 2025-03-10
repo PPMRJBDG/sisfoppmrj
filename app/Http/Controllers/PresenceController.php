@@ -175,7 +175,7 @@ class PresenceController extends Controller
         $page = $request->get('page') ? $request->get('page') : 1;
         $monthDecrement = $page - 1;
         $decreasedDate = Carbon::now()->startOfMonth()->subMonths($monthDecrement);
-        $presences = Presence::orderBy('event_date', 'DESC')->whereMonth('event_date', '=', $decreasedDate->month)->whereYear('event_date', '=', $decreasedDate->year)->get();
+        $presences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->whereMonth('event_date', '=', $decreasedDate->month)->whereYear('event_date', '=', $decreasedDate->year)->get();
         $today = date('Y-m-d', strtotime(today()));
         // exit;
         return view('presence.latest_list', ['presences' => $presences, 'page' => $page, 'date' => $decreasedDate, 'today' => $today]);
@@ -1418,11 +1418,11 @@ class PresenceController extends Controller
         $presenceId = $request->get('presenceId');
         $dayname = date('D', strtotime(today()));
         if ($dayname == "Fri") {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(3)->get();
+            $openPresences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->limit(3)->get();
         } elseif ($dayname == "Sun") {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(1)->get();
+            $openPresences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->limit(1)->get();
         } else {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(2)->get();
+            $openPresences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->limit(2)->get();
         }
 
         return view('presence.create_my_permit', ['openPresences' => $openPresences, 'presenceId' => $presenceId, 'data_kbm_ijin' => $data_kbm_ijin]);
@@ -1732,9 +1732,9 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
     {
         $dayname = date('D', strtotime(today()));
         if ($dayname == "Fri") {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(5)->get();
+            $openPresences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->limit(5)->get();
         } else {
-            $openPresences = Presence::orderBy('event_date', 'DESC')->limit(4)->get();
+            $openPresences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->limit(4)->get();
         }
 
         if (auth()->user()->hasRole('superadmin')) {
@@ -2022,7 +2022,7 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
 
         $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santri->id)->first();
 
-        $openPresences = Presence::whereDate('start_date_time', date('Y-m-d'))->get();
+        $openPresences = Presence::where('is_deleted', 0)->whereDate('start_date_time', date('Y-m-d'))->get();
 
         return view('presence.edit_permit', ['permit' => $permit, 'openPresences' => $openPresences]);
     }

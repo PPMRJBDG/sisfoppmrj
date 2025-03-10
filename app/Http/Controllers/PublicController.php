@@ -505,6 +505,29 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             }
 
             echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
+        } elseif ($time == 'nerobos') {
+            $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
+            $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
+            if (count($mhs_alpha) > 0) {
+                foreach ($mhs_alpha as $vs) {
+                    $nohp = $vs->nohp;
+                    if ($nohp != '') {
+                        if ($nohp[0] == '0') {
+                            $nohp = '62' . substr($nohp, 1);
+                        }
+                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+                            $query->where('name', 'NOT LIKE', '%Bulk%');
+                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+                        if ($wa_phone != null) {
+                            $caption = '*Assalaamu Alaikum '.$vs->fullname.'*,
+Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan jangan lupa input ijin melalui Sisfo.
+الحمد للّٰه جزاكم اللّٰه خيرًا 😇🙏🏻';
+                            WaSchedules::save('Nerobos: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
+                        }
+                        $time_post++;
+                    }
+                }
+            }
         }
     }
 

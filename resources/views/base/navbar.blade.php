@@ -127,11 +127,6 @@
             <span class="sidenav-link-text ms-1">Link Laporan</span>
           </a>
         </li>
-        <li>
-          <a class="sidenav-link" href="{{ url('msgtools/report') }}">
-            <span class="sidenav-link-text ms-1">Scheduler</span>
-          </a>
-        </li>
       </ul>
     </li>
     @endif
