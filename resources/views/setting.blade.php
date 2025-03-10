@@ -86,7 +86,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
-                                        Sinkroniasi dengan Fingerprint
+                                        Sinkroniasi dengan Fingerprint | <i><small>{{count($total_santri_tfs)}} belum tersinkronisasi</small></i>
                                     </label>
                                 </div>
                             </div>
@@ -101,14 +101,16 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">
-                                        <i><small>{{count($total_santri_tfs)}} belum tersinkronisasi</small></i>
-                                    </label>
+                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync - Get User Info">
                                 </div>
                             </div>
+                        </div>
+                    </form>
+                    <form action="{{ route('sync delete fs') }}" id="sync-fs-get" method="POST" enctype="multipart/form-data">
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync - Get User Info">
+                                    <input class="btn btn-danger btn-sm btn-block mb-0" type="submit" value="Sync - Delete User Info">
                                 </div>
                             </div>
                         </div>

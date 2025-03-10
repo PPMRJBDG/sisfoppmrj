@@ -26,30 +26,32 @@ class FsController extends Controller
             // SET USERINFO
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
-                $url = 'https://developer.fingerspot.io/api/set_userinfo';
-                $data_fs = '{
-                        "trans_id":"'.date("YmdHis").'", 
-                        "cloud_id":"'.$cfs.'", 
-                        "data":{
-                            "pin":"'.$vs->santri_id.'", 
-                            "name":"'.$vs->fullname.'", 
-                            "privilege":"1", 
-                            "password":"159", 
-                            "rfid": "0", 
-                            "template":"'.$vs->template_fs.'"
-                            }
-                        }';
+                if($vs->template_fs==""){
+                    $url = 'https://developer.fingerspot.io/api/set_userinfo';
+                    $data_fs = '{
+                            "trans_id":"'.date("YmdHis").'", 
+                            "cloud_id":"'.$cfs.'", 
+                            "data":{
+                                "pin":"'.$vs->santri_id.'", 
+                                "name":"'.$vs->fullname.'", 
+                                "privilege":"1", 
+                                "password":"159", 
+                                "rfid": "0", 
+                                "template":"'.$vs->template_fs.'"
+                                }
+                            }';
 
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-                $result = curl_exec($ch);
-                curl_close($ch);
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                    $result = curl_exec($ch);
+                    curl_close($ch);
+                }
             }
         }
 
@@ -65,8 +67,38 @@ class FsController extends Controller
             // GET USERINFO
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
-                $url = 'https://developer.fingerspot.io/api/get_userinfo';
-                $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", "pin":"'.$vs->santri_id.'"}';
+                if($vs->template_fs==""){
+                    $url = 'https://developer.fingerspot.io/api/get_userinfo';
+                    $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", "pin":"'.$vs->santri_id.'"}';
+
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                    $result = curl_exec($ch);
+                    curl_close($ch);
+                }
+            }
+        }
+
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - get user info.');
+    }
+
+    public function sync_deleteuserinfo(Request $request){
+        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
+        $cloud_fs = env('CLOUD_FS_ID01');
+        $split_cloud_fs = explode(",", $cloud_fs);
+
+        foreach($split_cloud_fs as $cfs){
+            // DELETE USERINFO
+            $set_santri = DB::table('v_user_santri')->get();
+            foreach ($set_santri as $vs) {
+                $url = 'https://developer.fingerspot.io/api/delete_userinfo';
+                $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", pin":"'.$vs->santri_id.'" }';
 
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -78,10 +110,14 @@ class FsController extends Controller
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 $result = curl_exec($ch);
                 curl_close($ch);
+
+                $get_santri = Santri::find($vs->santri_id);
+                $get_santri->template_fs = null;
+                $get_santri->save();
             }
         }
 
-        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - get user info.');
+        return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - delete user info.');
     }
 
     public function fs01(Request $request)

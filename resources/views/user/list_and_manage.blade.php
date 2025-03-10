@@ -48,6 +48,7 @@
         <thead class="thead-light" style="background-color:#f6f9fc;">
           <tr class="list">
             <th class="text-center text-uppercase text-xxs font-weight-bolder">Action</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder">Sync</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder">Nama</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">No HP</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Kelamin</th>
@@ -69,6 +70,11 @@
               @can('update users')
               <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Edit</a>
               @endcan
+            </td>
+            <td class="text-sm">
+              <a href="#" class="btn {{ ($user->santri->template_fs!=null) ? 'btn-warning' : 'btn-danger' }} btn-sm mb-0">
+                {{ ($user->santri->template_fs!=null) ? 'Ok' : 'Nok'; }}
+              </a>
             </td>
             <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')" style="cursor:pointer;">
               <div class="d-flex px-2 py-1">

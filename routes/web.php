@@ -35,6 +35,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 Route::post('/fs01', [App\Http\Controllers\FsController::class, 'fs01']);
 Route::post('/sync_setuserinfo', [App\Http\Controllers\FsController::class, 'sync_setuserinfo'])->name('sync set fs');
 Route::post('/sync_getuserinfo', [App\Http\Controllers\FsController::class, 'sync_getuserinfo'])->name('sync get fs');
+Route::post('/sync_deleteuserinfo', [App\Http\Controllers\FsController::class, 'sync_deleteuserinfo'])->name('sync delete fs');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/home/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/tabgraf/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'tabgraf']);
