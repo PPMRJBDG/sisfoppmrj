@@ -531,8 +531,12 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
             }
         } elseif ($time=='tatib') {
             $tatib = ReminderTatatertib::where('status', 1)->first();
-            WaSchedules::save('Tatib #'.$tatib->id, $tatib->konten_tatib, $setting->wa_maurus_group_id);
-            WaSchedules::save('Tatib #'.$tatib->id, $tatib->konten_tatib, $setting->wa_ortu_group_id);
+            WaSchedules::save('Tatib #'.$tatib->id, '*PEMBACAAN TATA TERTIB PPM RJ*
+
+'.$tatib->konten_tatib, $setting->wa_maurus_group_id);
+            WaSchedules::save('Tatib #'.$tatib->id, '*PEMBACAAN TATA TERTIB PPM RJ*
+
+'.$tatib->konten_tatib, $setting->wa_ortu_group_id);
             $tatib->status = 0;
             $tatib->save();
 
