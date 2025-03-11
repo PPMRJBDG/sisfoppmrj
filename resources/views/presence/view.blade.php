@@ -84,7 +84,7 @@
     </div>
   </div>
 </div>
-@if(auth()->user()->hasRole('divisi kurikulum'))
+@if(auth()->user()->hasRole('divisi kurikulum') && !auth()->user()->santri->lorongUnderLead)
   <div class="card">
     <div class="card-body pt-4 p-2">
       <div class="alert alert-danger text-white">Anda tidak diperkenankan melihat presensi mahasiswa.</div>
