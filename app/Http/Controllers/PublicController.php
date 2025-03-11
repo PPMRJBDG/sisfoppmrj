@@ -23,6 +23,7 @@ use App\Models\Lorong;
 use App\Models\ReportScheduler;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\SpWhatsappContacts;
+use App\Models\ReminderTatatertib;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -38,7 +39,7 @@ class PublicController extends Controller
 
         // PREVIEW + DAILY
         if ($time == 'preview-daily') {
-            $contact_id = $setting->wa_ketertiban_group_id;
+            $contact_id = $setting->wa_info_presensi_group_id;
             $time_post = 1;
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
@@ -261,7 +262,7 @@ NB:
             }
 
             if (count($data_mhs) > 0) {
-                WaSchedules::save('Weekly Report', $data_presensi_weekly, WaSchedules::getContactId('120363393787316837@g.us'), 1);
+                WaSchedules::save('Weekly Report', $data_presensi_weekly, $setting->wa_info_presensi_group_id, 1);
 
                 // kirim ke ortu
                 $time_post = 2;
@@ -400,7 +401,7 @@ NB:
                     }
                 }
             }
-            $contact_id = WaSchedules::getContactId('120363393787316837@g.us');
+            $contact_id = $setting->wa_info_presensi_group_id;
             WaSchedules::save('Amrin Jami Tanpa Ijin Bulan ' . $last_month, $caption, $contact_id, $time_post);
             $time_post++;
 
@@ -451,7 +452,7 @@ NB:
 ' . $nox . ' *' . $casp->santri->user->fullname . '*: ' . $casp->jenis->jenis_pelanggaran . ' (SP ' . $casp->keringanan_sp . ')';
                 $nox++;
             }
-            $contact_id = WaSchedules::getContactId('120363393787316837@g.us');
+            $contact_id = $setting->wa_info_presensi_group_id;
             WaSchedules::save('Data Pelanggaran Aktif', $caption_pelanggaran, $contact_id, $time_post);
             $time_post++;
 
@@ -527,6 +528,22 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                         $time_post++;
                     }
                 }
+            }
+        } elseif ($time=='tatib') {
+            $tatib = ReminderTatatertib::where('status', 1)->first();
+            WaSchedules::save('Tatib #'.$tatib->id, $tatib->konten_tatib, $setting->wa_maurus_group_id);
+            WaSchedules::save('Tatib #'.$tatib->id, $tatib->konten_tatib, $setting->wa_ortu_group_id);
+            $tatib->status = 0;
+            $tatib->save();
+
+            $next_tatib = ReminderTatatertib::where('id', ($tatib->id+1))->first();
+            if($next_tatib==null){
+                $update = ReminderTatatertib::where('id', 1)->first();
+                $update->status = 1;
+                $update->save();
+            }else{
+                $next_tatib->status = 1;
+                $next_tatib->save();
             }
         }
     }
@@ -742,7 +759,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
             if ($permit->save()) {
                 $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
 *Alasan Ditolak:* Karena ' . $permit->alasan_rejected;
-                WaSchedules::save('Permit Rejected', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
+                WaSchedules::save('Permit Rejected', $caption, $setting->wa_info_presensi_group_id, null, true);
 
                 $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
                 // kirim ke yg ijin

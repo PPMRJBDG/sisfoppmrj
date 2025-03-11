@@ -109,9 +109,6 @@ class SettingController extends Controller
                 'wa_template' => 'required',
                 'wa_min_delay' => 'required',
                 'wa_max_delay' => 'required',
-                // 'wa_ketertiban_group_id' => 'required',
-                // 'wa_ortu_group_id' => 'required',
-                // 'wa_info_presensi_group_id' => 'required',
                 'wa_header' => 'required',
                 'wa_footer' => 'required',
                 'wa_info_alpha_ortu' => 'required',
@@ -135,6 +132,7 @@ class SettingController extends Controller
                 'wa_ketertiban_group_id' => $request->input('wa_ketertiban_group_id'),
                 'wa_info_presensi_group_id' => $request->input('wa_info_presensi_group_id'),
                 'wa_ortu_group_id' => $request->input('wa_ortu_group_id'),
+                'wa_maurus_group_id' => $request->input('wa_maurus_group_id'),
                 'wa_dewanguru_group_id' => $request->input('wa_dewanguru_group_id'),
                 'wa_header' => $request->input('wa_header'),
                 'wa_footer' => $request->input('wa_footer'),
@@ -157,6 +155,7 @@ class SettingController extends Controller
             $setting->wa_ketertiban_group_id = $request->input('wa_ketertiban_group_id');
             $setting->wa_info_presensi_group_id = $request->input('wa_info_presensi_group_id');
             $setting->wa_ortu_group_id = $request->input('wa_ortu_group_id');
+            $setting->wa_maurus_group_id = $request->input('wa_maurus_group_id');
             $setting->wa_dewanguru_group_id = $request->input('wa_dewanguru_group_id');
             $setting->wa_header = $request->input('wa_header');
             $setting->wa_footer = $request->input('wa_footer');

@@ -114,7 +114,8 @@
             <br>
             <span class="text-xxs">{{ $permit->updated_at }}</span>
             <br>
-            <span class="badge {{ $permit->status == 'pending' ? 'bg-gradient-secondary' : ($permit->status == 'approved' ? 'bg-gradient-success' : ($permit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($permit->status) }}</span>
+            <span class="badge {{ $permit->status == 'pending' ? 'bg-secondary' : ($permit->status == 'approved' ? 'bg-success' : ($permit->status == 'rejected' ? 'bg-danger' : '')) }}">{{ ucwords($permit->status) }}</span>
+            Perijinan ke: {{ $permit->ijin_kuota }}
           </td>
           <td class="p-2 text-xs">
             <div>

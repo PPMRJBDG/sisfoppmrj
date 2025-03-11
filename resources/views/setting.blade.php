@@ -162,7 +162,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 {{ $data->periode_tahun }}
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <a href="{{ route('delete periode tahun', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                                                <a href="{{ route('delete periode tahun', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -275,7 +275,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 {{ $data->keterangan }}
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <a href="{{ route('delete liburan', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                                                <a href="{{ route('delete liburan', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -342,7 +342,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 <b>[{{ $data->kategori_pelanggaran }}]</b> {{ $data->jenis_pelanggaran }}
                                             </td>
                                             <td class="align-middle text-center text-xs">
-                                                <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                                                <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -427,7 +427,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
-                                                WA - Grup Ketertiban
+                                                WA - Grup Diskusi Ketertiban
                                             </label>
                                             <select data-mdb-filter="true" class="select wa_ketertiban_group_id form-control" name="wa_ketertiban_group_id" id="wa_ketertiban_group_id">
                                                 <option value="">--pilih--</option>
@@ -435,6 +435,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @foreach($list_wa_group as $wg)
                                                 <option <?php if ($list_setting != null) {
                                                             echo ($wg->id == $list_setting->wa_ketertiban_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                WA - Grup Info Presensi & Perijinan
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_info_presensi_group_id form-control" name="wa_info_presensi_group_id" id="wa_info_presensi_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_info_presensi_group_id) ? 'selected' : '';
                                                         } ?> value="{{$wg->id}}">{{$wg->name}}</option>
                                                 @endforeach
                                                 @endif
@@ -450,6 +465,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @foreach($list_wa_group as $wg)
                                                 <option <?php if ($list_setting != null) {
                                                             echo ($wg->id == $list_setting->wa_ortu_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                WA - Grup Maurus
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_maurus_group_id form-control" name="wa_maurus_group_id" id="wa_maurus_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_maurus_group_id) ? 'selected' : '';
                                                         } ?> value="{{$wg->id}}">{{$wg->name}}</option>
                                                 @endforeach
                                                 @endif

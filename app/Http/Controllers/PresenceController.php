@@ -1136,7 +1136,7 @@ class PresenceController extends Controller
                     }
                 }
 
-                WaSchedules::save('Permit Approval', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
+                WaSchedules::save('Permit Approval', $caption, $setting->wa_info_presensi_group_id, null, true);
                 return json_encode(['status' => true, 'message' => 'Ijin berhasil disetujui', 'is_present' => $is_present]);
             }
         } else {
@@ -1163,7 +1163,7 @@ class PresenceController extends Controller
 
             if ($updated) {
                 $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-                WaSchedules::save('Permit Approval', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
+                WaSchedules::save('Permit Approval', $caption, $setting->wa_info_presensi_group_id, null, true);
             } else {
                 return redirect()->back()->withErrors('failed_updating_permit', 'Izin gagal disetujui.');
             }
@@ -1242,6 +1242,7 @@ class PresenceController extends Controller
                         if (isset($alasan_rejected)) {
                             $permit->alasan_rejected = $alasan_rejected;
                         }
+                        $permit->ijin_kuota = "";
                         $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
                         $updated = $permit->save();
                         if ($updated) {
@@ -1285,7 +1286,7 @@ class PresenceController extends Controller
                     }
                 }
 
-                WaSchedules::save('Permit Rejected', $caption, WaSchedules::getContactId('120363393787316837@g.us'), $time_post, true);
+                WaSchedules::save('Permit Rejected', $caption, $setting->wa_info_presensi_group_id, $time_post, true);
 
                 return json_encode(['status' => true, 'message' => 'Izin berhasil ditolak']);
             }
@@ -1302,12 +1303,13 @@ class PresenceController extends Controller
             $permit->alasan_rejected = $request->get('alasan');
             $permit->rejected_by = auth()->user()->fullname;
             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+            $permit->ijin_kuota = "";
 
             $updated = $permit->save();
 
             if ($updated) {
                 $caption = '*' . auth()->user()->fullname . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
-                WaSchedules::save('Permit Rejected', $caption, WaSchedules::getContactId('120363393787316837@g.us'), 1, true);
+                WaSchedules::save('Permit Rejected', $caption, $setting->wa_info_presensi_group_id, 1, true);
 
                 $name = '[Rejected] Perijinan Dari ' . $permit->santri->user->fullname;
                 // kirim ke yg ijin
@@ -1484,7 +1486,7 @@ class PresenceController extends Controller
             $add_ss = $request->input('status_ss');
             $add_ss_k = '';
             if (isset($add_ss)) {
-                $add_ss = 'Status SS: ' . $add_ss;
+                $add_ss = '- Status SS: ' . $add_ss;
                 $add_ss_k = $add_ss;
                 if (str_contains($request->input('status_ss'), 'Belum')) {
                     $add_ss_k = $add_ss_k . '
@@ -1506,7 +1508,8 @@ class PresenceController extends Controller
                 'reason_category' => $request->input('reason_category'),
                 'status' => 'approved', // default (apabila ijin tidak sesuai baru di reject)
                 'ids' => $ids,
-                'status_ss' => $request->input('status_ss')
+                'status_ss' => $request->input('status_ss'),
+                'ijin_kuota' => ($data_kbm_ijin['ijin'] + 1).'/'.$data_kbm_ijin['kuota']
             ]);
 
             if ($inserted) {
@@ -1519,16 +1522,16 @@ class PresenceController extends Controller
 
                 $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
-Presensi: ' . $presence->name . '
-Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+- Presensi: ' . $presence->name . '
+- Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss_k;
 
                 $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
-Presensi: ' . $presence->name . '
-Alasan:  [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+- Presensi: ' . $presence->name . '
+- Alasan:  [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss;
 
                 WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
@@ -1608,7 +1611,7 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                 $add_ss = $request->input('status_ss');
                 $add_ss_k = '';
                 if (isset($add_ss)) {
-                    $add_ss = 'Status SS: ' . $add_ss;
+                    $add_ss = '- Status SS: ' . $add_ss;
                     $add_ss_k = $add_ss;
                     if (str_contains($request->input('status_ss'), 'Belum')) {
                         $add_ss_k = $add_ss_k . '
@@ -1627,6 +1630,7 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                     ->where('fkPresence_group_id', $pres->id)
                     ->get();
 
+                $loop_ijin = 1;
                 foreach ($createdPresences as $presence) {
                     // check whether permit already exists
                     $existingPermit = Permit::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri->id)->first();
@@ -1655,8 +1659,10 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                         'status' => $statusx,
                         'approved_by' => $updated_by,
                         'ids' => $ids,
-                        'status_ss' => $request->input('status_ss')
+                        'status_ss' => $request->input('status_ss'),
+                        'ijin_kuota' => ($data_kbm_ijin['ijin'] + $loop_ijin).'/'.$data_kbm_ijin['kuota']
                     ]);
+                    $loop_ijin++;
                 }
 
                 // create generator
@@ -1679,16 +1685,16 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
 
                 $caption = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
-Presensi: ' . $pres_name . '
-Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+- Presensi: ' . $pres_name . '
+- Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
 ' . $add_ss_k;
 
                 $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
-Presensi: ' . $pres_name . '
-Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+- Presensi: ' . $pres_name . '
+- Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
 ' . $add_ss;
 
                 WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
@@ -1800,7 +1806,7 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
         $add_ss = $request->input('status_ss');
         $add_ss_k = '';
         if (isset($add_ss)) {
-            $add_ss = 'Status SS: ' . $add_ss;
+            $add_ss = '- Status SS: ' . $add_ss;
             $add_ss_k = $add_ss;
             if (str_contains($request->input('status_ss'), 'Belum')) {
                 $add_ss_k = $add_ss_k . '
@@ -1813,6 +1819,8 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
             }
         }
 
+        $data_kbm_ijin = CommonHelpers::statusPerijinan($santriId);
+
         $ids = uniqid();
         $inserted = Permit::create([
             'fkSantri_id' => $santriId,
@@ -1821,11 +1829,11 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
             'reason_category' => $request->input('reason_category'),
             'status' => $request->input('status'),
             'ids' => $ids,
-            'status_ss' => $request->input('status_ss')
+            'status_ss' => $request->input('status_ss'),
+            'ijin_kuota' => ($data_kbm_ijin['ijin'] + 1).'/'.$data_kbm_ijin['kuota']
         ]);
 
         if ($inserted) {
-            $data_kbm_ijin = CommonHelpers::statusPerijinan($santriId);
             $santri = Santri::find($santriId);
             $presence = Presence::find($request->input('fkPresence_id'));
             if ($santri->fkLorong_id == '') {
@@ -1910,7 +1918,7 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
             $add_ss = $request->input('status_ss');
             $add_ss_k = '';
             if (isset($add_ss)) {
-                $add_ss = 'Status SS: ' . $add_ss;
+                $add_ss = '- Status SS: ' . $add_ss;
                 $add_ss_k = $add_ss;
                 if (str_contains($request->input('status_ss'), 'Belum')) {
                     $add_ss_k = $add_ss_k . '
@@ -1929,6 +1937,7 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                 ->where('fkPresence_group_id', $pres->id)
                 ->get();
 
+            $loop_ijin = 1;
             foreach ($createdPresences as $presence) {
                 // check whether permit already exists
                 $existingPermit = Permit::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri->id)->first();
@@ -1951,8 +1960,10 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
                     'status' => $request->input('status'),
                     'approved_by' => 'system',
                     'ids' => $ids,
-                    'status_ss' => $request->input('status_ss')
+                    'status_ss' => $request->input('status_ss'),
+                    'ijin_kuota' => ($data_kbm_ijin['ijin'] + $loop_ijin).'/'.$data_kbm_ijin['kuota']
                 ]);
+                $loop_ijin++;
             }
 
             // create generator
@@ -2141,7 +2152,7 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
                     }
                 }
 
-                WaSchedules::save('Permit Delete', $caption, WaSchedules::getContactId('120363393787316837@g.us'), null, true);
+                WaSchedules::save('Permit Delete', $caption, $setting->wa_info_presensi_group_id, null, true);
                 return json_encode(['status' => true, 'message' => 'Izin berhasil dihapus']);
             }
         } else {

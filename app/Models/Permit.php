@@ -20,7 +20,8 @@ class Permit extends Model
         'ids',
         'metadata',
         'status_ss',
-        'alasan_rejected'
+        'alasan_rejected',
+        'ijin_kuota'
     ];
 
     /**
