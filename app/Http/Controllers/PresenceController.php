@@ -1102,6 +1102,7 @@ class PresenceController extends Controller
     {
         // get current santri
         $json = $request->get('json');
+        $setting = Settings::find(1);
         if (isset($json)) {
             if ($json) {
                 $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari:
@@ -1844,16 +1845,16 @@ class PresenceController extends Controller
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
-Presensi: ' . $presence->name . '
-Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+- Presensi: ' . $presence->name . '
+- Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss_k;
 
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
-Presensi: ' . $presence->name . '
-Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
+- Presensi: ' . $presence->name . '
+- Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss;
 
             WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
@@ -1991,9 +1992,9 @@ Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ij
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
-Presensi: ' . $pres_name . '
-Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+- Presensi: ' . $pres_name . '
+- Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
 ' . $sttijn . '
 ' . $add_ss_k;
 
@@ -2002,9 +2003,9 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
             }
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
-Presensi: ' . $pres_name . '
-Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
-Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
+- Presensi: ' . $pres_name . '
+- Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
+- Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
 ' . $sttijn . '
 ' . $add_ss;
 
@@ -2132,6 +2133,7 @@ Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date'
      */
     public function delete_permit(Request $request)
     {
+        $setting = Settings::find(1);
         $json = $request->get('json');
         if (isset($json)) {
             if ($json) {
