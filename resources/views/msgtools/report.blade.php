@@ -21,7 +21,7 @@
                             {{ $d->santri->user->fullname }}
                         </td>
                         <td>
-                            {{ $d->link_url }}
+                            <a href="{{$d->link_url}}" target="_blank">{{ $d->link_url }}</a>
                         </td>
                         <!-- <td>
                             {{ $d->month }}
