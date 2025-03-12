@@ -68,8 +68,8 @@ class FsController extends Controller
                     $result = curl_exec($ch);
                     curl_close($ch);
                 }
-                $loop++;
             }
+            $loop++;
         }
 
         return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - set user info.');
