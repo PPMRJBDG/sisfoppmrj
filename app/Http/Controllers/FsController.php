@@ -29,30 +29,30 @@ class FsController extends Controller
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
                 if($vs->template_fs1=="" && $loop==1){
-                    setUserInfo($vs->santri_id, $vs->fullname, $cfs);
+                    $this->setUserInfo($vs->santri_id, $vs->fullname, $cfs);
                 }
                 
                 if($vs->template_fs2=="" && $loop==2){
-                    setUserInfo($vs->santri_id, $vs->fullname, $cfs);
+                    $this->setUserInfo($vs->santri_id, $vs->fullname, $cfs);
                 }
                 
                 if($vs->template_fs3=="" && $loop==3){
-                    setUserInfo($vs->santri_id, $vs->fullname, $cfs);
+                    $this->setUserInfo($vs->santri_id, $vs->fullname, $cfs);
                 }
             }
 
             $data_degur = DewanPengajars::whereNotNull('pin')->get();
             foreach($data_degur as $degur){
                 if($degur->cloud_fs1=="" && $loop==1){
-                    setUserInfo($degur->pin, $degur->name, $cfs);
+                    $this->setUserInfo($degur->pin, $degur->name, $cfs);
                 }
                 
                 if($degur->cloud_fs2=="" && $loop==2){
-                    setUserInfo($degur->pin, $degur->name, $cfs);
+                    $this->setUserInfo($degur->pin, $degur->name, $cfs);
                 }
                 
                 if($degur->cloud_fs3=="" && $loop==3){
-                    setUserInfo($degur->pin, $degur->name, $cfs);
+                    $this->setUserInfo($degur->pin, $degur->name, $cfs);
                 }
             }
 
@@ -62,7 +62,7 @@ class FsController extends Controller
         return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil sinkronisasi - set user info.');
     }
 
-    function setUserInfo($pin, $name, $cfs){
+    public function setUserInfo($pin, $name, $cfs){
         $setting = Settings::find(1);
         $authorization = "Authorization: Bearer ".$setting->token_fs;
         $url = 'https://developer.fingerspot.io/api/set_userinfo';
@@ -102,30 +102,30 @@ class FsController extends Controller
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
                 if($vs->template_fs1=="" && $loop==1){
-                    getUserInfo($vs->santri_id, $cfs);
+                    $this->getUserInfo($vs->santri_id, $cfs);
                 }
 
                 if($vs->template_fs2=="" && $loop==2){
-                    getUserInfo($vs->santri_id, $cfs);
+                    $this->getUserInfo($vs->santri_id, $cfs);
                 }
 
                 if($vs->template_fs3=="" && $loop==3){
-                    getUserInfo($vs->santri_id, $cfs);
+                    $this->getUserInfo($vs->santri_id, $cfs);
                 }
             }
 
             $data_degur = DewanPengajars::whereNotNull('pin')->get();
             foreach($data_degur as $degur){
                 if($degur->cloud_fs1=="" && $loop==1){
-                    getUserInfo($degur->pin, $cfs);
+                    $this->getUserInfo($degur->pin, $cfs);
                 }
                 
                 if($degur->cloud_fs2=="" && $loop==2){
-                    getUserInfo($degur->pin, $cfs);
+                    $this->getUserInfo($degur->pin, $cfs);
                 }
                 
                 if($degur->cloud_fs3=="" && $loop==3){
-                    getUserInfo($degur->pin, $cfs);
+                    $this->getUserInfo($degur->pin, $cfs);
                 }
             }
             $loop++;
@@ -161,7 +161,7 @@ class FsController extends Controller
             // DELETE USERINFO
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
-                deleteUserInfo($vs->santri_id, $cfs);
+                $this->deleteUserInfo($vs->santri_id, $cfs);
                 $get_santri = Santri::find($vs->santri_id);
                 $get_santri->template_fs1 = null;
                 $get_santri->template_fs2 = null;
@@ -170,7 +170,7 @@ class FsController extends Controller
             }
             $data_degur = DewanPengajars::whereNotNull('pin')->get();
             foreach($data_degur as $degur){
-                deleteUserInfo($degur->pin, $cfs);
+                $this->deleteUserInfo($degur->pin, $cfs);
                 $get_degur = DewanPengajars::find($degur->id);
                 $get_degur->cloud_fs1 = null;
                 $get_degur->cloud_fs2 = null;
