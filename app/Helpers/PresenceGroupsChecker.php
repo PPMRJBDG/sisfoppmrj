@@ -41,6 +41,10 @@ class PresenceGroupsChecker
 
             // start to check and create all of them
             foreach ($presenceGroups as $presenceGroup) {
+                if($currentDay=='saturday' && $presenceGroup->id==2){
+                    continue;
+                }
+
                 $presenceName = $presenceGroup->name . ' ' . $currentDateNumber . '/' . $currentMonth;
 
                 // check if the presenceGroup already has a presence in this day

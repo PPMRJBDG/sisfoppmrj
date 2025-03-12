@@ -1843,19 +1843,26 @@ class PresenceController extends Controller
                 $lorong = '*' . $santri->lorong->name . '*';
             }
 
+            $need_approval = '';
+            if($request->input('status')=='pending'){
+                $need_approval = '
+
+*PERLU PERSETUJUAN*';
+            }
+
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 - Presensi: ' . $presence->name . '
 - Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 - Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
-' . $add_ss_k;
+' . $add_ss_k.$need_approval;
 
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
 - Presensi: ' . $presence->name . '
 - Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 - Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
-' . $add_ss;
+' . $add_ss.$need_approval;
 
             WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
 

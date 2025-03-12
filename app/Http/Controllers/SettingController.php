@@ -12,6 +12,7 @@ use App\Models\Settings;
 use App\Models\SpTeam;
 use App\Models\SpUsers;
 use App\Models\SpWhatsappContacts;
+use App\Models\DewanPengajars;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\CommonHelpers;
@@ -34,6 +35,10 @@ class SettingController extends Controller
         $total_santri_tfs1 = DB::table('v_user_santri')->where('template_fs1', null)->get();
         $total_santri_tfs2 = DB::table('v_user_santri')->where('template_fs2', null)->get();
         $total_santri_tfs3 = DB::table('v_user_santri')->where('template_fs3', null)->get();
+        $total_degur_tfs1 = DewanPengajars::where('cloud_fs1', null)->get();
+        $total_degur_tfs2 = DewanPengajars::where('cloud_fs2', null)->get();
+        $total_degur_tfs3 = DewanPengajars::where('cloud_fs3', null)->get();
+
         $list_wa_team = null;
         $list_wa_account = null;
         $list_wa_group = null;
@@ -64,6 +69,9 @@ class SettingController extends Controller
             'total_santri_tfs1' => $total_santri_tfs1,
             'total_santri_tfs2' => $total_santri_tfs2,
             'total_santri_tfs3' => $total_santri_tfs3,
+            'total_degur_tfs1' => $total_degur_tfs1,
+            'total_degur_tfs2' => $total_degur_tfs2,
+            'total_degur_tfs3' => $total_degur_tfs3,
             'cloud_fs' => CommonHelpers::settings()->cloud_fs,
         ]);
     }

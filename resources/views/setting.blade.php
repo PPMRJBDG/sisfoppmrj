@@ -95,13 +95,13 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         foreach($split_cloud_fs as $fs){
                                             if($i==1){
                                                 echo '<br>';
-                                                echo '<i><small>'.$fs.' : '.count($total_santri_tfs1).' belum sinkron</small></i>';
+                                                echo '<i><small>'.$fs.':<br>- '.count($total_santri_tfs1).' mahasiswa dan '.count($total_degur_tfs1).' pengajar belum sinkron</small></i>';
                                             }elseif($i==2){
                                                 echo '<br>';
-                                                echo '<i><small>'.$fs.' : '.count($total_santri_tfs2).' belum sinkron</small></i>';
+                                                echo '<i><small>'.$fs.':<br>- '.count($total_santri_tfs2).' mahasiswa dan '.count($total_degur_tfs2).' pengajar belum sinkron</small></i>';
                                             }elseif($i==3){
                                                 echo '<br>';
-                                                echo '<i><small>'.$fs.' : '.count($total_santri_tfs3).' belum sinkron</small></i>';
+                                                echo '<i><small>'.$fs.':<br>- '.count($total_santri_tfs3).' mahasiswa dan '.count($total_degur_tfs3).' pengajar belum sinkron</small></i>';
                                             }
                                             
                                             $i++;
