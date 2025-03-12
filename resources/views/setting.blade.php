@@ -89,7 +89,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
-                                        Sinkroniasi dengan Fingerprint
+                                        Sinkroniasi dengan Fingerprint - Mahasiswa
                                         <?php
                                         $i=1;
                                         foreach($split_cloud_fs as $fs){

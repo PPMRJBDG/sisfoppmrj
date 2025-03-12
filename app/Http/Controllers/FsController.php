@@ -232,7 +232,7 @@ class FsController extends Controller
                                     if ($wa_phone != null) {
                                         $text_late = '';
                                         if($is_late){
-                                            $text_late = 'terlambat';
+                                            $text_late = '*terlambat*';
                                             $nohp = $get_santri->user->nohp;
                                             if ($nohp != '') {
                                                 if ($nohp[0] == '0') {
@@ -246,9 +246,9 @@ class FsController extends Controller
                                                 }
                                             }
                                         }else{
-                                            $text_late = 'tepat waktu';
+                                            $text_late = '*tepat waktu*';
                                         }
-
+                                        $sign_in = date_format(date_create($sign_in),"d-m-Y H:i:s");
                                         WaSchedules::save('Presensi: Berhasil', '*'.$get_santri->user->fullname.'* telah hadir '.$text_late.' pada '.$presence->name.' | Tanggal & Jam: '.$sign_in.'.', $wa_phone->pid);
                                     }
                                 }
