@@ -90,12 +90,23 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                 <div class="form-group">
                                     <label class="form-control-label">
                                         Sinkroniasi dengan Fingerprint
-                                        <br>
-                                        <i><small>{{ (count($split_cloud_fs)==1) ? $split_cloud_fs[0] : '-' }} : {{ count($total_santri_tfs1) }} belum sinkron</small></i>
-                                        <br>
-                                        <i><small>{{ (count($split_cloud_fs)==2) ? $split_cloud_fs[1] : '-' }} : {{ count($total_santri_tfs2) }} belum sinkron</small></i>
-                                        <br>
-                                        <i><small>{{ (count($split_cloud_fs)==3) ? $split_cloud_fs[2] : '-' }} : {{ count($total_santri_tfs3) }} belum sinkron</small></i>
+                                        <?php
+                                        $i=1;
+                                        foreach($split_cloud_fs as $fs){
+                                            if($i==1){
+                                                echo '<br>';
+                                                echo '<i><small>'.$fs.' : '.count($total_santri_tfs1).' belum sinkron</small></i>';
+                                            }elseif($i==2){
+                                                echo '<br>';
+                                                echo '<i><small>'.$fs.' : '.count($total_santri_tfs2).' belum sinkron</small></i>';
+                                            }elseif($i==3){
+                                                echo '<br>';
+                                                echo '<i><small>'.$fs.' : '.count($total_santri_tfs3).' belum sinkron</small></i>';
+                                            }
+                                            
+                                            $i++;
+                                        }
+                                        ?>
                                     </label>
                                 </div>
                             </div>
