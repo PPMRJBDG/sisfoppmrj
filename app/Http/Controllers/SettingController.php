@@ -35,9 +35,9 @@ class SettingController extends Controller
         $total_santri_tfs1 = DB::table('v_user_santri')->where('template_fs1', null)->get();
         $total_santri_tfs2 = DB::table('v_user_santri')->where('template_fs2', null)->get();
         $total_santri_tfs3 = DB::table('v_user_santri')->where('template_fs3', null)->get();
-        $total_degur_tfs1 = DewanPengajars::where('cloud_fs1', null)->get();
-        $total_degur_tfs2 = DewanPengajars::where('cloud_fs2', null)->get();
-        $total_degur_tfs3 = DewanPengajars::where('cloud_fs3', null)->get();
+        $total_degur_tfs1 = DewanPengajars::where('cloud_fs1', null)->whereNotNull('pin')->get();
+        $total_degur_tfs2 = DewanPengajars::where('cloud_fs2', null)->whereNotNull('pin')->get();
+        $total_degur_tfs3 = DewanPengajars::where('cloud_fs3', null)->whereNotNull('pin')->get();
 
         $list_wa_team = null;
         $list_wa_account = null;
