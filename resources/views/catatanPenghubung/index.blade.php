@@ -127,36 +127,12 @@
         $('#cat_id').val(id);
         $('#santri_id').val(santri_id);
 
-        if ($("#kepribadian" + santri_id).html() != '') {
-            $("#cat_kepribadian").val($("#kepribadian" + santri_id).html())
-        } else {
-            $("#cat_kepribadian").val(kepribadian);
-        }
-        if ($("#sholat" + santri_id).html() != '') {
-            $("#cat_sholat").val($("#sholat" + santri_id).html())
-        } else {
-            $("#cat_sholat").val(sholat);
-        }
-        if ($("#kbm" + santri_id).html() != '') {
-            $("#cat_kbm").val($("#kbm" + santri_id).html())
-        } else {
-            $("#cat_kbm").val(kbm);
-        }
-        if ($("#asmara" + santri_id).html() != '') {
-            $("#cat_asmara").val($("#asmara" + santri_id).html())
-        } else {
-            $("#cat_asmara").val(asmara);
-        }
-        if ($("#akhlaq" + santri_id).html() != '') {
-            $("#cat_akhlaq").val($("#akhlaq" + santri_id).html())
-        } else {
-            $("#cat_akhlaq").val(akhlaq);
-        }
-        if ($("#umum" + santri_id).html() != '') {
-            $("#cat_umum").val($("#umum" + santri_id).html())
-        } else {
-            $("#cat_umum").val(umum);
-        }
+        $("#cat_kepribadian").val(kepribadian);
+        $("#cat_sholat").val(sholat);
+        $("#cat_kbm").val(kbm);
+        $("#cat_asmara").val(asmara);
+        $("#cat_akhlaq").val(akhlaq);
+        $("#cat_umum").val(umum);
     }
 
     $('#save').click(function() {
