@@ -72,8 +72,8 @@
               @endcan
             </td>
             <td class="text-sm">
-              <a href="#" class="btn {{ ($user->santri->template_fs!=null) ? 'btn-warning' : 'btn-danger' }} btn-sm mb-0">
-                {{ ($user->santri->template_fs!=null) ? 'Ok' : 'Nok'; }}
+              <a href="#" class="btn {{ ($user->santri->template_fs1!=null) ? 'btn-warning' : 'btn-danger' }} btn-sm mb-0">
+                {{ ($user->santri->template_fs1!=null) ? 'Ok' : 'Nok'; }}
               </a>
             </td>
             <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')" style="cursor:pointer;">

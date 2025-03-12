@@ -21,7 +21,7 @@ class Santri extends Model
         'exit_at',
         'alasan_keluar',
         'ids',
-        'template_fs'
+        'template_fs1'
     ];
 
     public function monitoringMateris()

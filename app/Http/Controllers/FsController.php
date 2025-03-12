@@ -18,39 +18,42 @@ use App\Helpers\WaSchedules;
 class FsController extends Controller
 {
     public function sync_setuserinfo(Request $request){
-        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
-        $cloud_fs = env('CLOUD_FS_ID01');
+        $setting = Settings::find(1);
+        $authorization = "Authorization: Bearer ".$setting->token_fs;
+        $cloud_fs = $setting->cloud_fs;
         $split_cloud_fs = explode(",", $cloud_fs);
 
         foreach($split_cloud_fs as $cfs){
             // SET USERINFO
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
-                if($vs->template_fs==""){
-                    $url = 'https://developer.fingerspot.io/api/set_userinfo';
-                    $data_fs = '{
-                            "trans_id":"'.date("YmdHis").'", 
-                            "cloud_id":"'.$cfs.'", 
-                            "data":{
-                                "pin":"'.$vs->santri_id.'", 
-                                "name":"'.$vs->fullname.'", 
-                                "privilege":"1", 
-                                "password":"159", 
-                                "rfid": "0", 
-                                "template":"'.$vs->template_fs.'"
-                                }
-                            }';
+                for($x==1; $x<=3; $x++){
+                    if($vs->template_fs.$x==""){
+                        $url = 'https://developer.fingerspot.io/api/set_userinfo';
+                        $data_fs = '{
+                                "trans_id":"'.date("YmdHis").'", 
+                                "cloud_id":"'.$cfs.'", 
+                                "data":{
+                                    "pin":"'.$vs->santri_id.'", 
+                                    "name":"'.$vs->fullname.'", 
+                                    "privilege":"1", 
+                                    "password":"159", 
+                                    "rfid": "0", 
+                                    "template":"'.$vs->template_fs.$x.'"
+                                    }
+                                }';
 
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fs);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                        $result = curl_exec($ch);
+                        curl_close($ch);
+                    }
                 }
             }
         }
@@ -59,28 +62,31 @@ class FsController extends Controller
     }
 
     public function sync_getuserinfo(Request $request){
-        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
-        $cloud_fs = env('CLOUD_FS_ID01');
+        $setting = Settings::find(1);
+        $authorization = "Authorization: Bearer ".$setting->token_fs;
+        $cloud_fs = $setting->cloud_fs;
         $split_cloud_fs = explode(",", $cloud_fs);
 
         foreach($split_cloud_fs as $cfs){
             // GET USERINFO
             $set_santri = DB::table('v_user_santri')->get();
             foreach ($set_santri as $vs) {
-                if($vs->template_fs==""){
-                    $url = 'https://developer.fingerspot.io/api/get_userinfo';
-                    $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", "pin":"'.$vs->santri_id.'"}';
+                for($x==1; $x<=3; $x++){
+                    if($vs->template_fs.$x==""){
+                        $url = 'https://developer.fingerspot.io/api/get_userinfo';
+                        $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", "pin":"'.$vs->santri_id.'"}';
 
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization));
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                        $result = curl_exec($ch);
+                        curl_close($ch);
+                    }
                 }
             }
         }
@@ -89,8 +95,9 @@ class FsController extends Controller
     }
 
     public function sync_deleteuserinfo(Request $request){
-        $authorization = "Authorization: Bearer ".env('TOKEN_FS');
-        $cloud_fs = env('CLOUD_FS_ID01');
+        $setting = Settings::find(1);
+        $authorization = "Authorization: Bearer ".$setting->token_fs;
+        $cloud_fs = $setting->cloud_fs;
         $split_cloud_fs = explode(",", $cloud_fs);
 
         foreach($split_cloud_fs as $cfs){
@@ -112,7 +119,9 @@ class FsController extends Controller
                 curl_close($ch);
 
                 $get_santri = Santri::find($vs->santri_id);
-                $get_santri->template_fs = null;
+                $get_santri->template_fs1 = null;
+                $get_santri->template_fs2 = null;
+                $get_santri->template_fs3 = null;
                 $get_santri->save();
             }
         }
@@ -237,12 +246,22 @@ class FsController extends Controller
             }elseif($type=='set_userinfo'){
                 echo "Sukses - Set User Info";
             }elseif($type=='get_userinfo'){
-                $get_santri = Santri::find($santri_id);
-                $get_santri->template_fs = $decoded_data['data']['template'];
-                if($get_santri->save()){
-                    echo "Sukses - Get User Info";
-                }else{
-                    echo "Gagal - Get User Info";
+                $setting = Settings::find(1);
+                $cloud_fs = $setting->cloud_fs;
+                $split_cloud_fs = explode(",", $cloud_fs);
+
+                $i=1;
+                foreach($split_cloud_fs as $cfs){
+                    if($cfs==$decoded_data['cloud_id']){
+                        $get_santri = Santri::find($santri_id);
+                        $get_santri->template_fs.$i = $decoded_data['data']['template'];
+                        if($get_santri->save()){
+                            echo "Sukses - Get User Info";
+                        }else{
+                            echo "Gagal - Get User Info";
+                        }
+                    }
+                    $i++;
                 }
             }elseif($type=='delete_userinfo'){
                 echo "Sukses - Delete User Info";

@@ -14,6 +14,7 @@ use App\Models\SpUsers;
 use App\Models\SpWhatsappContacts;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\CommonHelpers;
 
 class SettingController extends Controller
 {
@@ -30,7 +31,9 @@ class SettingController extends Controller
         $list_setting = Settings::first();
         $list_wa_user = SpUsers::where('username', $list_setting->wa_username)->get();
         // $total_santri = DB::table('v_user_santri')->get();
-        $total_santri_tfs = DB::table('v_user_santri')->where('template_fs', null)->get();
+        $total_santri_tfs1 = DB::table('v_user_santri')->where('template_fs1', null)->get();
+        $total_santri_tfs2 = DB::table('v_user_santri')->where('template_fs2', null)->get();
+        $total_santri_tfs3 = DB::table('v_user_santri')->where('template_fs3', null)->get();
         $list_wa_team = null;
         $list_wa_account = null;
         $list_wa_group = null;
@@ -58,7 +61,10 @@ class SettingController extends Controller
             'list_wa_team' => $list_wa_team,
             'list_wa_group' => $list_wa_group,
             'list_jenis_pelanggaran' => $list_jenis_pelanggaran,
-            'total_santri_tfs' => $total_santri_tfs,
+            'total_santri_tfs1' => $total_santri_tfs1,
+            'total_santri_tfs2' => $total_santri_tfs2,
+            'total_santri_tfs3' => $total_santri_tfs3,
+            'cloud_fs' => CommonHelpers::settings()->cloud_fs,
         ]);
     }
 
@@ -122,6 +128,8 @@ class SettingController extends Controller
         if ($setting == null) {
             Settings::create([
                 'host_url' => $request->input('host_url'),
+                'cloud_fs' => $request->input('cloud_fs'),
+                'token_fs' => $request->input('token_fs'),
                 'wa_username' => $request->input('wa_username'),
                 'wa_team_id' => $request->input('wa_team_id'),
                 'wa_sender_account_id' => $request->input('wa_sender_account_id'),
@@ -145,6 +153,8 @@ class SettingController extends Controller
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
+            $setting->cloud_fs = $request->input('cloud_fs');
+            $setting->token_fs = $request->input('token_fs');
             $setting->wa_username = $request->input('wa_username');
             $setting->wa_team_id = $request->input('wa_team_id');
             $setting->wa_sender_account_id = $request->input('wa_sender_account_id');

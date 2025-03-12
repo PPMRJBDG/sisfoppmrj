@@ -33,5 +33,7 @@ class Settings extends Model
         // scheduler
         'wa_info_jaga_malam',
         'wa_info_tatatertib',
+        'cloud_fs',
+        'token_fs'
     ];
 }

@@ -399,13 +399,13 @@ class UserController extends Controller
             $user->password = Hash::make('Bismillah@354');
 
             // DELETE DATA DI FINGERPRINT
-            $cloud_fs = env('CLOUD_FS_ID01');
+            $cloud_fs = CommonHelpers::settings()->cloud_fs;
             $split_cloud_fs = explode(",", $cloud_fs);
 
             foreach($split_cloud_fs as $cfs){
                 $url = 'https://developer.fingerspot.io/api/delete_userinfo';
                 $data = '{"trans_id":"'.date("YmdHis").'", "cloud_id":"'.$cfs.'", pin":"'.$user->santri->id.'" }';
-                $authorization = "Authorization: Bearer ".env('TOKEN_FS');
+                $authorization = "Authorization: Bearer ".CommonHelpers::settings()->token_fs;
                 
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);

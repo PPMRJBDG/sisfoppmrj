@@ -230,7 +230,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="example-text-input" class="form-control-label">Template Fingerprint</label>
-              <input class="form-control" type="text" name="template_fs" value="{{ isset($user->santri) ? $user->santri->template_fs : ''}}" readonly>
+              <input class="form-control" type="text" name="template_fs1" value="{{ isset($user->santri) ? $user->santri->template_fs1 : ''}}" readonly>
             </div>
           </div>
         </div>

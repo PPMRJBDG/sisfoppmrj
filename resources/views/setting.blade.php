@@ -82,14 +82,25 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('sync set fs') }}" id="sync-fs-set" method="POST" enctype="multipart/form-data">
+                        <?php
+                        $split_cloud_fs = explode(",", $cloud_fs);
+                        ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">
-                                        Sinkroniasi dengan Fingerprint | <i><small>{{count($total_santri_tfs)}} belum tersinkronisasi</small></i>
+                                        Sinkroniasi dengan Fingerprint
+                                        <br>
+                                        <i><small>{{ (count($split_cloud_fs)==1) ? $split_cloud_fs[0] : '-' }} : {{ count($total_santri_tfs1) }} belum sinkron</small></i>
+                                        <br>
+                                        <i><small>{{ (count($split_cloud_fs)==2) ? $split_cloud_fs[1] : '-' }} : {{ count($total_santri_tfs2) }} belum sinkron</small></i>
+                                        <br>
+                                        <i><small>{{ (count($split_cloud_fs)==3) ? $split_cloud_fs[2] : '-' }} : {{ count($total_santri_tfs3) }} belum sinkron</small></i>
                                     </label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Sync - Set User Info">
@@ -409,6 +420,18 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cloud FS
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->cloud_fs : '' }}" name="cloud_fs">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Token FS
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->token_fs : '' }}" name="token_fs">
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
