@@ -68,6 +68,7 @@ class FsController extends Controller
                     $result = curl_exec($ch);
                     curl_close($ch);
                 }
+                $loop++;
             }
         }
 
