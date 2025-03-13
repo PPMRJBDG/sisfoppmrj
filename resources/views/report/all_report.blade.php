@@ -247,12 +247,33 @@
         </div>
     </div>
 
+    @if($catatan_penghubungs!=null)
+    <div class="card shadow border mb-2">
+        <h5 class="text-center mb-1">Catatan Penghubung</h5>
+        <div class="card-body p-2">
+            <h5>Kepribadian:</h5>
+            <h6>{{ $catatan_penghubungs->cat_kepribadian }}</h6>
+            <hr>
+            <h5>Sholat:</h5>
+            <h6>{{ $catatan_penghubungs->cat_sholat }}</h6>
+            <hr>
+            <h5>KBM:</h5>
+            <h6>{{ $catatan_penghubungs->cat_kbm }}</h6>
+            <hr>
+            <h5>Asmara:</h5>
+            <h6>{{ $catatan_penghubungs->cat_asmara }}</h6>
+            <hr>
+            <h5>Umum:</h5>
+            <h6>{{ $catatan_penghubungs->cat_umum }}</h6>
+        </div>
+    </div>
+    @endif
 
     @if(count($pelanggaran)>0)
     <div class="card shadow border mb-2">
         <h5 class="text-center mb-1">Riwayat Pelanggaran</h5>
         <div class="card-body p-0">
-            <h6>Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
+            <h6 class="p-2">Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
             <div class="datatable datatable-sm p-0">
                 <table id="recap-pelanggaran" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">

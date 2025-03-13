@@ -24,6 +24,8 @@ use App\Models\ReportScheduler;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\SpWhatsappContacts;
 use App\Models\ReminderTatatertib;
+use App\Models\CatatanPenghubungs;
+
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -705,6 +707,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                 }
             }
         }
+        $catatan_penghubungs = CatatanPenghubungs::where('fkSantri_id',$santri_id)->first();
 
         return view('report.all_report', [
             'santri' => $santri,
@@ -714,6 +717,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
             'datapg' => $datapg,
             'data_materi' => $data_materi,
             'pelanggaran' => $pelanggaran,
+            'catatan_penghubungs' => $catatan_penghubungs,
             'sodaqoh' => $sodaqoh
         ]);
     }
