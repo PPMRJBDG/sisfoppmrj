@@ -327,7 +327,7 @@ NB:
 
             $caption = '*[LAPORAN BULANAN]*
 ';
-            $caption = $caption . '*DAFTAR KEHADIRAN MAHASISWA < 80% [BULAN ' . date('M Y', $lsm) . ']*';
+            $caption = $caption . '*DAFTAR KEHADIRAN MAHASISWA < 80% [BULAN ' . strtoupper(date('M Y', $lsm)) . ']*';
             foreach ($list_angkatan as $la) {
                 foreach ($loop_month as $lm) {
                     if (date('Y-m', strtotime(date($lm))) < date('Y-m')) {

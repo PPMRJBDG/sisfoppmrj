@@ -51,6 +51,12 @@
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
+      <a class="sidenav-link d-flex" aria-current="page" href="#">
+        <i class="fa fa-dashboard pe-3"></i>Laporan
+      </a>
+    </li>
+    
+    <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" href="#" block-id="return-false" id="navbarDropdownMenuLink-pengurus" role="button" aria-expanded="false">
         <i class="fa fa-cog pe-3"></i>Pengurus
       </a>

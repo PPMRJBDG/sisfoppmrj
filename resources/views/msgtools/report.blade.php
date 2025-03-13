@@ -28,7 +28,7 @@
                         </td> -->
                         <td>
                             @if($d->status==1)
-                            <i class="ni ni-check-bold text-info text-sm opacity-10"></i>
+                            <i class="fas fa-check text-info text-sm opacity-10"></i>
                             @endif
                         </td>
                         <!-- <td>
