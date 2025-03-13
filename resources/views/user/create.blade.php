@@ -1,19 +1,26 @@
+@if ($errors->any())
+<div class="alert alert-danger text-white">
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
+@endif
+@if (session('success'))
+<div class="alert alert-success text-white">
+  {{ session('success') }}
+</div>
+@endif
+    
+<div class="col-md-12">
+  <a class="btn btn-secondary btn-block btn-sm mb-2" href="{{ url('user/list/santri') }}">
+    <span class="">Kembali Daftar Mahasiswa</span>
+  </a>
+</div>
+
 <div class="card shadow border">
   <div class="card-body p-2">
-    @if ($errors->any())
-    <div class="alert alert-danger text-white">
-      <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-    @endif
-    @if (session('success'))
-    <div class="alert alert-success text-white">
-      {{ session('success') }}
-    </div>
-    @endif
     <form action="{{ route('store user') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="row">
@@ -122,6 +129,13 @@
               <input class="form-check-input" type="checkbox" name="role-divisi-kurikulum">
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Keamanan</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-keamanan">
+            </div>
+          </div>
+
           <div style="display:none;">
             <div class="col-md-4">
               <div class="form-group form-check">
@@ -133,12 +147,6 @@
               <div class="form-group form-check">
                 <label class="custom-control-label" for="customCheck1">Divisi IT</label>
                 <input class="form-check-input" type="checkbox" name="role-divisi-it">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group form-check">
-                <label class="custom-control-label" for="customCheck1">Divisi Kurikulum</label>
-                <input class="form-check-input" type="checkbox" name="role-divisi-kurikulum">
               </div>
             </div>
             <div class="col-md-4">
@@ -175,12 +183,6 @@
               <div class="form-group form-check">
                 <label class="custom-control-label" for="customCheck1">Divisi Asad</label>
                 <input class="form-check-input" type="checkbox" name="role-divisi-asad">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group form-check">
-                <label class="custom-control-label" for="customCheck1">Divisi Keamanan</label>
-                <input class="form-check-input" type="checkbox" name="role-divisi-keamanan">
               </div>
             </div>
           </div>

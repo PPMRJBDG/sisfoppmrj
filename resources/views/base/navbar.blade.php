@@ -149,6 +149,14 @@
     </li>
     @endif
 
+    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
+    <li class="sidenav-item">
+      <a class="sidenav-link d-flex" aria-current="page" href="{{ url('keamanan') }}">
+        <i class="fa fa-warning pe-3"></i>Daftar Jaga Malam
+      </a>
+    </li>
+    @endif
+
     <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-jadwalkbm" role="button" aria-expanded="false">
         <i class="fa fa-calendar pe-3"></i>Jadwal KBM

@@ -245,7 +245,7 @@ class FsController extends Controller
                                     $query->where('name', 'NOT LIKE', '%Bulk%');
                                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                                 if ($wa_phone != null) {
-                                    WaSchedules::save('Presensi: Null', '*[Fingerprint]* Mohon maaf '.$get_santri->user->fullname.', saat ini belum ada KBM.', $wa_phone->pid, null, true);
+                                    WaSchedules::save('Presensi: Null', '*[Fingerprint]* Mohon maaf '.$get_santri->user->fullname.', mungkin KBM sudah selesai atau belum mulai KBM selanjutnya.', $wa_phone->pid, null, true);
                                 }
                             }
                         }
@@ -253,12 +253,22 @@ class FsController extends Controller
                         if($get_degur!=null){
                             // C26308525F1E1B32,C263045107151123 -> PPM 1
                             // C2630451072F3523 -> PPM 2
-                            if($cloud_id=="C26308525F1E1B32" || $cloud_id=="C263045107151123"){
-                                $presence->fkDewan_pengajar_1 = $get_degur->id;
-                            }elseif($cloud_id=="C2630451072F3523"){
-                                $presence->fkDewan_pengajar_2 = $get_degur->id;
+
+                            if($presence->is_put_together==1){
+                                if($presence->fkDewan_pengajar_1==""){
+                                    $presence->fkDewan_pengajar_1 = $get_degur->id;
+                                }else{
+                                    $presence->fkDewan_pengajar_2 = $get_degur->id;
+                                }
+                                $presence->save();
+                            }else{
+                                if($cloud_id=="C26308525F1E1B32" || $cloud_id=="C263045107151123"){
+                                    $presence->fkDewan_pengajar_1 = $get_degur->id;
+                                }elseif($cloud_id=="C2630451072F3523"){
+                                    $presence->fkDewan_pengajar_2 = $get_degur->id;
+                                }
+                                $presence->save();
                             }
-                            $presence->save();
                         }else{
                             $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri_id)->first();
                             if ($existingPresent == null) {
@@ -278,7 +288,7 @@ class FsController extends Controller
                                         'fkSantri_id' => $santri_id,
                                         'fkPresence_id' => $presence->id,
                                         'sign_in' => $sign_in,
-                                        'updated_by' => 'Fingerprint',
+                                        'updated_by' => 'Fingerprint '.$cloud_id,
                                         'is_late' => $is_late
                                     ]);
 

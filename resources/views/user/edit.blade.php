@@ -13,8 +13,13 @@
 </div>
 @endif
 
+<div class="col-md-12">
+  <a class="btn btn-secondary btn-block btn-sm mb-2" href="#" onclick="getPrevPage()">
+    <span class="">Kembali</span>
+  </a>
+</div>
+
 <div class="card shadow border p-2">
-  <a type="button" class="btn btn-rounded btn-outline-warning btn-block m-0 mb-3" href="#" onclick="getPrevPage()">Kembali</a>
   <div class="card-body p-2">
     @if(isset($user))
     <form action="{{ route('update user', $user->id) }}" method="post" id="upload-file" enctype="multipart/form-data">
@@ -141,6 +146,13 @@
               <input class="form-check-input" type="checkbox" name="role-divisi-kurikulum" {{ $user->hasRole(['divisi kurikulum']) ? 'checked' : '' }}>
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group form-check">
+              <label class="custom-control-label" for="customCheck1">Keamanan</label>
+              <input class="form-check-input" type="checkbox" name="role-divisi-keamanan" {{ $user->hasRole(['divisi keamanan']) ? 'checked' : '' }}>
+            </div>
+          </div>
+
           <div style="display:none;">
             <div class="col-md-4">
               <div class="form-group form-check">
@@ -190,13 +202,8 @@
                 <input class="form-check-input" type="checkbox" name="role-divisi-asad" {{ $user->hasRole(['divisi asad']) ? 'checked' : '' }}>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group form-check">
-                <label class="custom-control-label" for="customCheck1">Divisi Keamanan</label>
-                <input class="form-check-input" type="checkbox" name="role-divisi-keamanan" {{ $user->hasRole(['divisi keamanan']) ? 'checked' : '' }}>
-              </div>
-            </div>
           </div>
+
           <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Mubalegh</label>

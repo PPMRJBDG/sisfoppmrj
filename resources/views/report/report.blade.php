@@ -43,6 +43,4 @@
     } catch (e) {
         window.location.replace(`{{ url("/") }}`)
     }
-
-    $('#table-report').DataTable();
 </script>
