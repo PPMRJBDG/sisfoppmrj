@@ -2,7 +2,7 @@
 $setting = App\Models\Settings::first();
 ?>
 <!DOCTYPE html>
-<html lang="en" data-mdb-theme="{{auth()->user()->themes}}">
+<html lang="en" data-mdb-theme="{{isset(auth()->user()->themes)}}">
 
 <head>
   <meta charset="utf-8" />
