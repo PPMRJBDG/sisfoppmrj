@@ -672,7 +672,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                         $datapg[$tb->ym][$pg->id]['hadir'] = $hadir;
                     }
 
-                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $santri_id AND a.status='approved' AND b.event_date LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
+                    $permit = DB::select("SELECT a.fkSantri_id, count(a.fkSantri_id) as approved FROM `permits` a JOIN `presences` b ON a.fkPresence_id=b.id WHERE a.fkSantri_id = $santri_id AND a.status='approved' AND b.is_deleted=0 AND b.event_date LIKE '%" . $tb->ym . "%' AND b.fkPresence_group_id = " . $pg->id . " GROUP BY a.fkSantri_id");
                     if ($permit != null) {
                         foreach ($permit as $p) {
                             $ijin = $ijin + $p->approved;
