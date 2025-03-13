@@ -51,9 +51,26 @@
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
-      <a class="sidenav-link d-flex" aria-current="page" href="#">
-        <i class="fa fa-dashboard pe-3"></i>Laporan
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" href="#" block-id="return-false" id="navbarDropdownMenuLink-reporting" role="button" aria-expanded="false">
+        <i class="fa fa-cog pe-3"></i>Laporan
       </a>
+      <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-reporting">
+        <li>
+          <a class="sidenav-link" href="{{ url('reporting/link_ortu') }}">
+            <span class="sidenav-link-text ms-1">Link Laporan Ortu</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidenav-link" href="{{ url('reporting/link_ortu') }}">
+            <span class="sidenav-link-text ms-1">Per Harian</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidenav-link" href="{{ url('reporting/link_ortu') }}">
+            <span class="sidenav-link-text ms-1">Dewan Guru</span>
+          </a>
+        </li>
+      </ul>
     </li>
     
     <li class="sidenav-item">
@@ -126,11 +143,6 @@
         <li>
           <a class="sidenav-link" href="{{ url('msgtools/contact') }}">
             <span class="sidenav-link-text ms-1">Contact & Bulk</span>
-          </a>
-        </li>
-        <li>
-          <a class="sidenav-link" href="{{ url('msgtools/report') }}">
-            <span class="sidenav-link-text ms-1">Link Laporan</span>
           </a>
         </li>
       </ul>

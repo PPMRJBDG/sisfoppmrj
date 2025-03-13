@@ -168,17 +168,6 @@ class MsgtoolsController extends Controller
         ]);
     }
 
-    public function report()
-    {
-        $datax = ReportScheduler::whereHas('santri', function ($query) {
-            $query->whereNull('exit_at');
-        })->get();
-
-        return view('msgtools.report', [
-            'datax' => $datax
-        ]);
-    }
-
     public function scheduler()
     {
         $datax = ReportScheduler::whereHas('santri', function ($query) {

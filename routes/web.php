@@ -219,8 +219,9 @@ Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::
 Route::get('/schedule/{time}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
 Route::get('/schedule/{time}/{presence_id}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
 Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
-Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
 Route::get('/generator', [App\Http\Controllers\PublicController::class, 'generator']);
+Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
+Route::get('/reporting/link_ortu', [App\Http\Controllers\ReportController::class, 'link_ortu'])->name('report link ortu')->middleware('role:superadmin|rj1|wk');
 
 Route::get('/dwngr/{id}/delete/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_delete_present'])->name('dwngr delete present');
 Route::get('/dwngr/{id}/present/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_present'])->name('dwngr is present');
@@ -235,7 +236,6 @@ Route::post('/catatan-penghubung/store', [App\Http\Controllers\CatatanPenghubung
 
 // msgtools
 Route::get('/msgtools/contact', [App\Http\Controllers\MsgtoolsController::class, 'contact'])->name('msgtools view contact')->middleware('role:superadmin|rj1');
-Route::get('/msgtools/report', [App\Http\Controllers\MsgtoolsController::class, 'report'])->name('msgtools view report')->middleware('role:superadmin|rj1');
 Route::get('/msgtools/scheduler', [App\Http\Controllers\MsgtoolsController::class, 'scheduler'])->name('msgtools view scheduler')->middleware('role:superadmin|rj1');
 Route::get('/msgtools/generate_bulk', [App\Http\Controllers\MsgtoolsController::class, 'generate_bulk'])->name('msgtools generate bulk')->middleware('role:superadmin|rj1');
 Route::post('/msgtools/delete_contact', [App\Http\Controllers\MsgtoolsController::class, 'delete_contact'])->name('msgtools delete contact')->middleware('role:superadmin|rj1');

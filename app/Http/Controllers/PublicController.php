@@ -622,6 +622,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
         $tahun_bulan = DB::table('presences')
             ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
             ->where('event_date', '>=', $santri->angkatan . '-09-01')
+            ->where('is_deleted',0)
             ->groupBy('ym')
             ->get();
 
@@ -631,6 +632,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                 $join->on('a.id', '=', 'b.fkPresence_id');
             })
             ->where('b.fkSantri_id', $santri_id)
+            ->where('a.is_deleted',0)
             ->orderBy('y', 'DESC')
             ->groupBy('y')
             ->get();
@@ -646,6 +648,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                 })
                 ->select('a.name', 'a.fkPresence_group_id', 'b.*')
                 ->where('a.event_date', 'like', '%' . $tb->ym . '%')
+                ->where('a.is_deleted',0)
                 ->orderBy('a.event_date', 'ASC')
                 ->get();
             if ($presences != null) {
