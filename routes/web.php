@@ -243,7 +243,8 @@ Route::post('/msgtools/create_group', [App\Http\Controllers\MsgtoolsController::
 Route::post('/msgtools/send_wa', [App\Http\Controllers\MsgtoolsController::class, 'send_wa'])->name('msgtools send wa')->middleware('role:superadmin|rj1');
 
 Route::get('/keamanan', [App\Http\Controllers\KeamananController::class, 'index'])->name('index keamanan')->middleware('role:superadmin|rj1|wk|divisi keamanan');
-Route::get('/keamanan/store_jagamalam', [App\Http\Controllers\KeamananController::class, 'store_jagamalam'])->name('store jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
+Route::post('/keamanan/store_jagamalam', [App\Http\Controllers\KeamananController::class, 'store_jagamalam'])->name('store jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
+Route::get('/keamanan/delete_jagamalam/{id}', [App\Http\Controllers\KeamananController::class, 'delete_jagamalam'])->name('delete jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);
