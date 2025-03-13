@@ -1105,7 +1105,7 @@ class PresenceController extends Controller
         $setting = Settings::find(1);
         if (isset($json)) {
             if ($json) {
-                $caption = '*' . auth()->user()->fullname . '* Menyetujui perijinan dari:
+                $caption = '*' . auth()->user()->fullname . '* Menyetujui perizinan dari:
 ';
                 $message = '';
                 $updated = false;
@@ -1124,20 +1124,24 @@ class PresenceController extends Controller
                             } else {
                                 $is_present = $is_present . ', ' . $permit->santri->user->fullname;
                             }
-                            $message = ' *(Gagal: Mahasiswa telah hadir di presensi ini)*';
+                            $message = ' *(Ternyata gagal: Karena mahasiswa telah hadir di presensi ini, silahkan dihapus perizinan ini)*';
                         } else {
                             $permit->status = 'approved';
                             $permit->approved_by = auth()->user()->fullname;
                             $permit->alasan_rejected = '';
                             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
                             $updated = $permit->save();
+
+                            $notif_info = '*' . auth()->user()->fullname . '* Menyetujui perizinan dari: *'.$permit->santri->user->fullname.'* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason;
+                            WaSchedules::save('Permit Approval - Mahasiswa', $notif_info, WaSchedules::getContactId($permit->santri->user->nohp), null, true);
+                            WaSchedules::save('Permit Approval - Ortu', $notif_info, WaSchedules::getContactId($permit->santri->nohp_ortu), null, true);
                         }
                         $caption = $caption . '- *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message . '
 ';
                     }
                 }
 
-                WaSchedules::save('Permit Approval', $caption, $setting->wa_info_presensi_group_id, null, true);
+                WaSchedules::save('Permit Approval - Info Perizinan', $caption, $setting->wa_info_presensi_group_id, null, true);
                 return json_encode(['status' => true, 'message' => 'Ijin berhasil disetujui', 'is_present' => $is_present]);
             }
         } else {
@@ -1186,6 +1190,14 @@ class PresenceController extends Controller
                     $permit->status = 'approved';
                     $permit->approved_by = auth()->user()->fullname;
                     $permit->save();
+
+                    $notif_info = '*' . auth()->user()->fullname . '* Menyetujui perizinan berjangka dari: *'.$permit->santri->user->fullname.'* pada:
+- ' . $permit->presenceGroup->name . '
+- Kategori Alasan: ' . $permit->reason_category . '
+- Alasan: ' . $permit->reason.'
+- Tanggal: '.date_format(date_create($permit->from_date),"d-m-Y").' s.d. '.date_format(date_create($permit->to_date),"d-m-Y");
+                    WaSchedules::save('Ranged Permit Approval - Mahasiswa', $notif_info, WaSchedules::getContactId($permit->santri->user->nohp));
+                    WaSchedules::save('Ranged Permit Approval - Ortu', $notif_info, WaSchedules::getContactId($permit->santri->nohp_ortu));
                 }
             }
 
@@ -1209,6 +1221,14 @@ class PresenceController extends Controller
                     $permit->status = 'rejected';
                     $permit->approved_by = auth()->user()->fullname;
                     $permit->save();
+
+                    $notif_info = '*' . auth()->user()->fullname . '* Menolak perizinan berjangka dari: *'.$permit->santri->user->fullname.'* pada:
+- ' . $permit->presenceGroup->name . '
+- Kategori Alasan: ' . $permit->reason_category . '
+- Alasan: ' . $permit->reason.'
+- Tanggal: '.date_format(date_create($permit->from_date),"d-m-Y").' s.d. '.date_format(date_create($permit->to_date),"d-m-Y");
+                    WaSchedules::save('Ranged Permit Rejected - Mahasiswa', $notif_info, WaSchedules::getContactId($permit->santri->user->nohp));
+                    WaSchedules::save('Ranged Permit Rejected - Ortu', $notif_info, WaSchedules::getContactId($permit->santri->nohp_ortu));
                 }
             }
 
@@ -1620,7 +1640,7 @@ class PresenceController extends Controller
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
                     }
                 } else {
-                    if (str_contains($request->input('reason_category'), 'Pulang -')) {
+                    if (str_contains($request->input('reason_category'), 'Pulang -') || $request->input('reason_category')=='Magang') {
                         return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
                     }
                 }
@@ -1689,14 +1709,16 @@ class PresenceController extends Controller
 - Presensi: ' . $pres_name . '
 - Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 - Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
-' . $add_ss_k;
+' . $add_ss_k.'
+*PERLU PERSETUJUAN PENGURUS*';
 
                 $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
 - Presensi: ' . $pres_name . '
 - Kategori: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 - Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
-' . $add_ss;
+' . $add_ss.'
+*PERLU PERSETUJUAN PENGURUS*';
 
                 WaSchedules::insertToKetertiban($santri, $caption, $caption_ortu);
 
@@ -1845,9 +1867,7 @@ class PresenceController extends Controller
 
             $need_approval = '';
             if($request->input('status')=='pending'){
-                $need_approval = '
-
-*PERLU PERSETUJUAN*';
+                $need_approval = '*PERLU PERSETUJUAN PENGURUS*';
             }
 
             $caption = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
@@ -1893,6 +1913,8 @@ class PresenceController extends Controller
             $all_presence = PresenceGroup::where('id', $request->input('fkPresenceGroup_id'))->get();
             $pres_name = $all_presence[0]->name;
         }
+
+        $data_kbm_ijin = CommonHelpers::statusPerijinan($request->input('fkSantri_id'));
         foreach ($all_presence as $pres) {
             $existingRangedPermit = RangedPermitGenerator::orWhere(function ($query) use ($request, $santri, $pres) {
                 $query->where('fkSantri_id', $santri->id);
@@ -1934,7 +1956,7 @@ class PresenceController extends Controller
 *NB: Silahkan Dewan Guru mempersiapkan SS kepada yang bersangkutan dan dikirim melalui WA*';
                 }
             } else {
-                if (str_contains($request->input('reason_category'), 'Pulang -')) {
+                if (str_contains($request->input('reason_category'), 'Pulang -') || $request->input('reason_category')=='Magang') {
                     return redirect()->route('presence permit submission', $presenceIdToInsert)->withErrors(['failed_adding_permit' => 'Status SS harus dipilih.']);
                 }
             }

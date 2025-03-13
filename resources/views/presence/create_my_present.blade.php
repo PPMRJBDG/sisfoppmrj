@@ -17,7 +17,7 @@
           <h6>{{ $presence->name }}</h6>
         </span>
         <div>
-          <span class="badge {{ $status == 'terbuka' || $status == 'sudah presensi' ? 'bg-gradient-success' : ($status == 'tutup' ? 'bg-gradient-secondary' : 'bg-gradient-danger' ) }}">{{ $status }}</span>
+          <span class="badge {{ $status == 'terbuka' || $status == 'sudah presensi' ? 'bg-success' : ($status == 'tutup' ? 'bg-secondary' : 'bg-danger' ) }}">{{ $status }}</span>
         </div>
       </div>
       <span class="mb-2 text-xs">Waktu buka: <span class="text-dark ms-sm-2 font-weight-bold">{{ $presence->start_date_time ? $presence->start_date_time : 'Tidak ada'}}</span></span>

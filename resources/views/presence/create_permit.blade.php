@@ -79,7 +79,7 @@
               <div class="col-md-12">
                 <div data-mdb-input-init class="form-outline form-group">
                   <textarea class="form-control" id="reason1" name="reason" rows="4" minlength="10" required></textarea>
-                  <label for="reason1" class="form-label">Berikan Alasan yg Jelas</label>
+                  <label for="reason1" class="form-label">Berikan Alasan yg Jelas (Keperluannya apa dan dimana)</label>
                 </div>
               </div>
             </div>
@@ -192,7 +192,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas <span style="color:#4d4d4d;">(minimal 10 karakter)</span></label>
+                  <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas (Keperluannya apa dan dimana)</label>
                   <textarea class="form-control" name="reason" minlength="10" required placeholder="Cth: Sakit"></textarea>
                 </div>
               </div>

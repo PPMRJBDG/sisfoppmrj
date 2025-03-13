@@ -45,7 +45,7 @@
                    {{ ucfirst(substr($myPermit->reason,0,30)) }}...
                  </td>
                  <td>
-                   <span class="badge {{ $myPermit->status == 'pending' ? 'bg-gradient-secondary' : ($myPermit->status == 'approved' ? 'bg-gradient-success' : ($myPermit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($myPermit->status) }}</span>
+                   <span class="badge {{ $myPermit->status == 'pending' ? 'bg-secondary' : ($myPermit->status == 'approved' ? 'bg-success' : ($myPermit->status == 'rejected' ? 'bg-danger' : '')) }}">{{ ucwords($myPermit->status) }}</span>
                    <br>
                    <small>{{ $myPermit->updated_at }}</small>
                  </td>
@@ -93,7 +93,7 @@
                    {{ $myRangedPermit->reason }}
                  </td>
                  <td><small>
-                     <span class="badge {{ $myRangedPermit->status == 'pending' ? 'bg-gradient-secondary' : ($myRangedPermit->status == 'approved' ? 'bg-gradient-success' : ($myRangedPermit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($myRangedPermit->status) }}</span>
+                     <span class="badge {{ $myRangedPermit->status == 'pending' ? 'bg-secondary' : ($myRangedPermit->status == 'approved' ? 'bg-success' : ($myRangedPermit->status == 'rejected' ? 'bg-danger' : '')) }}">{{ ucwords($myRangedPermit->status) }}</span>
                      <br>
                      {{ $myRangedPermit->from_date }} s.d {{ $myRangedPermit->to_date }}
                    </small></td>

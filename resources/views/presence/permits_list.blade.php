@@ -38,7 +38,7 @@
             <td>
               {{ $permit->updated_at }}
               <br>
-              <span class="badge {{ $permit->status == 'pending' ? 'bg-gradient-secondary' : ($permit->status == 'approved' ? 'bg-gradient-success' : ($permit->status == 'rejected' ? 'bg-gradient-danger' : '')) }}">{{ ucwords($permit->status) }}</span>
+              <span class="badge {{ $permit->status == 'pending' ? 'bg-secondary' : ($permit->status == 'approved' ? 'bg-success' : ($permit->status == 'rejected' ? 'bg-danger' : '')) }}">{{ ucwords($permit->status) }}</span>
             </td>
           </tr>
           @endforeach

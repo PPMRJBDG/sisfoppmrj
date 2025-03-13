@@ -21,7 +21,7 @@
             4. Bagi yang <b>izin pulang, jangan lupa meminta SS</b><br>
             5. Bagi yang mengajar prasaringan/musyawarah tidak perlu izin<br>
             6. Jika memungkinkan, mengikuti KBM melalui SDC<br>
-            7. Ijin ini akan dikirim otomatis via WA ke Koor Lorong dan Orang Tua
+            7. Perizinan ini akan dikirim otomatis via WA ke Ketertiban dan Orang Tua
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas <span style="color:#4d4d4d;">(minimal 10 karakter)</span></label>
+            <label for="fkPresence_id" class="form-control-label">Berikan Alasan yg Jelas (Keperluannya apa dan dimana)</label>
             <textarea class="form-control" name="reason" minlength="10" placeholder="Cth: Sakit" required onkeyup="return checkTextLength(this)"></textarea>
           </div>
         </div>

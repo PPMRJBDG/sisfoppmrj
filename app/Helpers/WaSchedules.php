@@ -97,7 +97,15 @@ class WaSchedules
     {
         $setting = Settings::first();
 
-        // kirim ke group koor lorong
+        // kirim ke group info ketertiban
+        $nohp = $santri->user->nohp;
+        if ($nohp != '') {
+            if ($nohp[0] == '0') {
+                $nohp = '62' . substr($nohp, 1);
+            }
+        }
+        $caption = $caption.'
+Hubungi: wa.me/'.$nohp;
         WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $setting->wa_info_presensi_group_id, null, true);
 
         // kirim ke ortu
@@ -111,26 +119,9 @@ class WaSchedules
                     $query->where('name', 'NOT LIKE', '%Bulk%');
                 })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
                 if ($wa_phone != null) {
-                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption_ortu, $wa_phone->pid, 5);
+                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname.' ke Ortu', $caption_ortu, $wa_phone->pid, 5);
                 }
             }
         }
-
-        // kirim ke koor lorong
-        // $koor_lorong = Lorong::find($santri->fkLorong_id);
-        // if ($koor_lorong != null && $setting != null) {
-        //     $nohp = $koor_lorong->leader->user->nohp;
-        //     if ($nohp != '') {
-        //         if ($nohp[0] == '0') {
-        //             $nohp = '62' . substr($nohp, 1);
-        //         }
-        //         $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-        //             $query->where('name', 'NOT LIKE', '%Bulk%');
-        //         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-        //         if ($wa_phone != null) {
-        //             WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $wa_phone->pid, 2);
-        //         }
-        //     }
-        // }
     }
 }

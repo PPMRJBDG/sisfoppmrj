@@ -317,7 +317,7 @@ function checkSS(val) {
     if (elb != null) {
         elb.disabled = true
     }
-    if (val.value.match("Pulang")) {
+    if (val.value.match("Pulang") || val.value.match("Magang")) {
         if (val.value.match("Pulang - Permintaan Ortu")) {
             alert("Perhatian! Sesuai peraturan, diperbolehkan pulang hanya di minggu ke 3 atau 4 saja.");
         }
