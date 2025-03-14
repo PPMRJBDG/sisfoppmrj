@@ -28,17 +28,24 @@ class KeamananController extends Controller
     {
         $check = JagaMalams::where('ppm',$request->input('ppm'))->get();
 
-        $putaran = 0;
-        if($check==null){
-            $putaran = 1;
+        if($request->input('id')!= ""){
+            $insert = JagaMalams::find($request->input('id'));
+            $insert->ppm = $request->input('ppm');
+            $insert->anggota = $request->input('anggota');
+            $insert->save();
         }else{
-            $putaran = count($check)+1;
+            $putaran = 0;
+            if($check==null){
+                $putaran = 1;
+            }else{
+                $putaran = count($check)+1;
+            }
+            $insert = JagaMalams::create([
+                'ppm' => $request->input('ppm'),
+                'putaran_ke' => $putaran,
+                'anggota' => $request->input('anggota'),
+            ]);
         }
-        $insert = JagaMalams::create([
-            'ppm' => $request->input('ppm'),
-            'putaran_ke' => $putaran,
-            'anggota' => $request->input('anggota'),
-        ]);
 
         if($insert){
             return json_encode(array("status" => true));

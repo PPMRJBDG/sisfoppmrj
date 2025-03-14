@@ -15,6 +15,7 @@ class Present extends Model
         'fkSantri_id',
         'fkPresence_id',
         'is_late',
+        'is_go_home_early',
         'updated_by',
         'metadata',
         'barcode_in',
@@ -22,7 +23,6 @@ class Present extends Model
         'sign_in',
         'sign_out',
         'reason_togo_home_early'
-
     ];
 
     /**
