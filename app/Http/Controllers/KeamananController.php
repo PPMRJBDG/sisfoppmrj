@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\JagaMalams;
+use App\Models\TelatPulangMalams;
 
 class KeamananController extends Controller
 {
@@ -46,6 +47,22 @@ class KeamananController extends Controller
                 'anggota' => $request->input('anggota'),
             ]);
         }
+
+        if($insert){
+            return json_encode(array("status" => true));
+        }else{
+            return json_encode(array("status" => false));
+        }
+    }
+
+    public function store_pulangmalam(Request $request)
+    {
+        $insert = TelatPulangMalams::create([
+            'fkJaga_malam_id' => auth()->user()->santri->id,
+            'fkSantri_id' => $request->input('santri_id'),
+            'jam_pulang' => $request->input('jam_pulang'),
+            'alasan' => $request->input('alasan'),
+        ]);
 
         if($insert){
             return json_encode(array("status" => true));

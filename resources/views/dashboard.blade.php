@@ -1,19 +1,85 @@
-<!-- @if($sign_in_out!=null)
-@if($sign_in_out->sign_out=='')
-<div class="col-12 p-0 mb-2">
-    <div class="card shadow border p-2">
-        <a href="{{ url('presensi/barcode') }}" class="btn btn-primary btn-sm btn-rounded mb-0">
-            @if($my_sign==null)
-            Sign In
-            @else
-            Sign Out
-            @endif
-            [{{$sign_in_out->name}}]
-        </a>
+@if(auth()->user()->santri->jaga_malam || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
+<div class="card shadow border mb-2">
+    <div class="card-body p-2">
+        <script>
+            function togglePrsc() {
+                $("#toggle-prsc").toggle();
+            }
+            function simpanPulangMalam() {
+                var datax = {};
+                datax['santri_id'] = $("#santri_id").val();
+                datax['jam_pulang'] = $("#jam_pulang").val();
+                datax['alasan'] = $("#alasan").val();
+
+                if(datax['alasan']==""){
+                    alert("Silahkan masukkan alasan");
+                }else{
+                    $("#loadingSubmit").show();
+                    $.post("{{ route('store pulangmalam') }}", datax,
+                        function(data, status) {
+                            window.location.reload();
+                        }
+                    )
+                }
+            }
+        </script>
+        <center><button class="btn btn-secondary btn-block mb-0" onclick="togglePrsc()">Input Keterlambatan Pulang</button></center>
+        <div id="toggle-prsc" class="pt-2" style="display:none;">
+            <div class="row">
+                <div class="col-md-3">
+                    <select data-mdb-filter="true" class="select form-control" value="" id="santri_id" name="santri_id" required>
+                        <option value="">--pilih santri--</option>
+                        @foreach($view_usantri as $s)
+                        <option value="{{$s->santri_id}}">{{$s->fullname}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="jam_pulang" required>
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" type="text" value="" id="alasan" placeholder="Tuliskan alasan kenapa terlambat" required>
+                </div>
+                <div class="col-md-3">
+                    <a href="#" class="btn btn-primary mb-2 btn-block" onclick="simpanPulangMalam()">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                        SIMPAN
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-2" style="background: #f6f6f6;">
+                <div class="datatable datatable-sm">
+                    <table id="table-report" class="table align-items-center mb-0">
+                        <thead style="background-color:#f6f9fc;">
+                            <tr>
+                                <th class="text-uppercase text-sm text-secondary">SANTRI</th>
+                                <th class="text-uppercase text-sm text-secondary">JAM PULANG</th>
+                                <th class="text-uppercase text-sm text-secondary">ALASAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data_telatpulang as $d)
+                                <tr class="text-sm">
+                                    <td>
+                                        {{ $d->santri->user->fullname }}
+                                    </td>
+                                    <td>
+                                        {{ date_format(date_create($d->jam_pulang), 'd-m-Y H:i:s') }}
+                                    </td>
+                                    <td>
+                                        {{ $d->alasan }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endif
-@endif -->
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
 <div class="col-12 p-0 mb-2">

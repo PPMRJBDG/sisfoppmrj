@@ -8,6 +8,7 @@ use App\Models\Presence;
 use App\Models\Present;
 use App\Helpers\CountDashboard;
 use App\Models\Periode;
+use App\Models\TelatPulangMalams;
 
 class HomeController extends Controller
 {
@@ -89,7 +90,7 @@ class HomeController extends Controller
             $tb = null;
         }
 
-        $view_usantri = DB::table('v_user_santri')->get();
+        $view_usantri = DB::table('v_user_santri')->orderBy('fullname','ASC')->get();
         $datapg = null;
         $all_presences = null;
         $presences = null;
@@ -249,6 +250,8 @@ class HomeController extends Controller
                 ->where('fkSantri_id', $santriIdToInsert)->first();
         }
 
+        $data_telatpulang = TelatPulangMalams::orderBy('id','DESC')->get();
+
         if ($json) {
             return [
                 'presences' => $presences,
@@ -260,6 +263,7 @@ class HomeController extends Controller
                 'all_presences' => $all_presences,
                 'list_angkatan' => $list_angkatan,
                 'select_angkatan' => $select_angkatan,
+                'data_telatpulang' => $data_telatpulang,
                 'all_permit' => $all_permit
             ];
         } else {
@@ -280,6 +284,7 @@ class HomeController extends Controller
                 'all_permit' => $all_permit,
                 'data_presensi' => $data_presensi,
                 'data_presensi' => $data_presensi,
+                'data_telatpulang' => $data_telatpulang,
                 'get_presence_today' => $get_presence_today
             ]);
         }

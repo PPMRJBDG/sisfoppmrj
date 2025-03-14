@@ -245,6 +245,7 @@ Route::post('/msgtools/send_wa', [App\Http\Controllers\MsgtoolsController::class
 Route::get('/keamanan', [App\Http\Controllers\KeamananController::class, 'index'])->name('index keamanan')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::post('/keamanan/store_jagamalam', [App\Http\Controllers\KeamananController::class, 'store_jagamalam'])->name('store jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::get('/keamanan/delete_jagamalam/{id}', [App\Http\Controllers\KeamananController::class, 'delete_jagamalam'])->name('delete jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
+Route::post('/keamanan/store_pulangmalam', [App\Http\Controllers\KeamananController::class, 'store_pulangmalam'])->name('store pulangmalam')->middleware('role:superadmin|rj1|wk|divisi keamanan|santri');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);
