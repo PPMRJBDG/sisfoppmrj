@@ -1,4 +1,4 @@
-@if(auth()->user()->santri->jaga_malam || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
+@if(isset(auth()->user()->santri->jaga_malam) || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
 <div class="card shadow border mb-2">
     <div class="card-body p-2">
         <script>

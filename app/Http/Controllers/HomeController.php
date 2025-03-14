@@ -250,7 +250,9 @@ class HomeController extends Controller
                 ->where('fkSantri_id', $santriIdToInsert)->first();
         }
 
-        $data_telatpulang = TelatPulangMalams::orderBy('id','DESC')->get();
+        $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
+        $yesterday = date('Y-m-d', $yesterday);
+        $data_telatpulang = TelatPulangMalams::where('jam_pulang','like',date('Y-m-d').'%')->orWhere('jam_pulang','like',$yesterday.'%')->orderBy('id','DESC')->get();
 
         if ($json) {
             return [
