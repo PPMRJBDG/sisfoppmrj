@@ -26,7 +26,7 @@
         <center><button class="btn btn-secondary btn-block mb-0" onclick="togglePrsc()">Input Keterlambatan Pulang</button></center>
         <div id="toggle-prsc" class="pt-2" style="display:none;">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <select data-mdb-filter="true" class="select form-control" value="" id="santri_id" name="santri_id" required>
                         <option value="">--pilih santri--</option>
                         @foreach($view_usantri as $s)
@@ -34,10 +34,10 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="jam_pulang" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <input class="form-control" type="text" value="" id="alasan" placeholder="Tuliskan alasan kenapa terlambat" required>
                 </div>
                 <div class="col-md-3">
