@@ -1,5 +1,5 @@
 <div class="card mb-2">
-    <div class="card-body">
+    <div class="card-body pb-0">
         <div class="card-title font-weight">
             <div class="row">
                 <input type="hidden" name="id" id="id" value="">
@@ -76,7 +76,7 @@
                                     ?>
                                 </td>
                                 <td>
-                                    {{ $d->status }}
+                                    {{ ($d->status==1) ? 'Next' : '-' }}
                                 </td>
                                 <td class="align-middle text-center text-sm">
                                     <a href="#" class="btn btn-secondary btn-sm mb-0" onclick="ubahJagaMalam({{$d}},'{{$daftar_pilihan}}')">Ubah</a>

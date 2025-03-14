@@ -85,7 +85,7 @@
                <tr class="text-sm">
                  <td>
                    <h6 class="mb-0 text-sm">{{ ($myRangedPermit->santri) ? $myRangedPermit->santri->user->fullname : '-' }}</h6>
-                   {{ $myRangedPermit->presenceGroup->name }}
+                   {{ isset($myRangedPermit->presenceGroup) ? $myRangedPermit->presenceGroup->name : '' }}
                  </td>
                  <td>
                    <b><small>[{{ ucfirst($myRangedPermit->reason_category) }}]</small></b>

@@ -25,6 +25,7 @@ use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\SpWhatsappContacts;
 use App\Models\ReminderTatatertib;
 use App\Models\CatatanPenghubungs;
+use App\Models\JagaMalams;
 
 use Illuminate\Support\Facades\DB;
 
@@ -535,9 +536,89 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
             echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
         } elseif ($time == 'jam-malam') {
+            DB::table('santris')->whereNull('exit_at')->update(array('jaga_malam' => 0));
             $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
             if ($contact_id != null) {
-                WaSchedules::save('Jam Malam ' . date('d-m-Y'), $setting->wa_info_jaga_malam, $contact_id->id, 1, true);
+                $jaga_malam1 = JagaMalams::where('ppm',1)->where('status',1)->first();
+                $jaga_malam2 = JagaMalams::where('ppm',2)->where('status',1)->first();
+                $check_liburan = Liburan::where('liburan_from', '<=', date('Y-m-d'))->where('liburan_to', '>=', date('Y-m-d'))->get();
+                if (count($check_liburan) == 0){
+                    $info_jam_malam = '*PPM 1*
+';
+                
+                    $split_team1 = explode(",", $jaga_malam1->anggota);
+                    foreach($split_team1 as $st){
+                        if($st!=""){
+                            $snt = Santri::find($st);
+                            $snt->jaga_malam = 1;
+                            $snt->save();
+                            $nohp = $snt->user->nohp;
+                            if ($nohp != '') {
+                                if ($nohp[0] == '0') {
+                                    $nohp = '62' . substr($nohp, 1);
+                                }
+                            }
+                            $info_jam_malam = $info_jam_malam.$snt->user->fullname.' wa.me/'.$nohp.'
+';
+
+                            $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.';
+                            WaSchedules::save('Nerobos Jaga Malam' . $snt->user->fullname, $capner, WaSchedules::getContactId($snt->user->nohp));
+                        }
+                    }
+                    $info_jam_malam = $info_jam_malam.'
+*PPM 2*
+';
+                    $split_team2 = explode(",", $jaga_malam2->anggota);
+                    foreach($split_team2 as $st){
+                        if($st!=""){
+                            $snt = Santri::find($st);
+                            $snt->jaga_malam = 1;
+                            $snt->save();
+                            $nohp = $snt->user->nohp;
+                            if ($nohp != '') {
+                                if ($nohp[0] == '0') {
+                                    $nohp = '62' . substr($nohp, 1);
+                                }
+                            }
+                            $info_jam_malam = $info_jam_malam.$snt->user->fullname.' wa.me/'.$nohp.'
+';
+
+                            $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.';
+                            WaSchedules::save('Nerobos Jaga Malam' . $snt->user->fullname, $capner, WaSchedules::getContactId($snt->user->nohp));
+                        }
+                    }
+                }else{
+                    $info_jam_malam = '*Amalsholih Yang Masih Berada Di Lingkungan PPM Turut Menjaga Keamanan.*
+';
+                }
+
+                $jaga_malam1->status = 0;
+                $jaga_malam1->save();
+                $jaga_malam2->status = 0;
+                $jaga_malam2->save();
+
+                $next_jaga1 = JagaMalams::where('ppm',1)->where('putaran_ke',($jaga_malam1->putaran_ke+1))->first();
+                if($next_jaga1==null){
+                    $update = JagaMalams::where('ppm',1)->where('putaran_ke',1)->first();
+                    $update->status = 1;
+                    $update->save();
+                }else{
+                    $next_jaga1->status = 1;
+                    $next_jaga1->save();
+                }
+                $next_jaga2 = JagaMalams::where('ppm',2)->where('putaran_ke',($jaga_malam2->putaran_ke+1))->first();
+                if($next_jaga2==null){
+                    $update = JagaMalams::where('ppm',2)->where('putaran_ke',1)->first();
+                    $update->status = 1;
+                    $update->save();
+                }else{
+                    $next_jaga2->status = 1;
+                    $next_jaga2->save();
+                }
+
+                $info_jam_malam = $info_jam_malam.'
+'.$setting->wa_info_jaga_malam;
+                WaSchedules::save('Jam Malam ' . date('d-m-Y'), $info_jam_malam, $contact_id->id);
             }
 
             echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
@@ -990,44 +1071,4 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
             return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menginput presensi');
         }
     }
-
-    // public function presence_is_late($id, $santriId, Request $request)
-    // {
-    //     $lorong = $request->get('lorong');
-    //     if ($lorong == null) {
-    //         $lorong = '-';
-    //     }
-    //     $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
-
-    //     if ($present) {
-    //         $present->delete();
-    //         Present::create([
-    //             'fkSantri_id' => $santriId,
-    //             'fkPresence_id' => $id,
-    //             'is_late' => 1
-    //         ]);
-    //     }
-
-    //     return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
-    // }
-
-    // public function presence_is_not_late($id, $santriId, Request $request)
-    // {
-    //     $lorong = $request->get('lorong');
-    //     if ($lorong == null) {
-    //         $lorong = '-';
-    //     }
-    //     $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
-
-    //     if ($present) {
-    //         $present->delete();
-    //         Present::create([
-    //             'fkSantri_id' => $santriId,
-    //             'fkPresence_id' => $id,
-    //             'is_late' => 0
-    //         ]);
-    //     }
-
-    //     return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil mengubah telat');
-    // }
 }
