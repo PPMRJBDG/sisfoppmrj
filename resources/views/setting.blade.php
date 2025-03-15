@@ -19,7 +19,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     <div class="col-md-6">
         <div class="col-md-12 mb-2">
             <h5 class="mb-0"><b>Profile</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('store apps') }}" id="upload-file" method="POST" enctype="multipart/form-data">
@@ -82,7 +82,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <!-- sync fingerspot -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0 mt-3"><b>Sinkronisasi FP</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('sync set fs') }}" id="sync-fs-set" method="POST" enctype="multipart/form-data">
@@ -147,7 +147,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <!-- Periode Tahun -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0 mt-3"><b>Periode</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -206,7 +206,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <!-- Generate Sodaqoh -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0 mt-3"><b>Generate Sodaqoh</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('store generate sodaqoh') }}" method="POST" enctype="multipart/form-data">
@@ -244,7 +244,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <!-- Calendar Liburan -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0 mt-3"><b>Liburan</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -323,7 +323,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <!-- Jenis Pelanggaran -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0 mt-3"><b>Daftar Pelanggaran</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -394,7 +394,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0"><b>Pengaturan</b></h5>
-            <hr>
+            
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -405,7 +405,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     <div class="col-md-6">
 
                                         <h5><b>Umum</b></h5>
-                                        <hr>
+                                        
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Host URL
@@ -432,7 +432,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
 
                                         <h5><b>WhatsApp</b></h5>
-                                        <hr>
+                                        
                                         <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
@@ -580,7 +580,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-6">
                                         <h5><b>Presensi</b></h5>
-                                        <hr>
+                                        
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Info Alpha ke Ortu
@@ -636,7 +636,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
 
                                         <h5><b>Scheduler</b></h5>
-                                        <hr>
+                                        
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Cron - Daily
@@ -764,7 +764,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 
                                     <div class="col-md-12">
                                         <h5><b>Template WA</b></h5>
-                                        <hr>
+                                        
                                         <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
