@@ -81,17 +81,17 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                             }
                         }
 
-                        // if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
-                        //     $infodp_xxz = $setting->org_name . ' 1 dan 2';
-                        //     if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
-                        //         $infodp_xxz = $setting->org_name . ' 2';
-                        //     } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
-                        //         $infodp_xxz = $setting->org_name . ' 1';
-                        //     }
-                        //     $infodp = '*[' . $setting->apps_name . ']* ' . $presence->name . ', Dewan Pengajar ' . $infodp_xxz . ' belum disesuaikan: ' . $setting->host_url . '/presensi/list/' . $presence->id;
-                        //     WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
-                        //     $time_post++;
-                        // }
+                        if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
+                            $infodp_xxz = $setting->org_name . ' 1 dan 2';
+                            if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
+                                $infodp_xxz = $setting->org_name . ' 2';
+                            } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
+                                $infodp_xxz = $setting->org_name . ' 1';
+                            }
+                            $infodp = 'Dewan Pengajar ' . $infodp_xxz . ' pada '.$presence->name.' belum disesuaikan';
+                            WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
+                            $time_post++;
+                        }
                     }
                 }
 
@@ -164,31 +164,19 @@ ________________________
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
-                        if (count($mhs_alpha) > 0) {
-                            $caption = $caption . '*Daftar Mahasiswa Alpha*
-';
-                            foreach ($mhs_alpha as $d) {
-                                $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
-';
-                                // info ke ortu
-//                                 if ($setting->wa_info_alpha_ortu == 1) {
-//                                     $caption_ortu = 'Assalamualaikum Wr Wb,
-// Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
-
-// Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
-// *' . $d['lorong'] . '*.
-
-// Alhamdulillahi Jazaakumullaahu Khoiro 🙏🏻';
-//                                     WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, true);
-//                                     $time_post++;
-//                                 }
-                            }
-                        }
+//                         if (count($mhs_alpha) > 0) {
+//                             $caption = $caption . '*Daftar Mahasiswa Alpha*
+// ';
+//                             foreach ($mhs_alpha as $d) {
+//                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
+// ';
+//                             }
+//                         }
                     }
                 }
                 $caption = $caption . '
 NB:
-- Jika ada keperluan, dapat melakukan input ijin melalui Sisfo
+- Jika ada keperluan atau berhalangan hadir, dapat melakukan input ijin melalui Sisfo
 - Jika dalam 1 bulan kehadiran < 80%, akan ada pemanggilan dan kafaroh
 - Apabila terdapat ketidaksesuaian, amalsholih menghubungi Pengurus atau Koor Lorong';
 
@@ -650,64 +638,32 @@ NB:
             }
 
             echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
-        } elseif ($time == 'nerobos') {
-//             if(!$setting->cron_nerobos){
-//                 exit;
-//             }
-            
-//             $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
-//             $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
-//             if (count($mhs_alpha) > 0) {
-//                 foreach ($mhs_alpha as $vs) {
-//                     $nohp = $vs->nohp;
-//                     if ($nohp != '') {
-//                         if ($nohp[0] == '0') {
-//                             $nohp = '62' . substr($nohp, 1);
-//                         }
-//                         $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-//                             $query->where('name', 'NOT LIKE', '%Bulk%');
-//                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-//                         if ($wa_phone != null) {
-//                             $caption = '*Assalaamu Alaikum '.$vs->fullname.'*,
-// Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan jangan lupa input ijin melalui Sisfo.
-// الحمد للّٰه جزاكم اللّٰه خيرًا 😇🙏🏻';
-//                             WaSchedules::save('Nerobos: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
-//                         }
-//                         $time_post++;
-//                     }
-//                 }
-//             }
-//             echo json_encode(['status' => true, 'message' => '[nerobos] success running scheduler']);
         } elseif ($time=='tatib') {
             if(!$setting->cron_tatib){
                 echo json_encode(['status' => false, 'message' => '[tatib] scheduler off']);
                 exit;
             }
-            
-            // if(date('D') == 'Sat' || date('D') == 'Sun'){
 
-            // }else{
-                $tatib = ReminderTatatertib::where('status', 1)->first();
-                $caption = "*PEMBACAAN TATA TERTIB PPM RJ*
+            $tatib = ReminderTatatertib::where('status', 1)->first();
+            $caption = "*PEMBACAAN TATA TERTIB PPM RJ*
 *".$tatib->kategori."*
 
 ".$tatib->konten_tatib;
 
-                WaSchedules::save('Tatib #'.$tatib->id, $caption, $setting->wa_maurus_group_id);
-                WaSchedules::save('Tatib #'.$tatib->id, $caption, $setting->wa_ortu_group_id);
-                $tatib->status = 0;
-                $tatib->save();
+            WaSchedules::save('Tatib #'.$tatib->id, $caption, $setting->wa_maurus_group_id);
+            WaSchedules::save('Tatib #'.$tatib->id, $caption, $setting->wa_ortu_group_id);
+            $tatib->status = 0;
+            $tatib->save();
 
-                $next_tatib = ReminderTatatertib::where('id', ($tatib->id+1))->first();
-                if($next_tatib==null){
-                    $update = ReminderTatatertib::where('id', 1)->first();
-                    $update->status = 1;
-                    $update->save();
-                }else{
-                    $next_tatib->status = 1;
-                    $next_tatib->save();
-                }
-            // }
+            $next_tatib = ReminderTatatertib::where('id', ($tatib->id+1))->first();
+            if($next_tatib==null){
+                $update = ReminderTatatertib::where('id', 1)->first();
+                $update->status = 1;
+                $update->save();
+            }else{
+                $next_tatib->status = 1;
+                $next_tatib->save();
+            }
             echo json_encode(['status' => true, 'message' => '[tatib] success running scheduler']);
         } elseif ($time=='minutes') {
             if(!$setting->cron_minutes){
@@ -746,13 +702,42 @@ NB:".$is_put_together."
             }
 
             // nerobos jika 30 menit belum dateng
-            // $currentDateTime = date('Y-m-d H:i');
-            // $add_mins = date('Y-m-d H:i', strtotime("+{$setting->reminder_kbm} minutes", strtotime($currentDateTime)));
-            // $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->where('is_deleted', 0)->first();
-            // if($get_presence_today!=null){
-            // }
+            if($setting->cron_nerobos){
+                $currentDateTime = date('Y-m-d H:i');
+                $min_mins = date('Y-m-d H:i', strtotime("-30 minutes", strtotime($currentDateTime)));
+                $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
+                if($get_presence_today!=null){
+                    $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
+                    if (count($mhs_alpha) > 0) {
+                        foreach ($mhs_alpha as $vs) {
+                            $caption = 'Assalaamu Alaikum *'.$vs->fullname.'*,
+Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan jangan lupa input ijin melalui Sisfo.
+الحمد للّٰه جزاكم اللّٰه خيرًا 😇🙏🏻';
+                            WaSchedules::save('Nerobos: ' . $vs->fullname, $caption, WaSchedules::getContactId($vs->nohp), null, true);
+                        }
+                    }
+                }
+            }
 
-            // jam FP off -> info alpha
+            // jam FP off -> info alpha ke ortu
+            if ($setting->wa_info_alpha_ortu) {
+                $currentDateTime = date('Y-m-d H:i');
+                $min_mins = date('Y-m-d H:i', strtotime("-45 minutes", strtotime($currentDateTime)));
+                $get_presence_today = Presence::where('event_date', $event_date)->where('end_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
+                if($get_presence_today!=null){
+                    $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
+                    if (count($mhs_alpha) > 0) {
+                        foreach ($mhs_alpha as $vs) {
+                            $caption_ortu = 'Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
+
+Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
+*' . $d['lorong'] . '*.';
+                            WaSchedules::save('Info Alpha ke Ortu: ' . $vs->fullname, $caption_ortu, WaSchedules::getContactId($vs->nohp_ortu));
+                        }
+                    }
+                }
+            }
+
             echo json_encode(['status' => true, 'message' => '[minutes] success running scheduler']);
         }
     }
