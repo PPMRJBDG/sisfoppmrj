@@ -19,4 +19,9 @@ class TelatPulangMalams extends Model
     {
         return $this->belongsTo(Santri::class, 'fkSantri_id');
     }
+
+    public function jaga()
+    {
+        return $this->belongsTo(Santri::class, 'fkJaga_malam_id');
+    }
 }

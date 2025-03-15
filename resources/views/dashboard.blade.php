@@ -53,6 +53,7 @@
                     <table id="table-report" class="table align-items-center mb-0">
                         <thead style="background-color:#f6f9fc;">
                             <tr>
+                                <th class="text-uppercase text-sm text-secondary">JAGA</th>
                                 <th class="text-uppercase text-sm text-secondary">SANTRI</th>
                                 <th class="text-uppercase text-sm text-secondary">JAM PULANG</th>
                                 <th class="text-uppercase text-sm text-secondary">ALASAN</th>
@@ -61,6 +62,9 @@
                         <tbody>
                             @foreach($data_telatpulang as $d)
                                 <tr class="text-sm">
+                                    <td>
+                                        {{ $d->jaga->user->fullname }}
+                                    </td>
                                     <td>
                                         {{ $d->santri->user->fullname }}
                                     </td>

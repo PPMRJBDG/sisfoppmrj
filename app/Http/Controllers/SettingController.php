@@ -158,6 +158,15 @@ class SettingController extends Controller
                 'status_perijinan' => $request->input('status_perijinan'),
                 'wa_link_presensi_koor' => $request->input('wa_link_presensi_koor'),
                 'auto_generate_hadir' => $request->input('auto_generate_hadir'),
+                'cron_daily' => $request->input('cron_daily'),
+                'cron_preview_daily' => $request->input('cron_preview_daily'),
+                'cron_weekly' => $request->input('cron_weekly'),
+                'cron_monthly' => $request->input('cron_monthly'),
+                'cron_presence' => $request->input('cron_presence'),
+                'cron_jam_malam' => $request->input('cron_jam_malam'),
+                'cron_nerobos' => $request->input('cron_nerobos'),
+                'cron_tatib' => $request->input('cron_tatib'),
+                'cron_minutes' => $request->input('cron_minutes'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -183,6 +192,15 @@ class SettingController extends Controller
             $setting->status_perijinan = $request->input('status_perijinan');
             $setting->wa_link_presensi_koor = $request->input('wa_link_presensi_koor');
             $setting->auto_generate_hadir = $request->input('auto_generate_hadir');
+            $setting->cron_daily = $request->input('cron_daily');
+            $setting->cron_preview_daily = $request->input('cron_preview_daily');
+            $setting->cron_weekly = $request->input('cron_weekly');
+            $setting->cron_monthly = $request->input('cron_monthly');
+            $setting->cron_presence = $request->input('cron_presence');
+            $setting->cron_jam_malam = $request->input('cron_jam_malam');
+            $setting->cron_nerobos = $request->input('cron_nerobos');
+            $setting->cron_tatib = $request->input('cron_tatib');
+            $setting->cron_minutes = $request->input('cron_minutes');
             $setting->save();
         }
 

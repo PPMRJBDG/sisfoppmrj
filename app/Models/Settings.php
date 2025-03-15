@@ -34,6 +34,15 @@ class Settings extends Model
         'wa_info_jaga_malam',
         'wa_info_tatatertib',
         'cloud_fs',
-        'token_fs'
+        'token_fs',
+        'cron_daily',
+        'cron_preview_daily',
+        'cron_weekly',
+        'cron_monthly',
+        'cron_presence',
+        'cron_jam_malam',
+        'cron_nerobos',
+        'cron_tatib',
+        'cron_minutes',
     ];
 }

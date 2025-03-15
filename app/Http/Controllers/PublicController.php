@@ -42,6 +42,10 @@ class PublicController extends Controller
 
         // PREVIEW + DAILY
         if ($time == 'preview-daily') {
+            if(!$setting->cron_preview_daily){
+                exit;
+            }
+
             $contact_id = $setting->wa_info_presensi_group_id;
             $time_post = 1;
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
@@ -105,6 +109,10 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                 echo json_encode(['status' => false, 'message' => 'holiday']);
             }
         } else if ($time == 'daily') {
+            if(!$setting->cron_daily){
+                exit;
+            }
+            
             $time_post = 1;
             // update pemutihan
             $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
@@ -207,10 +215,9 @@ NB:
 
         // WEEKLY
         elseif ($time == 'weekly') {
-            // laporan presensi mingguan
-            // bulk mahasiswa + ortu
-            // jika all_ijin > 1/3 KBM diberi peringatan
-            // daftar mahasiswa yang presensi < 80%
+            if(!$setting->cron_weekly){
+                exit;
+            }
 
             $lm = strtotime(date("Y-m-d"));
             $last_month = date('Y-m', $lm);
@@ -281,6 +288,10 @@ NB:
 
         // MONTHLY
         elseif ($time == 'monthly') {
+            if(!$setting->cron_monthly){
+                exit;
+            }
+            
             $time_post = 1;
             $no = 1;
             // daftar mahasiswa yang presensi < 80%
@@ -497,6 +508,10 @@ Silahkan klik link dibawah ini:
 
         // LINK PRESENSI
         elseif ($time == 'presence') {
+            if(!$setting->cron_presence){
+                exit;
+            }
+            
             PresenceGroupsChecker::checkPresenceGroups();
             $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
             if ($get_presence_today != null) {
@@ -536,6 +551,10 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
             echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
         } elseif ($time == 'jam-malam') {
+            if(!$setting->cron_jam_malam){
+                exit;
+            }
+            
             DB::table('santris')->whereNull('exit_at')->update(array('jaga_malam' => 0));
             $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
             if ($contact_id != null) {
@@ -623,6 +642,10 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
             echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
         } elseif ($time == 'nerobos') {
+            if(!$setting->cron_nerobos){
+                exit;
+            }
+            
             $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
             $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
             if (count($mhs_alpha) > 0) {
@@ -646,9 +669,13 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                 }
             }
         } elseif ($time=='tatib') {
-            if(date('D') == 'Sat' || date('D') == 'Sun'){
+            if(!$setting->cron_tatib){
+                exit;
+            }
+            
+            // if(date('D') == 'Sat' || date('D') == 'Sun'){
 
-            }else{
+            // }else{
                 $tatib = ReminderTatatertib::where('status', 1)->first();
                 $caption = "*PEMBACAAN TATA TERTIB PPM RJ*
 *".$tatib->kategori."*
@@ -669,7 +696,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                     $next_tatib->status = 1;
                     $next_tatib->save();
                 }
-            }
+            // }
         }
     }
 

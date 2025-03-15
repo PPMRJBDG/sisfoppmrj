@@ -613,7 +613,125 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             <textarea rows="3" class="form-control" name="wa_footer" required>{{ ($list_setting) ? $list_setting->wa_footer : '' }}</textarea>
                                             @endif
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Daily
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_daily form-control" name="cron_daily" id="cron_daily">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_daily) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_daily) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Preview Daily
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_preview_daily form-control" name="cron_preview_daily" id="cron_preview_daily">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_preview_daily) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_preview_daily) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Weekly
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_weekly form-control" name="cron_weekly" id="cron_weekly">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_weekly) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_weekly) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Monthly
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_monthly form-control" name="cron_monthly" id="cron_monthly">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_monthly) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_monthly) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Presence
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_presence form-control" name="cron_presence" id="cron_presence">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_presence) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_presence) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Jam Malam
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_jam_malam form-control" name="cron_jam_malam" id="cron_jam_malam">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_jam_malam) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_jam_malam) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Nerobos
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_nerobos form-control" name="cron_nerobos" id="cron_nerobos">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_nerobos) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_nerobos) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Tata Tertib
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_tatib form-control" name="cron_tatib" id="cron_tatib">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_tatib) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_tatib) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cron - Per Menit
+                                            </label>
+                                            <select data-mdb-filter="true" class="select cron_minutes form-control" name="cron_minutes" id="cron_minutes">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->cron_minutes) ? 'selected' : '';
+                                                        } ?> value="0">Matikan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->cron_minutes) ? 'selected' : '';
+                                                        } ?> value="1">Aktifkan</option>
+                                            </select>
+                                        </div>
                                     </div>
+
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             @if($list_setting->wa_username!='')
