@@ -18,6 +18,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 <div class="row">
     <div class="col-md-6">
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0"><b>Profile</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('store apps') }}" id="upload-file" method="POST" enctype="multipart/form-data">
@@ -79,6 +81,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- sync fingerspot -->
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0 mt-3"><b>Sinkronisasi FP</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('sync set fs') }}" id="sync-fs-set" method="POST" enctype="multipart/form-data">
@@ -142,6 +146,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Periode Tahun -->
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0 mt-3"><b>Periode</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -199,6 +205,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Generate Sodaqoh -->
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0 mt-3"><b>Generate Sodaqoh</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <form action="{{ route('store generate sodaqoh') }}" method="POST" enctype="multipart/form-data">
@@ -235,6 +243,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Calendar Liburan -->
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0 mt-3"><b>Liburan</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -312,6 +322,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
         </div>
         <!-- Jenis Pelanggaran -->
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0 mt-3"><b>Daftar Pelanggaran</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -381,6 +393,8 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
     <div class="col-md-6">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
+            <h5 class="mb-0"><b>Pengaturan</b></h5>
+            <hr>
             <div class="card border p-2 shadow-lg">
                 <div class="">
                     <div class="row">
@@ -389,6 +403,9 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6">
+
+                                        <h5><b>Umum</b></h5>
+                                        <hr>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Host URL
@@ -401,6 +418,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             </label>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->wa_username : '' }}" name="wa_username" required>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Cloud FS
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->cloud_fs : '' }}" name="cloud_fs">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Token FS
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->token_fs : '' }}" name="token_fs">
+                                        </div>
+
+                                        <h5><b>WhatsApp</b></h5>
+                                        <hr>
                                         <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
@@ -431,18 +463,6 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endforeach
                                                 @endif
                                             </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                Cloud FS
-                                            </label>
-                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->cloud_fs : '' }}" name="cloud_fs">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                Token FS
-                                            </label>
-                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->token_fs : '' }}" name="token_fs">
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
@@ -520,62 +540,6 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-control-label">
-                                                WA - Info Alpha ke Ortu
-                                            </label>
-                                            <select data-mdb-filter="true" class="select wa_info_alpha_ortu form-control" name="wa_info_alpha_ortu" id="wa_info_alpha_ortu">
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (0 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
-                                                        } ?> value="0">Tidak</option>
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (1 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
-                                                        } ?> value="1">Ya</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                WA - Link Presensi ke Koor Lorong
-                                            </label>
-                                            <select data-mdb-filter="true" class="select wa_link_presensi_koor form-control" name="wa_link_presensi_koor" id="wa_link_presensi_koor">
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (0 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
-                                                        } ?> value="0">Tidak</option>
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (1 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
-                                                        } ?> value="1">Ya</option>
-                                            </select>
-                                            @endif
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                Auto Generate Hadir
-                                            </label>
-                                            <select data-mdb-filter="true" class="select auto_generate_hadir form-control" name="auto_generate_hadir" id="auto_generate_hadir">
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (0 == $list_setting->auto_generate_hadir) ? 'selected' : '';
-                                                        } ?> value="0">Tidak</option>
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (1 == $list_setting->auto_generate_hadir) ? 'selected' : '';
-                                                        } ?> value="1">Ya</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                Status Perijinan 30%
-                                            </label>
-                                            <select data-mdb-filter="true" class="select status_perijinan form-control" name="status_perijinan" id="status_perijinan">
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (0 == $list_setting->status_perijinan) ? 'selected' : '';
-                                                        } ?> value="0">Tidak Diaktifkan</option>
-                                                <option <?php if ($list_setting != null) {
-                                                            echo (1 == $list_setting->status_perijinan) ? 'selected' : '';
-                                                        } ?> value="1">Diaktifkan</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
                                                 WA - Type
@@ -613,6 +577,66 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             <textarea rows="3" class="form-control" name="wa_footer" required>{{ ($list_setting) ? $list_setting->wa_footer : '' }}</textarea>
                                             @endif
                                         </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5><b>Presensi</b></h5>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Info Alpha ke Ortu
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_info_alpha_ortu form-control" name="wa_info_alpha_ortu" id="wa_info_alpha_ortu">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
+                                                        } ?> value="0">Tidak</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->wa_info_alpha_ortu) ? 'selected' : '';
+                                                        } ?> value="1">Ya</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Link Presensi ke Koor Lorong
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_link_presensi_koor form-control" name="wa_link_presensi_koor" id="wa_link_presensi_koor">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
+                                                        } ?> value="0">Tidak</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->wa_link_presensi_koor) ? 'selected' : '';
+                                                        } ?> value="1">Ya</option>
+                                            </select>
+                                            @endif
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Auto Generate Hadir
+                                            </label>
+                                            <select data-mdb-filter="true" class="select auto_generate_hadir form-control" name="auto_generate_hadir" id="auto_generate_hadir">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->auto_generate_hadir) ? 'selected' : '';
+                                                        } ?> value="0">Tidak</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->auto_generate_hadir) ? 'selected' : '';
+                                                        } ?> value="1">Ya</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Status Perijinan 30%
+                                            </label>
+                                            <select data-mdb-filter="true" class="select status_perijinan form-control" name="status_perijinan" id="status_perijinan">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->status_perijinan) ? 'selected' : '';
+                                                        } ?> value="0">Tidak Diaktifkan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->status_perijinan) ? 'selected' : '';
+                                                        } ?> value="1">Diaktifkan</option>
+                                            </select>
+                                        </div>
+
+                                        <h5><b>Scheduler</b></h5>
+                                        <hr>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Cron - Daily
@@ -730,20 +754,28 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                         } ?> value="1">Aktifkan</option>
                                             </select>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Reminder KBM (menit)
+                                            </label>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->reminder_kbm : '' }}" name="reminder_kbm">
+                                        </div>
                                     </div>
 
                                     <div class="col-md-12">
+                                        <h5><b>Template WA</b></h5>
+                                        <hr>
                                         <div class="form-group">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
-                                                WA - Info Jaga Malam
+                                                Info Jaga Malam
                                             </label>
                                             <textarea rows="6" class="form-control mb-2" name="wa_info_jaga_malam" required>{{ ($list_setting) ? $list_setting->wa_info_jaga_malam : '' }}</textarea>
 
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
-                                                WA - Info Untuk Mahasiswa yang Sudah Lulus
+                                                Info Untuk Mahasiswa yang Sudah Lulus
                                             </label>
                                             <textarea rows="6" class="form-control mb-2" name="wa_info_lulus" required>{{ ($list_setting) ? $list_setting->wa_info_lulus : '' }}</textarea>
                                             @endif

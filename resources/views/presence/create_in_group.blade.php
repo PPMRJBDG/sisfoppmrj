@@ -1,3 +1,4 @@
+
 @if(isset($presenceGroup))
 <div class="card shadow border p-2">
   <div class="">

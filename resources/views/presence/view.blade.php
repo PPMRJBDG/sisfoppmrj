@@ -1,6 +1,7 @@
 <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
+
 @if(isset($presence))
 <div class="card shadow border">
   <div class="card-body p-2">
@@ -18,9 +19,9 @@
         var checkBoxSatukan = document.getElementById("is_put_together");
         checkBoxSatukan = (checkBoxSatukan.checked) ? 1 : 0;
         
-        if (checkBoxHasda && checkBoxSatukan) {
-          $("#p1").html('Penyampai Dalil / PPG');
-          $("#p2").html('Penyampai Teks / Naslis');
+        if ((checkBoxHasda && checkBoxSatukan) || checkBoxSatukan) {
+          $("#p1").html('Pemateri');
+          $("#p2").html('Pemateri');
         } else {
           $("#p1").html('Pengajar PPM 1');
           $("#p2").html('Pengajar PPM 2');
@@ -40,7 +41,7 @@
             <input class="form-control" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text">
           </div>
           <div class="col-12 pb-2">
-            <small id="p1">{{ ($presence->is_hasda && $presence->is_put_together) ? 'Penyampai Dalil / PPG' : 'Pengajar PPM 1' }}</small>
+            <small id="p1">{{ (($presence->is_hasda && $presence->is_put_together) || $presence->is_put_together) ? 'Pemateri' : 'Pengajar PPM 1' }}</small>
             <select data-mdb-filter="true" name="dewan_pengajar1" id="dewan_pengajar1" class="select form-control">
               <option value="">Pilih Dewan Pengajar PPM 1</option>
               @foreach($dewan_pengajar as $dp)
@@ -49,7 +50,7 @@
             </select>
           </div>
           <div class="col-12 pb-2">
-            <small id="p2">{{ ($presence->is_hasda && $presence->is_put_together) ? 'Penyampai Teks / Naslis' : 'Pengajar PPM 2' }}</small>
+            <small id="p2">{{ (($presence->is_hasda && $presence->is_put_together) || $presence->is_put_together) ? 'Pemateri' : 'Pengajar PPM 2' }}</small>
             <select data-mdb-filter="true" name="dewan_pengajar2" id="dewan_pengajar2" class="select form-control">
               <option value="">Pilih Dewan Pengajar PPM 2</option>
               @foreach($dewan_pengajar as $dp)
@@ -60,7 +61,7 @@
           <div class="col-12 p-2 pl-0">
             <div class="form-check mb-0">
               <input class="form-check-input" onchange="isHasdaSatukan()" type="checkbox" {{ ($presence->is_hasda) ? 'checked' : '' }} id="is_hasda" name="is_hasda">
-              <label class="form-check-label" for="is_hasda">Hasda</label>
+              <label class="form-check-label" for="is_hasda">Hasda <small>(tambahkan pada nama KBM dengan: Teks / Dalil / PPG / Organisasi)</small></label>
             </div>
             <div class="form-check mb-0">
               <input class="form-check-input" onchange="isHasdaSatukan()" type="checkbox" {{ ($presence->is_put_together) ? 'checked' : '' }} id="is_put_together" name="is_put_together">
@@ -468,12 +469,14 @@
     datax['is_put_together'] = (checkBoxPutGe.checked) ? 1 : 0;
     $("#info-update-presence").hide();
     $("#info-update").html('');
+    $("#loadingSubmit").show();
 
     $.post(`{{ url("/") }}/presensi/list/update/` + id, datax,
       function(data, status) {
         var return_data = JSON.parse(data);
         $("#info-update-presence").show();
         $("#info-update").html(return_data.message);
+        $("#loadingSubmit").hide();
       }
     )
   }

@@ -26,6 +26,7 @@ function refreshCurrentUrl() {
 }
 
 function getPrevPage() {
+    $("#breadcrumb-item").html("")
     if (getCookie('prev_url') == "") {
         getPage("/home");
     } else {

@@ -13,11 +13,6 @@
 </div>
 @endif
 
-<div class="col-md-12">
-  <a class="btn btn-secondary btn-block btn-sm mb-2" href="#" onclick="getPrevPage()">
-    <span class="">Kembali</span>
-  </a>
-</div>
 
 <div class="card shadow border p-2">
   <div class="card-body p-2">

@@ -43,6 +43,7 @@ class PublicController extends Controller
         // PREVIEW + DAILY
         if ($time == 'preview-daily') {
             if(!$setting->cron_preview_daily){
+                echo json_encode(['status' => false, 'message' => '[preview-daily] scheduler off']);
                 exit;
             }
 
@@ -110,6 +111,7 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
             }
         } else if ($time == 'daily') {
             if(!$setting->cron_daily){
+                echo json_encode(['status' => false, 'message' => '[daily] scheduler off']);
                 exit;
             }
             
@@ -216,6 +218,7 @@ NB:
         // WEEKLY
         elseif ($time == 'weekly') {
             if(!$setting->cron_weekly){
+                echo json_encode(['status' => false, 'message' => '[weekly] scheduler off']);
                 exit;
             }
 
@@ -288,7 +291,9 @@ NB:
 
         // MONTHLY
         elseif ($time == 'monthly') {
+            PresenceGroupsChecker::createPresence();
             if(!$setting->cron_monthly){
+                echo json_encode(['status' => false, 'message' => '[monthly] scheduler off']);
                 exit;
             }
             
@@ -509,6 +514,7 @@ Silahkan klik link dibawah ini:
         // LINK PRESENSI
         elseif ($time == 'presence') {
             if(!$setting->cron_presence){
+                echo json_encode(['status' => false, 'message' => '[presence] scheduler off']);
                 exit;
             }
             
@@ -540,7 +546,9 @@ Silahkan klik link dibawah ini:
                         if ($setting->wa_info_alpha_ortu == 1) {
                             $caption_ortu = 'Menginformasikan bahwa *' . $d['name'] . '* tadi tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
 
-Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
+NB:
+- Jika ternyata hadir, silahkan melaporkan ke Pengurus untuk disesuaikan presensinya
+- Jika ada kendala lainnya, silahkan menghubungi:
 *' . $d['lorong'] . '*.';
                             WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, false);
                             $time_post++;
@@ -552,6 +560,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
         } elseif ($time == 'jam-malam') {
             if(!$setting->cron_jam_malam){
+                echo json_encode(['status' => false, 'message' => '[jam-malam] scheduler off']);
                 exit;
             }
             
@@ -642,34 +651,36 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
             echo json_encode(['status' => true, 'message' => '[jam-malam] success running scheduler']);
         } elseif ($time == 'nerobos') {
-            if(!$setting->cron_nerobos){
-                exit;
-            }
+//             if(!$setting->cron_nerobos){
+//                 exit;
+//             }
             
-            $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
-            $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
-            if (count($mhs_alpha) > 0) {
-                foreach ($mhs_alpha as $vs) {
-                    $nohp = $vs->nohp;
-                    if ($nohp != '') {
-                        if ($nohp[0] == '0') {
-                            $nohp = '62' . substr($nohp, 1);
-                        }
-                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                        if ($wa_phone != null) {
-                            $caption = '*Assalaamu Alaikum '.$vs->fullname.'*,
-Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan jangan lupa input ijin melalui Sisfo.
-الحمد للّٰه جزاكم اللّٰه خيرًا 😇🙏🏻';
-                            WaSchedules::save('Nerobos: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
-                        }
-                        $time_post++;
-                    }
-                }
-            }
+//             $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
+//             $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
+//             if (count($mhs_alpha) > 0) {
+//                 foreach ($mhs_alpha as $vs) {
+//                     $nohp = $vs->nohp;
+//                     if ($nohp != '') {
+//                         if ($nohp[0] == '0') {
+//                             $nohp = '62' . substr($nohp, 1);
+//                         }
+//                         $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+//                             $query->where('name', 'NOT LIKE', '%Bulk%');
+//                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+//                         if ($wa_phone != null) {
+//                             $caption = '*Assalaamu Alaikum '.$vs->fullname.'*,
+// Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan jangan lupa input ijin melalui Sisfo.
+// الحمد للّٰه جزاكم اللّٰه خيرًا 😇🙏🏻';
+//                             WaSchedules::save('Nerobos: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
+//                         }
+//                         $time_post++;
+//                     }
+//                 }
+//             }
+//             echo json_encode(['status' => true, 'message' => '[nerobos] success running scheduler']);
         } elseif ($time=='tatib') {
             if(!$setting->cron_tatib){
+                echo json_encode(['status' => false, 'message' => '[tatib] scheduler off']);
                 exit;
             }
             
@@ -697,6 +708,52 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                     $next_tatib->save();
                 }
             // }
+            echo json_encode(['status' => true, 'message' => '[tatib] success running scheduler']);
+        } elseif ($time=='minutes') {
+            if(!$setting->cron_minutes){
+                echo json_encode(['status' => false, 'message' => '[minutes] scheduler off']);
+                exit;
+            }
+            // Nerobos KBM
+            $event_date = date('Y-m-d');
+            $currentDateTime = date('Y-m-d H:i');
+            $add_mins = date('Y-m-d H:i', strtotime("+{$setting->reminder_kbm} minutes", strtotime($currentDateTime)));
+            $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->where('is_deleted', 0)->first();
+            if($get_presence_today!=null){
+                $is_put_together = "";
+                if($get_presence_today->is_put_together){
+                    $is_put_together = "
+- *Disatukan di PPM 1*";
+                }
+                $is_hasda = "";
+                if($get_presence_today->is_hasda){
+                    $is_hasda = " - *HASDA*";
+                }
+                $caption = "*[INFO ".strtoupper($get_presence_today->name)."]*".$is_hasda."
+
+".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd-m-Y')."
+-
+Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
+Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
+-
+Fingerprint (in): *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
+Fingerprint (out): *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
+-
+NB:".$is_put_together."
+- Amalsholih untuk hadir tepat waktu
+- Dalam pelaksanaan KBM supaya dipersungguh dan diniati mencari kefahaman";
+                WaSchedules::save('Reminder #'.$get_presence_today->name, $caption, $setting->wa_maurus_group_id);
+            }
+
+            // nerobos jika 30 menit belum dateng
+            // $currentDateTime = date('Y-m-d H:i');
+            // $add_mins = date('Y-m-d H:i', strtotime("+{$setting->reminder_kbm} minutes", strtotime($currentDateTime)));
+            // $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->where('is_deleted', 0)->first();
+            // if($get_presence_today!=null){
+            // }
+
+            // jam FP off -> info alpha
+            echo json_encode(['status' => true, 'message' => '[minutes] success running scheduler']);
         }
     }
 

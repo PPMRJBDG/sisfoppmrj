@@ -1,17 +1,18 @@
 <header>
   <nav class="navbar navbar-expand-lg fixed-top navbar-{{auth()->user()->themes}} bg-body-tertiary shadow-1-strong border-bottom">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        @if($setting->logoImgUrl!='')
-        <img src="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}" height="24" alt="PPM Logo" loading="lazy" />
-
-        <!-- <a type="button" class="btn btn-primary btn-floating m-0" onclick="getPrevPage()">
-          <i class="fas fa-chevron-left"></i>
-        </a> -->
-        @else
-        No Logo
-        @endif
-      </a>
+      <div class="d-flex">
+        <a class="navbar-brand" href="#">
+          @if($setting->logoImgUrl!='')
+          <img src="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}" height="24" alt="PPM Logo" loading="lazy" />
+          @else
+          No Logo
+          @endif
+        </a>
+        <a type="button" class="btn btn-primary btn-floating m-0" href="#" onclick="getPrevPage()">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+      </div>
 
       <div class="d-flex">
         <div class="flex-fill">

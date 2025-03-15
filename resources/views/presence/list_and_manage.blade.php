@@ -20,12 +20,6 @@
   </div>
 </div>
 
-@if (session('success'))
-<div class="alert alert-success text-white">
-  {{ session('success') }}
-</div>
-@endif
-
 @foreach($presenceGroups as $presenceGroup)
 <div class="card shadow border mb-2">
   <div class="card-header">

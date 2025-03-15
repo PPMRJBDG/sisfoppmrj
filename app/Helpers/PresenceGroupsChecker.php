@@ -52,6 +52,14 @@ class PresenceGroupsChecker
                     ->where('event_date', $currentDate)->first();
 
                 if (isset($presenceInThisDate)) {
+                    if($presenceInThisDate->is_deleted==2){
+                        $presenceInThisDate->is_deleted = 0;
+                        $presenceInThisDate->start_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour));
+                        $presenceInThisDate->end_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour));
+                        $presenceInThisDate->presence_start_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour));
+                        $presenceInThisDate->presence_end_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour));
+                        $presenceInThisDate->save();
+                    }
                     array_push($results['already_created_presences'], $presenceInThisDate);
                     continue;
                 }
@@ -85,6 +93,89 @@ class PresenceGroupsChecker
                 }
 
                 array_push($results['created_presences'], $presenceName);
+            }
+        }
+
+        return $results;
+    }
+
+    public static function createPresence()
+    {
+        $results = [
+            'created_presences' => [],
+            'already_created_presences' => [],
+            'presences_failed_to_create' => [],
+            'presence_groups_have_schedules' => [],
+            'day' => ''
+        ];
+
+        $tahun = date('Y');
+        $bulan = date('m');
+        $jumlah_tanggal = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+
+        for($i=0; $i<$jumlah_tanggal; $i++){
+            // get current day
+            $currentDate = date('Y-m-d', strtotime('+'.$i.' day', strtotime(date('Y-m-d'))));;
+            $currentDateNumber = date_format(date_create($currentDate), 'd');
+            $currentMonth = date_format(date_create($currentDate), 'm');
+            $currentDay = strtolower(date_format(date_create($currentDate), 'l'));
+            $results['day'] = $currentDay;
+
+            $check_liburan = Liburan::where('liburan_from', '<=', $currentDate)->where('liburan_to', '>=', $currentDate)->get();
+
+            if (count($check_liburan) == 0 && $currentDay != 'sunday') {
+                // load all presence groups that the 'days' attribute contains current day AND are ACTIVE
+                $presenceGroups = PresenceGroup::where('days', 'LIKE', '%' . $currentDay . '%')->where('status', 'active')->get();
+
+                $results['presence_groups_have_schedules'] = $presenceGroups;
+
+                // start to check and create all of them
+                foreach ($presenceGroups as $presenceGroup) {
+                    if($currentDay=='saturday' && $presenceGroup->id==2){
+                        continue;
+                    }
+
+                    $presenceName = $presenceGroup->name . ' ' . $currentDateNumber . '/' . $currentMonth;
+
+                    // check if the presenceGroup already has a presence in this day
+                    $presenceInThisDate = Presence::where('fkPresence_group_id', $presenceGroup->id)
+                        ->where('event_date', $currentDate)->first();
+
+                    if (isset($presenceInThisDate)) {
+                        array_push($results['already_created_presences'], $presenceInThisDate);
+                        continue;
+                    }
+
+                    $getPengajar1 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                        ->where('day', $currentDay)->where('ppm', 1)->first();
+                    $getPengajar2 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                        ->where('day', $currentDay)->where('ppm', 2)->first();
+
+                    $newPresenceInThisDate = Presence::create([
+                        'fkPresence_group_id' => $presenceGroup->id,
+                        'name' => $presenceName,
+                        'event_date' => $currentDate,
+                        'total_mhs' => CountDashboard::total_mhs('all'),
+                        'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
+                        'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour)),
+                        'presence_start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour)),
+                        'presence_end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour)),
+                        'fkDewan_pengajar_1' => ($getPengajar1 != null) ? $getPengajar1->fkDewan_pengajar_id : null,
+                        'fkDewan_pengajar_2' => ($getPengajar2 != null) ? $getPengajar2->fkDewan_pengajar_id : null,
+                        'is_deleted' => ($i==0) ? 0 : 2,
+                    ]);
+
+                    if (!$newPresenceInThisDate) {
+                        Log::error('Unable to a create Presence in PresenceGroup scheduling in process of inserting to DB.
+                        Presence name: ' . $presenceName);
+
+                        array_push($results['presences_failed_to_create'], $presenceName);
+
+                        continue;
+                    }
+
+                    array_push($results['created_presences'], $presenceName);
+                }
             }
         }
 

@@ -352,7 +352,7 @@ class PresenceController extends Controller
         $presence = Presence::find($id);
         if ($presence == null) {
             return redirect()->route('index');
-        } elseif ($presence->is_deleted) {
+        } elseif ($presence->is_deleted==1) {
             return redirect()->route('presence tm')->with('success', 'Presensi ' . $presence->name . ' telah dihapus oleh ' . $presence->deleted_by);
         }
 

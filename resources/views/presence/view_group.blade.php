@@ -1,3 +1,4 @@
+
 <div>
   @if(isset($presenceGroup))
   <div class="card shadow border">
@@ -28,7 +29,7 @@
   </div>
   @endif
 
-  <div class="card shadow border mt-2 mb-2 p-2">
+  <div class="card shadow border mt-0 mb-2 p-2">
     <a href="{{ route('create presence in group', $presenceGroup->id) }}" class="btn btn-primary btn-block btn-sm m-0">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Buat presensi di grup ini
@@ -43,25 +44,67 @@
     </div>
   <?php } ?>
 
-  @foreach($presenceGroup->presences()->where('is_deleted',0)->orderBy('event_date', 'DESC')->paginate(13) as $presence)
-  <div class="card shadow border mb-2 p-2">
-    <div class="">
-      <h6 class=" mb-0 text-sm font-weight-bolder">{{ $presence->name }}</h6>
-      @include('components.presence_summary', ['presence' => $presence])
-    </div>
-    <div class="ms-auto text-end mt-3">
-      <a class="btn btn-success btn-sm m-0" href="{{ route('view presence', $presence->id) }}"><i class="far fa-eye me-2" aria-hidden="true"></i>Lihat</a>
-      @can('delete presences')
-      <a class="btn btn-danger btn-sm m-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
-      @endcan
-      @can('update presences')
-      <a class="btn btn-warning btn-sm m-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt me-2" aria-hidden="true"></i>Ubah</a>
-      @endcan
-    </div>
-  </div>
-  @endforeach
+  <div class="card shadow border">
+    <nav>
+      <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
+          <a data-mdb-ripple-init class="nav-link active font-weight-bolder" id="nav-aktif-tab" data-bs-toggle="tab" href="#nav-aktif" role="tab" aria-controls="nav-aktif" aria-selected="true">
+              Aktif
+          </a>
+          <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-draft-tab" data-bs-toggle="tab" href="#nav-draft" role="tab" aria-controls="nav-draft">
+              Draft
+          </a>
+      </div>
 
-  @include('components.paginator', ['page' => $page])
+      <div class="tab-content p-0 mt-2" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-aktif" role="tabpanel" aria-labelledby="nav-aktif-tab">
+          @foreach($presenceGroup->presences()->where('is_deleted',0)->orderBy('event_date', 'DESC')->paginate(13) as $presence)
+          <div class="card shadow border mb-2 p-2">
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="mb-0 text-sm font-weight-bolder">{{ $presence->name }}</h6>
+                @include('components.presence_summary', ['presence' => $presence])
+              </div>
+              <div class="col-md-6 ms-auto text-end mt-3">
+                <a class="btn btn-success btn-sm m-0" href="{{ route('view presence', $presence->id) }}"><i class="far fa-eye me-2" aria-hidden="true"></i>Lihat</a>
+                @can('delete presences')
+                <a class="btn btn-danger btn-sm m-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
+                @endcan
+                @can('update presences')
+                <a class="btn btn-warning btn-sm m-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt me-2" aria-hidden="true"></i>Ubah</a>
+                @endcan
+              </div>
+            </div>
+          </div>
+          @endforeach
+
+          @include('components.paginator', ['page' => $page])
+      </div>
+      <div class="tab-pane fade show" id="nav-draft" role="tabpanel" aria-labelledby="nav-draft-tab">
+        @foreach($presenceGroup->presences()->where('is_deleted',2)->orderBy('event_date', 'ASC')->paginate(13) as $presence)
+          <div class="card shadow border mb-2 p-2">
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="mb-0 text-sm font-weight-bolder">{{ $presence->name }}</h6>
+                @include('components.presence_summary', ['presence' => $presence])
+              </div>
+              <div class="col-md-6 ms-auto text-end mt-3">
+                <a class="btn btn-success btn-sm m-0" href="{{ route('view presence', $presence->id) }}"><i class="far fa-eye me-2" aria-hidden="true"></i>Lihat</a>
+                @can('delete presences')
+                <a class="btn btn-danger btn-sm m-0" href="{{ route('delete presence', $presence->id) }}" onclick="return confirm('Yakin menghapus? Seluruh data terkait presensi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
+                @endcan
+                @can('update presences')
+                <a class="btn btn-warning btn-sm m-0" href="{{ route('edit presence', $presence->id) }}"><i class="fas fa-pencil-alt me-2" aria-hidden="true"></i>Ubah</a>
+                @endcan
+              </div>
+            </div>
+          </div>
+          @endforeach
+
+          @include('components.paginator', ['page' => $page])
+      </div>
+    </div>
+    </nav>
+  </div>
 
   @else
   <div class="card">
