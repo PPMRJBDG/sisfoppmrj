@@ -677,10 +677,11 @@ NB:
                 exit;
             }
             // Nerobos KBM
-            $event_date = date('Y-m-d');
             $currentDateTime = date('Y-m-d H:i');
             $add_mins = date('Y-m-d H:i', strtotime("+{$setting->reminder_kbm} minutes", strtotime($currentDateTime)));
+            $event_date = date('Y-m-d', strtotime("+{$setting->reminder_kbm} minutes", strtotime($currentDateTime)));
             $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->whereNot('is_deleted', 1)->first();
+            
             if($get_presence_today!=null){
                 $is_put_together = "";
                 if($get_presence_today->is_put_together){
@@ -693,7 +694,7 @@ NB:
                 }
                 $caption = "*[INFO ".strtoupper($get_presence_today->name)."]*".$is_hasda."
 
-".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd-m-Y')."
+".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd M Y')."
 -
 Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
 Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
