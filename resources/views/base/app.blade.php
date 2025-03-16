@@ -291,7 +291,7 @@ if (auth()->user()->hasRole('barcode')) {
           }
 
           getPage(this.href);
-          $("#breadcrumb-item").html(e.target.innerText)
+          // $("#breadcrumb-item").html(e.target.innerText)
           return false;
         }
       }
