@@ -711,7 +711,7 @@ NB:".$is_put_together."
             if($setting->cron_nerobos){
                 $currentDateTime = date('Y-m-d H:i');
                 $min_mins = date('Y-m-d H:i', strtotime("-{$setting->reminder_nerobos} minutes", strtotime($currentDateTime)));
-                $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
+                $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $min_mins.'%')->whereNot('is_deleted', 1)->first();
                 if($get_presence_today!=null){
                     $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
                     if (count($mhs_alpha) > 0) {

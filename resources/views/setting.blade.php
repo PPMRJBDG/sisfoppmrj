@@ -715,7 +715,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                         } ?> value="1">Aktifkan</option>
                                             </select>
                                         </div>
-                                        <!-- <div class="form-group">
+                                        <div class="form-group">
                                             <label class="form-control-label">
                                                 Cron - Nerobos
                                             </label>
@@ -727,7 +727,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->cron_nerobos) ? 'selected' : '';
                                                         } ?> value="1">Aktifkan</option>
                                             </select>
-                                        </div> -->
+                                        </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Cron - Tata Tertib
