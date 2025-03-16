@@ -699,12 +699,15 @@ NB:
 Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
 Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
 -
-Fingerprint (in): *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
-Fingerprint (out): *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
+*Fingerprint*:
+Mulai Sign In -> *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
+Batas Sign Out -> *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
 -
 NB:".$is_put_together."
-- Amalsholih untuk hadir tepat waktu
-- Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman";
+- Amalsholih untuk dapat hadir tepat waktu, tertib, dan disiplin
+- Supaya mempersiapkan diri sebelum jam KBM dimulai, menuju masjid/mushola untuk sholat berjamaah sekaligus membawa materi yang sudah ditentukan
+- Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman
+- Dilarang scan fingerprint, lalu kembali ke kamar tanpa ada udzur (jika diketahui akan mendapat kafaroh)";
                 WaSchedules::save('Reminder #'.$get_presence_today->name, $caption, $setting->wa_maurus_group_id);
             }
 
