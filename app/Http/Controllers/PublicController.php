@@ -219,9 +219,9 @@ NB:
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-            $data_presensi_weekly = '*[Laporan Mingguan] Presensi KBM kurang dari 80%: ' . date("M Y") . '*
-';
+            $data_presensi_weekly = '*[Laporan Mingguan] Presensi KBM kurang dari 80%: ' . date("M Y") . '*';
             $data_mhs = array();
+            $set_angkatan = "";
             foreach ($list_angkatan as $la) {
                 $result = (new HomeController)->dashboard($last_month, $la->angkatan, '-', true);
                 $view_usantri = $result['view_usantri'];
@@ -229,7 +229,7 @@ NB:
                 $presences = $result['presences'];
                 $all_presences = $result['all_presences'];
                 $all_permit = $result['all_permit'];
-
+                
                 foreach ($view_usantri as $vu) {
                     $all_persentase = 0;
                     $all_kbm = 0;
@@ -251,6 +251,12 @@ NB:
                         $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
                         // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
                         if ($all_persentase < 80) {
+                            if($set_angkatan!=$vu->angkatan){
+                                $data_presensi_weekly = $data_presensi_weekly."
+
+*".$la->angkatan."*";
+                                $set_angkatan = $vu->angkatan;
+                            }
                             $all_persentase = number_format($all_persentase, 2);
                             $data_mhs[$vu->santri_id]['nohp'] = $vu->nohp_ortu;
                             $data_mhs[$vu->santri_id]['caption'] = '*[Laporan Mingguan] Presensi KBM ' . $vu->fullname . ' pada bulan ' . date("M Y") . ': ' . $all_persentase . '%*';
@@ -697,14 +703,14 @@ Fingerprint (out): *".date_format(date_create($get_presence_today->presence_end_
 -
 NB:".$is_put_together."
 - Amalsholih untuk hadir tepat waktu
-- Dalam pelaksanaan KBM supaya dipersungguh dan diniati mencari kefahaman";
+- Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman";
                 WaSchedules::save('Reminder #'.$get_presence_today->name, $caption, $setting->wa_maurus_group_id);
             }
 
-            // nerobos jika 30 menit belum dateng
+            // nerobos belum dateng
             if($setting->cron_nerobos){
                 $currentDateTime = date('Y-m-d H:i');
-                $min_mins = date('Y-m-d H:i', strtotime("-30 minutes", strtotime($currentDateTime)));
+                $min_mins = date('Y-m-d H:i', strtotime("-{$setting->reminder_nerobos} minutes", strtotime($currentDateTime)));
                 $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
                 if($get_presence_today!=null){
                     $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);

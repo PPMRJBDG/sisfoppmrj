@@ -715,7 +715,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                         } ?> value="1">Aktifkan</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label class="form-control-label">
                                                 Cron - Nerobos
                                             </label>
@@ -727,7 +727,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                             echo (1 == $list_setting->cron_nerobos) ? 'selected' : '';
                                                         } ?> value="1">Aktifkan</option>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Cron - Tata Tertib
@@ -758,7 +758,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             <label class="form-control-label">
                                                 Reminder KBM (menit)
                                             </label>
+                                            <br>
+                                            <small>
+                                                [pengingat dijalankan sebelum {{$list_setting->reminder_kbm}} menit KBM dimulai]
+                                            </small>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->reminder_kbm : '' }}" name="reminder_kbm">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Reminder Kehadiran (menit)
+                                            </label>
+                                            <br>
+                                            <small>
+                                                [pengingat dijalankan setelah {{$list_setting->reminder_nerobos}} menit KBM dimulai]
+                                            </small>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->reminder_nerobos : '' }}" name="reminder_nerobos">
                                         </div>
                                     </div>
 

@@ -45,5 +45,6 @@ class Settings extends Model
         'cron_tatib',
         'cron_minutes',
         'reminder_kbm',
+        'reminder_nerobos',
     ];
 }

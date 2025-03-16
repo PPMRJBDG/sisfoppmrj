@@ -132,6 +132,7 @@ class SettingController extends Controller
                 'wa_link_presensi_koor' => 'required',
                 'auto_generate_hadir' => 'required',
                 'reminder_kbm' => 'required',
+                'reminder_nerobos' => 'required',
             ]);
         }
         if ($setting == null) {
@@ -169,6 +170,7 @@ class SettingController extends Controller
                 'cron_tatib' => $request->input('cron_tatib'),
                 'cron_minutes' => $request->input('cron_minutes'),
                 'reminder_kbm' => $request->input('reminder_kbm'),
+                'reminder_nerobos' => $request->input('reminder_nerobos'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -204,6 +206,7 @@ class SettingController extends Controller
             $setting->cron_tatib = $request->input('cron_tatib');
             $setting->cron_minutes = $request->input('cron_minutes');
             $setting->reminder_kbm = $request->input('reminder_kbm');
+            $setting->reminder_nerobos = $request->input('reminder_nerobos');
             $setting->save();
         }
 
