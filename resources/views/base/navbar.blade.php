@@ -16,7 +16,7 @@
 
       <div class="d-flex">
         <div class="flex-fill">
-          <small id="breadcrumb-item" class="float-start font-weight-bolder m-0">Home</small>
+          <small id="breadcrumb-item" class="float-start font-weight-bolder m-0"></small>
         </div>
       </div>
 
