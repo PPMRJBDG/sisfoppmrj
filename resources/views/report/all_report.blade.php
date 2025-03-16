@@ -118,17 +118,21 @@
         </div>
 
         <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
+            <?php $no = 1; ?>
             @foreach($tahun as $th)
-            <?php
-            $now = date("Y");
-            $act = '';
-            if ($now == $th->y) {
-                $act = 'active';
-            }
-            ?>
-            <a data-mdb-ripple-init class="nav-link {{$act}} font-weight-bolder" id="nav-th{{ $th->y }}-tab" data-bs-toggle="tab" href="#nav-th{{ $th->y }}" role="tab" aria-controls="nav-th{{ $th->y }}" aria-selected="true">
-                {{ ($th->y-1).'-'.$th->y }}
-            </a>
+                <?php
+                $now = date("Y");
+                $act = '';
+                if ($now == $th->y) {
+                    $act = 'active';
+                }
+                ?>
+                @if($no <= (count($tahun)-1))
+                <a data-mdb-ripple-init class="nav-link {{$act}} font-weight-bolder" id="nav-th{{ $th->y }}-tab" data-bs-toggle="tab" href="#nav-th{{ $th->y }}" role="tab" aria-controls="nav-th{{ $th->y }}" aria-selected="true">
+                    {{ ($th->y-1).'-'.$th->y }}
+                </a>
+                @endif
+                <?php $no++; ?>
             @endforeach
         </div>
         <div class="tab-content p-0 mt-2" id="nav-tabContent">
