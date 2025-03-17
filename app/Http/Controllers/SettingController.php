@@ -133,6 +133,7 @@ class SettingController extends Controller
                 'auto_generate_hadir' => 'required',
                 'reminder_kbm' => 'required',
                 'reminder_nerobos' => 'required',
+                'reminder_alpha_ortu' => 'required',
             ]);
         }
         if ($setting == null) {
@@ -171,6 +172,7 @@ class SettingController extends Controller
                 'cron_minutes' => $request->input('cron_minutes'),
                 'reminder_kbm' => $request->input('reminder_kbm'),
                 'reminder_nerobos' => $request->input('reminder_nerobos'),
+                'reminder_alpha_ortu' => $request->input('reminder_alpha_ortu'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -207,6 +209,7 @@ class SettingController extends Controller
             $setting->cron_minutes = $request->input('cron_minutes');
             $setting->reminder_kbm = $request->input('reminder_kbm');
             $setting->reminder_nerobos = $request->input('reminder_nerobos');
+            $setting->reminder_alpha_ortu = $request->input('reminder_alpha_ortu');
             $setting->save();
         }
 

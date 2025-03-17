@@ -46,5 +46,6 @@ class Settings extends Model
         'cron_minutes',
         'reminder_kbm',
         'reminder_nerobos',
+        'reminder_alpha_ortu',
     ];
 }

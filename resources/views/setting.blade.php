@@ -774,6 +774,16 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             </small>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->reminder_nerobos : '' }}" name="reminder_nerobos">
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Info Alpha Ortu (menit)
+                                            </label>
+                                            <br>
+                                            <small>
+                                                [pengingat dijalankan setelah {{$list_setting->reminder_alpha_ortu}} menit KBM selesai]
+                                            </small>
+                                            <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->reminder_alpha_ortu : '' }}" name="reminder_alpha_ortu">
+                                        </div>
                                     </div>
 
                                     <div class="col-md-12">

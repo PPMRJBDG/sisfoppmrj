@@ -715,6 +715,7 @@ NB:".$is_put_together."
             if($setting->cron_nerobos){
                 $currentDateTime = date('Y-m-d H:i');
                 $min_mins = date('Y-m-d H:i', strtotime("-{$setting->reminder_nerobos} minutes", strtotime($currentDateTime)));
+                $event_date = date('Y-m-d', strtotime("-{$setting->reminder_nerobos} minutes", strtotime($currentDateTime)));
                 $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
                 if($get_presence_today!=null){
                     $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
@@ -732,13 +733,14 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
             // jam FP off -> info alpha ke ortu
             if ($setting->wa_info_alpha_ortu) {
                 $currentDateTime = date('Y-m-d H:i');
-                $min_mins = date('Y-m-d H:i', strtotime("-45 minutes", strtotime($currentDateTime)));
+                $min_mins = date('Y-m-d H:i', strtotime("-{$setting->reminder_alpha_ortu} minutes", strtotime($currentDateTime)));
                 $get_presence_today = Presence::where('event_date', $event_date)->where('end_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
                 if($get_presence_today!=null){
                     $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
                     if (count($mhs_alpha) > 0) {
                         foreach ($mhs_alpha as $vs) {
-                            $caption_ortu = 'Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
+                            $caption_ortu = 'Mohon maaf mengganggu,
+Menginformasikan bahwa *' . $d['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $presence->name . '.
 
 Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 *' . $d['lorong'] . '*.';
