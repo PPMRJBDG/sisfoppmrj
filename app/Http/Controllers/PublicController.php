@@ -734,6 +734,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
             if ($setting->wa_info_alpha_ortu) {
                 $currentDateTime = date('Y-m-d H:i');
                 $min_mins = date('Y-m-d H:i', strtotime("-{$setting->reminder_alpha_ortu} minutes", strtotime($currentDateTime)));
+                $event_date = date('Y-m-d', strtotime("-{$setting->reminder_alpha_ortu} minutes", strtotime($currentDateTime)));
                 $get_presence_today = Presence::where('event_date', $event_date)->where('end_date_time','like', $min_mins.'%')->where('is_deleted', 0)->first();
                 if($get_presence_today!=null){
                     $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
