@@ -692,18 +692,19 @@ NB:
                 if($get_presence_today->is_hasda){
                     $is_hasda = " - *HASDA*";
                 }
-                $caption = "*[INFO ".strtoupper($get_presence_today->name)."]*".$is_hasda."
+                $caption = "*INFO ".strtoupper($get_presence_today->name)."*".$is_hasda."
 
-".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd M Y')."
+📆 ".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd M Y')."
 -
-Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
-Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
+⏰️ Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
+⏰️ Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
 -
 *Fingerprint*:
-Mulai Sign In -> *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
-Batas Sign Out -> *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
+🟢 Mulai Sign In -> *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
+🔴 Batas Sign Out -> *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
 -
-NB:".$is_put_together."
+🗒️ NB:".$is_put_together."
+- Untuk presensi, semua wajib scan Fingerprint
 - Amalsholih untuk dapat hadir tepat waktu, tertib, dan disiplin
 - Supaya mempersiapkan diri sebelum jam KBM dimulai, menuju masjid/mushola untuk sholat berjamaah sekaligus membawa materi yang sudah ditentukan
 - Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman
@@ -741,7 +742,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                     if (count($mhs_alpha) > 0) {
                         foreach ($mhs_alpha as $vs) {
                             $caption_ortu = 'Mohon maaf mengganggu,
-Menginformasikan bahwa *' . $vs['name'] . '* tadi tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
+Menginformasikan bahwa *' . $vs['name'] . '* tadi tidak hadir tanpa ijin pada *' . $get_presence_today->name . '*.
 
 Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 *' . $vs['lorong'] . '*.';

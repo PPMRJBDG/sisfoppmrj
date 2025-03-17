@@ -150,7 +150,9 @@
             <div style="font-size:11px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
             @if($update)
             <div class="card-body p-0 py-2">
-              <a id="btn-select-all" class="btn btn-danger btn-sm btn-block mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                <a id="btn-select-all" class="btn btn-danger btn-sm btn-block mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
+              @endif
             </div>
             @endif
             <div class="table-responsive">
@@ -173,8 +175,8 @@
                     </td>
                     <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
                       @if($update)
-                      <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
-                      <a class="btn btn-danger btn-block btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
+                        <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
+                        <a class="btn btn-danger btn-block btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
                       @endif
                     </td>
                   </tr>
@@ -251,7 +253,10 @@
 
                     @if($update)
                     <a class="btn btn-warning btn-sm mb-0" id="return-false" onclick="promptRejectPermit('{{$url_promptRejectPermit}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Reject</a>
-                    <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Hadir</a>
+                    
+                      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                        <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Hadir</a>
+                      @endif
                     @endif
                   </td>
                   <!-- <td></td> -->
@@ -268,9 +273,11 @@
 
         <div class="tab-pane fade show" id="nav-alpha" role="tabpanel" aria-labelledby="nav-alpha-tab">
           @if($update)
-          <div class="card-body p-0">
-            <a id="btn-select-all" class="btn btn-primary btn-sm btn-block mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
-          </div>
+            <div class="card-body p-0">
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                <a id="btn-select-all" class="btn btn-primary btn-sm btn-block mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
+              @endif
+            </div>
           @endif
           <div class="table-responsive">
             <table id="table-alpha" class="table table-sm align-items-center mb-0">
@@ -289,7 +296,9 @@
                   </td>
                   <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
                     @if($update)
-                    <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
+                      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                        <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
+                      @endif
                     @endif
                   </td>
                 </tr>
