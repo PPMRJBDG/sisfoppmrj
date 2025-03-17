@@ -744,7 +744,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
 Menginformasikan bahwa *' . $vs->fullname . '* kemarin tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
 
 Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
-*' . $d['lorong'] . '*.';
+*' . $vs->lorong . '*.';
                             WaSchedules::save('Info Alpha ke Ortu: ' . $vs->fullname, $caption_ortu, WaSchedules::getContactId($vs->nohp_ortu));
                         }
                     }
