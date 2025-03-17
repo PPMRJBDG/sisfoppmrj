@@ -741,7 +741,7 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                     if (count($mhs_alpha) > 0) {
                         foreach ($mhs_alpha as $vs) {
                             $caption_ortu = 'Mohon maaf mengganggu,
-Menginformasikan bahwa *' . $vs['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
+Menginformasikan bahwa *' . $vs['name'] . '* tadi tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
 
 Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 *' . $vs['lorong'] . '*.';
