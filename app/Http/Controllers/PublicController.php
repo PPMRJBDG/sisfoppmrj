@@ -721,10 +721,10 @@ NB:".$is_put_together."
                     $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
                     if (count($mhs_alpha) > 0) {
                         foreach ($mhs_alpha as $vs) {
-                            $caption = 'Assalaamu Alaikum *'.$vs->fullname.'*,
+                            $caption = 'Assalaamu Alaikum *'.$vs['name'].'*,
 Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan jangan lupa input ijin melalui Sisfo.
 الحمد للّٰه جزاكم اللّٰه خيرًا 😇🙏🏻';
-                            WaSchedules::save('Nerobos: ' . $vs->fullname, $caption, WaSchedules::getContactId($vs->nohp), null, true);
+                            WaSchedules::save('Nerobos: ' . $vs['name'], $caption, WaSchedules::getContactId($vs['nohp']), null, true);
                         }
                     }
                 }
@@ -741,11 +741,11 @@ Mohon maaf dipersilahkan untuk segera menghadiri KBM, jika memang berhalangan ja
                     if (count($mhs_alpha) > 0) {
                         foreach ($mhs_alpha as $vs) {
                             $caption_ortu = 'Mohon maaf mengganggu,
-Menginformasikan bahwa *' . $vs->fullname . '* kemarin tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
+Menginformasikan bahwa *' . $vs['name'] . '* kemarin tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
 
 Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
-*' . $vs->lorong . '*.';
-                            WaSchedules::save('Info Alpha ke Ortu: ' . $vs->fullname, $caption_ortu, WaSchedules::getContactId($vs->nohp_ortu));
+*' . $vs['lorong'] . '*.';
+                            WaSchedules::save('Info Alpha ke Ortu: ' . $vs['name'], $caption_ortu, WaSchedules::getContactId($vs['nohp_ortu']));
                         }
                     }
                 }
