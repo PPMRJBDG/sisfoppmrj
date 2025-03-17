@@ -183,7 +183,7 @@
             <span class="text-xxs">{{ $rpg->updated_at }}</span>
           </td>
           <td class="text-xs">
-            <i><b>{{ $rpg->presenceGroup->name }}</b></i>
+            <i><b>{{ isset($rpg->presenceGroup) ? $rpg->presenceGroup->name : '' }}</b></i>
             <br>
             {{$rpg->from_date}} s.d {{$rpg->to_date}}
           </td>
