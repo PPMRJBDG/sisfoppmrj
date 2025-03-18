@@ -145,7 +145,7 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
             if (count($check_liburan) == 0) {
                 $caption = 'Berikut kami informasikan daftar kehadiran pada hari *' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M Y") . '*.
 
-*Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
+👮🏼‍♂️ *Total Mahasiswa: ' . CountDashboard::total_mhs('all') . '*';
                 $get_presence = Presence::where('event_date', $yesterday)->where('is_deleted', 0)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
@@ -159,8 +159,8 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                         $mhs_alpha = CountDashboard::mhs_alpha($presence->id, 'all', $presence->event_date);
 
                         $caption = $caption . '
-________________________
-*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
+------------------------
+📆 *_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
@@ -175,7 +175,7 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                     }
                 }
                 $caption = $caption . '
-NB:
+📝 NB:
 - Jika ada keperluan atau berhalangan hadir, dapat melakukan input ijin melalui Sisfo
 - Jika dalam 1 bulan kehadiran < 80%, akan ada pemanggilan dan kafaroh
 - Apabila terdapat ketidaksesuaian, amalsholih menghubungi Pengurus atau Koor Lorong';
@@ -557,7 +557,9 @@ NB:
                 echo json_encode(['status' => false, 'message' => '[jam-malam] scheduler off']);
                 exit;
             }
-            
+            $info_jam_malam = '🔰 *PETUGAS JAGA MALAM*
+
+';
             DB::table('santris')->whereNull('exit_at')->update(array('jaga_malam' => 0));
             $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
             if ($contact_id != null) {
@@ -565,7 +567,7 @@ NB:
                 $jaga_malam2 = JagaMalams::where('ppm',2)->where('status',1)->first();
                 $check_liburan = Liburan::where('liburan_from', '<=', date('Y-m-d'))->where('liburan_to', '>=', date('Y-m-d'))->get();
                 if (count($check_liburan) == 0){
-                    $info_jam_malam = '*PPM 1*
+                    $info_jam_malam = $info_jam_malam.'👮🏼‍♂️ *PPM 1*
 ';
                 
                     $split_team1 = explode(",", $jaga_malam1->anggota);
@@ -589,7 +591,7 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
                         }
                     }
                     $info_jam_malam = $info_jam_malam.'
-*PPM 2*
+*👮🏼‍♂️ PPM 2*
 ';
                     $split_team2 = explode(",", $jaga_malam2->anggota);
                     foreach($split_team2 as $st){
