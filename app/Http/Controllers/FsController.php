@@ -303,7 +303,7 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                             if ($wa_phone != null) {
                                                 $text_late = '';
                                                 if($is_late){
-                                                    $text_late = '*terlambat*';
+                                                    $text_late = '🟨 *terlambat*';
                                                     $nohp = $get_santri->user->nohp;
                                                     if ($nohp != '') {
                                                         if ($nohp[0] == '0') {
@@ -313,11 +313,11 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                                             $query->where('name', 'NOT LIKE', '%Bulk%');
                                                         })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
                                                         if ($wa_phone_santri != null) {
-                                                            WaSchedules::save('Presensi Terlambat', '*[Terlambat KBM]* Silahkan istighfar sebanyak 30x.', $wa_phone_santri->pid, null, true);
+                                                            WaSchedules::save('Presensi Terlambat', '🟨 *[Terlambat KBM]* Silahkan istighfar sebanyak 30x.', $wa_phone_santri->pid, null, true);
                                                         }
                                                     }
                                                 }else{
-                                                    $text_late = '*tepat waktu*';
+                                                    $text_late = '✅ *tepat waktu*';
                                                 }
                                                 $sign_in = date_format(date_create($sign_in),"d-m-Y H:i:s");
                                                 WaSchedules::save('Presensi: Berhasil', '*'.$get_santri->user->fullname.'* telah hadir '.$text_late.' pada '.$presence->name.' | Tanggal & Jam: '.$sign_in.'.', $wa_phone->pid);

@@ -129,6 +129,7 @@ class CountDashboard
                         ->join('users', 'users.id', '=', 'santris.fkUser_id')
                         ->whereNull('santris.exit_at')
                         ->orderBy('users.fullname')
+                        ->orderBy('presents.is_late')
                         ->get();
                 } else {
                     $presents = $presence->presents()
@@ -138,6 +139,7 @@ class CountDashboard
                         ->whereNull('santris.exit_at')
                         ->where('santris.fkLorong_id', $lorong)
                         ->orderBy('users.fullname')
+                        ->orderBy('presents.is_late')
                         ->get();
                 }
             }
@@ -150,6 +152,7 @@ class CountDashboard
                     ->join('users', 'users.id', '=', 'santris.fkUser_id')
                     ->where('fkLorong_id', $lorong->id)
                     ->orderBy('users.fullname')
+                    ->orderBy('presents.is_late')
                     ->get();
             }
         } else {
@@ -161,6 +164,7 @@ class CountDashboard
                     ->where('santris.angkatan', $for)
                     ->whereNull('santris.exit_at')
                     ->orderBy('users.fullname')
+                    ->orderBy('presents.is_late')
                     ->get();
             }
         }

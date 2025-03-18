@@ -168,7 +168,7 @@
                   @if($present->santri->fkLorong_id==$lorong || $lorong=='-')
                   <tr title="{{$present->metadata}}" id="trh{{$present->fkSantri_id}}" class="dtmhsh" val-id="{{$present->fkSantri_id}}" val-name="{{$present->santri->user->fullname}}" updated-by="{{$present->updated_by}}">
                     <td class="text-sm">
-                      <b>{{ $present->santri->user->fullname }}</b>
+                      {{ ($present->is_late) ? '🟨' : '✅' }} <b>{{ $present->santri->user->fullname }}</b>
                       <br>
                       <small style="font-size: 9px;">{{ ($present->sign_in) ? 'in: '.date_format(date_create($present->sign_in), 'H:i:s') : '-' }}</small> | 
                       <small style="font-size: 9px;">{{ ($present->sign_out) ? 'out: '.date_format(date_create($present->sign_out), 'H:i:s') : '-' }}</small>
