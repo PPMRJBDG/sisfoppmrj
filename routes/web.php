@@ -247,6 +247,9 @@ Route::post('/keamanan/store_jagamalam', [App\Http\Controllers\KeamananControlle
 Route::get('/keamanan/delete_jagamalam/{id}', [App\Http\Controllers\KeamananController::class, 'delete_jagamalam'])->name('delete jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::post('/keamanan/store_pulangmalam', [App\Http\Controllers\KeamananController::class, 'store_pulangmalam'])->name('store pulangmalam')->middleware('role:superadmin|rj1|wk|divisi keamanan|santri');
 
+// PMB
+Route::get('/pmb', [App\Http\Controllers\PmbController::class, 'index']);
+
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);
 });

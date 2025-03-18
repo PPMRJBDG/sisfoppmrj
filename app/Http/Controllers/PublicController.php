@@ -164,14 +164,14 @@ ________________________
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
-//                         if (count($mhs_alpha) > 0) {
-//                             $caption = $caption . '*Daftar Mahasiswa Alpha*
-// ';
-//                             foreach ($mhs_alpha as $d) {
-//                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
-// ';
-//                             }
-//                         }
+                        if (count($mhs_alpha) > 0) {
+                            $caption = $caption . '*Daftar Mahasiswa Alpha*
+';
+                            foreach ($mhs_alpha as $d) {
+                                $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
+';
+                            }
+                        }
                     }
                 }
                 $caption = $caption . '
@@ -304,14 +304,14 @@ NB:
             // cek hasda
             $get_presence_hasda = Presence::where('event_date', 'like', $last_month.'%')->where('is_hasda', 1)->where('is_deleted', 0)->get();
             $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
-            $caption_hasda = '*DAFTAR MAHASISWA YANG BELUM MENGIKUTI HASDA BULAN ' . strtoupper(date('M Y', $lsm)) . '*
-';
+            $caption_hasda = '*DAFTAR MAHASISWA YANG BELUM MENGIKUTI HASDA BULAN ' . strtoupper(date('M Y', $lsm)) . '*';
 
             if($get_presence_hasda!=null){
                 $set_presence = '';
                 foreach($get_presence_hasda as $gph){
                     if($set_presence!=$gph->id){
                         $caption_hasda = $caption_hasda.'
+
 *'.$gph->name.'*';
                         $set_presence = $gph->id;
                     }
@@ -583,7 +583,8 @@ NB:
                             $info_jam_malam = $info_jam_malam.$snt->user->fullname.' wa.me/'.$nohp.'
 ';
 
-                            $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.';
+                            $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.
+Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 di Sisfo.';
                             WaSchedules::save('Nerobos Jaga Malam' . $snt->user->fullname, $capner, WaSchedules::getContactId($snt->user->nohp));
                         }
                     }
@@ -605,7 +606,8 @@ NB:
                             $info_jam_malam = $info_jam_malam.$snt->user->fullname.' wa.me/'.$nohp.'
 ';
 
-                            $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.';
+                            $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.
+Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 di Sisfo.';
                             WaSchedules::save('Nerobos Jaga Malam' . $snt->user->fullname, $capner, WaSchedules::getContactId($snt->user->nohp));
                         }
                     }
@@ -683,6 +685,13 @@ NB:
             $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->whereNot('is_deleted', 1)->first();
             
             if($get_presence_today!=null){
+                $presenceGroup = PresenceGroup::find($get_presence_today->fkPresence_group_id);
+                $get_presence_today->start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->start_hour));
+                $get_presence_today->end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->end_hour));
+                $get_presence_today->presence_start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_start_hour));
+                $get_presence_today->presence_end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_end_hour));
+                $get_presence_today->save();
+
                 $is_put_together = "";
                 if($get_presence_today->is_put_together){
                     $is_put_together = "

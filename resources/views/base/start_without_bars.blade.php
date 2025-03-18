@@ -45,8 +45,8 @@ $setting = App\Models\Settings::first();
   .bg-primary,
   .badge-primary {
     background: #48c6ef !important;
-    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
-    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
+    /* background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
+    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important */
   }
 
   /* .btn-danger, */
@@ -54,8 +54,8 @@ $setting = App\Models\Settings::first();
   .alert-danger,
   .bg-danger {
     background: #f093fb !important;
-    background: -webkit-linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important;
-    background: linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important
+    /* background: -webkit-linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important;
+    background: linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important */
   }
 
   /* .btn-warning, */
@@ -64,8 +64,8 @@ $setting = App\Models\Settings::first();
   .partial,
   .bg-warning {
     background: #f6d365 !important;
-    background: -webkit-linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important;
-    background: linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important
+    /* background: -webkit-linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important;
+    background: linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important */
   }
 
   /* .btn-success, */
@@ -74,16 +74,16 @@ $setting = App\Models\Settings::first();
   .alert-success,
   .bg-success {
     background-color: #00c851 !important;
-    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
-    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
+    /* background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
+    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important */
   }
 
   /* .btn-secondary, */
   .bg-secondary,
   .badge-secondary {
     background-color: #a6c !important;
-    background: -webkit-linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important;
-    background: linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important
+    /* background: -webkit-linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important;
+    background: linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important */
   }
 
   .nav-tabs .nav-link {
