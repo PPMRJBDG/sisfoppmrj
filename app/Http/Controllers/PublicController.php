@@ -52,8 +52,8 @@ class PublicController extends Controller
             $time_post = 1;
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
-                $caption = '*[Preview]*
-*Amshol Cek Daftar Kehadiran Kemarin:*';
+                $caption = '*[PREVIEW]*
+*Amalsholih Cek Kehadiran Kemarin, Apabila Ada Yang Tidak Sesuai Silahkan Menghubungi RJ/WK:*';
                 $get_presence = Presence::where('event_date', $yesterday)->where('is_deleted', 0)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
@@ -68,7 +68,7 @@ class PublicController extends Controller
 
                         $caption = $caption . '
 ________________________
-*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
+*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->presenceGroup->name . '_*
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
@@ -97,7 +97,7 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
 
                 $name = '[Preview] Daily Report ' . date_format(date_create($yesterday), "d M Y");
                 if ($contact_id != '' && count($get_presence) > 0) {
-                    $insert = WaSchedules::save($name, $caption, $contact_id, $time_post, true);
+                    $insert = WaSchedules::save($name, $caption, $setting->wa_maurus_group_id, $time_post, true);
                     if ($insert) {
                         echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
                     } else {
