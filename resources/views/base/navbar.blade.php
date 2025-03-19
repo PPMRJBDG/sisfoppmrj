@@ -152,9 +152,21 @@
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
     <li class="sidenav-item">
-      <a class="sidenav-link d-flex" aria-current="page" href="{{ url('keamanan') }}">
-        <i class="fa fa-warning pe-3"></i>Daftar Jaga Malam
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-keamanan" role="button" aria-expanded="false">
+        <i class="fa fa-warning pe-3"></i>Keamanan
       </a>
+      <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-keamanan">
+        <li>
+          <a class="sidenav-link" href="{{ url('keamanan') }}">
+            <span class="sidenav-link-text ms-1">Daftar Jaga Malam</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidenav-link" href="{{ url('keamanan/pulang-malam') }}">
+            <span class="sidenav-link-text ms-1">Pulang Malam < 23:00</span>
+          </a>
+        </li>
+      </ul>
     </li>
     @endif
 

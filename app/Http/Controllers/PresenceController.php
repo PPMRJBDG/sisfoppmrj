@@ -531,10 +531,23 @@ class PresenceController extends Controller
 
         $updated = $presenceGroup->save();
 
-        if (!$updated)
+        if (!$updated){
             return redirect()->route('edit presence group', $request->route('id'))->withErrors(['failed_updating_presence_group']);
+        }else{
+            $get_presence = Presence::where('fkPresence_group_id',$request->route('id'))->where('is_deleted',2)->get();
+            if($get_presence!=null){
+                foreach($get_presence as $pres){
+                    $update_presence = Presence::find($pres->id);
+                    $update_presence->start_date_time = date('Y-m-d H:i', strtotime($pres->event_date . ' ' . $presenceGroup->start_hour));
+                    $update_presence->end_date_time = date('Y-m-d H:i', strtotime($pres->event_date . ' ' . $presenceGroup->end_hour));
+                    $update_presence->presence_start_date_time = date('Y-m-d H:i', strtotime($pres->event_date . ' ' . $presenceGroup->presence_start_hour));
+                    $update_presence->presence_end_date_time = date('Y-m-d H:i', strtotime($pres->event_date . ' ' . $presenceGroup->presence_end_hour));
+                    $update_presence->save();
+                }
+            }
 
-        return redirect()->route('edit presence group', $request->route('id'))->with('success', 'Berhasil mengubah grup presensi.');
+            return redirect()->route('edit presence group', $request->route('id'))->with('success', 'Berhasil mengubah grup presensi.');
+        }
     }
 
     /**

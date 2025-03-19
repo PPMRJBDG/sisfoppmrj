@@ -52,14 +52,14 @@ class PresenceGroupsChecker
                     ->where('event_date', $currentDate)->first();
 
                 if (isset($presenceInThisDate)) {
-                    if($presenceInThisDate->is_deleted==2){
-                        $presenceInThisDate->is_deleted = 0;
-                        $presenceInThisDate->start_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour));
-                        $presenceInThisDate->end_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour));
-                        $presenceInThisDate->presence_start_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour));
-                        $presenceInThisDate->presence_end_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour));
-                        $presenceInThisDate->save();
-                    }
+                    // if($presenceInThisDate->is_deleted==2){
+                    //     $presenceInThisDate->is_deleted = 0;
+                    //     $presenceInThisDate->start_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour));
+                    //     $presenceInThisDate->end_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour));
+                    //     $presenceInThisDate->presence_start_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour));
+                    //     $presenceInThisDate->presence_end_date_time = date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour));
+                    //     $presenceInThisDate->save();
+                    // }
                     array_push($results['already_created_presences'], $presenceInThisDate);
                     continue;
                 }

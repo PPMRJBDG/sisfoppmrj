@@ -26,6 +26,7 @@ use App\Models\SpWhatsappContacts;
 use App\Models\ReminderTatatertib;
 use App\Models\CatatanPenghubungs;
 use App\Models\JagaMalams;
+use App\Models\LaporanKeamanans;
 
 use Illuminate\Support\Facades\DB;
 
@@ -126,7 +127,7 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
                     $set_archive->is_archive = 1;
                     if ($set_archive->save()) {
                         $caption = 'Pemutihan SP ' . $gp->keringanan_sp . ' an. ' . $gp->santri->user->fullname;
-                        WaSchedules::save($caption, $caption, 'wa_info_presensi_group_id', $time_post, true);
+                        WaSchedules::save($caption, $caption, $setting->wa_info_presensi_group_id, $time_post, true);
                         $time_post++;
                     }
                 }
@@ -164,14 +165,14 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
-                        if (count($mhs_alpha) > 0) {
-                            $caption = $caption . '*Daftar Mahasiswa Alpha*
-';
-                            foreach ($mhs_alpha as $d) {
-                                $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
-';
-                            }
-                        }
+//                         if (count($mhs_alpha) > 0) {
+//                             $caption = $caption . '*Daftar Mahasiswa Alpha*
+// ';
+//                             foreach ($mhs_alpha as $d) {
+//                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
+// ';
+//                             }
+//                         }
                     }
                 }
                 $caption = $caption . '
@@ -573,8 +574,13 @@ NB:
                     $split_team1 = explode(",", $jaga_malam1->anggota);
                     foreach($split_team1 as $st){
                         if($st!=""){
+                            $insertLap = LaporanKeamanans::create([
+                                'fkSantri_id' => $st,
+                                'event_date' => date('Y-m-d'),
+                            ]);
                             $snt = Santri::find($st);
                             $snt->jaga_malam = 1;
+                            $snt->fkLaporan_keamanan_id = $insertLap->id;
                             $snt->save();
                             $nohp = $snt->user->nohp;
                             if ($nohp != '') {
@@ -596,8 +602,13 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
                     $split_team2 = explode(",", $jaga_malam2->anggota);
                     foreach($split_team2 as $st){
                         if($st!=""){
+                            $insertLap = LaporanKeamanans::create([
+                                'fkSantri_id' => $st,
+                                'event_date' => date('Y-m-d'),
+                            ]);
                             $snt = Santri::find($st);
                             $snt->jaga_malam = 1;
+                            $snt->fkLaporan_keamanan_id = $insertLap->id;
                             $snt->save();
                             $nohp = $snt->user->nohp;
                             if ($nohp != '') {
@@ -687,12 +698,12 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
             $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->whereNot('is_deleted', 1)->first();
             
             if($get_presence_today!=null){
-                $presenceGroup = PresenceGroup::find($get_presence_today->fkPresence_group_id);
-                $get_presence_today->start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->start_hour));
-                $get_presence_today->end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->end_hour));
-                $get_presence_today->presence_start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_start_hour));
-                $get_presence_today->presence_end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_end_hour));
-                $get_presence_today->save();
+                // $presenceGroup = PresenceGroup::find($get_presence_today->fkPresence_group_id);
+                // $get_presence_today->start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->start_hour));
+                // $get_presence_today->end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->end_hour));
+                // $get_presence_today->presence_start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_start_hour));
+                // $get_presence_today->presence_end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_end_hour));
+                // $get_presence_today->save();
 
                 $is_put_together = "";
                 if($get_presence_today->is_put_together){

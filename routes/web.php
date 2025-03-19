@@ -36,7 +36,7 @@ Route::post('/fs01', [App\Http\Controllers\FsController::class, 'fs01']);
 Route::post('/sync_setuserinfo', [App\Http\Controllers\FsController::class, 'sync_setuserinfo'])->name('sync set fs');
 Route::post('/sync_getuserinfo', [App\Http\Controllers\FsController::class, 'sync_getuserinfo'])->name('sync get fs');
 Route::post('/sync_deleteuserinfo', [App\Http\Controllers\FsController::class, 'sync_deleteuserinfo'])->name('sync delete fs');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard']);
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 Route::get('/home/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'dashboard']);
 Route::get('/tabgraf/{tb}/{select_angkatan}/{select_periode}', [App\Http\Controllers\HomeController::class, 'tabgraf']);
 
@@ -246,6 +246,8 @@ Route::get('/keamanan', [App\Http\Controllers\KeamananController::class, 'index'
 Route::post('/keamanan/store_jagamalam', [App\Http\Controllers\KeamananController::class, 'store_jagamalam'])->name('store jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::get('/keamanan/delete_jagamalam/{id}', [App\Http\Controllers\KeamananController::class, 'delete_jagamalam'])->name('delete jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::post('/keamanan/store_pulangmalam', [App\Http\Controllers\KeamananController::class, 'store_pulangmalam'])->name('store pulangmalam')->middleware('role:superadmin|rj1|wk|divisi keamanan|santri');
+Route::get('/keamanan/pulang-malam', [App\Http\Controllers\KeamananController::class, 'pulang_malam'])->name('pulangmalam keamanan')->middleware('role:superadmin|rj1|wk|divisi keamanan');
+Route::post('/keamanan/jobdesk/store', [App\Http\Controllers\KeamananController::class, 'store_jobdesk'])->name('store jobdesk')->middleware('role:superadmin|rj1|wk|divisi keamanan|santri');
 
 // PMB
 Route::get('/pmb', [App\Http\Controllers\PmbController::class, 'index']);

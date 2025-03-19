@@ -9,6 +9,7 @@ use App\Models\Present;
 use App\Helpers\CountDashboard;
 use App\Models\Periode;
 use App\Models\TelatPulangMalams;
+use App\Models\LaporanKeamanans;
 use App\Helpers\PresenceGroupsChecker;
 
 class HomeController extends Controller
@@ -254,6 +255,10 @@ class HomeController extends Controller
         $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
         $yesterday = date('Y-m-d', $yesterday);
         $data_telatpulang = TelatPulangMalams::where('jam_pulang','like',date('Y-m-d').'%')->orWhere('jam_pulang','like',$yesterday.'%')->orderBy('id','DESC')->get();
+        $data_jobdesk_jaga = null;
+        if(auth()->user()->santri){
+            $data_jobdesk_jaga = LaporanKeamanans::where('id',auth()->user()->santri->fkLaporan_keamanan_id)->first();
+        }
 
         if ($json) {
             return [
@@ -267,7 +272,8 @@ class HomeController extends Controller
                 'list_angkatan' => $list_angkatan,
                 'select_angkatan' => $select_angkatan,
                 'data_telatpulang' => $data_telatpulang,
-                'all_permit' => $all_permit
+                'all_permit' => $all_permit,
+                'data_jobdesk_jaga' => $data_jobdesk_jaga,
             ];
         } else {
             return view('dashboard', [
@@ -288,7 +294,8 @@ class HomeController extends Controller
                 'data_presensi' => $data_presensi,
                 'data_presensi' => $data_presensi,
                 'data_telatpulang' => $data_telatpulang,
-                'get_presence_today' => $get_presence_today
+                'get_presence_today' => $get_presence_today,
+                'data_jobdesk_jaga' => $data_jobdesk_jaga,
             ]);
         }
     }

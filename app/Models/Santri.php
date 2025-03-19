@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Present;
 use App\Models\Permit;
+use App\Models\LaporanKeamanans;
 
 class Santri extends Model
 {
@@ -21,8 +22,15 @@ class Santri extends Model
         'exit_at',
         'alasan_keluar',
         'ids',
-        'template_fs1'
+        'template_fs1',
+        'jaga_malam',
+        'fkLaporan_keamanan_id'
     ];
+
+    // public function laporanKeamanan()
+    // {
+    //     return $this->hasMany(LaporanKeamanans::class, 'fkSantri_id');
+    // }
 
     public function monitoringMateris()
     {

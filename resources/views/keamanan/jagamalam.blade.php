@@ -18,7 +18,7 @@
                         @endforeach
                     </select>
                     <input type="hidden" value="" id="anggota_terpilih" name="anggota_terpilih">
-                    <div class="bg-primary text-white mt-2 p-2" id="daftar_pilihan"></div>
+                    <div class="bg-primary text-white mt-2 p-2" id="daftar_pilihan" style="display:none;"></div>
                 </div>
 
                 <div class="col-md-4 mb-2">
@@ -100,6 +100,7 @@
     }
 
     function ubahJagaMalam(data,daftar_pilihan){
+        $("#daftar_pilihan").fadeIn();
         $("#id").val(data.id);
         $("#ppm").val(data.ppm);
         $("#daftar_pilihan").html(daftar_pilihan);
@@ -111,10 +112,11 @@
         $("#ppm").val(1);
         $("#daftar_pilihan").html('');
         $("#anggota_terpilih").val('');
-        $("#batal").hide();
+        $("#daftar_pilihan").fadeOut();
     }
 
     function selectAnggota(t){
+        $("#daftar_pilihan").fadeIn();
         $("#daftar_pilihan").html($("#daftar_pilihan").html()+$("#anggota option:selected").text()+'<br>');
         $("#anggota_terpilih").val($("#anggota_terpilih").val()+$("#anggota option:selected").val()+',');
     }

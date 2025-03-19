@@ -18,7 +18,11 @@
         checkBoxHasda = (checkBoxHasda.checked) ? 1 : 0;
         var checkBoxSatukan = document.getElementById("is_put_together");
         checkBoxSatukan = (checkBoxSatukan.checked) ? 1 : 0;
-        
+        if(checkBoxHasda){
+          $("#hasda_note").fadeIn();
+        }else{
+          $("#hasda_note").fadeOut();
+        }
         if ((checkBoxHasda && checkBoxSatukan) || checkBoxSatukan) {
           $("#p1").html('Pemateri');
           $("#p2").html('Pemateri');
@@ -36,9 +40,13 @@
       @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('kurikulum'))
       <div class="row p-2 ">
         <div class="card-body p-2" style="background:#f9f9f9;border:#ddd 1px solid;">
-          <div class="col-12 pb-2">
-            <small>Nama KBM</small>
-            <input class="form-control" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text">
+          <div class="col-12 pb-2" style="line-height: 0.8;">
+            <small>
+              Nama KBM
+              <br>
+              <span id="hasda_note" style="display:none;font-size:9px;">(Tambahkan pada nama KBM dengan: Teks / Dalil / PPG / Organisasi)</span>
+            </small>
+            <input class="form-control mt-1" value="{{$presence->name}}" id="presence_name" name="presence_name" type="text">
           </div>
           <div class="col-12 pb-2">
             <small id="p1">{{ (($presence->is_hasda && $presence->is_put_together) || $presence->is_put_together) ? 'Pemateri' : 'Pengajar PPM 1' }}</small>
@@ -61,7 +69,7 @@
           <div class="col-12 p-2 pl-0">
             <div class="form-check mb-0">
               <input class="form-check-input" onchange="isHasdaSatukan()" type="checkbox" {{ ($presence->is_hasda) ? 'checked' : '' }} id="is_hasda" name="is_hasda">
-              <label class="form-check-label" for="is_hasda">Hasda <small>(tambahkan pada nama KBM dengan: Teks / Dalil / PPG / Organisasi)</small></label>
+              <label class="form-check-label" for="is_hasda">Hasda</label>
             </div>
             <div class="form-check mb-0">
               <input class="form-check-input" onchange="isHasdaSatukan()" type="checkbox" {{ ($presence->is_put_together) ? 'checked' : '' }} id="is_put_together" name="is_put_together">
@@ -173,10 +181,10 @@
                       <small style="font-size: 9px;">{{ ($present->sign_in) ? 'in: '.date_format(date_create($present->sign_in), 'H:i:s') : '-' }}</small> | 
                       <small style="font-size: 9px;">{{ ($present->sign_out) ? 'out: '.date_format(date_create($present->sign_out), 'H:i:s') : '-' }}</small>
                     </td>
-                    <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
+                    <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}" style="line-height:0.8;">
                       @if($update)
-                        <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
-                        <a class="btn btn-danger btn-block btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
+                        <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : $present->updated_by}}</small><br>
+                        <a class="btn btn-danger btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">A</a>
                       @endif
                     </td>
                   </tr>

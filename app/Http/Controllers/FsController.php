@@ -286,7 +286,7 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                         'fkSantri_id' => $santri_id,
                                         'fkPresence_id' => $presence->id,
                                         'sign_in' => $sign_in,
-                                        'updated_by' => 'Fingerprint '.$cloud_id,
+                                        'updated_by' => $cloud_id,
                                         'is_late' => $is_late
                                     ]);
 
