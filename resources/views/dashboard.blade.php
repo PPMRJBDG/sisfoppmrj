@@ -141,7 +141,7 @@ if(isset(auth()->user()->santri)){
                                     <div class="col-md-12">
                                         <div class="mt-2 p-2 bg-white border">
                                             <p>Pelaksanaan ini di monitoring dan di kontrol juga oleh Koor Ketertiban (Ust. Latif & Ust. Yopi), jika ditemukan laporan yang tidak sesuai dengan yang sebenarnya, maka mohon ridhonya untuk diberikan kafaroh oleh Koor Ketertiban.</p>
-                                            <p>Bagi yang sudah jaga dan melaporkan ini dinyatakan "Hadir" pada KBM Shubuh, dan bagi yang tidak jaga (berhalangan) masih memiliki kewajiban untuk mengikuti KBM Shubuh.</p>
+                                            <p>Bagi yang sudah jaga dan melaporkan ini dinyatakan (auto) "Hadir" pada KBM Shubuh, dan bagi yang tidak jaga (berhalangan) masih memiliki kewajiban untuk mengikuti KBM Shubuh.</p>
                                             <p><b>Ttd,<br>Pegurus PPM</b></p>
                                         </div>
                                         <hr>

@@ -70,7 +70,6 @@ class PublicController extends Controller
 ________________________
 *_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
-Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
 
 ';
                         if (count($mhs_alpha) > 0) {
@@ -161,10 +160,14 @@ Link: ' . $setting->host_url . '/presensi/list/' . $presence->id . '
 
                         $caption = $caption . '
 ------------------------
-📆 *_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
+📆 *_' . $presence->presenceGroup->name . '_*
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
+*Dewan Pengajar*
+- PPM 1: '.(($presence->fkDewan_pengajar_1!=null) ? $presence->dewanPengajar1->name : '').'
+- PPM 2: '.(($presence->fkDewan_pengajar_2!=null) ? $presence->dewanPengajar2->name : '').'
 ';
+
 //                         if (count($mhs_alpha) > 0) {
 //                             $caption = $caption . '*Daftar Mahasiswa Alpha*
 // ';
