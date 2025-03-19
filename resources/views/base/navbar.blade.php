@@ -242,6 +242,26 @@
         @endif
       </ul>
     </li>
+    
+    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || isset(auth()->user()->santri->panitiaPmb))
+    <li class="sidenav-item">
+      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-pmb" role="button" aria-expanded="false">
+        <i class="fas fa-address-book pe-3"></i>PMB
+      </a>
+      <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-pmb">
+        <li>
+          <a class="sidenav-link" href="{{ url('pmb/panitia') }}">
+            <span class="sidenav-link-text ms-1">Panitia</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidenav-link" href="{{ url('pmb/list_maba') }}">
+            <span class="sidenav-link-text ms-1">Daftar Camaba</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    @endif
 
     @can('view users list')
     <li class="sidenav-item">
@@ -249,13 +269,6 @@
         <i class="fa fa-user pe-3"></i>User
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-user">
-        @if(auth()->user()->hasRole('superadmin'))
-        <li>
-          <a class="sidenav-link" href="{{ url('user/list/camaba') }}">
-            <span class="sidenav-link-text ms-1">Daftar Camaba</span>
-          </a>
-        </li>
-        @endif
         <li>
           <a class="sidenav-link" href="{{ url('user/list/santri') }}">
             <span class="sidenav-link-text ms-1">Daftar Mahasiswa</span>

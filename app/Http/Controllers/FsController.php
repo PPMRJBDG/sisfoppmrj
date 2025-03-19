@@ -270,6 +270,32 @@ class FsController extends Controller
                                 $presence->save();
                             }
                         }else{
+                            // cek awal scan dewan guru
+
+                            if($setting->status_scan_degur){
+                                $status_scan_degur = false;
+                                if($presence->is_put_together==1){
+                                    if($presence->fkDewan_pengajar_1==""){
+                                        $status_scan_degur = true;
+                                    }
+                                }else{
+                                    if($cloud_id=="C26308525F1E1B32" || $cloud_id=="C263045107151123"){
+                                        if($presence->fkDewan_pengajar_1==""){
+                                            $status_scan_degur = true;
+                                        }
+                                    }elseif($cloud_id=="C2630451072F3523"){
+                                        if($presence->fkDewan_pengajar_2==""){
+                                            $status_scan_degur = true;
+                                        }
+                                    }
+                                }
+
+                                if($status_scan_degur){
+                                    WaSchedules::save('KBM Belum Mulai', '*[Fingerprint]* Mohon maaf untuk ketertiban, mekanisme scan fingerprint diawali oleh Dewan Guru terlebih dahulu.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                    exit;
+                                }
+                            }
+
                             $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri_id)->first();
                             if ($existingPresent == null) {
                                 if($presence->end_date_time < $datetime){

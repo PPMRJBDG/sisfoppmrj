@@ -131,7 +131,7 @@ class KeamananController extends Controller
 - Mengecek Lingkungan '.$jd_cek_lingkungan.'
 - Mengecek Lahan '.$jd_cek_lahan.'
 - Sudah Adzan 1/3 Malam '.$jd_adzan_malam.'
-- Sudah Nerobosi Muadzin '.$jd_nerobos_muadzin.'
+- Salah Satu Sudah Adzan Shubuh '.$jd_nerobos_muadzin.'
 - Kondisi Umum: '.$request->input('jd_kondisi_umum');
             WaSchedules::save('Update Info Jam Malam: '.auth()->user()->fullname, $caption, $setting->wa_info_presensi_group_id, null, true);
 

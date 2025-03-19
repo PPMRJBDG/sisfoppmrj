@@ -49,7 +49,7 @@ if (auth()->user()->hasRole('barcode')) {
   /* .btn-primary, */
   .bg-primary,
   .badge-primary {
-    background: #48c6ef !important;
+    background:  #48c6ef !important;
     background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
     background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
   }

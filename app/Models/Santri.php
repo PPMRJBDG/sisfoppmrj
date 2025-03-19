@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Present;
 use App\Models\Permit;
-use App\Models\LaporanKeamanans;
+use App\Models\PanitiaPmbs;
 
 class Santri extends Model
 {
@@ -27,10 +27,10 @@ class Santri extends Model
         'fkLaporan_keamanan_id'
     ];
 
-    // public function laporanKeamanan()
-    // {
-    //     return $this->hasMany(LaporanKeamanans::class, 'fkSantri_id');
-    // }
+    public function panitiaPmb()
+    {
+        return $this->hasOne(PanitiaPmbs::class, 'fkSantri_id');
+    }
 
     public function monitoringMateris()
     {

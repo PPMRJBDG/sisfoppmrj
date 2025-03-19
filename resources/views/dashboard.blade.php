@@ -6,6 +6,7 @@ if(isset(auth()->user()->santri)){
     }
 }
 ?>
+
 @if($santri_jaga || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
 <div class="card shadow border mb-2" style="background-color:#f6f9fc;">
     <div class="card-body p-2">
@@ -127,7 +128,7 @@ if(isset(auth()->user()->santri)){
                                                 }
                                             ?>
                                             <input class="form-check-input" type="checkbox" {{ $c_7 }} id="jd_nerobos_muadzin" name="jd_nerobos_muadzin">
-                                            <label class="form-check-label" for="jd_nerobos_muadzin">Sudah Nerobosi Muadzin</label>
+                                            <label class="form-check-label" for="jd_nerobos_muadzin">Salah Satu Sudah Adzan Shubuh</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mt-2">

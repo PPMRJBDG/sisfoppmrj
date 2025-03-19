@@ -47,5 +47,7 @@ class Settings extends Model
         'reminder_kbm',
         'reminder_nerobos',
         'reminder_alpha_ortu',
+        'status_perijinan',
+        'status_scan_degur',
     ];
 }

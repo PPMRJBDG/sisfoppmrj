@@ -242,6 +242,7 @@ Route::post('/msgtools/delete_contact', [App\Http\Controllers\MsgtoolsController
 Route::post('/msgtools/create_group', [App\Http\Controllers\MsgtoolsController::class, 'create_group'])->name('msgtools create group')->middleware('role:superadmin|rj1');
 Route::post('/msgtools/send_wa', [App\Http\Controllers\MsgtoolsController::class, 'send_wa'])->name('msgtools send wa')->middleware('role:superadmin|rj1');
 
+// keamanan
 Route::get('/keamanan', [App\Http\Controllers\KeamananController::class, 'index'])->name('index keamanan')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::post('/keamanan/store_jagamalam', [App\Http\Controllers\KeamananController::class, 'store_jagamalam'])->name('store jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
 Route::get('/keamanan/delete_jagamalam/{id}', [App\Http\Controllers\KeamananController::class, 'delete_jagamalam'])->name('delete jagamalam')->middleware('role:superadmin|rj1|wk|divisi keamanan');
@@ -250,7 +251,12 @@ Route::get('/keamanan/pulang-malam', [App\Http\Controllers\KeamananController::c
 Route::post('/keamanan/jobdesk/store', [App\Http\Controllers\KeamananController::class, 'store_jobdesk'])->name('store jobdesk')->middleware('role:superadmin|rj1|wk|divisi keamanan|santri');
 
 // PMB
-Route::get('/pmb', [App\Http\Controllers\PmbController::class, 'index']);
+Route::get('/pmb', [App\Http\Controllers\PmbPublicController::class, 'index']);
+Route::post('/pmb/store_maba', [App\Http\Controllers\PmbPublicController::class, 'store_maba'])->name('store maba');
+Route::get('/pmb/panitia', [App\Http\Controllers\PmbController::class, 'view_panitia'])->name('view panitia')->middleware('role:superadmin|rj1|wk|permission:view panitia pmb');
+Route::get('/pmb/delete_panitia/{id}', [App\Http\Controllers\PmbController::class, 'delete_panitia'])->name('delete panitia pmb')->middleware('role:superadmin|rj1|wk');
+Route::post('/pmb/store_panitia', [App\Http\Controllers\PmbController::class, 'store_panitia'])->name('store panitia')->middleware('role:superadmin|rj1|wk');
+Route::get('/pmb/list_maba', [App\Http\Controllers\PmbController::class, 'view_maba'])->name('view maba')->middleware('role:superadmin|rj1|wk');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);
