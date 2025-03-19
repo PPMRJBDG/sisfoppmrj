@@ -1927,7 +1927,6 @@ class PresenceController extends Controller
             $pres_name = $all_presence[0]->name;
         }
 
-        $data_kbm_ijin = CommonHelpers::statusPerijinan($request->input('fkSantri_id'));
         foreach ($all_presence as $pres) {
             $existingRangedPermit = RangedPermitGenerator::orWhere(function ($query) use ($request, $santri, $pres) {
                 $query->where('fkSantri_id', $santri->id);
@@ -1994,6 +1993,7 @@ class PresenceController extends Controller
                 if (isset($existingPresent))
                     continue;
 
+                $data_kbm_ijin = CommonHelpers::statusPerijinan($request->input('fkSantri_id'));
                 $ids = uniqid();
                 $inserted = Permit::create([
                     'fkSantri_id' => $santri->id,
