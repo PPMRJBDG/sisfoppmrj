@@ -38,7 +38,7 @@
     </div>
 
     @if(count($sodaqoh)>0)
-    <div class="card shadow border mb-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Pembayaran Sodaqoh</h5>
         <div class="card-body p-0">
             <div class="datatable datatable-sm p-0" data-mdb-pagination="false">
@@ -93,7 +93,7 @@
     $all_alpha = 0;
     ?>
     @if($datapg!=null)
-    <div class="card shadow border mb-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Presensi Kehadiran</h5>
         <div class="card-body p-0 text-center">
             <th class="text-center p-1">Total Keseluruhan</th>
@@ -224,14 +224,14 @@
         </div>
     </div>
     @else
-    <div class="card shadow border mb-2">
+    <div class="card shadow border mb-2 p-2">
         <div class="card-body p-2 text-center">
             Belum dimulai KBM
         </div>
     </div>
     @endif
 
-    <div class="card shadow border mb-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Pencapaian Materi</h5>
         <div class="card-body p-0">
             <div class="datatable datatable-sm" data-mdb-pagination="false">
@@ -252,29 +252,29 @@
     </div>
 
     @if($catatan_penghubungs!=null)
-    <div class="card shadow border mb-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Catatan Penghubung</h5>
         <div class="card-body p-2">
-            <h5>Kepribadian:</h5>
-            <h6>{{ $catatan_penghubungs->cat_kepribadian }}</h6>
+            <h6 class="font-weight-bolder">Kepribadian:</h6>
+            <span>{{ $catatan_penghubungs->cat_kepribadian }}</span>
             <hr>
-            <h5>Sholat:</h5>
-            <h6>{{ $catatan_penghubungs->cat_sholat }}</h6>
+            <h6 class="font-weight-bolder">Sholat:</h6>
+            <span>{{ $catatan_penghubungs->cat_sholat }}</span>
             <hr>
-            <h5>KBM:</h5>
-            <h6>{{ $catatan_penghubungs->cat_kbm }}</h6>
+            <h6 class="font-weight-bolder">KBM:</h6>
+            <span>{{ $catatan_penghubungs->cat_kbm }}</span>
             <hr>
-            <h5>Asmara:</h5>
-            <h6>{{ $catatan_penghubungs->cat_asmara }}</h6>
+            <h6 class="font-weight-bolder">Asmara:</span>
+            <span>{{ $catatan_penghubungs->cat_asmara }}</span>
             <hr>
-            <h5>Umum:</h5>
-            <h6>{{ $catatan_penghubungs->cat_umum }}</h6>
+            <h6 class="font-weight-bolder">Umum:</h6>
+            <span>{{ $catatan_penghubungs->cat_umum }}</span>
         </div>
     </div>
     @endif
 
     @if(count($pelanggaran)>0)
-    <div class="card shadow border mb-2">
+    <div class="card shadow border mb-2 p-2">
         <h5 class="text-center mb-1">Riwayat Pelanggaran</h5>
         <div class="card-body p-0">
             <h6 class="p-2">Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>

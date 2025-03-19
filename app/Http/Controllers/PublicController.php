@@ -188,11 +188,11 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                 if ($contact_id != '' && count($get_presence) > 0) {
                     $insert = WaSchedules::save($name, $caption, $contact_id);
 
-                    $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
-                    if ($contact_id != null) {
-                        $name = '[Maurus Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
-                        $insert = WaSchedules::save($name, $caption, $contact_id->id, 2);
-                    }
+                    // $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
+                    // if ($contact_id != null) {
+                    //     $name = '[Maurus Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
+                    //     $insert = WaSchedules::save($name, $caption, $contact_id->id, 2);
+                    // }
 
                     if ($insert) {
                         echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
