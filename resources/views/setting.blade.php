@@ -634,6 +634,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                         } ?> value="1">Diaktifkan</option>
                                             </select>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Mekanisme Dewan Guru Scan Awal
+                                            </label>
+                                            <select data-mdb-filter="true" class="select status_scan_degur form-control" name="status_scan_degur" id="status_scan_degur">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->status_scan_degur) ? 'selected' : '';
+                                                        } ?> value="0">Tidak Diaktifkan</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->status_scan_degur) ? 'selected' : '';
+                                                        } ?> value="1">Diaktifkan</option>
+                                            </select>
+                                        </div>
 
                                         <h5><b>Scheduler</b></h5>
                                         

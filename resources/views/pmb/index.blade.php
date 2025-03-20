@@ -6,7 +6,7 @@
     <div class="col-md-6">
         <form action="{{ route('store maba') }}" id="upload-file" method="POST" enctype="multipart/form-data">
             <div class="card">
-                <img src="https://lh7-us.googleusercontent.com/VEj0yusMnQV3zzl_wlRUZoOuhgfjqoua_8s6vk7l_jwkGq06jKIjdjRrGI_GrBVHA0SeZE511deIdXa7lKPny-_8lUY2ET_rg2WvhzupQOG0_MDWrk6g7eAc-xgw9L64lyAcJENUw8W_Q_fgs2LY4cmgWC1K5w" class="card-img-top" alt="Fissure in Sandstone"/>
+                <img src="https://i.ibb.co.com/nNsP2s8t/BANNER-FORM-OM-PPMRJ-2025.png" class="card-img-top" alt="PMB 2025-2026"/>
             </div>
             
             <div class="card border shadow-sm mt-2">
@@ -16,7 +16,7 @@
                         Calon Santri Baru PPM RJ Tahun Ajaran 2025/2026 wajib mengisi formulir pendaftaran ini dengan sebenar-benarnya.
                     </p>
                     <p>
-                        Jika belum diterima sebagai Mahasiswa di salah satu Universitas, maka data kampus, jurusan, dan angkatan dapat dikosongkan terlebih dahulu (diisi dengan "-").
+                        Jika belum diterima sebagai Mahasiswa di salah satu Universitas, maka data kampus, jurusan, dan angkatan dapat dikosongkan terlebih dahulu.
                     </p>
                     <p>
                         Untuk informasi lebih lanjut, silahkan menghubungi:
@@ -41,7 +41,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
-                        <select data-mdb-filter="true" class="select form-control" value="" id="gender" name="gender" required>
+                        <select class="form-control" value="" id="gender" name="gender" required>
                             <option value="">--Pilih--</option>
                             <option value="male">Laki-laki</option>
                             <option value="female">Perempuan</option>
@@ -72,12 +72,13 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="example-text-input" class="form-control-label">Golongan Darah</label>
-                        <select data-mdb-filter="true" class="select form-control" value="" id="blood_group" name="blood_group" required>
+                        <select class="form-control" value="" id="blood_group" name="blood_group" required>
                             <option value="">--Pilih--</option>
                             <option value="A">A</option>
                             <option value="AB">AB</option>
                             <option value="B">B</option>
                             <option value="O">O</option>
+                            <option value="Other">Belum Tahu</option>
                         </select>
                     </div>
                 </div>
@@ -104,8 +105,8 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">ID Line</label>
-                        <input class="form-control" type="text" name="id_line">
+                        <label for="example-text-input" class="form-control-label">Email</label>
+                        <input class="form-control" type="email" name="email" required>
                     </div>
                 </div>
             </div>
@@ -113,8 +114,8 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Email</label>
-                        <input class="form-control" type="email" name="email" required>
+                        <label for="example-text-input" class="form-control-label">ID Line</label>
+                        <input class="form-control" type="text" name="id_line">
                     </div>
                 </div>
             </div>
@@ -131,8 +132,8 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Kota Asal</label>
-                        <input class="form-control" type="text" name="kota" required>
+                        <label for="example-text-input" class="form-control-label">Kota / Kabupaten Asal</label>
+                        <input class="form-control" type="text" name="kota_kab" required>
                     </div>
                 </div>
             </div>
@@ -213,7 +214,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="example-text-input" class="form-control-label">Apakah Anda sudah Muballigh/Muballighot ?</label>
-                        <select data-mdb-filter="true" class="select form-control" value="" id="gender" name="gender" required>
+                        <select class="form-control" value="" id="muballigh" name="muballigh" required>
                             <option value="">--Pilih--</option>
                             <option value="sudah">Sudah</option>
                             <option value="belum">Belum</option>
@@ -272,7 +273,16 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="example-text-input" class="form-control-label">Nama Wali <small>(kosongkan jika tidak diwalikan)</small></label>
-                        <input class="form-control" type="text" name="nama_wali" required>
+                        <input class="form-control" type="text" name="nama_wali">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border shadow-sm mt-2">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Profesi Wali</label>
+                        <input class="form-control" type="text" name="profesi_wali">
                     </div>
                 </div>
             </div>
@@ -289,7 +299,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nomor WhatsApp Orangtua Aktif</label>
+                        <label for="example-text-input" class="form-control-label">Nomor WhatsApp Orangtua / Wali Aktif</label>
                         <input class="form-control" type="text" name="nomor_wa_ortu_wali" required>
                     </div>
                 </div>
@@ -317,12 +327,12 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="example-text-input" class="form-control-label">Dapat melaksanakan seleksi secara luring ?</label>
-                        <select data-mdb-filter="true" class="select form-control" value="" id="seleksi_luring" name="seleksi_luring" required>
+                        <select class="form-control" value="" id="seleksi_luring" name="seleksi_luring" required>
                             <option value="">--Pilih--</option>
                             <option value="bisa">Bisa</option>
                             <option value="tidak">Tidak</option>
                         </select>
-                        <input class="form-control mt-2" type="text" name="alasan_seleksi_daring" placeholder="Jika Tidak, berikan alasan kenapa" required>
+                        <input class="form-control mt-2" type="text" name="alasan_seleksi_daring" placeholder="Jika Tidak, berikan alasan kenapa">
                     </div>
                 </div>
             </div>
@@ -340,7 +350,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="example-text-input" class="form-control-label">Pendamping Saat Seleksi</label>
-                        <select data-mdb-filter="true" class="select form-control" value="" id="pendamping_seleksi" name="pendamping_seleksi" required>
+                        <select class="form-control" value="" id="pendamping_seleksi" name="pendamping_seleksi" required>
                             <option value="">--Pilih--</option>
                             <option value="ortu">Orang Tua</option>
                             <option value="wali">Wali</option>

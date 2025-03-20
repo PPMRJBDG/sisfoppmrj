@@ -297,6 +297,7 @@ if(isset(auth()->user()->santri)){
             <div class="tab-content p-0 mt-2" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-mahasiswa" role="tabpanel" aria-labelledby="nav-mahasiswa-tab">
                     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+                    
                     <div class="datatable datatable-sm border" data-mdb-pagination="false" data-mdb-fixed-header="true">
                         <table id="table-hadir" class="table align-items-center mb-0">
                             <thead>

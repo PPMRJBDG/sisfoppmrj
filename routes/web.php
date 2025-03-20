@@ -251,12 +251,14 @@ Route::get('/keamanan/pulang-malam', [App\Http\Controllers\KeamananController::c
 Route::post('/keamanan/jobdesk/store', [App\Http\Controllers\KeamananController::class, 'store_jobdesk'])->name('store jobdesk')->middleware('role:superadmin|rj1|wk|divisi keamanan|santri');
 
 // PMB
-Route::get('/pmb', [App\Http\Controllers\PmbPublicController::class, 'index']);
+Route::get('/pmb', [App\Http\Controllers\PmbPublicController::class, 'index'])->name('index pmb');
+Route::get('/pmb/registration-successful', [App\Http\Controllers\PmbPublicController::class, 'registration_successful'])->name('registration successful');
 Route::post('/pmb/store_maba', [App\Http\Controllers\PmbPublicController::class, 'store_maba'])->name('store maba');
-Route::get('/pmb/panitia', [App\Http\Controllers\PmbController::class, 'view_panitia'])->name('view panitia')->middleware('role:superadmin|rj1|wk|permission:view panitia pmb');
-Route::get('/pmb/delete_panitia/{id}', [App\Http\Controllers\PmbController::class, 'delete_panitia'])->name('delete panitia pmb')->middleware('role:superadmin|rj1|wk');
-Route::post('/pmb/store_panitia', [App\Http\Controllers\PmbController::class, 'store_panitia'])->name('store panitia')->middleware('role:superadmin|rj1|wk');
-Route::get('/pmb/list_maba', [App\Http\Controllers\PmbController::class, 'view_maba'])->name('view maba')->middleware('role:superadmin|rj1|wk');
+Route::get('/pmb/panitia', [App\Http\Controllers\PmbController::class, 'view_panitia'])->name('view panitia')->middleware('role:superadmin|rj1|wk|panitia pmb');
+Route::get('/pmb/delete_panitia/{id}', [App\Http\Controllers\PmbController::class, 'delete_panitia'])->name('delete panitia pmb')->middleware('role:superadmin|rj1|wk|panitia pmb');
+Route::post('/pmb/store_panitia', [App\Http\Controllers\PmbController::class, 'store_panitia'])->name('store panitia')->middleware('role:superadmin|rj1|wk|panitia pmb');
+Route::get('/pmb/list_maba', [App\Http\Controllers\PmbController::class, 'view_maba'])->name('view maba')->middleware('role:superadmin|rj1|wk|panitia pmb');
+Route::post('/pmb/change_status_maba', [App\Http\Controllers\PmbController::class, 'change_status_maba'])->name('change status maba')->middleware('role:superadmin|rj1|wk|panitia pmb');
 
 Route::get('/run/migrate', function (Request $request) {
     return Artisan::call('migrate', ["--force" => true]);

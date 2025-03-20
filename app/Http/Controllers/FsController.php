@@ -253,25 +253,35 @@ class FsController extends Controller
                         if($get_degur!=null){
                             // C26308525F1E1B32,C263045107151123 -> PPM 1
                             // C2630451072F3523 -> PPM 2
-
+                            $is_late = 0;
+                            if ($datetime > $presence->start_date_time) {
+                                $is_late = 1;
+                            }
                             if($presence->is_put_together==1){
                                 if($presence->fkDewan_pengajar_1==""){
                                     $presence->fkDewan_pengajar_1 = $get_degur->id;
+                                    $presence->sign_in_degur1 = $datetime;
+                                    $presence->status_terlambat_degur1 = $is_late;
                                 }else{
                                     $presence->fkDewan_pengajar_2 = $get_degur->id;
+                                    $presence->sign_in_degur2 = $datetime;
+                                    $presence->status_terlambat_degur2 = $is_late;
                                 }
-                                $presence->save();
                             }else{
                                 if($cloud_id=="C26308525F1E1B32" || $cloud_id=="C263045107151123"){
                                     $presence->fkDewan_pengajar_1 = $get_degur->id;
+                                    $presence->sign_in_degur1 = $datetime;
+                                    $presence->status_terlambat_degur1 = $is_late;
                                 }elseif($cloud_id=="C2630451072F3523"){
                                     $presence->fkDewan_pengajar_2 = $get_degur->id;
+                                    $presence->sign_in_degur2 = $datetime;
+                                    $presence->status_terlambat_degur2 = $is_late;
                                 }
-                                $presence->save();
                             }
+
+                            $presence->save();
                         }else{
                             // cek awal scan dewan guru
-
                             if($setting->status_scan_degur){
                                 $status_scan_degur = false;
                                 if($presence->is_put_together==1){
@@ -291,7 +301,7 @@ class FsController extends Controller
                                 }
 
                                 if($status_scan_degur){
-                                    WaSchedules::save('KBM Belum Mulai', '*[Fingerprint]* Mohon maaf untuk ketertiban, mekanisme scan fingerprint diawali oleh Dewan Guru terlebih dahulu.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                    WaSchedules::save('KBM Belum Mulai', '*[Fingerprint]* Mohon maaf untuk ketertiban, mekanisme scan fingerprint diawali oleh Dewan Guru terlebih dahulu (jika scan sebelum Dewan Guru, maka statusnya masih alpha meskipun mesin fingerprint OK).', WaSchedules::getContactId($get_santri->user->nohp), null, true);
                                     exit;
                                 }
                             }
@@ -306,6 +316,22 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                     $is_late = 0;
                                     if ($sign_in > $presence->start_date_time) {
                                         $is_late = 1;
+                                    }
+                                    // Kondisi jika dewan guru terlambat, kemurahan buat semua -> status tidak telat (tepat waktu)
+                                    if($presence->is_put_together==1){
+                                        if($presence->status_terlambat_degur1){
+                                            $is_late = 0;
+                                        }
+                                    }else{
+                                        if($cloud_id=="C26308525F1E1B32" || $cloud_id=="C263045107151123"){
+                                            if($presence->status_terlambat_degur1){
+                                                $is_late = 0;
+                                            }
+                                        }elseif($cloud_id=="C2630451072F3523"){
+                                            if($presence->status_terlambat_degur2){
+                                                $is_late = 0;
+                                            }
+                                        }
                                     }
 
                                     $inserted = Present::create([

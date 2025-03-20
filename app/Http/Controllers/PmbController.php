@@ -9,10 +9,15 @@ use App\Models\PanitiaPmbs;
 use App\Models\ModelHasRole;
 use App\Models\Santri;
 use App\Models\User;
+use App\Models\Camabas;
 
 class PmbController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function view_panitia()
     {
         $datax = PanitiaPmbs::get();
@@ -63,12 +68,48 @@ class PmbController extends Controller
         return redirect()->route('view panitia', $id)->with('success', 'Berhasil menghapus panitia');
     }
 
-    public function view_maba()
+    public function view_maba($select_angkatan=0)
     {
-        
+        if(auth()->user()->hasRole('panitia pmb')){
+            $select_angkatan = date('Y');
+            $list_angkatan = DB::table('camabas')
+                            ->select('angkatan')
+                            ->where('angkatan',$select_angkatan)
+                            ->orderBy('angkatan', 'ASC')
+                            ->groupBy('angkatan')
+                            ->get();
+        }else{
+            $list_angkatan = DB::table('camabas')
+                            ->select('angkatan')
+                            ->orderBy('angkatan', 'ASC')
+                            ->groupBy('angkatan')
+                            ->get();
+        }
+
+        if($select_angkatan==0){
+            $camabas = Camabas::get();
+        }else{
+            $camabas = Camabas::where('angkatan',$select_angkatan)->get();
+        }
+
         return view('pmb.view_maba', [
-            
+            'list_angkatan' => $list_angkatan,
+            'select_angkatan' => $select_angkatan,
+            'camabas' => $camabas,
         ]);
+    }
+
+    public function change_status_maba(Request $request)
+    {
+        $change_status = Camabas::find($request->input('id'));
+        $change_status->status = $request->input('status');
+        $change_status->save();
+
+        if($change_status){
+            return json_encode(array("status" => true));
+        }else{
+            return json_encode(array("status" => false));
+        }
     }
     
 }

@@ -10,6 +10,7 @@ use App\Helpers\CountDashboard;
 use App\Models\Periode;
 use App\Models\TelatPulangMalams;
 use App\Models\LaporanKeamanans;
+use App\Models\Lorong;
 use App\Helpers\PresenceGroupsChecker;
 
 class HomeController extends Controller
@@ -92,7 +93,12 @@ class HomeController extends Controller
             $tb = null;
         }
 
+        $get_lorong = null;
+        if(auth()->user()->hasRole('koor lorong')){
+            $get_lorong = Lorong::where('fkSantri_leaderId',auth()->user()->santri->id)->first();
+        }
         $view_usantri = DB::table('v_user_santri')->orderBy('fullname','ASC')->get();
+        
         $datapg = null;
         $all_presences = null;
         $presences = null;
@@ -104,36 +110,73 @@ class HomeController extends Controller
                 if ($select_angkatan == null) {
                     $xtb = explode("-", $tb);
                     if (intval($xtb[1]) < 9) {
-                        $view_usantri = DB::table('v_user_santri')
-                            ->where('angkatan', '<', $xtb[0])
-                            ->orderBy('fullname')->get();
+                        if($get_lorong==null){
+                            $view_usantri = DB::table('v_user_santri')
+                                ->where('angkatan', '<', $xtb[0])
+                                ->orderBy('fullname')->get();
+                        }else{
+                            $view_usantri = DB::table('v_user_santri')
+                                ->where('angkatan', '<', $xtb[0])
+                                ->where('fkLorong_id', $get_lorong->id)
+                                ->orderBy('fullname')->get();
+                        }
                     } else {
-                        $view_usantri = DB::table('v_user_santri')
-                            ->where('angkatan', '<=', $xtb[0])
-                            ->orderBy('fullname')->get();
+                        if($get_lorong==null){
+                            $view_usantri = DB::table('v_user_santri')
+                                ->where('angkatan', '<=', $xtb[0])
+                                ->orderBy('fullname')->get();
+                        }else{
+                            $view_usantri = DB::table('v_user_santri')
+                                ->where('angkatan', '<=', $xtb[0])
+                                ->where('fkLorong_id', $get_lorong->id)
+                                ->orderBy('fullname')->get();
+                        }
                     }
                 } else {
                     if ($select_angkatan == intval(explode("-", $tb)[0]) && intval(explode("-", $tb)[1] < 9)) {
                         $view_usantri = null;
                     } else {
-                        $view_usantri = DB::table('v_user_santri')
-                            ->where('angkatan', $select_angkatan)
-                            ->orderBy('fullname')->get();
+                        if($get_lorong==null){
+                            $view_usantri = DB::table('v_user_santri')
+                                ->where('angkatan', $select_angkatan)
+                                ->orderBy('fullname')->get();
+                        }else{
+                            $view_usantri = DB::table('v_user_santri')
+                                ->where('angkatan', $select_angkatan)
+                                ->where('fkLorong_id', $get_lorong->id)
+                                ->orderBy('fullname')->get();
+                        }
                     }
                 }
             } elseif ($select_periode != null) {
                 $split_periode = explode("-", $select_periode);
                 if ($select_angkatan == null) {
-                    $view_usantri = DB::table('v_user_santri')
-                        ->where('angkatan', '<=', $split_periode[0])
-                        ->orderBy('fullname')->get();
+                    if($get_lorong==null){
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', '<=', $split_periode[0])
+                            ->orderBy('fullname')->get();
+                    }else{
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', '<=', $split_periode[0])
+                            ->where('fkLorong_id', $get_lorong->id)
+                            ->orderBy('fullname')->get();
+                    }
                 } else {
-                    $view_usantri = DB::table('v_user_santri')
-                        ->where('angkatan', '<=', $split_periode[0])
-                        ->where('angkatan', $select_angkatan)
-                        ->orderBy('fullname')->get();
+                    if($get_lorong==null){
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', '<=', $split_periode[0])
+                            ->where('angkatan', $select_angkatan)
+                            ->orderBy('fullname')->get();
+                    }else{
+                        $view_usantri = DB::table('v_user_santri')
+                            ->where('angkatan', '<=', $split_periode[0])
+                            ->where('angkatan', $select_angkatan)
+                            ->where('fkLorong_id', $get_lorong->id)
+                            ->orderBy('fullname')->get();
+                    }
                 }
             }
+
             if ($view_usantri != null) {
                 foreach ($view_usantri as $vu) {
                     foreach ($presence_group as $pg) {

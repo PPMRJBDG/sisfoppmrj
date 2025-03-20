@@ -22156,7 +22156,7 @@ screen and (-ms-high-contrast:active) {
 
 .datatable thead,
 .datatable thead tr {
-    background-color: inherit
+    background-color: #f6f9fc!important;
 }
 
 .datatable thead tr {

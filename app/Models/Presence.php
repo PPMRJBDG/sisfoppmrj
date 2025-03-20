@@ -25,7 +25,11 @@ class Presence extends Model
         'is_hasda',
         'is_put_together',
         'is_deleted',
-        'deleted_by'
+        'deleted_by',
+        'sign_in_degur1',
+        'sign_in_degur2',
+        'status_terlambat_degur1',
+        'status_terlambat_degur2',
     ];
 
     /**

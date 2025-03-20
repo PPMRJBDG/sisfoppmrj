@@ -134,6 +134,7 @@ class SettingController extends Controller
                 'reminder_kbm' => 'required',
                 'reminder_nerobos' => 'required',
                 'reminder_alpha_ortu' => 'required',
+                'status_scan_degur' => 'required',
             ]);
         }
         if ($setting == null) {
@@ -173,6 +174,7 @@ class SettingController extends Controller
                 'reminder_kbm' => $request->input('reminder_kbm'),
                 'reminder_nerobos' => $request->input('reminder_nerobos'),
                 'reminder_alpha_ortu' => $request->input('reminder_alpha_ortu'),
+                'status_scan_degur' => $request->input('status_scan_degur'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -210,6 +212,7 @@ class SettingController extends Controller
             $setting->reminder_kbm = $request->input('reminder_kbm');
             $setting->reminder_nerobos = $request->input('reminder_nerobos');
             $setting->reminder_alpha_ortu = $request->input('reminder_alpha_ortu');
+            $setting->status_scan_degur = $request->input('status_scan_degur');
             $setting->save();
         }
 

@@ -507,55 +507,6 @@ Silahkan klik link dibawah ini:
             $time_post++;
 
             echo json_encode(['status' => true, 'message' => '[monthly] success running scheduler']);
-        }
-
-        // LINK PRESENSI
-        elseif ($time == 'presence') {
-            if(!$setting->cron_presence){
-                echo json_encode(['status' => false, 'message' => '[presence] scheduler off']);
-                exit;
-            }
-            
-            PresenceGroupsChecker::checkPresenceGroups();
-            $get_presence_today = Presence::where('event_date', date("Y-m-d"))->where('fkPresence_group_id', $presence_id)->where('is_deleted', 0)->first();
-            if ($get_presence_today != null) {
-                if ($setting->auto_generate_hadir) {
-                    $view_usantri = DB::table('v_user_santri')->orderBy('fullname', 'ASC')->get();
-                    foreach ($view_usantri as $mhs) {
-                        $permit = Permit::where('fkPresence_id', $get_presence_today->id)->where('fkSantri_id', $mhs->santri_id)->where('status', 'approved')->first();
-                        if (!$permit) {
-                            $existingPresent = Present::where('fkPresence_id', '=', $get_presence_today->id, 'and')->where('fkSantri_id', '=', $mhs->santri_id)->first();
-                            if (!$existingPresent) {
-                                $inserted = Present::create([
-                                    'fkSantri_id' => $mhs->santri_id,
-                                    'fkPresence_id' => $get_presence_today->id,
-                                    'is_late' => 0
-                                ]);
-                            }
-                        }
-                    }
-                }
-
-                // alpha
-                $mhs_alpha = CountDashboard::mhs_alpha($get_presence_today->id, 'all', $get_presence_today->event_date);
-                if (count($mhs_alpha) > 0) {
-                    foreach ($mhs_alpha as $d) {
-                        // info ke ortu
-                        if ($setting->wa_info_alpha_ortu == 1) {
-                            $caption_ortu = 'Menginformasikan bahwa *' . $d['name'] . '* tadi tidak hadir tanpa ijin pada ' . $get_presence_today->name . '.
-
-NB:
-- Jika ternyata hadir, silahkan melaporkan ke Pengurus untuk disesuaikan presensinya
-- Jika ada kendala lainnya, silahkan menghubungi:
-*' . $d['lorong'] . '*.';
-                            WaSchedules::save('Info Alpha ke Ortu ' . $d['name'], $caption_ortu, WaSchedules::getContactId($d['nohp_ortu']), $time_post, false);
-                            $time_post++;
-                        }
-                    }
-                }
-            }
-
-            echo json_encode(['status' => true, 'message' => '[presence] success running scheduler']);
         } elseif ($time == 'jam-malam') {
             if(!$setting->cron_jam_malam){
                 echo json_encode(['status' => false, 'message' => '[jam-malam] scheduler off']);
@@ -701,13 +652,6 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
             $get_presence_today = Presence::where('event_date', $event_date)->where('start_date_time','like', $add_mins.'%')->whereNot('is_deleted', 1)->first();
             
             if($get_presence_today!=null){
-                // $presenceGroup = PresenceGroup::find($get_presence_today->fkPresence_group_id);
-                // $get_presence_today->start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->start_hour));
-                // $get_presence_today->end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->end_hour));
-                // $get_presence_today->presence_start_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_start_hour));
-                // $get_presence_today->presence_end_date_time = date('Y-m-d H:i', strtotime($event_date . ' ' . $presenceGroup->presence_end_hour));
-                // $get_presence_today->save();
-
                 $is_put_together = "";
                 if($get_presence_today->is_put_together){
                     $is_put_together = "
@@ -729,7 +673,7 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
 🔴 Batas Sign Out -> *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
 -
 🗒️ NB:".$is_put_together."
-- Untuk presensi, semua wajib scan Fingerprint
+- *Untuk presensi, semua wajib scan Fingerprint setelah Dewan Guru (jika scan sebelum Dewan Guru, maka statusnya masih alpha meskipun mesin fingerprint OK)*
 - Amalsholih untuk dapat hadir tepat waktu, tertib, dan disiplin
 - Supaya mempersiapkan diri sebelum jam KBM dimulai, menuju masjid/mushola untuk sholat berjamaah sekaligus membawa materi yang sudah ditentukan
 - Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman
