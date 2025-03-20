@@ -31,8 +31,8 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nama Lengkap</label>
-                        <input class="form-control" type="text" name="fullname" required>
+                        <label class="form-control-label">Nama Lengkap</label>
+                        <input class="form-control" type="text" id="fullname" name="fullname" required>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Jenis Kelamin</label>
+                        <label class="form-control-label">Jenis Kelamin</label>
                         <select class="form-control" value="" id="gender" name="gender" required>
                             <option value="">--Pilih--</option>
                             <option value="male">Laki-laki</option>
@@ -53,7 +53,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Tempat Lahir</label>
+                        <label class="form-control-label">Tempat Lahir</label>
                         <input class="form-control" type="text" name="place_of_birth" required>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Tanggal Lahir <small>(ex: 18-07-1991)</small></label>
+                        <label class="form-control-label">Tanggal Lahir <small>(ex: 18-07-1991)</small></label>
                         <input class="form-control" type="date" name="birthday" required>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Golongan Darah</label>
+                        <label class="form-control-label">Golongan Darah</label>
                         <select class="form-control" value="" id="blood_group" name="blood_group" required>
                             <option value="">--Pilih--</option>
                             <option value="A">A</option>
@@ -87,7 +87,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Riwayat Penyakit</label>
+                        <label class="form-control-label">Riwayat Penyakit</label>
                         <input class="form-control" type="text" name="riwayat_penyakit">
                     </div>
                 </div>
@@ -96,7 +96,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nomor WhatsApp</label>
+                        <label class="form-control-label">Nomor WhatsApp</label>
                         <input class="form-control" type="text" name="nomor_wa" required>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Email</label>
+                        <label class="form-control-label">Email</label>
                         <input class="form-control" type="email" name="email" required>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">ID Line</label>
+                        <label class="form-control-label">ID Line</label>
                         <input class="form-control" type="text" name="id_line">
                     </div>
                 </div>
@@ -123,7 +123,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Alamat Rumah Lengkap</label>
+                        <label class="form-control-label">Alamat Rumah Lengkap</label>
                         <input class="form-control" type="text" name="alamat" required>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Kota / Kabupaten Asal</label>
+                        <label class="form-control-label">Kota / Kabupaten Asal</label>
                         <input class="form-control" type="text" name="kota_kab" required>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Daerah Asal Sambung</label>
+                        <label class="form-control-label">Daerah Asal Sambung</label>
                         <input class="form-control" type="text" name="daerah" required>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Desa Asal Sambung</label>
+                        <label class="form-control-label">Desa Asal Sambung</label>
                         <input class="form-control" type="text" name="desa" required>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Kelompok Asal Sambung</label>
+                        <label class="form-control-label">Kelompok Asal Sambung</label>
                         <input class="form-control" type="text" name="kelompok" required>
                     </div>
                 </div>
@@ -168,7 +168,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nomor WhatsApp Pengurus Kelompok</label>
+                        <label class="form-control-label">Nomor WhatsApp Pengurus Kelompok</label>
                         <input class="form-control" type="text" name="wa_pengurus" required>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Universitas</label>
+                        <label class="form-control-label">Universitas</label>
                         <input class="form-control" type="text" name="universitas" required>
                     </div>
                 </div>
@@ -186,7 +186,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Jurusan</label>
+                        <label class="form-control-label">Jurusan</label>
                         <input class="form-control" type="text" name="jurusan" required>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Apa motivasi Anda menjadi Santri di PPM RJ ?</label>
+                        <label class="form-control-label">Apa motivasi Anda menjadi Santri di PPM RJ ?</label>
                         <input class="form-control" type="text" name="motivasi" required>
                     </div>
                 </div>
@@ -204,7 +204,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Apakah sebelumnya sudah pernah mondok ? Dimana ?</label>
+                        <label class="form-control-label">Apakah sebelumnya sudah pernah mondok ? Dimana ?</label>
                         <input class="form-control" type="text" name="mondok_asal">
                     </div>
                 </div>
@@ -213,7 +213,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Apakah Anda sudah Muballigh/Muballighot ?</label>
+                        <label class="form-control-label">Apakah Anda sudah Muballigh/Muballighot ?</label>
                         <select class="form-control" value="" id="muballigh" name="muballigh" required>
                             <option value="">--Pilih--</option>
                             <option value="sudah">Sudah</option>
@@ -226,7 +226,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Foto Pas</label>
+                        <label class="form-control-label">Foto Pas</label>
                         <input class="form-control" type="file" name="foto_pas" id="foto_pas">
                     </div>
                 </div>
@@ -236,7 +236,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nama Ayah</label>
+                        <label class="form-control-label">Nama Ayah</label>
                         <input class="form-control" type="text" name="nama_ayah" required>
                     </div>
                 </div>
@@ -245,7 +245,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Profesi Ayah</label>
+                        <label class="form-control-label">Profesi Ayah</label>
                         <input class="form-control" type="text" name="profesi_ayah" required>
                     </div>
                 </div>
@@ -254,7 +254,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nama Ibu</label>
+                        <label class="form-control-label">Nama Ibu</label>
                         <input class="form-control" type="text" name="nama_ibu" required>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Profesi Ibu</label>
+                        <label class="form-control-label">Profesi Ibu</label>
                         <input class="form-control" type="text" name="profesi_ibu" required>
                     </div>
                 </div>
@@ -272,7 +272,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nama Wali <small>(kosongkan jika tidak diwalikan)</small></label>
+                        <label class="form-control-label">Nama Wali <small>(kosongkan jika tidak diwalikan)</small></label>
                         <input class="form-control" type="text" name="nama_wali">
                     </div>
                 </div>
@@ -281,7 +281,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Profesi Wali</label>
+                        <label class="form-control-label">Profesi Wali</label>
                         <input class="form-control" type="text" name="profesi_wali">
                     </div>
                 </div>
@@ -290,7 +290,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Alamat Orang Tua / Wali</label>
+                        <label class="form-control-label">Alamat Orang Tua / Wali</label>
                         <input class="form-control" type="text" name="alamat_ortu_wali" required>
                     </div>
                 </div>
@@ -299,7 +299,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Nomor WhatsApp Orangtua / Wali Aktif</label>
+                        <label class="form-control-label">Nomor WhatsApp Orangtua / Wali Aktif</label>
                         <input class="form-control" type="text" name="nomor_wa_ortu_wali" required>
                     </div>
                 </div>
@@ -326,7 +326,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Dapat melaksanakan seleksi secara luring ?</label>
+                        <label class="form-control-label">Dapat melaksanakan seleksi secara luring ?</label>
                         <select class="form-control" value="" id="seleksi_luring" name="seleksi_luring" required>
                             <option value="">--Pilih--</option>
                             <option value="bisa">Bisa</option>
@@ -340,7 +340,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Pilih Tanggal Seleksi <small>(ex: 18-07-2025)</small></label>
+                        <label class="form-control-label">Pilih Tanggal Seleksi <small>(ex: 18-07-2025)</small></label>
                         <input class="form-control" type="date" name="tanggal_seleksi" required>
                     </div>
                 </div>
@@ -349,7 +349,7 @@
             <div class="card border shadow-sm mt-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="example-text-input" class="form-control-label">Pendamping Saat Seleksi</label>
+                        <label class="form-control-label">Pendamping Saat Seleksi</label>
                         <select class="form-control" value="" id="pendamping_seleksi" name="pendamping_seleksi" required>
                             <option value="">--Pilih--</option>
                             <option value="ortu">Orang Tua</option>
