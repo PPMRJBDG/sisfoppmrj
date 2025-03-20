@@ -1,3 +1,12 @@
+<style>
+    .table>:not(caption)>*>* {
+        padding: 0;
+    }
+    .table>:not(caption)>*>* {
+        border-bottom-width: 0;
+    }
+</style>
+
 <input class="form-control" type="hidden" value="" id="rab_id" />
 <div class="card shadow border">
     <div class="card-header p-2">
@@ -132,64 +141,6 @@
                     @endif
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modalPeriode" tabindex="-1" role="dialog" aria-labelledby="modalPeriodeLabel" aria-hidden="true">
-    <div class="modal-dialog p-4" role="document" style="max-width:100% !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="modalPeriodeLabel">Set Periode</h6>
-            </div>
-            <div class="modal-body p-0">
-                <!-- <div class="tab">
-                    @for($i=1; $i<=12; $i++) <button class="tablinks {{($i==1) ? 'active' : ''}}" onclick="openTab(event, 'bln_{{$i}}')">{{$i}}</button>@endfor
-                </div> -->
-                <?php
-                for ($i = 1; $i <= 12; $i++) {
-                ?>
-                    <div class="card shadow border tabcontent" id="bln_{{$i}}" style="{{($i==1) ? 'display:block;' : ''}}">
-                        <div class="card-body p-2">
-                            <div class="table-responsive">
-                                <table id="table" class="table align-items-center mb-4">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                                <th colspan="5" style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">Bulan {{$i}}</th>
-                                            <?php } ?>
-                                        </tr>
-                                        <tr>
-                                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                                <?php for ($x = 1; $x <= 5; $x++) { ?>
-                                                    <th style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">{{$x}}</th>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-center">
-                                        <tr>
-                                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                                <?php for ($x = 1; $x <= 5; $x++) { ?>
-                                                    <td style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">
-                                                        <div class="form-group form-check mb-0" style="margin-left:10px!important;">
-                                                            <input class="form-check-input" type="checkbox" id="bln-{{$i}}-mg-{{$x}}" name="bln-{{$i}}-mg-{{$x}}">
-                                                        </div>
-                                                    </td>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="close_1" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
-                <button type="button" id="close_2" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
-            </div>
         </div>
     </div>
 </div>

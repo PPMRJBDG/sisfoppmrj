@@ -30,10 +30,12 @@ if (auth()->user()->hasRole('barcode')) {
 </head>
 
 <style>
-  body {
-    font-size: .9rem !important;
+  body, .table, .form-control, .select-option {
+    font-size: .8rem !important;
   }
-
+  .select-arrow {
+    font-size: .5rem !important;
+  }
   .btn {
     font-size: .7rem !important;
   }
@@ -111,6 +113,13 @@ if (auth()->user()->hasRole('barcode')) {
   .dataTables_wrapper .dataTables_filter input {
     margin-bottom: 10px !important;
   }
+  .modal{
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10000;
+      width: 100% !important;
+      height: 100% !important;
+      overflow-x: auto; 
+  }
 </style>
 
 <body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0" onload="getPage(getCookie('current_url'))">
@@ -139,6 +148,10 @@ if (auth()->user()->hasRole('barcode')) {
     <footer class="footer text-center p-2">
       <span class="text-xs pb-2"><small style="font-size:10px;">Tim IT {{$setting->apps_name}} © {{ date('Y') }}</small></span>
     </footer>
+
+    @include('pmb._pmb_modal')
+    @include('keuangan._keuangan_modal')
+    @include('catatanPenghubung._penghubung_modal')
 
     <div class="modal" id="cacahJiwaModal" tabindex="-1" role="dialog" aria-labelledby="cacahJiwaModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
       <div class="modal-dialog" role="document" style="max-width:600px !important;">

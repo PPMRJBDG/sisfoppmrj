@@ -134,16 +134,16 @@ $setting = App\Models\Settings::first();
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card mb-3" style="border-radius: 1rem;">
-            <div class="card-body p-5 text-center">
-                <div class="p-3 ps-0">
+          <!-- <div class="card mb-3" style="border-radius: 1rem;">
+            <div class="card-body p-3 text-center">
+                <div class="">
                   <h5 class="mb-0">Penerimaan Mahasiswa Baru<br>2025 / 2026</h5>
                 </div>
                 <div class="text-center">
                   <a href="{{ route('index pmb') }}" class="btn btn-primary font-weight-bold btn-lg btn-block btn-rounded mt-4 mb-0">Register</a>
                 </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="card" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
