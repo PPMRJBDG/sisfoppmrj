@@ -73,7 +73,7 @@ class KeamananController extends Controller
         if($insert){
             $setting = Settings::find(1);
             $santri = Santri::find($request->input('santri_id'));
-            $caption = 'Laporan dari: *'.auth()->user()->fullname.'*,
+            $caption = '*[JAGA MALAM]* Laporan dari: *'.auth()->user()->fullname.'*,
 - *'.$santri->user->fullname.'* baru pulang pukul '.date_format(date_create($request->input('jam_pulang')),'H:i:s').' dengan alasan: *'.$request->input('alasan').'*';
             WaSchedules::save('Terlambat Pulang Malam: '.$santri->user->fullname, $caption, $setting->wa_info_presensi_group_id, null, true);
             return json_encode(array("status" => true));

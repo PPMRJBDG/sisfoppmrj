@@ -250,6 +250,11 @@
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-pmb">
         <li>
+          <a class="sidenav-link" href="{{ url('pmb/konfigurasi') }}">
+            <span class="sidenav-link-text ms-1">Konfigurasi</span>
+          </a>
+        </li>
+        <li>
           <a class="sidenav-link" href="{{ url('pmb/panitia') }}">
             <span class="sidenav-link-text ms-1">Panitia</span>
           </a>

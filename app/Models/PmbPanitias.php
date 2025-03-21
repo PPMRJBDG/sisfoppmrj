@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Santri;
 
-class PanitiaPmbs extends Model
+class PmbPanitias extends Model
 {
     protected $fillable = [
         'fkSantri_id',
+        'angkatan'
     ];
 
     /**

@@ -45,7 +45,15 @@
         datax['status'] = val;
         $.post("{{ route('change status maba') }}", datax,
             function(dataz, status) {
-                
+                var return_data = JSON.parse(dataz);
+                if(return_data.status){
+                    $("select#status-maba"+id).css('background','#fff');
+                    if(return_data.change_status=='diterima'){
+                        $("select#status-maba"+id).css('background','#b5fbb6');
+                    }else if(return_data.change_status=='ditolak'){
+                        $("select#status-maba"+id).css('background','#fbb5b5');
+                    }
+                }
             }
         );
     }

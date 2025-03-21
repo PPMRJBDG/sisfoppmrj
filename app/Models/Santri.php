@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Present;
 use App\Models\Permit;
-use App\Models\PanitiaPmbs;
+use App\Models\PmbPanitias;
 
 class Santri extends Model
 {
@@ -29,7 +29,7 @@ class Santri extends Model
 
     public function panitiaPmb()
     {
-        return $this->hasOne(PanitiaPmbs::class, 'fkSantri_id');
+        return $this->hasOne(PmbPanitias::class, 'fkSantri_id');
     }
 
     public function monitoringMateris()

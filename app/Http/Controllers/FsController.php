@@ -12,6 +12,7 @@ use App\Models\Santri;
 use App\Models\FsLogs;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\DewanPengajars;
+use App\Models\Liburan;
 use App\Helpers\WaSchedules;
 
 // Set UserInfo
@@ -227,27 +228,27 @@ class FsController extends Controller
                 $scan_verify  = $decoded_data['data']['verify'];
                 try {
                     $datetime = $decoded_data['data']['scan'];
-                    $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
-                        ->where('presence_end_date_time', '>=', $datetime)->first();
                     $setting = Settings::find(1);
                     $get_santri = Santri::find($santri_id);
+
+                    $date_format = date_format(date_create($datetime), "Y-m-d");
+                    $check_liburan = Liburan::where('liburan_from', '<=', $date_format)->where('liburan_to', '>=', $date_format)->get();
+                    if (count($check_liburan) > 0) {
+                        WaSchedules::save('Liburan', '*[Fingerprint]* Mohon maaf saat ini sedang libur KBM, silahkan memanfaatkan waktu liburan dengan baik.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                        echo "Nok - Liburan";
+                        exit;
+                    }
+
+                    $presence = Presence::where('is_deleted', 0)->where('presence_start_date_time', '<=', $datetime)
+                        ->where('presence_end_date_time', '>=', $datetime)->first();
                     $get_degur = DewanPengajars::where('pin',$santri_id)->first();
 
                     if ($presence == null) {
                         if($get_degur==null){
                             // kirim WA ke mahasiswa
-                            $nohp = $get_santri->user->nohp;
-                            if ($nohp != '') {
-                                if ($nohp[0] == '0') {
-                                    $nohp = '62' . substr($nohp, 1);
-                                }
-                                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                                    $query->where('name', 'NOT LIKE', '%Bulk%');
-                                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                                if ($wa_phone != null) {
-                                    WaSchedules::save('Presensi: Null', '*[Fingerprint]* Mohon maaf *'.$get_santri->user->fullname.'*, mungkin KBM sudah selesai atau belum mulai KBM selanjutnya.', $wa_phone->pid, null, true);
-                                }
-                            }
+                            WaSchedules::save('Presensi: Null', '*[Fingerprint]* Mohon maaf *'.$get_santri->user->fullname.'*, mungkin KBM sudah selesai atau belum mulai KBM selanjutnya.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                            echo "Nok - Presensi Null";
+                            exit;
                         }
                     } else {
                         if($get_degur!=null){
@@ -280,6 +281,8 @@ class FsController extends Controller
                             }
 
                             $presence->save();
+                            echo "Ok - Presensi Dewan Guru";
+                            exit;
                         }else{
                             // cek awal scan dewan guru
                             if($setting->status_scan_degur){
@@ -302,6 +305,7 @@ class FsController extends Controller
 
                                 if($status_scan_degur){
                                     WaSchedules::save('KBM Belum Mulai', '*[Fingerprint]* Mohon maaf untuk ketertiban, mekanisme scan fingerprint diawali oleh Dewan Guru terlebih dahulu (jika scan sebelum Dewan Guru, maka statusnya masih alpha meskipun mesin fingerprint OK).', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                    echo "Nok - KBM Belum Dimulai";
                                     exit;
                                 }
                             }
@@ -311,6 +315,8 @@ class FsController extends Controller
                                 if($presence->end_date_time < $datetime){
                                     WaSchedules::save('Presensi: Terlambat KBM Selesai', '*[Fingerprint]* Mohon maaf *'.$get_santri->user->fullname.'*, KBM sudah selesai.
 Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi RJ / WK.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                    echo "Nok - Presensi: Terlambat KBM Selesai";
+                                    exit;
                                 }else{
                                     $sign_in = $datetime;
                                     $is_late = 0;
@@ -389,6 +395,8 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                             }
                                         }
                                     }
+                                    echo "Ok - Presensi Sign In";
+                                    exit;
                                 }
                             }else{
                                 if ($datetime < $presence->end_date_time) {
@@ -396,11 +404,15 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                 }
                                 $existingPresent->sign_out = $datetime;
                                 $existingPresent->save();
+                                echo "Ok - Presensi Sign Out";
+                                exit;
                             }
                         }
                     }
                 } catch (Exception $err) {
                     WaSchedules::save('Fingerprint Error', '*[Fingerprint Error]*, Segera lakukan perbaikan, dan jika masih terkendala silahkan koor lorong melakukan input presensi melalui Sisfo', 'wa_ketertiban_group_id', null, true);
+                    echo "Nok - Fingerprint Error";
+                    exit;
                 }
             }elseif($type=='set_userinfo'){
                 echo "Sukses - Set User Info";

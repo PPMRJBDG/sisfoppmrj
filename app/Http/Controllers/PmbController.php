@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-use App\Models\PanitiaPmbs;
+use App\Models\PmbPanitias;
 use App\Models\ModelHasRole;
 use App\Models\Santri;
 use App\Models\User;
-use App\Models\Camabas;
+use App\Models\PmbCamabas;
+use App\Models\PmbKonfigurasis;
 
 class PmbController extends Controller
 {
@@ -17,16 +18,46 @@ class PmbController extends Controller
     {
         $this->middleware('auth');
     }
+
+    public function konfigurasi()
+    {
+        $datax = PmbKonfigurasis::get();
+
+        return view('pmb.konfigurasi', [
+            'datax' => $datax,
+        ]);
+    }
+
+    public function store_konfigurasi(Request $request)
+    {
+
+        $tahun_pmb = PmbKonfigurasis::where('tahun_pmb',$request->input('tahun_pmb'))->first();
+        if($tahun_pmb==null){
+            $insert = PmbKonfigurasis::create([
+                'tahun_pmb' => $request->input('tahun_pmb'),
+                'gelombang1' => $request->input('gelombang1'),
+                'gelombang2' => $request->input('gelombang2'),
+                'informasi_pmb' => $request->input('informasi_pmb'),
+            ]);
+        }else{
+            $tahun_pmb->gelombang1 = $request->input('gelombang1');
+            $tahun_pmb->gelombang2 = $request->input('gelombang2');
+            $tahun_pmb->informasi_pmb = $request->input('informasi_pmb');
+            $tahun_pmb->save();
+        }
+
+        return redirect()->route('konfigurasi pmb');
+    }
     
     public function view_panitia()
     {
-        $datax = PanitiaPmbs::get();
+        $datax = PmbPanitias::get();
         $santris = DB::table('v_user_santri as a')
-        ->leftJoin('panitia_pmbs as b', function ($join) {
+        ->leftJoin('pmb_panitias as b', function ($join) {
             $join->on('a.santri_id', '=', 'b.fkSantri_id');
         })
         ->whereNull('b.fkSantri_id')
-        ->where('angkatan', (date('Y')-1))
+        ->where('b.angkatan', (date('Y')-1))
         ->orderBy('fullname','ASC')
         ->get();
 
@@ -38,8 +69,9 @@ class PmbController extends Controller
 
     public function store_panitia(Request $request)
     {
-        $insert = PanitiaPmbs::create([
-            'fkSantri_id' => $request->input('fkSantri_id')
+        $insert = PmbPanitias::create([
+            'fkSantri_id' => $request->input('fkSantri_id'),
+            'angkatan' => date('Y')
         ]);
 
         $santri = Santri::find($request->input('fkSantri_id'));
@@ -56,7 +88,7 @@ class PmbController extends Controller
 
     public function delete_panitia($id)
     {
-        $data = PanitiaPmbs::find($id);
+        $data = PmbPanitias::find($id);
         if($data){
             $santri = Santri::find($data->fkSantri_id);
             if($data->delete()){
@@ -72,14 +104,14 @@ class PmbController extends Controller
     {
         if(auth()->user()->hasRole('panitia pmb')){
             $select_angkatan = date('Y');
-            $list_angkatan = DB::table('camabas')
+            $list_angkatan = DB::table('pmb_camabas')
                             ->select('angkatan')
                             ->where('angkatan',$select_angkatan)
                             ->orderBy('angkatan', 'ASC')
                             ->groupBy('angkatan')
                             ->get();
         }else{
-            $list_angkatan = DB::table('camabas')
+            $list_angkatan = DB::table('pmb_camabas')
                             ->select('angkatan')
                             ->orderBy('angkatan', 'ASC')
                             ->groupBy('angkatan')
@@ -87,9 +119,9 @@ class PmbController extends Controller
         }
 
         if($select_angkatan==0){
-            $camabas = Camabas::get();
+            $camabas = PmbCamabas::get();
         }else{
-            $camabas = Camabas::where('angkatan',$select_angkatan)->get();
+            $camabas = PmbCamabas::where('angkatan',$select_angkatan)->get();
         }
 
         return view('pmb.view_maba', [
@@ -101,12 +133,12 @@ class PmbController extends Controller
 
     public function change_status_maba(Request $request)
     {
-        $change_status = Camabas::find($request->input('id'));
+        $change_status = PmbCamabas::find($request->input('id'));
         $change_status->status = $request->input('status');
         $change_status->save();
 
         if($change_status){
-            return json_encode(array("status" => true));
+            return json_encode(array("status" => true, "change_status" => $request->input('status')));
         }else{
             return json_encode(array("status" => false));
         }

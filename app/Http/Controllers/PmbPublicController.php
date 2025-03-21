@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Camabas;
+use App\Models\PmbCamabas;
+use App\Models\PmbKonfigurasis;
 
 class PmbPublicController extends Controller
 {
 
     public function index()
     {
+        $konfigurasi_pmb = PmbKonfigurasis::where('tahun_pmb',date('Y'))->first();
         return view('pmb.index', [
-            
+            'konfigurasi_pmb' => $konfigurasi_pmb
         ]);
     }
 
@@ -32,7 +34,7 @@ class PmbPublicController extends Controller
             $request->foto_pas->store('users', 'public');
         }
 
-        $insert = Camabas::create([
+        $insert = PmbCamabas::create([
             'fullname' => strtoupper($request->input('fullname')),
             'gender' => strtoupper($request->input('gender')),
             'place_of_birth' => strtoupper($request->input('place_of_birth')),
@@ -67,7 +69,7 @@ class PmbPublicController extends Controller
             'tanggal_seleksi' => strtoupper($request->input('tanggal_seleksi')),
             'pendamping_seleksi' => strtoupper($request->input('pendamping_seleksi')),
             'angkatan' => date('Y'),
-            'status' => 'in-review',
+            'status' => 'pending',
         ]);
         
         return redirect()->route('registration successful');

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Camabas extends Model
+class PmbCamabas extends Model
 {
     protected $fillable = [
         'fullname',

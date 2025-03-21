@@ -32,7 +32,7 @@ if(isset(auth()->user()->santri)){
                 }
             }
         </script>
-        <center><button class="btn btn-secondary btn-block mb-0" onclick="togglePrsc()">JAGA MALAM</button></center>
+        <center><button class="btn btn-secondary btn-sm btn-block mb-0" onclick="togglePrsc()">JAGA MALAM</button></center>
         <div id="toggle-prsc" class="pt-2" style="display:none;">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">

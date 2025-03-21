@@ -254,6 +254,8 @@ Route::post('/keamanan/jobdesk/store', [App\Http\Controllers\KeamananController:
 Route::get('/pmb', [App\Http\Controllers\PmbPublicController::class, 'index'])->name('index pmb');
 Route::get('/pmb/registration-successful', [App\Http\Controllers\PmbPublicController::class, 'registration_successful'])->name('registration successful');
 Route::post('/pmb/store_maba', [App\Http\Controllers\PmbPublicController::class, 'store_maba'])->name('store maba');
+Route::get('/pmb/konfigurasi', [App\Http\Controllers\PmbController::class, 'konfigurasi'])->name('konfigurasi pmb')->middleware('role:superadmin|rj1|wk|panitia pmb');
+Route::post('/pmb/store_konfigurasi', [App\Http\Controllers\PmbController::class, 'store_konfigurasi'])->name('store konfigurasi pmb')->middleware('role:superadmin|rj1|wk|panitia pmb');
 Route::get('/pmb/panitia', [App\Http\Controllers\PmbController::class, 'view_panitia'])->name('view panitia')->middleware('role:superadmin|rj1|wk|panitia pmb');
 Route::get('/pmb/delete_panitia/{id}', [App\Http\Controllers\PmbController::class, 'delete_panitia'])->name('delete panitia pmb')->middleware('role:superadmin|rj1|wk|panitia pmb');
 Route::post('/pmb/store_panitia', [App\Http\Controllers\PmbController::class, 'store_panitia'])->name('store panitia')->middleware('role:superadmin|rj1|wk|panitia pmb');

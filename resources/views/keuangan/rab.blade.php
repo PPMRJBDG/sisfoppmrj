@@ -8,7 +8,7 @@
 </style>
 
 <input class="form-control" type="hidden" value="" id="rab_id" />
-<div class="card shadow border">
+<div class="card">
     <div class="card-header p-2">
         <div class="">
             <table class="table align-items-center mb-0">
@@ -82,7 +82,7 @@
             </div>
         </div>
     </div>
-    <div class="card-body shadow-lg p-0">
+    <div class="card-body p-0">
         <div class="datatable datatable-sm">
             <table class="table align-items-center mb-4 text-uppercase">
                 <thead style="background-color:#f6f9fc;">
