@@ -28,7 +28,7 @@
                             </p>
                         </div>
                     @else
-                        @if($konfigurasi_pmb!=null){
+                        @if($konfigurasi_pmb!=null)
                             <div  style="line-height: 0.4;">
                                 <p class="card-text">Penerimaan Mahasiswa Baru Dibuka Pada Tanggal:</p>
                                 <p class="card-text">- Gelombang 1: {{date_format(date_create($konfigurasi_pmb->gelombang1),'d M Y')}}</p>
