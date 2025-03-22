@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-6">
         <form action="{{ route('store maba') }}" id="upload-file" method="POST" enctype="multipart/form-data">
-            <div class="card">
+            <div class="card border shadow-sm p-2" style="background: #049759;">
                 <img src="https://i.ibb.co.com/nNsP2s8t/BANNER-FORM-OM-PPMRJ-2025.png" class="card-img-top" alt="PMB 2025-2026"/>
             </div>
             
@@ -76,7 +76,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-control-label">Tanggal Lahir <small>(ex: 18-07-1991)</small></label>
-                            <input class="form-control" type="date" name="birthday" required>
+                            <input class="form-control" type="date" name="birthday" value="{{date('Y-m-d')}}" required>
                         </div>
                     </div>
                 </div>
@@ -354,7 +354,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-control-label">Pilih Tanggal Seleksi <small>(ex: 18-07-2025)</small></label>
-                            <input class="form-control" type="date" name="tanggal_seleksi" required>
+                            <input class="form-control" type="date" name="tanggal_seleksi" value="{{date('Y-m-d')}}" required>
                         </div>
                     </div>
                 </div>
