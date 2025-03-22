@@ -1,27 +1,5 @@
 @include('base.start_without_bars', ['path' => 'pmb', 'containerClass' => '', 'title' => "Penerimaan Mahasiswa Baru"])
-<style>
-.input-container input {
-    border: none;
-    box-sizing: border-box;
-    outline: 0;
-    padding: .75rem;
-    position: relative;
-    width: 100%;
-}
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
-}
-</style>
 <div class="row">
     <div class="col-md-3">
     </div>
@@ -98,7 +76,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-control-label">Tanggal Lahir <small>(ex: 18-07-1991)</small></label>
-                            <input class="form-control datepicker" type="date" id="birthday" name="birthday" value="{{date('Y-m-d')}}" required>
+                            <input class="form-control" type="date" id="birthday" name="birthday" value="{{date('Y-m-d')}}" required>
                         </div>
                     </div>
                 </div>
@@ -408,13 +386,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 <!-- New Material Design -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="{{ asset('ui-kit/js/mdb.umd.min.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ asset('ui-kit/js/mdb.umd.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('ui-kit/js/mdb.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('ui-kit/js/mdb-v2.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('ui-kit/js/modules/wow.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('ui-kit/js/modules/wow.min.js') }}"></script> -->
 
 <script>
-    $(document).ready(() => {
-        new WOW().init();
-    });
+    // $(document).ready(() => {
+    //     new WOW().init();
+    // });
 </script>
