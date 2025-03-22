@@ -92,7 +92,7 @@ class PmbPublicController extends Controller
         ]);
 
         $setting = Settings::find(1);
-        $caption = '[PMB] Pendaftar Baru an. *'.strtoupper($request->input('fullname')).'* Asal *'.strtoupper($request->input('daerah')).'*.
+        $caption = '*[PMB '.date('Y').']* Pendaftar Baru an. *'.strtoupper($request->input('fullname')).'* Asal *'.strtoupper($request->input('daerah')).'*.
 *Hubungi:*
 - No HP Calon Maba: '.$request->input('nomor_wa').'
 - No HP Ortu / Wali: '.$request->input('nomor_wa_ortu_wali').'
