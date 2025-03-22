@@ -76,7 +76,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-control-label">Tanggal Lahir <small>(ex: 18-07-1991)</small></label>
-                            <input class="form-control" type="date" name="birthday" value="{{date('Y-m-d')}}" required>
+                            <input class="form-control" type="date" id="birthday" name="birthday" value="{{date('Y-m-d')}}" required>
                         </div>
                     </div>
                 </div>
@@ -354,7 +354,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-control-label">Pilih Tanggal Seleksi <small>(ex: 18-07-2025)</small></label>
-                            <input class="form-control" type="date" name="tanggal_seleksi" value="{{date('Y-m-d')}}" required>
+                            <input class="form-control" type="date" id="tanggal_seleksi" name="tanggal_seleksi" value="{{date('Y-m-d')}}" required>
                         </div>
                     </div>
                 </div>
