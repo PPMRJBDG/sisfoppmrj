@@ -14,7 +14,7 @@
 @endif
 
 <div class="card border shadow-lg p-2">
-    <div class="datatable datatable-sm">
+    <div class="datatable datatable-sm" data-mdb-entries="50">
         <table id="table" class="table align-items-center mb-0">
             <thead style="background-color:#f6f9fc;">
                 <tr>

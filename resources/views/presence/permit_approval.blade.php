@@ -82,7 +82,7 @@
   Harian <span class="badge badge-secondary">{{$status}}</span>
 </div>
 <div class="card shadow border p-2">
-  <div class="datatable datatable-sm">
+  <div class="datatable datatable-sm" data-mdb-entries="20">
     <table id="table-harian" class="table align-items-center mb-0">
       <thead>
         <tr>
@@ -151,7 +151,7 @@
   Berjangka <span class="badge badge-secondary">{{$status}}</span>
 </div>
 <div class="card shadow border p-2">
-  <div class="datatable datatable-sm">
+  <div class="datatable datatable-sm" data-mdb-entries="20">
     <table id="table-berjangka" class="table align-items-center mb-0">
       <thead>
         <tr>

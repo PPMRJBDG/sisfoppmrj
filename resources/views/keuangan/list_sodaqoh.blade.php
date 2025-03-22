@@ -18,7 +18,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 
 <small><i>Last update: {{date_format(date_create($last_update->updated_at), 'd M Y H:i:s')}}</i></small>
 <div class="card border py-2">
-    <div class="datatable datatable-sm" data-mdb-pagination="false">
+    <div class="datatable datatable-sm" data-mdb-pagination="false" data-mdb-entries="50">
         <table class="table align-items-center mb-0">
             <thead>
                 <tr>

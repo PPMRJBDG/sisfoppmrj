@@ -41,6 +41,16 @@ class PmbPublicController extends Controller
             $request->foto_pas->store('users', 'public');
         }
 
+        $cek_gelombang = PmbKonfigurasis::where('tahun_pmb',date('Y'))->first();
+        $gelombang = 0;
+        if($cek_gelombang!=null){
+            if($cek_gelombang->gelombang1 <= date('Y') && $cek_gelombang->gelombang2 > date('Y')){
+                $gelombang = 1;
+            }else{
+                $gelombang = 2;
+            }
+        }
+
         $insert = PmbCamabas::create([
             'fullname' => strtoupper($request->input('fullname')),
             'gender' => strtoupper($request->input('gender')),
@@ -63,12 +73,13 @@ class PmbPublicController extends Controller
             'mondok_asal' => strtoupper($request->input('mondok_asal')),
             'muballigh' => strtoupper($request->input('muballigh')),
             'foto_pas' => $request->hasFile('foto_pas') ? $request->foto_pas->hashName() : null,
+            'status_ortu_wali' => strtoupper($request->input('status_ortu_wali')),
             'nama_ayah' => strtoupper($request->input('nama_ayah')),
             'profesi_ayah' => strtoupper($request->input('profesi_ayah')),
             'nama_ibu' => strtoupper($request->input('nama_ibu')),
             'profesi_ibu' => strtoupper($request->input('profesi_ibu')),
-            'nama_wali' => strtoupper($request->input('nama_wali')),
-            'profesi_wali' => strtoupper($request->input('profesi_wali')),
+            // 'nama_wali' => strtoupper($request->input('nama_wali')),
+            // 'profesi_wali' => strtoupper($request->input('profesi_wali')),
             'alamat_ortu_wali' => strtoupper($request->input('alamat_ortu_wali')),
             'nomor_wa_ortu_wali' => strtoupper($request->input('nomor_wa_ortu_wali')),
             'seleksi_luring' => strtoupper($request->input('seleksi_luring')),
@@ -76,6 +87,7 @@ class PmbPublicController extends Controller
             'tanggal_seleksi' => strtoupper($request->input('tanggal_seleksi')),
             'pendamping_seleksi' => strtoupper($request->input('pendamping_seleksi')),
             'angkatan' => date('Y'),
+            'gelombang' => $gelombang,
             'status' => 'pending',
         ]);
         

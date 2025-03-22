@@ -32,8 +32,6 @@ class PmbCamabas extends Model
         'profesi_ayah',
         'nama_ibu',
         'profesi_ibu',
-        'nama_wali',
-        'profesi_wali',
         'alamat_ortu_wali',
         'nomor_wa_ortu_wali',
         'seleksi_luring',
@@ -58,5 +56,6 @@ class PmbCamabas extends Model
         'nilai_wawancara',
         'nilai_wawancara_ket',
         'nilai_wawancara_mentor',
+        'status_ortu_wali',
     ];
 }

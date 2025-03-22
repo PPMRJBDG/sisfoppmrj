@@ -261,7 +261,7 @@
         </li>
         <li>
           <a class="sidenav-link" href="{{ url('pmb/list_maba') }}">
-            <span class="sidenav-link-text ms-1">Daftar Camaba</span>
+            <span class="sidenav-link-text ms-1">Data Camaba</span>
           </a>
         </li>
       </ul>

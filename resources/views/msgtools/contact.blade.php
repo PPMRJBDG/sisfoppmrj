@@ -33,7 +33,7 @@
             </a>
         </div>
 
-        <div class="datatable datatable-sm">
+        <div class="datatable datatable-sm" data-mdb-entries="120">
             <table id="table-group" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
