@@ -33,13 +33,13 @@ if (auth()->user()->hasRole('barcode')) {
 
 <style>
   body, .table, .form-control, .select-option {
-    font-size: .8rem !important;
+    font-size: .9rem !important;
   }
   .select-arrow {
     font-size: .5rem !important;
   }
   .btn {
-    font-size: .7rem !important;
+    font-size: .8rem !important;
   }
 
   .form-group {
