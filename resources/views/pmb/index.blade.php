@@ -76,7 +76,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-control-label">Tanggal Lahir <small>(ex: 18-07-1991)</small></label>
-                            <input class="form-control" type="date" id="birthday" name="birthday" value="{{date('Y-m-d')}}" required>
+                            <input class="form-control datepicker" type="date" id="birthday" name="birthday" value="{{date('Y-m-d')}}" required>
                         </div>
                     </div>
                 </div>
