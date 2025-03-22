@@ -13,8 +13,15 @@ class PmbPublicController extends Controller
     public function index()
     {
         $konfigurasi_pmb = PmbKonfigurasis::where('tahun_pmb',date('Y'))->first();
+        $status_pmb = false;
+        if($konfigurasi_pmb!=null){
+            if(date('Y-m-d') >= $konfigurasi_pmb->gelombang1){
+                $status_pmb = true;
+            }
+        }
         return view('pmb.index', [
-            'konfigurasi_pmb' => $konfigurasi_pmb
+            'konfigurasi_pmb' => $konfigurasi_pmb,
+            'status_pmb' => $status_pmb,
         ]);
     }
 

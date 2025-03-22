@@ -235,7 +235,7 @@ function openTabGraf(tahun, data_presence_group) {
                                         color: '#b2b9bf',
                                         font: {
                                             size: 11,
-                                            family: "Varela Round",
+                                            family: "Open Sans",
                                             style: 'normal',
                                             lineHeight: 2
                                         },
@@ -255,7 +255,7 @@ function openTabGraf(tahun, data_presence_group) {
                                         padding: 10,
                                         font: {
                                             size: 11,
-                                            family: "Varela Round",
+                                            family: "Open Sans",
                                             style: 'normal',
                                             lineHeight: 2
                                         },

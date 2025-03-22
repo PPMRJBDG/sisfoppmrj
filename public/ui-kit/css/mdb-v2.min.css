@@ -22,7 +22,7 @@
     --mdb-dark: #303030;
     --mdb-white: #fff;
     --mdb-black: #000;
-    --mdb-font-roboto: "Varela Round", sans-serif;
+    --mdb-font-roboto: "Open Sans", sans-serif;
     --mdb-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --mdb-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --mdb-gradient: linear-gradient(180deg, hsla(0, 0%, 100%, 0.15), hsla(0, 0%, 100%, 0))

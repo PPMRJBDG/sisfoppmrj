@@ -123,12 +123,64 @@ class PmbController extends Controller
         }else{
             $camabas = PmbCamabas::where('angkatan',$select_angkatan)->get();
         }
+        $panitias = PmbPanitias::where('angkatan',date('Y'))->get();
 
         return view('pmb.view_maba', [
             'list_angkatan' => $list_angkatan,
             'select_angkatan' => $select_angkatan,
             'camabas' => $camabas,
+            'panitias' => $panitias,
         ]);
+    }
+
+    public function store_nilai_maba(Request $request)
+    {
+        $store_nilai = PmbCamabas::find($request->input('id'));
+        $tipe = $request->input('tipe');
+        $store_nilai->{'nilai_'.$tipe} = $request->input('val');
+        
+        // echo $store_nilai->nilai_.$tipe; exit;
+        // if($request->input('tipe')=='bacaan'){
+        //     $store_nilai->nilai_bacaan = $request->input('nilai_bacaan');
+        //     $store_nilai->nilai_bacaan_ket = $request->input('nilai_bacaan_ket');
+        //     $store_nilai->nilai_bacaan_mentor = $request->input('nilai_bacaan_mentor');
+        // }elseif($request->input('tipe')=='quran'){
+        //     $store_nilai->nilai_penyampaian_quran = $request->input('nilai_quran');
+        //     $store_nilai->nilai_penyampaian_quran_ket = $request->input('nilai_quran_ket');
+        //     $store_nilai->nilai_penyampaian_quran_mentor = $request->input('nilai_quran_mentor');
+        // }elseif($request->input('tipe')=='adzan'){
+        //     $store_nilai->nilai_adzan = $request->input('nilai_adzan');
+        //     $store_nilai->nilai_adzan_ket = $request->input('nilai_adzan_ket');
+        //     $store_nilai->nilai_adzan_mentor = $request->input('nilai_adzan_mentor');
+        // }
+        
+        $store_nilai->save();
+
+        if($store_nilai){
+            return json_encode(array("status" => true, "store_nilai" => $request->input('val')));
+        }else{
+            return json_encode(array("status" => false));
+        }
+    }
+
+    public function change_mentor_maba(Request $request)
+    {
+        $change_mentor = PmbCamabas::find($request->input('id'));
+        if($request->input('mentor')==1){
+            $change_mentor->mentor1 = $request->input('value');
+        }elseif($request->input('mentor')==2){
+            $change_mentor->mentor2 = $request->input('value');
+        }elseif($request->input('mentor')==3){
+            $change_mentor->mentor3 = $request->input('value');
+        }
+        
+        $change_mentor->save();
+
+        if($change_mentor){
+            return json_encode(array("status" => true, "change_mentor" => $request->input('value')));
+        }else{
+            return json_encode(array("status" => false));
+        }
     }
 
     public function change_status_maba(Request $request)

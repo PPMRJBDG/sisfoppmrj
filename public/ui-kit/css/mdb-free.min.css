@@ -3344,7 +3344,7 @@ textarea.form-control.is-invalid {
 .btn {
     --mdb-btn-padding-x: 1.5rem;
     --mdb-btn-padding-y: 0.375rem;
-    --mdb-btn-font-family: "Varela Round", sans-serif;
+    --mdb-btn-font-family: "Open Sans", sans-serif;
     --mdb-btn-font-size: 0.75rem;
     --mdb-btn-font-weight: 500;
     --mdb-btn-line-height: 1.5;
@@ -15071,7 +15071,7 @@ fieldset:disabled .btn {
 
 :root,
 [data-mdb-theme=light] {
-    --mdb-font-roboto: "Varela Round", sans-serif;
+    --mdb-font-roboto: "Open Sans", sans-serif;
     --mdb-bg-opacity: 1;
     --mdb-text-hover-opacity: 0.8;
     --mdb-surface-color: #4f4f4f;
@@ -20819,7 +20819,7 @@ fieldset:disabled .btn-group-vertical>.btn {
     --mdb-carousel-control-icon-font-weight: 700;
     font-weight: var(--mdb-carousel-control-icon-font-weight);
     font-size: var(--mdb-carousel-control-icon-font-size);
-    font-family: "Varela Round", sans-serif;
+    font-family: "Open Sans", sans-serif;
 }
 
 .carousel-control-next-icon::after {
@@ -20828,7 +20828,7 @@ fieldset:disabled .btn-group-vertical>.btn {
     --mdb-carousel-control-icon-font-weight: 700;
     font-weight: var(--mdb-carousel-control-icon-font-weight);
     font-size: var(--mdb-carousel-control-icon-font-size);
-    font-family: "Varela Round", sans-serif;
+    font-family: "Open Sans", sans-serif;
 }
 
 /*# sourceMappingURL=mdb.min.css.map */
