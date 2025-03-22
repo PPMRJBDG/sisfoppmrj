@@ -301,24 +301,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="card border shadow-sm mt-2">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-control-label">Nama Wali <small>(kosongkan jika tidak diwalikan)</small></label>
-                            <input class="form-control" type="text" name="nama_wali">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card border shadow-sm mt-2">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-control-label">Profesi Wali</label>
-                            <input class="form-control" type="text" name="profesi_wali">
-                        </div>
-                    </div>
-                </div> -->
-
                 <div class="card border shadow-sm mt-2">
                     <div class="card-body">
                         <div class="form-group">

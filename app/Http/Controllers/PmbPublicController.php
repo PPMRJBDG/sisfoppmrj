@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\PmbCamabas;
 use App\Models\PmbKonfigurasis;
+use App\Models\Setting;
+use App\Helpers\WaSchedules;
 
 class PmbPublicController extends Controller
 {
@@ -78,8 +80,6 @@ class PmbPublicController extends Controller
             'profesi_ayah' => strtoupper($request->input('profesi_ayah')),
             'nama_ibu' => strtoupper($request->input('nama_ibu')),
             'profesi_ibu' => strtoupper($request->input('profesi_ibu')),
-            // 'nama_wali' => strtoupper($request->input('nama_wali')),
-            // 'profesi_wali' => strtoupper($request->input('profesi_wali')),
             'alamat_ortu_wali' => strtoupper($request->input('alamat_ortu_wali')),
             'nomor_wa_ortu_wali' => strtoupper($request->input('nomor_wa_ortu_wali')),
             'seleksi_luring' => strtoupper($request->input('seleksi_luring')),
@@ -90,6 +90,14 @@ class PmbPublicController extends Controller
             'gelombang' => $gelombang,
             'status' => 'pending',
         ]);
+
+        $setting = Settings::find(1);
+        $caption = '[PMB] Pendaftar Baru an. *'.strtoupper($request->input('fullname')).'* Asal *'.strtoupper($request->input('daerah')).'*.
+*Hubungi:*
+- No HP Calon Maba: '.$request->input('nomor_wa').'
+- No HP Ortu / Wali: '.$request->input('nomor_wa_ortu_wali').'
+- No HP Pengurus Klp: '.$request->input('wa_pengurus');
+        WaSchedules::save('[PMB] Pendaftar Baru', $caption, $setting->wa_info_presensi_group_id, null, true);
         
         return redirect()->route('registration successful');
     }
