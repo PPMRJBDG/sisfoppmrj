@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\PmbCamabas;
 use App\Models\PmbKonfigurasis;
-use App\Models\Setting;
+use App\Models\Settings;
 use App\Helpers\WaSchedules;
 
 class PmbPublicController extends Controller
