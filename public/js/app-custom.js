@@ -118,8 +118,6 @@ function openTab(data_presence_group) {
             function (data, status) {
                 $('#loading-table').css('display', 'none');
                 $('#card-table').css('display', 'block');
-                $('#loading-grafik').css('display', 'none');
-                $('#card-grafik').css('display', 'block');
                 var prev_persentase = 0;
                 var no = 1;
                 var data_body = '';
@@ -181,8 +179,6 @@ function openGraf(data_presence_group) {
 
         $.get(base_url + `/tabgraf/` + tb + `/` + angkatan + `/` + periode,
             function (data, status) {
-                $('#loading-table').css('display', 'none');
-                $('#card-table').css('display', 'block');
                 $('#loading-grafik').css('display', 'none');
                 $('#card-grafik').css('display', 'block');
                 data_presensi = data['data_presensi'];
