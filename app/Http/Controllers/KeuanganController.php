@@ -122,13 +122,17 @@ class KeuanganController extends Controller
                     ]);
                     $request->bukti_transfer->store('bukti_transfer', 'public');
                 }
-                
+
+                $status = 'pending';
+                if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku')) {
+                    $status = 'approved';
+                }
                 $created = SodaqohHistoris::create([
                     'fkSodaqoh_id' => $request->input('id'),
                     'fkSantri_id' => $request->input('fkSantri_id'),
                     'nominal' => $request->input('nominal_bayar'),
                     'bukti_transfer' => $request->hasFile('bukti_transfer') ? $request->bukti_transfer->hashName() : null,
-                    'status' => 'pending',
+                    'status' => $status,
                     'pay_date' => $request->input('date'),
                     'updated_by' => auth()->user()->fullname,
                 ]);
