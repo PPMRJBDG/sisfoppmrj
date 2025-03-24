@@ -135,11 +135,13 @@ class KeuanganController extends Controller
 
                 if ($created) {
                     // kirim WA
-                    $santri = Santri::find($request->input('fkSantri_id'));
-                    $setting = Settings::find(1);
-                    $caption = '*[SODAQOH TAHUNAN]* Pembayaran sodaqoh tahunan dari *'.$santri->user->fullname.'* sejumlah *Rp '.number_format($request->input('nominal_bayar'),0).'*.
+                    if (auth()->user()->hasRole('santri')) {
+                        $santri = Santri::find($request->input('fkSantri_id'));
+                        $setting = Settings::find(1);
+                        $caption = '*[SODAQOH TAHUNAN]* Pembayaran sodaqoh tahunan dari *'.$santri->user->fullname.'* sejumlah *Rp '.number_format($request->input('nominal_bayar'),0).'*.
 Bukti Transfer: '.$setting->host_url.'/storage/bukti_transfer/'.$created->bukti_transfer;
-                    WaSchedules::save('Pembayaran Sodaqoh dari '.$santri->user->fullname, $caption, $setting->wa_keuangan_group_id, null, true);
+                        WaSchedules::save('Pembayaran Sodaqoh dari '.$santri->user->fullname, $caption, $setting->wa_keuangan_group_id, null, true);
+                    }
                     return json_encode(array("status" => true, "message" => 'Pembayaran sodaqoh berhasil diajukan'));
                 } else {
                     return json_encode(array("status" => false, "message" => 'Pembayaran sodaqoh gagal diajukan'));
@@ -199,74 +201,6 @@ Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0
             return json_encode(array("status" => false, "message" => 'Data tidak ditemukan'));
         }
     }
-
-//     public function store_sodaqoh(Request $request)
-//     {
-//         $check = Sodaqoh::find($request->input('id'));
-//         $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
-//         if ($check) {
-//             // crosscheck
-//             if ($check->fkSantri_id == $request->input('fkSantri_id')) {
-//                 $check->nominal = $request->input('nominal');
-//                 $check->keterangan = $request->input('keterangan');
-//                 $bx = $request->input('periode_bulan');
-//                 $cx = $request->input('periode_bulan') . '_date';
-//                 $check->$bx = $request->input('nominal_bayar');
-//                 $check->$cx = $request->input('date');
-
-//                 if ($check->save()) {
-//                     $terbayar = 0;
-//                     $history_payment = '
-// *Riwayat Pembayaran:*';
-//                     foreach ($bulan as $b) {
-//                         $terbayar = $terbayar + $check->$b;
-//                         if ($check->$b != '') {
-//                             $history_payment = $history_payment . '
-//         - Rp ' . number_format($check->$b, 0);
-//                         }
-//                     }
-//                     $nominal_kekurangan = $check->nominal - $terbayar;
-//                     $text_kekurangan = '';
-//                     $status_lunas = '*[LUNAS]*';
-//                     if ($nominal_kekurangan > 0) {
-//                         $text_kekurangan = '
-// Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
-//                         $status_lunas = '*[BELUM LUNAS]*';
-//                     } else {
-//                         $check->status_lunas = 1;
-//                         $check->save();
-//                     }
-//                     // kirim wa
-//                     if ($request->input('info-wa') == "true") {
-//                         $nohp = $check->santri->nohp_ortu;
-//                         if ($nohp != '') {
-//                             if ($nohp[0] == '0') {
-//                                 $nohp = '62' . substr($nohp, 1);
-//                             }
-//                             $setting = Settings::find(1);
-//                             $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-//                                 $query->where('name', 'NOT LIKE', '%Bulk%');
-//                             })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-//                             if ($wa_phone != null) {
-//                                 $caption = $status_lunas . ' Pembayaran Sodaqoh Tahunan ' . $setting->org_name . ' Periode ' . $check->periode . ' an. *' . $check->santri->user->fullname . '* senilai *Rp ' . number_format($request->input('nominal_bayar'), 0) . '* sudah dikonfirmasi.
-// ' . $history_payment . '
-// ' . $text_kekurangan;
-//                                 WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, $wa_phone->pid);
-//                             }
-//                         }
-//                     }
-//                     // end kirim wa
-//                     return json_encode(array("status" => true, "message" => 'Berhasil diinput', 'data' => $check, 'bulan' => $bulan));
-//                 } else {
-//                     return json_encode(array("status" => false, "message" => 'Gagal diinput'));
-//                 }
-//             } else {
-//                 return json_encode(array("status" => false, "message" => 'ID Mahasiswa tidak valid'));
-//             }
-//         } else {
-//             return json_encode(array("status" => false, "message" => 'Data tidak ditemukan'));
-//         }
-//     }
 
     public function delete_sodaqoh($id, $periode, $angkatan, $select_lunas)
     {

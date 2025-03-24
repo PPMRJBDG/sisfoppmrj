@@ -78,14 +78,6 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                     </table>
                 </div>
                 <h6 class="text-sm font-weight-bolder mt-3 pb-2 text-warning">Kekurangan: <span id="kekurangan"></span></h6>
-
-                <?php if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku')) { ?>
-                    <hr>
-                    <div class="form-group form-check mb-0">
-                        <label class="custom-control-label">Info via WA</label>
-                        <input class="form-check-input" type="checkbox" id="info-wa" name="info-wa">
-                    </div>
-                <?php } ?>
             </div>
             <div class="card-header p-2" id="info-update-sodaqoh" style="display:none;border-radius:4px;">
                 <h6 id="bg-warning" class="mb-0 bg-warning p-1 text-white" style="display:none;">
@@ -298,13 +290,6 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
             formData.append("keterangan", $('#keterangan').val());
             formData.append("date", $('#date').val());
             formData.append("nominal_bayar", $('#nominal_bayar').val());
-            var checkBox = document.getElementById("info-wa");
-            formData.append("info-wa", false);
-            if(checkBox!=undefined){
-                if (checkBox.checked == true) {
-                    formData.append("info-wa", true);
-                }
-            }
             formData.append("bukti_transfer", files[0]);
             var role_santri = "<?php echo auth()->user()->hasRole('santri'); ?>";
             var routex = "{{ route('store sodaqoh') }}";
