@@ -124,9 +124,6 @@ class KeuanganController extends Controller
                 }
 
                 $status = 'pending';
-                if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku')) {
-                    $status = 'approved';
-                }
                 $created = SodaqohHistoris::create([
                     'fkSodaqoh_id' => $request->input('id'),
                     'fkSantri_id' => $request->input('fkSantri_id'),
