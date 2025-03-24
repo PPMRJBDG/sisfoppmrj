@@ -257,7 +257,7 @@ if(isset(auth()->user()->santri)){
             @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
                 <div class="col-md-4 mb-2">
                     <select data-mdb-filter="true" class="select select_angkatan form-control" name="select_angkatan" id="select_angkatan">
-                        <option value="-">Angkatan</option>
+                        <option value="-">Semua Angkatan</option>
                         @foreach($list_angkatan as $la)
                         <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">Angkatan {{$la->angkatan}}</option>
                         @endforeach
@@ -266,7 +266,7 @@ if(isset(auth()->user()->santri)){
             @endif
             <div class="col-md-4 mb-2">
                 <select data-mdb-filter="true" class="select select_tb form-control" name="select_tb" id="select_tb">
-                    <option value="-">Keseluruhan</option>
+                    <option value="-">Keseluruhan Bulan Tanggal</option>
                     @foreach($tahun_bulan as $tbx)
                     <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
                     @endforeach
@@ -275,7 +275,7 @@ if(isset(auth()->user()->santri)){
             @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
                 <div class="col-md-4">
                     <select data-mdb-filter="true" class="select select_periode form-control" name="select_periode" id="select_periode">
-                        <option value="-">Keseluruhan</option>
+                        <option value="-">Keseluruhan Periode</option>
                         @foreach($periode_tahun as $prt)
                         <option {{ ($select_periode == $prt->periode_tahun) ? 'selected' : '' }} value="{{$prt->periode_tahun}}">{{$prt->periode_tahun}}</option>
                         @endforeach
@@ -297,10 +297,10 @@ if(isset(auth()->user()->santri)){
                 <a data-mdb-ripple-init class="nav-link active font-weight-bolder" id="nav-dashboard-tab" data-bs-toggle="tab" href="#nav-dashboard" role="tab" aria-controls="nav-dashboard" aria-selected="true">
                     Dashboard
                 </a>
-                <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-table-tab" onclick="openTabGraf('tabtable','{{$presence_group}}')" data-bs-toggle="tab" href="#nav-table" role="tab" aria-controls="nav-table" aria-selected="false">
+                <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-table-tab" onclick="openTab('{{$presence_group}}')" data-bs-toggle="tab" href="#nav-table" role="tab" aria-controls="nav-table" aria-selected="false">
                     Table
                 </a>
-                <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-grafik-tab" onclick="openTabGraf('tabgrafik','{{$presence_group}}')" data-bs-toggle="tab" href="#nav-grafik" role="tab" aria-controls="nav-grafik" aria-selected="false">
+                <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-grafik-tab" onclick="openGraf('{{$presence_group}}')" data-bs-toggle="tab" href="#nav-grafik" role="tab" aria-controls="nav-grafik" aria-selected="false">
                     Grafik
                 </a>
                 @endif
@@ -514,9 +514,9 @@ if(isset(auth()->user()->santri)){
                     <div class="card-grafik p-2" id="card-grafik" style="display:none;">
                         @foreach($presence_group as $pg)
                         <p class="mb-0 text-sm font-weight-bolder">Grafik Kehadiran {{ $pg->name }}</p>
-                        <label style="color:#3A416F;"><i class="ni ni-air-baloon"></i></label> hadir
-                        <label style="color:#5e72e4;"><i class="ni ni-air-baloon"></i></label> ijin
-                        <label style="color:#f56565;"><i class="ni ni-air-baloon"></i></label> alpha
+                        <label style="color:#3A416F;"><i class="fa fa-air-baloon"></i></label> hadir
+                        <label style="color:#5e72e4;"><i class="fa fa-air-baloon"></i></label> ijin
+                        <label style="color:#f56565;"><i class="fa fa-air-baloon"></i></label> alpha
                         <div class="card border mb-3">
                             <div class="card-body p-2">
                                 <div class="chart">

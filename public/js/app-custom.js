@@ -108,12 +108,10 @@ function showCacahJiwa() {
     $('#cacahJiwaModal').fadeIn();
 }
 
-function openTabGraf(tahun, data_presence_group) {
-    if (tahun == 'tabtable' || tahun == 'tabgrafik') {
+function openTab(data_presence_group) {
         var angkatan = $('#select_angkatan').val();
         var tb = $('#select_tb').val();
         var periode = $('#select_periode').val();
-        var data_presensi = null;
         var presence_group = JSON.parse(data_presence_group);
 
         $.get(base_url + `/tabgraf/` + tb + `/` + angkatan + `/` + periode,
@@ -122,13 +120,13 @@ function openTabGraf(tahun, data_presence_group) {
                 $('#card-table').css('display', 'block');
                 $('#loading-grafik').css('display', 'none');
                 $('#card-grafik').css('display', 'block');
-
-                // TABLE
                 var prev_persentase = 0;
                 var no = 1;
                 var data_body = '';
                 var datax = data['data_presensi']['detil_presensi'];
                 data_presensi = data['data_presensi'];
+
+                // TABLE
                 Object.keys(datax).forEach(function (index) {
                     let tanggalSekarang = new Date(index);
                     let formatIndonesia = new Intl.DateTimeFormat('id-ID', {    year: 'numeric',    month: '2-digit',    day: '2-digit'}).format(tanggalSekarang);
@@ -167,6 +165,27 @@ function openTabGraf(tahun, data_presence_group) {
                     no++;
                 });
                 $('#data-table').html(data_body);
+
+                var elem = document.getElementById("section-1");
+                elem.scrollIntoView();
+            }
+        );
+}
+
+function openGraf(data_presence_group) {
+        var angkatan = $('#select_angkatan').val();
+        var tb = $('#select_tb').val();
+        var periode = $('#select_periode').val();
+        var data_presensi = null;
+        var presence_group = JSON.parse(data_presence_group);
+
+        $.get(base_url + `/tabgraf/` + tb + `/` + angkatan + `/` + periode,
+            function (data, status) {
+                $('#loading-table').css('display', 'none');
+                $('#card-table').css('display', 'block');
+                $('#loading-grafik').css('display', 'none');
+                $('#card-grafik').css('display', 'block');
+                data_presensi = data['data_presensi'];
 
                 // GRAFIK
                 presence_group.forEach(function (item, index) {
@@ -285,7 +304,6 @@ function openTabGraf(tahun, data_presence_group) {
                 elem.scrollIntoView();
             }
         );
-    }
 }
 
 function hari_ini(hari) {
