@@ -208,8 +208,6 @@
 </div>
 
 <script>
-
-
 $('.select_angkatan').change((e) => {
     var periode = $('#select_periode').val()
     var lunas = $('#select_lunas').val()

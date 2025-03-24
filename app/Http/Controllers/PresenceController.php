@@ -628,11 +628,32 @@ class PresenceController extends Controller
         return view('presence.view_presence_group_recap', ['lorongs' => $lorongs, 'presenceGroup' => $presenceGroup]);
     }
 
-    /**
-     * Show the specified presence group's recaps list.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    public function daily_presences($select_tb,$select_kbm)
+    {
+        if($select_tb==0){
+            $select_tb = date('Y-m');
+        }
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date_format(date_create($select_tb),'m'), date_format(date_create($select_tb),'Y'));
+        $mahasiswa = DB::table('v_user_santri')->orderBy('fullname','ASC')->get();
+        $list_presence_group = PresenceGroup::get();
+        $list_presence = Presence::where('fkPresence_group_id',$select_kbm)->where('event_date','like',$select_tb.'%')->where('is_deleted',0)->get();
+        $tahun_bulan = DB::table('presences')
+                ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
+                ->groupBy('ym')
+                ->orderBy('ym', 'DESC')
+                ->get();
+
+        return view('report.daily_presences', [
+            'mahasiswa' => $mahasiswa,
+            'select_tb' => $select_tb,
+            'select_kbm' => $select_kbm,
+            'days_in_month' => $days_in_month,
+            'list_presence_group' => $list_presence_group,
+            'list_presence' => $list_presence,
+            'tahun_bulan' => $tahun_bulan,
+        ]);
+    }
+
     public function view_presence_group_recap($id, $fromDate, $toDate, $lorongId)
     {
         $presenceGroup = PresenceGroup::find($id);

@@ -68,12 +68,12 @@
           </a>
         </li>
         <li>
-          <a class="sidenav-link" href="{{ url('reporting/link_ortu') }}">
+          <a class="sidenav-link" href="{{ route('view daily public presences recaps',[date('Y-m'),1]) }}">
             <span class="sidenav-link-text ms-1">Per Harian</span>
           </a>
         </li>
         <li>
-          <a class="sidenav-link" href="{{ url('reporting/link_ortu') }}">
+          <a class="sidenav-link" href="#">
             <span class="sidenav-link-text ms-1">Dewan Guru</span>
           </a>
         </li>

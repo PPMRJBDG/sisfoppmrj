@@ -251,17 +251,18 @@ if(isset(auth()->user()->santri)){
 @else
 <div class="">
     <p class="mb-2 text-sm font-weight-bolder">Laporan Presensi</p>
-    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
     <div class="card border p-2 mb-2">
         <div class="row">
-            <div class="col-md-4 mb-2">
-                <select data-mdb-filter="true" class="select select_angkatan form-control" name="select_angkatan" id="select_angkatan">
-                    <option value="-">Angkatan</option>
-                    @foreach($list_angkatan as $la)
-                    <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">Angkatan {{$la->angkatan}}</option>
-                    @endforeach
-                </select>
-            </div>
+            @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+                <div class="col-md-4 mb-2">
+                    <select data-mdb-filter="true" class="select select_angkatan form-control" name="select_angkatan" id="select_angkatan">
+                        <option value="-">Angkatan</option>
+                        @foreach($list_angkatan as $la)
+                        <option {{ ($select_angkatan == $la->angkatan) ? 'selected' : '' }} value="{{$la->angkatan}}">Angkatan {{$la->angkatan}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
             <div class="col-md-4 mb-2">
                 <select data-mdb-filter="true" class="select select_tb form-control" name="select_tb" id="select_tb">
                     <option value="-">Keseluruhan</option>
@@ -270,17 +271,18 @@ if(isset(auth()->user()->santri)){
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
-                <select data-mdb-filter="true" class="select select_periode form-control" name="select_periode" id="select_periode">
-                    <option value="-">Keseluruhan</option>
-                    @foreach($periode_tahun as $prt)
-                    <option {{ ($select_periode == $prt->periode_tahun) ? 'selected' : '' }} value="{{$prt->periode_tahun}}">{{$prt->periode_tahun}}</option>
-                    @endforeach
-                </select>
-            </div>
+            @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+                <div class="col-md-4">
+                    <select data-mdb-filter="true" class="select select_periode form-control" name="select_periode" id="select_periode">
+                        <option value="-">Keseluruhan</option>
+                        @foreach($periode_tahun as $prt)
+                        <option {{ ($select_periode == $prt->periode_tahun) ? 'selected' : '' }} value="{{$prt->periode_tahun}}">{{$prt->periode_tahun}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
         </div>
     </div>
-    @endif
 
     <div class="card border">
         <nav>
@@ -289,7 +291,10 @@ if(isset(auth()->user()->santri)){
                     Mahasiswa
                 </a>
                 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
-                <?php $presence_group = App\Models\PresenceGroup::get(); ?>
+                <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-dashboard-tab" data-bs-toggle="tab" href="#nav-dashboard" role="tab" aria-controls="nav-dashboard" aria-selected="true">
+                    Dashboard
+                </a>
+                <?php // $presence_group = App\Models\PresenceGroup::get(); ?>
                 <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-table-tab" onclick="openTabGraf('tabtable','{{$presence_group}}')" data-bs-toggle="tab" href="#nav-table" role="tab" aria-controls="nav-table" aria-selected="false">
                     Table
                 </a>
@@ -301,12 +306,78 @@ if(isset(auth()->user()->santri)){
 
             <div class="tab-content p-0 mt-2" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-mahasiswa" role="tabpanel" aria-labelledby="nav-mahasiswa-tab">
-                    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                @foreach($presence_group as $pg)
+                                    <div class="col-12 mb-2">
+                                        <div class="">
+                                            <div class="card-body p-2 text-center">
+                                                <h6 class="text-sm font-weight-bolder mb-0 bg-primary p-2 text-white">
+                                                    {{ $pg->name }}
+                                                    (<?php
+                                                        if ($datapg[$pg->id]['loopr'] != 0) {
+                                                            echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
+                                                        } else {
+                                                            echo "-";
+                                                        }
+                                                        ?>)
+                                                </h6>
+                                                <div class="datatable datatable-sm" data-mdb-pagination="false">
+                                                    <table class="table align-items-center mb-0">
+                                                        <thead>
+                                                            <tr class="text-xs">
+                                                                <th class="text-uppercase font-weight-bolder bg-grey">TANGGAL</th>
+                                                                <th class="text-uppercase font-weight-bolder">STATUS</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if(isset($presences_santri))
+                                                                @foreach($presences_santri as $prs)
+                                                                    @if($pg->id==$prs->fkPresence_group_id)
+                                                                        <tr class="text-sm">
+                                                                            <td>
+                                                                                {{ date_format(date_create($prs->event_date), 'd M') }}
+                                                                            </td>
+                                                                            <td>
+                                                                                @if($prs->fkSantri_id!="")
+                                                                                    <span class="badge badge-primary">Hadir</span>
+                                                                                @else
+                                                                                    <?php
+                                                                                    $check_permit = null;
+                                                                                    if(isset(auth()->user()->santri)){
+                                                                                        $check_permit = App\Models\Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->where('fkSantri_id', auth()->user()->santri->id)->first();
+                                                                                    }
+                                                                                    ?>
+                                                                                    @if($check_permit!=null)
+                                                                                        <span class="badge badge-secondary">Ijin</span>
+                                                                                    @else
+                                                                                        <span class="badge badge-warning">Alpha</span>
+                                                                                    @endif
+                                                                                @endif
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+                <div class="tab-pane fade show" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
                     <div class="datatable datatable-sm border" data-mdb-pagination="false" data-mdb-fixed-header="true">
                         <table id="table-hadir" class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-xs font-weight-bolder ps-2">ANGKATAN<br>NAMA</th>
+                                    <th class="text-uppercase text-xs font-weight-bolder ps-2" data-mdb-width="300" data-mdb-fixed="true">ANGKATAN<br>NAMA</th>
                                     @foreach($presence_group as $pg)
                                     <th class="text-uppercase text-center text-xs font-weight-bolder">
                                         {{strtoupper($pg->name)}}
@@ -384,84 +455,7 @@ if(isset(auth()->user()->santri)){
                             </tbody>
                         </table>
                     </div>
-                    @else(auth()->user()->hasRole('santri'))
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="p-2">
-                                <label class="m-0 text-sm">Filter</label>
-                                <div class="p-0">
-                                    <select data-mdb-filter="true" class="select select_tb form-control" name="select_tb" id="select_tb">
-                                        <option value="-">Keseluruhan</option>
-                                        @foreach($tahun_bulan as $tbx)
-                                        <option {{ ($tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                @foreach($presence_group as $pg)
-                                    @if($pg->id!=7)
-                                        <div class="col-12 mb-2">
-                                            <div class="">
-                                                <div class="card-body p-2 text-center">
-                                                    <h6 class="text-sm font-weight-bolder bg-primary p-2 text-white">
-                                                        {{$pg->name}}
-                                                        (<?php
-                                                            if ($datapg[$pg->id]['loopr'] != 0) {
-                                                                echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
-                                                            } else {
-                                                                echo "-";
-                                                            }
-                                                            ?>)
-                                                    </h6>
-                                                    <div class="datatable datatable-sm" data-mdb-pagination="false">
-                                                        <table class="table align-items-center mb-0">
-                                                            <thead>
-                                                                <tr class="text-xs">
-                                                                    <th class="text-uppercase font-weight-bolder bg-grey">TANGGAL</th>
-                                                                    <th class="text-uppercase font-weight-bolder">STATUS</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @if(isset($presences))
-                                                                @foreach($presences as $prs)
-                                                                @if($pg->id==$prs->fkPresence_group_id)
-                                                                <tr class="text-sm">
-                                                                    <td>
-                                                                        {{ date_format(date_create($prs->event_date), 'd M') }}
-                                                                    </td>
-                                                                    <td>
-                                                                        @if($prs->fkSantri_id!="")
-                                                                        <span class="badge badge-primary">Hadir</span>
-                                                                        @else
-                                                                        <?php
-                                                                        $check_permit = App\Models\Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->where('fkSantri_id', auth()->user()->santri->id)->first();
-                                                                        ?>
-                                                                        @if($check_permit!=null)
-                                                                        <span class="badge badge-secondary">Ijin</span>
-                                                                        @else
-                                                                        <span class="badge badge-warning">Alpha</span>
-                                                                        @endif
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
-                                                                @endif
-                                                                @endforeach
-                                                                @endif
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    @endif
                 </div>
-                @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
                 <div class="tab-pane fade show" id="nav-table" role="tabpanel" aria-labelledby="nav-table-tab">
                     <div class="card-body" id="loading-table" style="border-radius:4px;">
                         <div class="text-center">

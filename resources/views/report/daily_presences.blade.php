@@ -1,115 +1,98 @@
 <style>
-  @media only screen and (max-width: 600px) {
-
-    body,
-    h6 {
-      font-size: 0.8rem !important;
-    }
-  }
-
-  .py-4 {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
+.datatable.datatable-sm th {
+    background: #f6f9fc !important;
+}  
 </style>
 
-<div class="p-2">
-  @if($presence)
-  <div class="card">
-    <div class="card-body p-2">
-      <center>
-        <h6>Daftar Hadir Angkatan {{$angkatan}} | {{$date .'/'. $month .'/'. $year}}</h6>
-      </center>
-      <div class="row text-center p-2">
-        <div class="col-4">
-          <i class="ni ni-check-bold text-info text-sm opacity-10"></i> Hadir
+<h6 class="font-weight-bold">Daftar Kehadiran</h6>
+<div class="card border p-2 mb-2">
+    <div class="row">
+        <div class="col-md-4 mb-2">
+            <select data-mdb-filter="true" class="select select_kbm form-control mb-0" name="select_kbm" id="select_kbm">
+                <option value="-">-- Pilih KBM --</option>
+                @foreach($list_presence_group as $lpg)
+                <option {{ ($select_kbm == $lpg->id) ? 'selected' : '' }} value="{{$lpg->id}}">{{$lpg->name}}</option>
+                @endforeach
+            </select>
         </div>
-        <div class="col-4">
-          <i class="ni ni-user-run text-warning text-sm opacity-10"></i> Ijin
+        <div class="col-md-4">
+            <select data-mdb-filter="true" class="select select_tb form-control mb-0" name="select_tb" id="select_tb">
+                <option value="-">Keseluruhan</option>
+                @foreach($tahun_bulan as $tbx)
+                <option {{ ($select_tb == $tbx->ym) ? 'selected' : '' }} value="{{$tbx->ym}}">{{$tbx->ym}}</option>
+                @endforeach
+            </select>
         </div>
-        <div class="col-4">
-          <i class="ni ni-fat-remove text-danger text-sm opacity-10"></i> Alpha
-        </div>
-      </div>
-      <div class="datatable table-responsive p-0">
-        <table id="recap-table" class="table align-items-center mb-0">
-          <thead style="background-color:#f6f9fc;">
-            <tr>
-              <th class="text-uppercase text-secondary text-xs font-weight-bolder">Nama</th>
-              @if(sizeof($presencesInDate) > 0)
-              @foreach($presencesInDate as $presenceInDate)
-              <th class="text-uppercase text-secondary text-xs font-weight-bolder">
-                {{ $presenceInDate->presenceGroup ? $presenceInDate->presenceGroup->name : $presenceInDate->name}}
-              </th>
-              @endforeach
-              @endif
-            </tr>
-          </thead>
-          <tbody>
-            @if(sizeof($mahasiswa) > 0)
-            @foreach($mahasiswa as $mhs)
-            <tr>
-              <td>
-                <h6 class="mb-0 text-xs">{{ $mhs->fullname }}</h6>
-              </td>
+    </div>
+</div>
 
-              @if(sizeof($presencesInDate) > 0)
-              @foreach($presencesInDate as $pid)
-              <td>
-                <?php
-                $icon = 'fat-remove text-danger';
-                foreach ($presents[$pid->id] as $present) {
-                  if ($present->fkSantri_id == $mhs->santri->id) {
-                    $icon = 'check-bold text-info';
-                  }
-                }
-                if (sizeof($permits) > 0) {
-                  foreach ($permits[$pid->id] as $permit) {
-                    if ($permit->fkSantri_id == $mhs->santri->id) {
-                      $icon = 'user-run text-warning';
+<div class="card">
+  <div class="card-body p-2">
+    <div class="datatable datatable-sm p-0" data-mdb-entries="200" data-mdb-striped="true" data-mdb-hover="true" data-mdb-max-height="650" data-mdb-fixed-header="true">
+      <table id="table" class="table align-items-center mb-0">
+        <thead style="background-color:#f6f9fc;">
+          <tr>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder" data-mdb-width="300" data-mdb-fixed="true">Nama</th>
+            @for($i=1; $i<=$days_in_month; $i++)
+              <th class="text-uppercase text-secondary text-xs font-weight-bolder">
+              {{$i}}
+              </th>
+            @endfor
+          </tr>
+        </thead>
+        <tbody>
+          @if(sizeof($mahasiswa) > 0)
+            @foreach($mahasiswa as $mhs)
+              <tr>
+                <td>
+                  {{ $mhs->fullname }}
+                </td>
+
+                @for($i=1; $i<=$days_in_month; $i++)
+                  <td>
+                    <?php
+                    foreach($list_presence as $lp){
+                      $dt = ($i<=9) ? '0'.$i : $i;
+                      if($lp->event_date==$select_tb.'-'.$dt){
+                        $present = App\Models\Present::where('fkPresence_id',$lp->id)->where('fkSantri_id',$mhs->santri_id)->first();
+                        if($present){
+                          echo '<i class="fa fa-check-square text-success"></i>';
+                        }else{
+                          $permit = App\Models\Permit::where('fkPresence_id',$lp->id)->where('fkSantri_id',$mhs->santri_id)->first();
+                          if($permit){
+                            echo '<i class="fa fa-exclamation text-warning"></i>';
+                          }else{
+                            echo '<i class="fa fa-xmark text-danger"></i>';
+                          }
+                        }
+                      }
                     }
-                  }
-                }
-                ?>
-                <i style="font-size:18px !important;" class="ni ni-{{$icon}} opacity-10"></i>
-              </td>
-              @endforeach
-              @endif
-            </tr>
+                    ?>
+                  </td>
+                @endfor
+              </tr>
             @endforeach
-            @endif
-          </tbody>
-        </table>
-      </div>
+          @endif
+        </tbody>
+      </table>
     </div>
   </div>
-  @else
-  @if(sizeof($presencesInDate) > 0)
-  <div class="card shadow border m-1">
-    <div class="card-body p-2">
-      <div class="alert alert-info text-white">Pilih presensi untuk mulai melihat.</div>
-    </div>
-  </div>
-  @endif
-  @endif
 </div>
 
 <script>
-  try {
-    $(document).ready();
-  } catch (e) {
-    window.location.replace(`{{ url("/") }}`)
-  }
-</script>
+try {
+  $(document).ready();
+} catch (e) {
+  window.location.replace(`{{ url("/") }}`)
+}
 
-@if($presence)
-<script>
-  $('#recap-table').DataTable({
-    order: [
-      // [1, 'desc']
-    ],
-    paging: false,
-    searching: false
-  });
+$('.select_kbm').change((e) => {
+    var select_tb = $('#select_tb').val();
+    getPage(`{{ url("/") }}/presensi/daily/` + select_tb + `/${$(e.currentTarget).val()}/`)
+});
+
+$('.select_tb').change((e) => {
+    var select_kbm = $('#select_kbm').val();
+    getPage(`{{ url("/") }}/presensi/daily/${$(e.currentTarget).val()}/` + select_kbm)
+});
 </script>
-@endif

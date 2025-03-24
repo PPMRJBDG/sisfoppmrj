@@ -858,47 +858,6 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         ]);
     }
 
-    public function daily_presences($year, $month, $date, $angkatan)
-    {
-        $presencesInDate = Presence::whereDate('event_date', '=', "$year-$month-$date")->get();
-        $mahasiswa = User::whereHas('santri', function ($query) {
-            $query->whereNull('exit_at');
-        })->whereHas('santri', function ($query) use ($angkatan) {
-            $query->where('angkatan', $angkatan);
-        })->orderBy('fullname', 'asc')->get();
-        $presents = array();
-        foreach ($presencesInDate as $pid) {
-            $presence = Presence::find($pid->id);
-            $presents[$pid->id] = $presence ?
-                $presence->presents()
-                ->select('presents.*')
-                ->join('santris', 'santris.id', '=', 'presents.fkSantri_id')
-                ->join('users', 'users.id', '=', 'santris.fkUser_id')
-                ->where('angkatan', $angkatan)
-                ->orderBy('users.fullname')
-                ->get()
-                :
-                null;
-
-            $permits[$pid->id] = $presence ?
-                Permit::where('fkPresence_id', [$pid->id])->where('status', 'approved')->get()
-                :
-                null;
-        }
-
-        return view('report.daily_presences', [
-            'mahasiswa' => $mahasiswa,
-            'presence' => $presence,
-            'permits' => $permits,
-            'presents' => $presents,
-            'presencesInDate' => $presencesInDate,
-            'year' => $year,
-            'month' => $month,
-            'date' => $date,
-            'angkatan' => $angkatan
-        ]);
-    }
-
     public function view_permit($ids)
     {
         $permit = Permit::where('ids', $ids)->first();

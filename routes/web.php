@@ -100,6 +100,7 @@ Route::get('/presensi/{id}/delete/{santriId}', [App\Http\Controllers\PresenceCon
 Route::get('/presensi/{id}/present/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_present'])->name('is present')->middleware('role:superadmin|rj1|wk|koor lorong');
 Route::get('/presensi/{id}/late/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_late'])->name('is late');
 Route::get('/presensi/{id}/notlate/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_not_late'])->name('is not late');
+Route::get('/presensi/daily/{select_tb}/{select_kbm}', [App\Http\Controllers\PresenceController::class, 'daily_presences'])->name('view daily public presences recaps');
 
 // presence groups
 Route::get('/presensi/list/group/check-schedules', [App\Http\Controllers\PresenceController::class, 'check_schedules'])->name('check presence schedules');
@@ -221,9 +222,8 @@ Route::post('/setting/store_settings', [App\Http\Controllers\SettingController::
 // report
 Route::get('/schedule/{time}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
 Route::get('/schedule/{time}/{presence_id}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
-Route::get('/daily/{year}/{month}/{date}/{angkatan}', [App\Http\Controllers\PublicController::class, 'daily_presences'])->name('view daily public presences recaps');
 Route::get('/generator', [App\Http\Controllers\PublicController::class, 'generator']);
-Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view daily public presences recaps');
+Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view report');
 Route::get('/reporting/link_ortu', [App\Http\Controllers\ReportController::class, 'link_ortu'])->name('report link ortu')->middleware('role:superadmin|rj1|wk');
 
 Route::get('/dwngr/{id}/delete/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_delete_present'])->name('dwngr delete present');

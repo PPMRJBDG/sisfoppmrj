@@ -35,7 +35,11 @@ class HomeController extends Controller
     {
         if ($tb == null && $select_angkatan == null && $select_periode == null) {
             $periode_tahun = Periode::latest('periode_tahun')->first();
-            $tb = null;
+            if(auth()->user()->hasRole('superadmin')){
+                $tb = null;
+            }else{
+                $tb = date("Y-m");   
+            }
             $select_angkatan = null;
             $select_periode = $periode_tahun->periode_tahun;
         }
@@ -73,7 +77,6 @@ class HomeController extends Controller
         if ($bfjkah) {
             $tahun_bulan = DB::table('presences')
                 ->select(DB::raw('DATE_FORMAT(event_date, "%Y-%m") as ym'))
-                // ->where('event_date', '>=', $select_angkatan . '-09-01')
                 ->groupBy('ym')
                 ->orderBy('ym', 'DESC')
                 ->get();
@@ -243,8 +246,10 @@ class HomeController extends Controller
                     }
                 }
             }
-        } elseif (auth()->user()->hasRole('santri')) {
-            $presences = DB::table('presences as a')
+        }
+
+        if (auth()->user()->hasRole('santri')) {
+            $presences_santri = DB::table('presences as a')
                 ->leftJoin('presents as b', function ($join) {
                     $join->on('a.id', '=', 'b.fkPresence_id');
                     $join->where('b.fkSantri_id', auth()->user()->santri->id);
@@ -253,13 +258,13 @@ class HomeController extends Controller
                 ->where('a.event_date', 'like', '%' . $tb . '%')
                 ->orderBy('a.event_date', 'ASC')
                 ->get();
-            if ($presences != null) {
+            if ($presences_santri != null) {
                 foreach ($presence_group as $pg) {
                     $datapg[$pg->id]['loopr'] = 0;
                     $datapg[$pg->id]['kehadiran'] = 0;
                     $loopr = 0;
                     $kehadiran = 0;
-                    foreach ($presences as $ps) {
+                    foreach ($presences_santri as $ps) {
                         if ($pg->id == $ps->fkPresence_group_id) {
                             $loopr++;
                             if ($ps->fkSantri_id != "") {
@@ -272,7 +277,7 @@ class HomeController extends Controller
                 }
             }
         } else {
-            $presences = null;
+            $presences_santri = null;
         }
 
         $data_presensi = array();
@@ -310,6 +315,7 @@ class HomeController extends Controller
         if ($json) {
             return [
                 'presences' => $presences,
+                'presences_santri' => $presences_santri,
                 'presence_group' => $presence_group,
                 'datapg' => $datapg,
                 'tahun_bulan' => $tahun_bulan,
@@ -327,6 +333,7 @@ class HomeController extends Controller
                 'sign_in_out' => $sign_in_out,
                 'my_sign' => $my_sign,
                 'periode_tahun' => $periode_tahun,
+                'presences_santri' => $presences_santri,
                 'presences' => $presences,
                 'presence_group' => $presence_group,
                 'datapg' => $datapg,
