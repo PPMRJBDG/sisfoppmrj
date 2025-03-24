@@ -216,7 +216,7 @@ Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0
     {
         $id = $request->input('id');
         $check = Sodaqoh::find($id);
-        $setting = Settings::find($id);
+        $setting = Settings::find(1);
         
         if ($check) {
             $get_historis = SodaqohHistoris::where('fkSodaqoh_id',$check->id)->where('status','approved')->get();
