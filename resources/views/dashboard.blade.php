@@ -302,7 +302,6 @@ if(isset(auth()->user()->santri)){
             <div class="tab-content p-0 mt-2" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-mahasiswa" role="tabpanel" aria-labelledby="nav-mahasiswa-tab">
                     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
-                    
                     <div class="datatable datatable-sm border" data-mdb-pagination="false" data-mdb-fixed-header="true">
                         <table id="table-hadir" class="table align-items-center mb-0">
                             <thead>
@@ -385,7 +384,7 @@ if(isset(auth()->user()->santri)){
                             </tbody>
                         </table>
                     </div>
-                    @elseif(auth()->user()->hasRole('santri'))
+                    @else(auth()->user()->hasRole('santri'))
                     <div class="row">
                         <div class="col-12">
                             <div class="p-2">
@@ -401,61 +400,61 @@ if(isset(auth()->user()->santri)){
                             </div>
                             <div class="row mt-2">
                                 @foreach($presence_group as $pg)
-                                @if($pg->id!=7)
-                                <div class="col-12 mb-2">
-                                    <div class="">
-                                        <div class="card-body p-2 text-center">
-                                            <h6 class="text-sm font-weight-bolder bg-primary p-2 text-white">
-                                                {{$pg->name}}
-                                                (<?php
-                                                    if ($datapg[$pg->id]['loopr'] != 0) {
-                                                        echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
-                                                    } else {
-                                                        echo "-";
-                                                    }
-                                                    ?>)
-                                            </h6>
-                                            <div class="datatable datatable-sm" data-mdb-pagination="false">
-                                                <table class="table align-items-center mb-0">
-                                                    <thead>
-                                                        <tr class="text-xs">
-                                                            <th class="text-uppercase font-weight-bolder bg-grey">TANGGAL</th>
-                                                            <th class="text-uppercase font-weight-bolder">STATUS</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if(isset($presences))
-                                                        @foreach($presences as $prs)
-                                                        @if($pg->id==$prs->fkPresence_group_id)
-                                                        <tr class="text-sm">
-                                                            <td>
-                                                                {{ date_format(date_create($prs->event_date), 'd M') }}
-                                                            </td>
-                                                            <td>
-                                                                @if($prs->fkSantri_id!="")
-                                                                <span class="badge badge-primary">Hadir</span>
-                                                                @else
-                                                                <?php
-                                                                $check_permit = App\Models\Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->where('fkSantri_id', auth()->user()->santri->id)->first();
-                                                                ?>
-                                                                @if($check_permit!=null)
-                                                                <span class="badge badge-secondary">Ijin</span>
-                                                                @else
-                                                                <span class="badge badge-warning">Alpha</span>
+                                    @if($pg->id!=7)
+                                        <div class="col-12 mb-2">
+                                            <div class="">
+                                                <div class="card-body p-2 text-center">
+                                                    <h6 class="text-sm font-weight-bolder bg-primary p-2 text-white">
+                                                        {{$pg->name}}
+                                                        (<?php
+                                                            if ($datapg[$pg->id]['loopr'] != 0) {
+                                                                echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
+                                                            } else {
+                                                                echo "-";
+                                                            }
+                                                            ?>)
+                                                    </h6>
+                                                    <div class="datatable datatable-sm" data-mdb-pagination="false">
+                                                        <table class="table align-items-center mb-0">
+                                                            <thead>
+                                                                <tr class="text-xs">
+                                                                    <th class="text-uppercase font-weight-bolder bg-grey">TANGGAL</th>
+                                                                    <th class="text-uppercase font-weight-bolder">STATUS</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if(isset($presences))
+                                                                @foreach($presences as $prs)
+                                                                @if($pg->id==$prs->fkPresence_group_id)
+                                                                <tr class="text-sm">
+                                                                    <td>
+                                                                        {{ date_format(date_create($prs->event_date), 'd M') }}
+                                                                    </td>
+                                                                    <td>
+                                                                        @if($prs->fkSantri_id!="")
+                                                                        <span class="badge badge-primary">Hadir</span>
+                                                                        @else
+                                                                        <?php
+                                                                        $check_permit = App\Models\Permit::where('fkPresence_id', $prs->id)->where('status', 'approved')->where('fkSantri_id', auth()->user()->santri->id)->first();
+                                                                        ?>
+                                                                        @if($check_permit!=null)
+                                                                        <span class="badge badge-secondary">Ijin</span>
+                                                                        @else
+                                                                        <span class="badge badge-warning">Alpha</span>
+                                                                        @endif
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
                                                                 @endif
+                                                                @endforeach
                                                                 @endif
-                                                            </td>
-                                                        </tr>
-                                                        @endif
-                                                        @endforeach
-                                                        @endif
-                                                    </tbody>
-                                                </table>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                @endif
+                                    @endif
                                 @endforeach
                             </div>
                         </div>

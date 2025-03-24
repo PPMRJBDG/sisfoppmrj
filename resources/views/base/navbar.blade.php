@@ -126,6 +126,11 @@
           </a>
         </li>
         <li>
+          <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
+            <span class="sidenav-link-text ms-1">Jurnal</span>
+          </a>
+        </li>
+        <li>
           <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
             <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
           </a>
@@ -146,13 +151,6 @@
             <span class="sidenav-link-text ms-1">RAB Kegiatan</span>
           </a>
         </li>
-        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
-        <li>
-          <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
-            <span class="sidenav-link-text ms-1">Jurnal</span>
-          </a>
-        </li>
-        @endif
       </ul>
     </li>
     @endif

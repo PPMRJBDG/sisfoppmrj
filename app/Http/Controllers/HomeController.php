@@ -94,8 +94,10 @@ class HomeController extends Controller
         }
 
         $get_lorong = null;
-        if(auth()->user()->hasRole('koor lorong')){
-            $get_lorong = Lorong::where('fkSantri_leaderId',auth()->user()->santri->id)->first();
+        if(isset(auth()->user()->id)){
+            if(auth()->user()->hasRole('koor lorong')){
+                $get_lorong = Lorong::where('fkSantri_leaderId',auth()->user()->santri->id)->first();
+            }
         }
         $view_usantri = DB::table('v_user_santri')->orderBy('fullname','ASC')->get();
         
@@ -299,8 +301,10 @@ class HomeController extends Controller
         $yesterday = date('Y-m-d', $yesterday);
         $data_telatpulang = TelatPulangMalams::where('jam_pulang','like',date('Y-m-d').'%')->orWhere('jam_pulang','like',$yesterday.'%')->orderBy('id','DESC')->get();
         $data_jobdesk_jaga = null;
-        if(auth()->user()->santri){
-            $data_jobdesk_jaga = LaporanKeamanans::where('id',auth()->user()->santri->fkLaporan_keamanan_id)->first();
+        if(isset(auth()->user()->id)){
+            if(auth()->user()->santri){
+                $data_jobdesk_jaga = LaporanKeamanans::where('id',auth()->user()->santri->fkLaporan_keamanan_id)->first();
+            }
         }
 
         if ($json) {
