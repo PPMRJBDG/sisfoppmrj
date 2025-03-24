@@ -216,7 +216,8 @@ Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0
     {
         $id = $request->input('id');
         $check = Sodaqoh::find($id);
-        $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
+        $setting = Settings::find($id);
+        
         if ($check) {
             $get_historis = SodaqohHistoris::where('fkSodaqoh_id',$check->id)->where('status','approved')->get();
             $terbayar = 0;
@@ -234,14 +235,11 @@ Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0
                 $text_kekurangan = '
 Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan, 0) . ',-*';
                 $status_lunas = '*[BELUM LUNAS]*';
-            } else {
-                $check->status_lunas = 1;
-                $check->save();
-            }
+            } 
+            
             // kirim wa
             $caption = $status_lunas . ' Mengingatkan Kewajiban Pembayaran Sodaqoh Tahunan ' . $setting->org_name . ' Periode ' . $check->periode . ' an. *' . $check->santri->user->fullname . '*.
-' . $history_payment . '
-' . $text_kekurangan;
+' . $history_payment . $text_kekurangan;
             WaSchedules::save('Sodaqoh: [' . $check->santri->angkatan . '] ' . $check->santri->user->fullname . ' - ' . $check->periode, $caption, WaSchedules::getContactId($check->santri->nohp_ortu));
             // end kirim wa
             return json_encode(array("status" => true, "message" => 'Berhasil diinput'));
