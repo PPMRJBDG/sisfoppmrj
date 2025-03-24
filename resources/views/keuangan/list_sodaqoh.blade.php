@@ -152,6 +152,7 @@
                         <?php
                             $st = 0;
                             $penerimaan = App\Models\SodaqohHistoris::where('fkSodaqoh_id',$data->id)->where('status','approved')->get();
+                            $histori = App\Models\SodaqohHistoris::where('fkSodaqoh_id',$data->id)->get();
                             foreach ($penerimaan as $b) {
                                 $st = $st + intval($b->nominal);
                             }
@@ -159,7 +160,7 @@
                         @if(($st==0 && $select_lunas==0) || ($st>0 && $select_lunas==3) || $select_lunas==1 || $select_lunas==2)
                             <tr class="text-sm" id="data{{$data->fkSantri_id}}">
                                 <td>
-                                    <a block-id="return-false" onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($penerimaan)}})" class="btn btn-{{($data->status_lunas) ? 'secondary' : 'primary'}} btn-sm mb-0">
+                                    <a block-id="return-false" onclick="openSodaqoh({{$data}},'[{{$data->santri->angkatan}}] {{$data->santri->user->fullname}}',{{json_encode($histori)}})" class="btn btn-{{($data->status_lunas) ? 'secondary' : 'primary'}} btn-sm mb-0">
                                         {{($data->status_lunas) ? 'Riwayat' : 'Bayar'}}
                                     </a>
                                 </td>
