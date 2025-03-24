@@ -106,8 +106,6 @@ function showCacahJiwa() {
     }
 
     $('#cacahJiwaModal').fadeIn();
-    $('#cacahJiwaModal').css('background', 'rgba(0, 0, 0, 0.7)');
-    $('#cacahJiwaModal').css('z-index', '10000');
 }
 
 function openTabGraf(tahun, data_presence_group) {
@@ -126,32 +124,46 @@ function openTabGraf(tahun, data_presence_group) {
                 $('#card-grafik').css('display', 'block');
 
                 // TABLE
+                var prev_persentase = 0;
                 var no = 1;
                 var data_body = '';
                 var datax = data['data_presensi']['detil_presensi'];
                 data_presensi = data['data_presensi'];
                 Object.keys(datax).forEach(function (index) {
+                    let tanggalSekarang = new Date(index);
+                    let formatIndonesia = new Intl.DateTimeFormat('id-ID', {    year: 'numeric',    month: '2-digit',    day: '2-digit'}).format(tanggalSekarang);
+                    
                     data_body = data_body + '<tr class="text-sm">' +
                         '<td class="text-center">' + no + '</td>' +
-                        '<td class="text-center font-weight-bolder">' + hari_ini(new Date(index).getDay()) + ', ' + index + '</td>';
+                        '<td class="text-left font-weight-bolder">' + hari_ini(new Date(index).getDay()) + ', ' + formatIndonesia + '</td>';
                     var persentase = 0;
                     var hadir = 0;
                     var alpha = 0;
                     presence_group.forEach(function (pg_key) {
-                        data_body = data_body + '<td class="text-center">';
+                        // data_body = data_body + '<td class="text-center">';
                         if (datax[index][pg_key['id']] != undefined) {
-                            data_body = data_body + datax[index][pg_key['id']]['hadir'] + '|' + datax[index][pg_key['id']]['ijin'] + '|' + datax[index][pg_key['id']]['alpha'];
+                            data_body = data_body + '<td class="text-center">' + datax[index][pg_key['id']]['hadir'] + '</td><td class="text-center">' + datax[index][pg_key['id']]['ijin'] + '</td><td class="text-center">' + datax[index][pg_key['id']]['alpha'] + '</td>';
                             hadir = hadir + (datax[index][pg_key['id']]['hadir'] + datax[index][pg_key['id']]['ijin']);
                             alpha = alpha + datax[index][pg_key['id']]['alpha'];
+                        }else{
+                            data_body = data_body + '<td class="text-center">0</td><td class="text-center">0</td><td class="text-center">0</td>';
                         }
-                        data_body = data_body + '</td>';
+                        // data_body = data_body + '</td>';
                     });
                     persentase = hadir / (hadir + alpha) * 100;
                     var style = '';
                     if (persentase < 80) {
                         style = 'text-warning';
+                    }else if (persentase < 50) {
+                        style = 'text-danger';
                     }
-                    data_body = data_body + '<td class="text-center font-weight-bolder ' + style + '">' + persentase.toFixed(2) + '%</td></tr>';
+
+                    var caret = '<i class="fa fa-caret-down text-danger" style="font-size:18px;"><i/>';
+                    if(prev_persentase < persentase){
+                        caret = '<i class="fa fa-caret-up text-success" style="font-size:18px;"><i/>';
+                    }
+                    data_body = data_body + '<td class="text-center font-weight-bolder ' + style + '">' + persentase.toFixed(2) + '%' +' ' + caret + '</td></tr>';
+                    prev_persentase = persentase;
                     no++;
                 });
                 $('#data-table').html(data_body);
@@ -162,11 +174,14 @@ function openTabGraf(tahun, data_presence_group) {
                     var gradientStroke1 = ctx7.createLinearGradient(0, 230, 0, 50);
                     gradientStroke1.addColorStop(1, 'rgba(94,114,228,0.2)');
                     gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-                    gradientStroke1.addColorStop(0, 'rgba(94,114,228,0)'); //purple colors
+                    gradientStroke1.addColorStop(0, 'rgba(94,114,228,0)'); 
+                    
                     new Chart(ctx7, {
+                        type: "line",
                         data: {
-                            labels: data_presensi['tanggal_presensi'][item.id],
-                            datasets: [{
+                            labels: (data_presensi['tanggal_presensi'][item.id]!=undefined) ? data_presensi['tanggal_presensi'][item.id] : "0",
+                            datasets: [
+                            {
                                 type: "bar",
                                 label: "Hadir",
                                 weight: 5,
@@ -177,7 +192,7 @@ function openTabGraf(tahun, data_presence_group) {
                                 backgroundColor: '#3A416F',
                                 borderRadius: 4,
                                 borderSkipped: false,
-                                data: data_presensi['total_presensi'][item.id] ? data_presensi['total_presensi'][item.id]['hadir'] : [0],
+                                data: (data_presensi['total_presensi'][item.id]!=undefined) ? data_presensi['total_presensi'][item.id]['hadir'] : [0],
                                 maxBarThickness: 10,
                             },
                             {
@@ -190,7 +205,7 @@ function openTabGraf(tahun, data_presence_group) {
                                 borderColor: "#5e72e4",
                                 borderWidth: 3,
                                 backgroundColor: gradientStroke1,
-                                data: data_presensi['total_presensi'][item.id] ? data_presensi['total_presensi'][item.id]['ijin'] : 0,
+                                data: (data_presensi['total_presensi'][item.id]!=undefined) ? data_presensi['total_presensi'][item.id]['ijin'] : [0],
                                 fill: true,
                             },
                             {
@@ -203,7 +218,7 @@ function openTabGraf(tahun, data_presence_group) {
                                 borderColor: "#f56565",
                                 borderWidth: 3,
                                 backgroundColor: gradientStroke1,
-                                data: data_presensi['total_presensi'][item.id] ? data_presensi['total_presensi'][item.id]['alpha'] : 0,
+                                data: (data_presensi['total_presensi'][item.id]!=undefined) ? data_presensi['total_presensi'][item.id]['alpha'] : [0],
                                 fill: true,
                             }
                             ],
@@ -265,6 +280,9 @@ function openTabGraf(tahun, data_presence_group) {
                         },
                     });
                 })
+
+                var elem = document.getElementById("section-1");
+                elem.scrollIntoView();
             }
         );
     }
