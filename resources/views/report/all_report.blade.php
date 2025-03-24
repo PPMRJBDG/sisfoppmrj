@@ -15,11 +15,15 @@
         display: block;
         padding: .5rem 1rem !important;
     }
+    
+    .table tbody {
+        font-weight: 400;
+    }
 </style>
 
 @if($santri==null)
 <div class="p-2">
-    <div class="card shadow border mb-2">
+    <div class="card border mb-2">
         <div class="card-body p-2">
             <center>
                 <h6 class="m-0" style="font-size:16px!important;">Data Mahasiswa Tidak Ditemukan</h6>
@@ -28,8 +32,8 @@
     </div>
 </div>
 @else
-<div class="p-2 pb-0">
-    <div class="card shadow border mb-2">
+<div class="p-2 pb-0 pt-0">
+    <div class="card border mb-2">
         <div class="card-body p-2">
             <center>
                 <h4 class="m-0">{{ $santri->user->fullname }}</h4>
@@ -38,7 +42,7 @@
     </div>
 
     @if(count($sodaqoh)>0)
-    <div class="card shadow border mb-2 p-2">
+    <div class="card border mb-2 p-2">
         <h5 class="text-center mb-1">Pembayaran Sodaqoh</h5>
         <div class="card-body p-0">
             <div class="datatable datatable-sm p-0" data-mdb-pagination="false">
@@ -93,7 +97,7 @@
     $all_alpha = 0;
     ?>
     @if($datapg!=null)
-    <div class="card shadow border mb-2 p-2">
+    <div class="card border mb-2 p-2">
         <h5 class="text-center mb-1">Presensi Kehadiran</h5>
         <div class="card-body p-0 text-center">
             <th class="text-center p-1">Total Keseluruhan</th>
@@ -224,14 +228,14 @@
         </div>
     </div>
     @else
-    <div class="card shadow border mb-2 p-2">
+    <div class="card border mb-2 p-2">
         <div class="card-body p-2 text-center">
             Belum dimulai KBM
         </div>
     </div>
     @endif
 
-    <div class="card shadow border mb-2 p-2">
+    <div class="card border mb-2 p-2">
         <h5 class="text-center mb-1">Pencapaian Materi</h5>
         <div class="card-body p-0">
             <div class="datatable datatable-sm" data-mdb-pagination="false">
@@ -252,7 +256,7 @@
     </div>
 
     @if($catatan_penghubungs!=null)
-    <div class="card shadow border mb-2 p-2">
+    <div class="card border mb-2 p-2">
         <h5 class="text-center mb-1">Catatan Penghubung</h5>
         <div class="card-body p-2">
             <h6 class="font-weight-bolder">Kepribadian:</h6>
@@ -274,7 +278,7 @@
     @endif
 
     @if(count($pelanggaran)>0)
-    <div class="card shadow border mb-2 p-2">
+    <div class="card border mb-2 p-2">
         <h5 class="text-center mb-1">Riwayat Pelanggaran</h5>
         <div class="card-body p-0">
             <h6 class="p-2">Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
@@ -282,7 +286,7 @@
                 <table id="recap-pelanggaran" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
-                            <th class="text-uppercase ps-2 font-weight-bolder">[SP] Pelanggaran</th>
+                            <th class="text-uppercase ps-2 font-weight-bolder">Pelanggaran</th>
                             <th class="text-uppercase ps-2 text-center font-weight-bolder">Tanggal SP</th>
                         </tr>
                     </thead>
@@ -290,7 +294,8 @@
                         @foreach($pelanggaran as $plg)
                         <tr>
                             <td class="p-1 ps-2">
-                                [SP {{ $plg->keringanan_sp }}] {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small>
+                                <!-- [SP {{ $plg->keringanan_sp }}]  -->
+                                {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small>
                             </td>
                             <td class="p-1 ps-2 text-center">
                                 @if($plg->is_surat_peringatan!='')

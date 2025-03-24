@@ -1,14 +1,14 @@
 const base_url = $("#base-url").val();
 
 $('body').on('click', '#close', function (e) {
-    $('#exampleModal').fadeOut();
+    $('#exampleModalReport').fadeOut();
     $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
     $('#alertModal').fadeOut();
     $('#contentAlert').html('');
 });
 
 $('#closeb').click(function () {
-    $('#exampleModal').fadeOut();
+    $('#exampleModalReport').fadeOut();
     $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
 });
 
@@ -303,9 +303,9 @@ function hari_ini(hari) {
 }
 
 function getReport(ids) {
-    $('#exampleModal').fadeIn();
-    $('#exampleModal').css('background', 'rgba(0, 0, 0, 0.7)');
-    $('#exampleModal').css('z-index', '10000');
+    $('#exampleModalReport').fadeIn();
+    $('#exampleModalReport').css('background', 'rgba(0, 0, 0, 0.7)');
+    $('#exampleModalReport').css('z-index', '10000');
     $('#contentReport').html('<iframe src="/report/' + ids + '"  style="height:100%;width:100%;"></iframe>');
 }
 

@@ -138,22 +138,6 @@ class PmbController extends Controller
         $store_nilai = PmbCamabas::find($request->input('id'));
         $tipe = $request->input('tipe');
         $store_nilai->{'nilai_'.$tipe} = $request->input('val');
-        
-        // echo $store_nilai->nilai_.$tipe; exit;
-        // if($request->input('tipe')=='bacaan'){
-        //     $store_nilai->nilai_bacaan = $request->input('nilai_bacaan');
-        //     $store_nilai->nilai_bacaan_ket = $request->input('nilai_bacaan_ket');
-        //     $store_nilai->nilai_bacaan_mentor = $request->input('nilai_bacaan_mentor');
-        // }elseif($request->input('tipe')=='quran'){
-        //     $store_nilai->nilai_penyampaian_quran = $request->input('nilai_quran');
-        //     $store_nilai->nilai_penyampaian_quran_ket = $request->input('nilai_quran_ket');
-        //     $store_nilai->nilai_penyampaian_quran_mentor = $request->input('nilai_quran_mentor');
-        // }elseif($request->input('tipe')=='adzan'){
-        //     $store_nilai->nilai_adzan = $request->input('nilai_adzan');
-        //     $store_nilai->nilai_adzan_ket = $request->input('nilai_adzan_ket');
-        //     $store_nilai->nilai_adzan_mentor = $request->input('nilai_adzan_mentor');
-        // }
-        
         $store_nilai->save();
 
         if($store_nilai){

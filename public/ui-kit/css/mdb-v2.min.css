@@ -16317,7 +16317,7 @@ input[type=file].form-control.is-invalid:focus-within~.form-file-label .form-fil
 }
 
 .table tbody {
-    font-weight: 300
+    font-weight: 400
 }
 
 .table>:not(:last-child)>:last-child>* {
@@ -22155,7 +22155,9 @@ screen and (-ms-high-contrast:active) {
 }
 
 .datatable thead,
-.datatable thead tr {
+.datatable thead tr,
+.datatablex thead,
+.datatablex thead tr {
     background-color: #f6f9fc!important;
 }
 

@@ -466,6 +466,36 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
+                                                WA - Grup Maurus
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_maurus_group_id form-control" name="wa_maurus_group_id" id="wa_maurus_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_maurus_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                WA - Grup Keuangan
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_keuangan_group_id form-control" name="wa_keuangan_group_id" id="wa_keuangan_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_keuangan_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
                                                 WA - Grup Dewan Guru
                                             </label>
                                             <select data-mdb-filter="true" class="select wa_dewanguru_group_id form-control" name="wa_dewanguru_group_id" id="wa_dewanguru_group_id">
@@ -519,21 +549,6 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @foreach($list_wa_group as $wg)
                                                 <option <?php if ($list_setting != null) {
                                                             echo ($wg->id == $list_setting->wa_ortu_group_id) ? 'selected' : '';
-                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
-                                                @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-control-label">
-                                                WA - Grup Maurus
-                                            </label>
-                                            <select data-mdb-filter="true" class="select wa_maurus_group_id form-control" name="wa_maurus_group_id" id="wa_maurus_group_id">
-                                                <option value="">--pilih--</option>
-                                                @if(count($list_wa_group)>0)
-                                                @foreach($list_wa_group as $wg)
-                                                <option <?php if ($list_setting != null) {
-                                                            echo ($wg->id == $list_setting->wa_maurus_group_id) ? 'selected' : '';
                                                         } ?> value="{{$wg->id}}">{{$wg->name}}</option>
                                                 @endforeach
                                                 @endif

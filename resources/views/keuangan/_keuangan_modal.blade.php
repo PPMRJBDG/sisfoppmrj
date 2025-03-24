@@ -1,6 +1,28 @@
 <?php
 $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags'];
 ?>
+<style>
+.table>:not(caption)>*>* {
+    padding: 8px;
+}
+</style>
+
+<div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalPreviewBukti" tabindex="-1" role="dialog" aria-labelledby="modalPreviewBuktiLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body pb-0">
+                <div id="dialog-preview-bukti" class="card border p-2 mt-2 mb-2" style="display:none;">
+                    
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" onclick="$('#modalPreviewBukti').hide()" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalSodaqoh" tabindex="-1" role="dialog" aria-labelledby="modalSodaqohLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
@@ -11,76 +33,59 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 </div>
             </div>
             <div class="modal-body pb-0">
-                <div class="p-2" style="background:#f9f9ff;border:1px #ddd solid;">
+                <div id="form-bayar" class="p-2" style="background:#f9f9ff;border:1px #ddd solid;">
                     <input class="form-control" readonly type="hidden" id="sodaqoh_id" name="sodaqoh_id" value="">
                     <input class="form-control" readonly type="hidden" id="periode" name="periode" value="">
                     <input class="form-control" readonly type="hidden" id="santri_id" name="santri_id" value="">
 
-                    <label class="form-control-label">Default Sodaqoh / Tahun</label>
+                    <label class="form-control-label">Kewajiban Sodaqoh / Tahun</label>
                     <input class="form-control" <?php if (!auth()->user()->hasRole('superadmin')) {
                                                     echo 'disabled';
                                                 } ?> type="number" id="nominal" name="nominal" value="">
                     <hr>
 
                     <div class="form-group">
-                        <label class="custom-control-label m-0">Periode Bulan</label>
-                        <select class="form-control" name="periode_bulan" id="periode_bulan">
-                            <?php foreach ($bulan as $bl) { ?>
-                                <option value="{{$bl}}">{{ucfirst($bl)}}</option>
-                            <?php } ?>
-                        </select>
+                        <label class="form-label m-0">Tanggal Pembayaran</label>
+                        <input class="form-control" type="date" id="date" value="{{date('Y-m-d')}}" name="date">
                     </div>
 
-                    <div class="form-outline form-group">
-                        <input class="form-control" type="date" id="date" name="date">
-                        <label class="form-label m-0"></label>
-                    </div>
-
-                    <div class="form-outline form-group">
-                        <input class="form-control" type="number" id="nominal_bayar" name="nominal_bayar" placeholder="0">
+                    <div class="form-group">
                         <label class="form-label m-0">Nominal</label>
+                        <input class="form-control" type="number" id="nominal_bayar" name="nominal_bayar" placeholder="0">
                     </div>
 
-                    <div class="form-outline form-group">
-                        <input class="form-control" type="text" id="ket" name="ket" value="">
+                    <div class="form-group">
+                        <label class="form-label mb-0" for="bukti_transfer">Bukti Transfer</label>
+                        <input class="form-control" type="file" id="bukti_transfer" name="bukti_transfer">
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label">Keterangan</label>
+                        <input class="form-control" type="text" id="ket" name="ket" value="">
                     </div>
-
-                    <br>
-                    <label class="form-control-label">*Jika terdapat pembayaran lebih dari 1x dalam 1 bulan, harap yang diinput adalah total dari jumlah pembayaran tersebut</label>
-                    <label class="form-control-label">**Jika terdapat perubahan, dapat memilih bulan sesuai yang akan diubah</label>
                 </div>
 
-                <table class="table align-items-center mb-0">
-                    <tbody>
-                        <tr>
-                            <td class="text-sm font-weight-bolder ps-0" colspan="2" style="border:none!important;">Riwayat Pembayaran</td>
-                        </tr>
-                        <?php foreach ($bulan as $bl) {
-                        ?>
-                            <tr class="text-sm m-1" id="idx{{$bl}}">
-                                <td class="p-0" style="border-bottom-width:0!important;width:20%;">
-                                    <input class="form-control" disabled type="text" value="{{$bl}}">
-                                </td>
-                                <td class="p-0" style="border-bottom-width:0!important;width:40%;">
-                                    <input class="form-control" disabled type="date" id="{{$bl}}_date" name="{{$bl}}_date">
-                                </td>
-                                <td class="p-0" style="border-bottom-width:0!important;">
-                                    <input class="form-control" disabled type="text" id="{{$bl}}" name="{{$bl}}" placeholder="0">
-                                </td>
-                            </tr>
-                        <?php }
-                        ?>
-                        <tr>
-                            <td class="text-sm font-weight-bolder ps-0 text-warning" colspan="2" style="border:none!important;">Kekurangan: <span id="kekurangan"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <div class="form-group form-check mb-0">
-                    <label class="custom-control-label">Info via WA</label>
-                    <input class="form-check-input" type="checkbox" id="info-wa" name="info-wa">
+                <div id="preview-bukti" class="card border p-2 mt-2 mb-2" style="display:none;">
+                
                 </div>
+
+                <h6 class="mt-2 mb-0">Riwayat Pembayaran</h6>
+                <div class="justify-content-center">
+                    <table class="table align-items-center mb-0">
+                        <tbody id="idx_histori">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <h6 class="text-sm font-weight-bolder mt-3 pb-2 text-warning">Kekurangan: <span id="kekurangan"></span></h6>
+
+                <?php if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku')) { ?>
+                    <hr>
+                    <div class="form-group form-check mb-0">
+                        <label class="custom-control-label">Info via WA</label>
+                        <input class="form-check-input" type="checkbox" id="info-wa" name="info-wa">
+                    </div>
+                <?php } ?>
             </div>
             <div class="card-header p-2" id="info-update-sodaqoh" style="display:none;border-radius:4px;">
                 <h6 id="bg-warning" class="mb-0 bg-warning p-1 text-white" style="display:none;">
@@ -105,9 +110,6 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 <h6 class="modal-title" id="modalPeriodeLabel">Set Periode</h6>
             </div>
             <div class="modal-body p-0">
-                <!-- <div class="tab">
-                    @for($i=1; $i<=12; $i++) <button class="tablinks {{($i==1) ? 'active' : ''}}" onclick="openTab(event, 'bln_{{$i}}')">{{$i}}</button>@endfor
-                </div> -->
                 <?php
                 for ($i = 1; $i <= 12; $i++) {
                 ?>
@@ -155,3 +157,223 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         </div>
     </div>
 </div>
+
+<div class="modal" id="alertModalPayment" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <div>
+            <h6 class="modal-title font-weight-bolder badge badge-warning" id="alertModalLabel">Pemberitahuan</h6>
+        </div>
+        <div>
+            <a style="cursor:pointer;" id="close"><i class="ni ni-fat-remove text-lg"></i></a>
+        </div>
+        </div>
+        <div class="modal-body" id="contentAlertPayment">
+
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload();">Keluar</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
+    function openSodaqoh(data, nm, histori) {
+        $('#modalSodaqoh').fadeIn();
+        $('#sodaqoh_id').val(data.id);
+        $('#periode').val(data.periode);
+        $('#nominal').val(data.nominal);
+        $('#santri_id').val(data.fkSantri_id);
+        $('#ket').val(data.keterangan);
+        $('#nm').text(nm + ' | ' + data.periode);
+        if(data.status_lunas){
+            $("#form-bayar").hide();
+        }else{
+            $("#form-bayar").show();
+        }
+
+        setHistory(data, histori)
+    }
+
+    async function setHistory(data, histori) {
+        $("#kekurangan").html('');
+        var kekurangan = 0;
+        var terbayar = 0;
+        var content = '<tr>'+
+                        '<th class="text-uppercase font-weight-bolder">Tanggal</th>'+
+                                '<th class="text-uppercase font-weight-bolder">Nominal</th>'+
+                                '<th class="text-uppercase font-weight-bolder">Status</th>'+
+                                '<th class="text-uppercase font-weight-bolder">Bukti</th>'+
+                            '</tr>';
+        document.getElementById('idx_histori').setAttribute('style', 'display:none;');
+        $("#idx_histori").html("");
+
+        histori.forEach(function(item, b) {
+            if(item['status']=='approved'){
+                terbayar = terbayar + parseInt(item['nominal']);
+            }
+            var nominal = new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR"
+            }).format(parseInt(item['nominal']));
+            var status = '<span class="badge badge-secondary">Pending</span>';
+            if(item['status']=='approved'){
+                status = '<span class="badge badge-success">Approved</span>';
+            }
+            var image = '';
+            if(item['bukti_transfer']!=null && item['bukti_transfer']!=""){
+                var show = item['bukti_transfer'];
+                image = '<button  type="button" class="btn btn-primary btn-floating btn-sm" data-mdb-ripple-init onclick="showBukti(\''+show+'\')"><i class="fa fa-image"></i></button>';
+            }
+            
+            content = content+  '<tr>'+
+                                    '<td><input value="'+item["pay_date"]+'" class="form-control" disabled></td>'+
+                                    '<td><input value="'+nominal+'" class="form-control" disabled></td>'+
+                                    '<td>'+status+'</td>'+
+                                    '<td>'+image+'</td>'+
+                                '</tr>';
+        })
+
+        $("#idx_histori").html(content);
+        document.getElementById('idx_histori').setAttribute('style', 'display:block;');
+
+        kekurangan = parseInt(data['nominal']) - terbayar;
+        $("#kekurangan").html(new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR"
+        }).format(parseInt(kekurangan)));
+    }
+
+    function reminderSodaqoh(data) {
+        if (confirm("Ingatkan sekarang ?")) {
+            $("#ingatkan" + data.id).html('Loading');
+            var datax = {};
+            datax['id'] = data.id;
+            $.post("{{ route('reminder sodaqoh') }}", datax,
+                function(dataz, status) {
+                    var return_data = JSON.parse(dataz);
+                    $("#ingatkan" + data.id).html('Ingatkan');
+                }
+            );
+        }
+    }
+
+    function showBukti(image){
+        $("#preview-bukti").focus();
+        $("#preview-bukti").show();
+        $("#preview-bukti").html('<img loading="lazy" style="width:100%;" src="/storage/bukti_transfer/'+image+'"><a href="#" class="mt-2 btn btn-outline-warning btn-sm" onclick="$(\'#preview-bukti\').hide()">Tutup Bukti</a>');
+    }
+
+    function showBuktiPreview(image){
+        $('#modalPreviewBukti').fadeIn();
+        $("#dialog-preview-bukti").focus();
+        $("#dialog-preview-bukti").show();
+        $("#dialog-preview-bukti").html('<img loading="lazy" style="width:100%;" src="/storage/bukti_transfer/'+image+'">');
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $('#save').click(function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+        $("#info-update-sodaqoh").hide();
+        var files = $('#bukti_transfer')[0].files;
+
+        if($('#nominal_bayar').val() == "" || $('#nominal_bayar').val() <= 0){
+            alert("Silahkan masukkan nominal pembayaran");
+        }else if(files.length > 0 ){
+            formData.append("id", $('#sodaqoh_id').val());
+            formData.append("nominal", $('#nominal').val());
+            formData.append("fkSantri_id", $('#santri_id').val());
+            formData.append("keterangan", $('#keterangan').val());
+            formData.append("date", $('#date').val());
+            formData.append("nominal_bayar", $('#nominal_bayar').val());
+            var checkBox = document.getElementById("info-wa");
+            formData.append("info-wa", false);
+            if(checkBox!=undefined){
+                if (checkBox.checked == true) {
+                    formData.append("info-wa", true);
+                }
+            }
+            formData.append("bukti_transfer", files[0]);
+            var role_santri = "<?php echo auth()->user()->hasRole('santri'); ?>";
+            var routex = "{{ route('store sodaqoh') }}";
+            if(role_santri){
+                routex = "{{ route('store sodaqoh santri') }}";
+            }
+            $("#loadingSubmit").show();
+            $.ajax({
+              url: routex,
+              type: "POST",
+              data: formData,
+              contentType: false,
+              processData: false,
+              success: function(response){
+                var return_data = JSON.parse(response);
+                $("#info-update-sodaqoh").show();
+                if (return_data.status) {
+                    alert(return_data.message)
+                    window.location.reload();
+                }else{
+                    $("#bg-warning").show();
+                    $("#info-warning").html(return_data.message);
+                }
+              },
+           });
+        }else{
+           alert("Please select a file.");
+        }
+    })
+
+    function actionPayment(tipe,id,msg){
+        if (confirm("Apakah yakin "+msg+" pembayaran ini ?")) {
+            $("#loadingSubmit").show();
+            var datax = {};
+            datax['id'] = id;
+            datax['tipe'] = tipe;
+            $.post("{{ route('approve payment') }}", datax,
+                function(dataz, status) {
+                    var return_data = JSON.parse(dataz);
+                    $("#alertModalPayment").show();
+                    $("#contentAlertPayment").html(return_data.message);
+                    $("#loadingSubmit").hide();
+                }
+            );
+        }
+    }
+
+    $('#close').click(function() {
+        $('#modalSodaqoh').fadeOut();
+        $("#preview-bukti").hide();
+        $("#preview-bukti").html('');
+        clear()
+    });
+
+    function clear() {
+        $("#kekurangan").html('');
+        $("#info-update-sodaqoh").hide();
+        $("#bg-warning").hide();
+        $("#bg-success").hide();
+        $('#sodaqoh_id').val('');
+        $('#periode').val('');
+        $('#nominal').val('');
+        $('#santri_id').val('');
+        $('#ket').val('');
+        $('#nm').text('');
+        var bulan = <?php echo json_encode($bulan); ?>;
+        bulan.forEach(function(item, b) {
+            $('#' + item).val('');
+            $('#' + item + '_date').val('');
+        })
+    }
+</script>

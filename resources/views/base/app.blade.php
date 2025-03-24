@@ -35,6 +35,9 @@ if (auth()->user()->hasRole('barcode')) {
   body, .table, .form-control, .select-option {
     font-size: .9rem !important;
   }
+  .datatable tbody {
+    font-weight: 400;
+  }
   .select-arrow {
     font-size: .5rem !important;
   }
@@ -154,9 +157,10 @@ if (auth()->user()->hasRole('barcode')) {
     @include('pmb._pmb_modal')
     @include('keuangan._keuangan_modal')
     @include('catatanPenghubung._penghubung_modal')
+    @include('stdbot._stdbot_modal')
 
     <div class="modal" id="cacahJiwaModal" tabindex="-1" role="dialog" aria-labelledby="cacahJiwaModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
-      <div class="modal-dialog" role="document" style="max-width:600px !important;">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document" style="max-width:600px !important;">
         <div class="modal-content">
           <div class="modal-header">
             <div>
@@ -176,8 +180,8 @@ if (auth()->user()->hasRole('barcode')) {
       </div>
     </div>
 
-    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document" style="max-width:600px !important;">
+    <div class="modal" id="exampleModalReport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <div>
@@ -187,7 +191,7 @@ if (auth()->user()->hasRole('barcode')) {
               <a block-id="return-false" href="#" style="cursor:pointer;" id="close"><i class="fa fa-times text-lg"></i></a>
             </div>
           </div>
-          <div class="modal-body p-1" id="contentReport" style="height:500px!important;">
+          <div class="modal-body p-0" id="contentReport" style="height:600px!important;">
             <tr>
               <td colspan="3">
                 <span class="text-center">
@@ -204,7 +208,7 @@ if (auth()->user()->hasRole('barcode')) {
     </div>
 
     <div class="modal" id="exampleModalMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelMateri" aria-hidden="true">
-      <div class="modal-dialog" role="document" style="max-width:650px !important;">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <div>
@@ -241,8 +245,8 @@ if (auth()->user()->hasRole('barcode')) {
       </div>
     </div>
 
-    <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" style="background:rgba(0, 0, 0, 0.7);z-index:999;" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
-      <div class="modal-dialog" role="document">
+    <div class="modal" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <div>

@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Santri;
-use App\Models\SodaqohHistoris;
+use App\Models\Sodaqoh;
 
-class Sodaqoh extends Model
+class SodaqohHistoris extends Model
 {
     protected $fillable = [
+        'fkSodaqoh_id',
         'fkSantri_id',
-        'periode',
         'nominal',
-        'status_lunas',
-        'keterangan',
-        'status_rukhso'
+        'bukti_transfer',
+        'status',
+        'updated_by',
+        'pay_date',
     ];
 
     public function santri()
@@ -23,8 +24,8 @@ class Sodaqoh extends Model
         return $this->belongsTo(Santri::class, 'fkSantri_id');
     }
 
-    public function histori()
+    public function sodaqoh()
     {
-        return $this->hasMany(SodaqohHistoris::class, 'fkSodaqoh_id');
+        return $this->belongsTo(Sodaqoh::class, 'fkSodaqoh_id');
     }
 }

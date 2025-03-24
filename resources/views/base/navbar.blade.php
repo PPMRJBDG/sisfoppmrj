@@ -50,6 +50,12 @@
       </a>
     </li>
 
+    <li class="sidenav-item">
+      <a class="sidenav-link d-flex" aria-current="page" href="{{ url('/keuangan/tagihan') }}">
+        <i class="fa fa-money-bill pe-3"></i>Tagihan
+      </a>
+    </li>
+
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" href="#" block-id="return-false" id="navbarDropdownMenuLink-reporting" role="button" aria-expanded="false">
@@ -96,21 +102,35 @@
             <span class="sidenav-link-text ms-1">Catatan Penghubung</span>
           </a>
         <li>
+        @if(auth()->user()->hasRole('superadmin'))
+        <li>
+          <a class="sidenav-link" href="{{ url('stdbot/contact') }}">
+            <span class="sidenav-link-text ms-1">Contact & Bulk</span>
+          </a>
+        </li>
+        @endif
       </ul>
     </li>
     @endif
 
-    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-keuangan" role="button" aria-expanded="false">
         <i class="fa fa-money pe-3"></i>Keuangan
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-keuangan">
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
         <li>
-          <a class="sidenav-link" href="{{ url('list_sodaqoh') }}">
+          <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
+            <span class="sidenav-link-text ms-1">Tagihan</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
             <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
           </a>
         </li>
+        @endif
         <li>
           <a class="sidenav-link" href="{{ url('keuangan/rab-tahunan') }}">
             <span class="sidenav-link-text ms-1">RAB Tahunan</span>
@@ -126,26 +146,13 @@
             <span class="sidenav-link-text ms-1">RAB Kegiatan</span>
           </a>
         </li>
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
         <li>
           <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
             <span class="sidenav-link-text ms-1">Jurnal</span>
           </a>
         </li>
-      </ul>
-    </li>
-    @endif
-
-    @if(auth()->user()->hasRole('superadmin'))
-    <li class="sidenav-item">
-      <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-msgtools" role="button" aria-expanded="false">
-        <i class="fa fa-envelope pe-3"></i>Message Tools
-      </a>
-      <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-msgtools">
-        <li>
-          <a class="sidenav-link" href="{{ url('msgtools/contact') }}">
-            <span class="sidenav-link-text ms-1">Contact & Bulk</span>
-          </a>
-        </li>
+        @endif
       </ul>
     </li>
     @endif
@@ -170,6 +177,7 @@
     </li>
     @endif
 
+    @if(!auth()->user()->hasRole('ku'))
     <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-jadwalkbm" role="button" aria-expanded="false">
         <i class="fa fa-calendar pe-3"></i>Jadwal KBM
@@ -242,6 +250,7 @@
         @endif
       </ul>
     </li>
+    @endif
     
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || isset(auth()->user()->santri->panitiaPmb))
     <li class="sidenav-item">

@@ -1,4 +1,4 @@
-<div class="card shadow border">
+<div class="card border">
   <div class="card-header p-2">
     @can('create users')
     <a href="{{ route('create user') }}" class="btn btn-primary form-control mb-2">
@@ -43,7 +43,7 @@
     </div>
     @endif
 
-    <div class="datatable datatable-sm p-0">
+    <div class="datatable datatable-sm p-0" data-mdb-entries="200">
       <table id="table" class="table align-items-center mb-0">
         <thead class="thead-light" style="background-color:#f6f9fc;">
           <tr class="list">
@@ -126,7 +126,7 @@
             <td class="text-sm">
               @foreach ($user->getRoleNames() as $role)
               @if($role!='santri' && $role!='mubalegh')
-              <span class="badge {{ $role=='koor lorong' ? 'bg-gradient-primary' : 'bg-gradient-success' }}">{{ $role }}</span>
+              <span class="badge {{ $role=='koor lorong' ? 'bg-primary' : 'bg-success' }}">{{ $role }}</span>
               @endif
               @endforeach
             </td>

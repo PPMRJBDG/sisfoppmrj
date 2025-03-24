@@ -28,8 +28,12 @@ $setting = App\Models\Settings::first();
 </head>
 
 <style>
-  body {
+  body, .table, .form-control, .select-option {
     font-size: .9rem !important;
+  }
+
+  .datatable tbody {
+    font-weight: 400;
   }
 
   .btn {
@@ -114,4 +118,4 @@ $setting = App\Models\Settings::first();
 <body class="g-sidenav-show bg-white">
   <div class="min-height-300 position-absolute w-100" style="min-height:100% !important;"></div>
   <main class="main-content position-relative border-radius-lg ">
-    <div class="container-fluid py-3 {{ isset($containerClass) ? $containerClass : '' }}">
+    <div class="container-fluid py-2 {{ isset($containerClass) ? $containerClass : '' }}">

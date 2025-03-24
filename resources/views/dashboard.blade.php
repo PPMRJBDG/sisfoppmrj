@@ -8,7 +8,7 @@ if(isset(auth()->user()->santri)){
 ?>
 
 @if($santri_jaga || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
-<div class="card shadow border mb-2" style="background-color:#f6f9fc;">
+<div class="card border mb-2" style="background-color:#f6f9fc;">
     <div class="card-body p-2">
         <script>
             function togglePrsc() {
@@ -218,7 +218,7 @@ if(isset(auth()->user()->santri)){
 
 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
 <div class="col-12 p-0 mb-2">
-    <div class="card shadow border border p-2">
+    <div class="card border border p-2">
         <p class="m-0 mb-2 text-sm font-weight-bolder">Shortcut Presensi Hari Ini</p>
         <a href="{{ url('presensi/izin/persetujuan') }}" class="btn btn-primary btn-sm btn-rounded m-0 mb-2">
             Terima / Tolak Ijin
@@ -236,18 +236,23 @@ if(isset(auth()->user()->santri)){
 </div>
 @endif
 
-@if(!auth()->user()->hasRole('superadmin'))
+@if(!auth()->user()->hasRole('superadmin') && !auth()->user()->hasRole('ku'))
 <div class="col-12 p-0 mb-2">
-    <div class="card shadow border p-2">
+    <div class="card border p-2">
         <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-sm btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>
     </div>
 </div>
 @endif
 
+@if(auth()->user()->hasRole('ku'))
+<div class="card border p-2">
+    <h6 class="mt-1">Selamat datang, {{auth()->user()->fullname}}</h6>
+</div>
+@else
 <div class="">
     <p class="mb-2 text-sm font-weight-bolder">Laporan Presensi</p>
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
-    <div class="card shadow border p-2 mb-2">
+    <div class="card border p-2 mb-2">
         <div class="row">
             <div class="col-md-4 mb-2">
                 <select data-mdb-filter="true" class="select select_angkatan form-control" name="select_angkatan" id="select_angkatan">
@@ -277,7 +282,7 @@ if(isset(auth()->user()->santri)){
     </div>
     @endif
 
-    <div class="card shadow border">
+    <div class="card border">
         <nav>
             <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
                 <a data-mdb-ripple-init class="nav-link active font-weight-bolder" id="nav-mahasiswa-tab" data-bs-toggle="tab" href="#nav-mahasiswa" role="tab" aria-controls="nav-mahasiswa" aria-selected="true">
@@ -508,7 +513,7 @@ if(isset(auth()->user()->santri)){
                         <label style="color:#3A416F;"><i class="ni ni-air-baloon"></i></label> hadir
                         <label style="color:#5e72e4;"><i class="ni ni-air-baloon"></i></label> ijin
                         <label style="color:#f56565;"><i class="ni ni-air-baloon"></i></label> alpha
-                        <div class="card shadow border mb-3">
+                        <div class="card border mb-3">
                             <div class="card-body p-2">
                                 <div class="chart">
                                     <canvas id="mixed-chart-{{ $pg->id }}" class="chart-canvas" height="300px"></canvas>
@@ -523,6 +528,7 @@ if(isset(auth()->user()->santri)){
         </nav>
     </div>
 </div>
+@endif
 
 <script src="{{ asset('js/plugins/chartjs.min.js') }}"></script>
 

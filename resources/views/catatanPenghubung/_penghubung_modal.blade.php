@@ -12,27 +12,21 @@
                 <input class="form-control" readonly type="hidden" id="santri_id" name="santri_id" value="">
 
                 <label class="form-control-label">Kepribadian</label>
-                <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="kepribadian{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                 <textarea class="form-control" type="text" id="cat_kepribadian" name="cat_kepribadian"></textarea>
 
                 <label class="form-control-label">Sholat 5 Waktu</label>
-                <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="sholat{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                 <textarea class="form-control" type="text" id="cat_sholat" name="cat_sholat"></textarea>
 
                 <label class="form-control-label">KBM</label>
-                <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="kbm{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                 <textarea class="form-control" type="text" id="cat_kbm" name="cat_kbm"></textarea>
 
                 <label class="form-control-label">Asmara</label>
-                <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="asmara{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                 <textarea class="form-control" type="text" id="cat_asmara" name="cat_asmara"></textarea>
 
                 <label class="form-control-label">Akhlaq</label>
-                <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="akhlaq{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                 <textarea class="form-control" type="text" id="cat_akhlaq" name="cat_akhlaq"></textarea>
 
                 <label class="form-control-label">Umum</label>
-                <!-- <?php for ($i = 1; $i < 10; $i++) { ?> <i class="fa fa-star" id="umum{{$i}}" aria-hidden="true"></i> <?php } ?> -->
                 <textarea class="form-control" type="text" id="cat_umum" name="cat_umum"></textarea>
                 @if(auth()->user()->hasRole('superadmin'))
                 <hr>

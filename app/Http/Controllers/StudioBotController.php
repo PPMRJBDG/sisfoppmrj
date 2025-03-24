@@ -12,7 +12,7 @@ use App\Helpers\CommonHelpers;
 use App\Helpers\WaSchedules;
 use Illuminate\Support\Facades\DB;
 
-class MsgtoolsController extends Controller
+class StudioBotController extends Controller
 {
     public function __construct()
     {
@@ -52,7 +52,7 @@ class MsgtoolsController extends Controller
             CommonHelpers::createBulk('Bulk Angkatan ' . $ga->angkatan, $xcga, 'nohp');
             CommonHelpers::createBulk('Bulk Ortu ' . $ga->angkatan, $xcga, 'nohp_ortu');
         }
-        return redirect()->route('msgtools view contact');
+        return redirect()->route('stdbot view contact');
     }
 
     public function contact()
@@ -160,7 +160,7 @@ class MsgtoolsController extends Controller
             $bulk_user[$gg->id]['bulk_name'] = $gg->name;
         }
 
-        return view('msgtools.contact', [
+        return view('stdbot.contact', [
             'get_user' => $getuser,
             'contact_user' => $contact_user,
             'group_user' => $group_user,
@@ -174,7 +174,7 @@ class MsgtoolsController extends Controller
             $query->whereNull('exit_at');
         })->get();
 
-        return view('msgtools.report', [
+        return view('stdbot.report', [
             'datax' => $datax
         ]);
     }

@@ -57,6 +57,7 @@
                                 <option value="tahunan">Tahunan</option>
                                 <option value="bulanan">Bulanan</option>
                                 <option value="mingguan">Mingguan</option>
+                                <option value="duamingguan">2 Mingguan</option>
                             </select>
                         </td>
                         <td>
@@ -83,7 +84,7 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <div class="datatable datatable-sm">
+        <div class="datatable datatable-sm" data-mdb-entries="200">
             <table class="table align-items-center mb-4 text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
