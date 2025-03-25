@@ -346,23 +346,23 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
 
     public function jurnal($select_bulan = null)
     {
-        $check = SodaqohHistoris::get();
-        if ($check) {
-            foreach($check as $c){
-                if($c->status=="approved"){
-                    $jurnal = Jurnals::create([
-                        'fkBank_id' => 2,
-                        'fkPos_id' => 1,
-                        'fkSodaqoh_id' => $c->sodaqoh->id,
-                        'tanggal' => $c->pay_date,
-                        'jenis' => 'in',
-                        'uraian' => 'Sodaqoh Tahunan '.$c->sodaqoh->periode.': '.$c->santri->user->fullname,
-                        'nominal' => $c->nominal,
-                        'tipe_penerimaan' => 'Sodaqoh Tahunan'
-                    ]);
-                }
-            }
-        }
+        // $check = SodaqohHistoris::get();
+        // if ($check) {
+        //     foreach($check as $c){
+        //         if($c->status=="approved"){
+        //             $jurnal = Jurnals::create([
+        //                 'fkBank_id' => 2,
+        //                 'fkPos_id' => 1,
+        //                 'fkSodaqoh_id' => $c->sodaqoh->id,
+        //                 'tanggal' => $c->pay_date,
+        //                 'jenis' => 'in',
+        //                 'uraian' => 'Sodaqoh Tahunan '.$c->sodaqoh->periode.': '.$c->santri->user->fullname,
+        //                 'nominal' => $c->nominal,
+        //                 'tipe_penerimaan' => 'Sodaqoh Tahunan'
+        //             ]);
+        //         }
+        //     }
+        // }
 
         $bulans = DB::table('jurnals')
                 ->select(DB::raw('DATE_FORMAT(tanggal, "%Y-%m") as ym'))
