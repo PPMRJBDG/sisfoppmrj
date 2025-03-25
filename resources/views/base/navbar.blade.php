@@ -126,13 +126,13 @@
           </a>
         </li>
         <li>
-          <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
-            <span class="sidenav-link-text ms-1">Jurnal</span>
+          <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
+            <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
           </a>
         </li>
         <li>
-          <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
-            <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
+          <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
+            <span class="sidenav-link-text ms-1">Jurnal</span>
           </a>
         </li>
         @endif

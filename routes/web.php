@@ -201,6 +201,7 @@ Route::get('/keuangan/rab-tahunan', [App\Http\Controllers\KeuanganController::cl
 Route::get('/keuangan/rab-tahunan/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan'])->name('view rab tahunan')->middleware('role:superadmin|ku|rj1|wk');
 Route::post('/keuangan/rab-tahunan/store', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan_store'])->name('store rab tahunan')->middleware('role:superadmin|ku|rj1|wk');
 Route::get('/keuangan/rab-tahunan/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan_delete'])->name('delete rab tahunan')->middleware('role:superadmin|ku|rj1|wk');
+Route::post('/keuangan/rab-tahunan/duplicate', [App\Http\Controllers\KeuanganController::class, 'duplicate_rab'])->name('duplicate rab')->middleware('role:superadmin|ku');
 Route::get('/keuangan/jurnal', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
 Route::get('/keuangan/jurnal/{select_bulan}', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
 Route::post('/keuangan/jurnal/delete', [App\Http\Controllers\KeuanganController::class, 'jurnal_delete'])->name('delete jurnal')->middleware('role:superadmin|ku|rj1');

@@ -5,9 +5,12 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 .table>:not(caption)>*>* {
     padding: 8px;
 }
+#table-periode>:not(caption)>*>* {
+    padding: 0px;
+}
 </style>
 
-<div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalPreviewBukti" tabindex="-1" role="dialog" aria-labelledby="modalPreviewBuktiLabel" aria-hidden="true">
+<div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalPreviewBukti" tabindex="-1" role="dialog" aria-labelledby="modalPreviewBuktiLabel">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body pb-0">
@@ -23,7 +26,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     </div>
 </div>
 
-<div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalSodaqoh" tabindex="-1" role="dialog" aria-labelledby="modalSodaqohLabel" aria-hidden="true">
+<div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="modalSodaqoh" tabindex="-1" role="dialog" aria-labelledby="modalSodaqohLabel">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,52 +98,102 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     </div>
 </div>
 
-<div class="modal" id="modalPeriode" tabindex="-1" role="dialog" aria-labelledby="modalPeriodeLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+<div class="modal" id="modalPeriode" tabindex="-1" role="dialog" aria-labelledby="modalPeriodeLabel">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document" style="max-width:98%;">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="modalPeriodeLabel">Set Periode</h6>
             </div>
             <div class="modal-body p-0">
-                <?php
-                for ($i = 1; $i <= 12; $i++) {
-                ?>
-                    <div class="card shadow border tabcontent" id="bln_{{$i}}" style="{{($i==1) ? 'display:block;' : ''}}">
-                        <div class="card-body p-2">
-                            <div class="table-responsive">
-                                <table id="table" class="table align-items-center mb-4">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                                <th colspan="5" style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">Bulan {{$i}}</th>
+                <div class="row p-2">
+                    <div class="col-md-6">
+                        <label class="font-weight-bolder">Setiap Bulan Kalender Akademik</label>
+                        <br>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(8,1)">Minggu 1</a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(8,2)">Minggu 2</a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(8,3)">Minggu 3</a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(8,4)">Minggu 4</a>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="font-weight-bolder">Setiap Bulan Penuh</label>
+                        <br>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(12,1)">Minggu 1</a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(12,2)">Minggu 2</a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(12,3)">Minggu 3</a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary" onclick="clickPeriode(12,4)">Minggu 4</a>
+                    </div>
+                </div>
+                <div class="card shadow border tabcontent">
+                    <div class="card-body p-2">
+                        <div class="table-responsive">
+                            <table id="table-periode" class="table align-items-center mb-4">
+                                <thead class="text-center">
+                                    <tr>
+                                        <?php for ($i = 1; $i <= 6; $i++) { ?>
+                                            <th colspan="5" style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">Bulan {{$i}}</th>
+                                        <?php } ?>
+                                    </tr>
+                                    <tr>
+                                        <?php for ($i = 1; $i <= 6; $i++) { ?>
+                                            <?php for ($x = 1; $x <= 5; $x++) { ?>
+                                                <th style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">{{$x}}</th>
                                             <?php } ?>
-                                        </tr>
-                                        <tr>
-                                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                                <?php for ($x = 1; $x <= 5; $x++) { ?>
-                                                    <th style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">{{$x}}</th>
-                                                <?php } ?>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    <tr>
+                                        <?php for ($i = 1; $i <= 6; $i++) { ?>
+                                            <?php for ($x = 1; $x <= 5; $x++) { ?>
+                                                <td style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">
+                                                    <div class="form-group form-check mb-0" style="margin-left:10px!important;">
+                                                        <input class="form-check-input" type="checkbox" id="bln-{{$i}}-mg-{{$x}}" name="bln-{{$i}}-mg-{{$x}}">
+                                                    </div>
+                                                </td>
                                             <?php } ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-center">
-                                        <tr>
-                                            <?php for ($i = 1; $i <= 12; $i++) { ?>
-                                                <?php for ($x = 1; $x <= 5; $x++) { ?>
-                                                    <td style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">
-                                                        <div class="form-group form-check mb-0" style="margin-left:10px!important;">
-                                                            <input class="form-check-input" type="checkbox" id="bln-{{$i}}-mg-{{$x}}" name="bln-{{$i}}-mg-{{$x}}">
-                                                        </div>
-                                                    </td>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <?php } ?>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                <?php } ?>
+                </div>
+
+                <div class="card shadow border tabcontent">
+                    <div class="card-body p-2">
+                        <div class="table-responsive">
+                            <table id="table-periode" class="table align-items-center mb-4">
+                                <thead class="text-center">
+                                    <tr>
+                                        <?php for ($i = 7; $i <= 12; $i++) { ?>
+                                            <th colspan="5" style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">Bulan {{$i}}</th>
+                                        <?php } ?>
+                                    </tr>
+                                    <tr>
+                                        <?php for ($i = 7; $i <= 12; $i++) { ?>
+                                            <?php for ($x = 1; $x <= 5; $x++) { ?>
+                                                <th style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">{{$x}}</th>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    <tr>
+                                        <?php for ($i = 7; $i <= 12; $i++) { ?>
+                                            <?php for ($x = 1; $x <= 5; $x++) { ?>
+                                                <td style="{{$i%2==0 ? 'background:#e9ecef;' : ''}}">
+                                                    <div class="form-group form-check mb-0" style="margin-left:10px!important;">
+                                                        <input class="form-check-input" type="checkbox" id="bln-{{$i}}-mg-{{$x}}" name="bln-{{$i}}-mg-{{$x}}">
+                                                    </div>
+                                                </td>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="close_1" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
@@ -150,7 +203,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
     </div>
 </div>
 
-<div class="modal" id="alertModalPayment" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
+<div class="modal" id="alertModalPayment" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -193,6 +246,24 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         }
 
         setHistory(data, histori)
+    }
+
+    function clickPeriode(tipe,minggu){
+        const elx = document.querySelectorAll(".form-check-input");
+        for (var i = 0; i < elx.length; i++) {
+            elx[i].checked = false;
+        }
+
+        for (var i = 1; i <= 12; i++) {
+            var checked = true;
+            if(tipe==8){
+                if(i==2 || i==7 || i==8 || i==9){
+                    checked = false;
+                }
+            }
+            const el = document.querySelector("#bln-" + i + "-mg-" + minggu);
+            el.checked = checked;
+        }
     }
 
     async function setHistory(data, histori) {
@@ -319,6 +390,20 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
            alert("Please select a file.");
         }
     })
+
+    function duplicateRab(){
+        if (confirm("Apakah yakin menduplikasi RAB Tahunan ini ?")) {
+            $("#loadingSubmit").show();
+            $.post("{{ route('duplicate rab') }}", null,
+                function(dataz, status) {
+                    var return_data = JSON.parse(dataz);
+                    alert(return_data.message);
+                    $("#loadingSubmit").show();
+                    window.location.reload();
+                }
+            );
+        }
+    }
 
     function actionPayment(tipe,id,msg){
         if (confirm("Apakah yakin "+msg+" pembayaran ini ?")) {

@@ -15,7 +15,7 @@
 
 <small><i>Last update: {{date_format(date_create($last_update->updated_at), 'd M Y H:i:s')}}</i></small>
 <div class="card border">
-    <div class="datatablex datatable-sm" data-mdb-pagination="false">
+    <div class="datatablex table-responsive datatable-sm" data-mdb-pagination="false">
         <table class="table align-items-center mb-0">
             <thead>
                 <tr>

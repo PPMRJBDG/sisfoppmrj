@@ -134,7 +134,7 @@ if (auth()->user()->hasRole('barcode')) {
 
     <!-- HEADER -->
     @include('base.navbar', ['setting', $setting])
-
+    <section id="section-top"></section>
     <!-- CONTAINER / CONTENT -->
     <div class="container-fluid pt-4" id="content-app"></div>
 
@@ -217,7 +217,7 @@ if (auth()->user()->hasRole('barcode')) {
             </div>
           </div>
           <div class="modal-body" style="height:500px;overflow:auto;">
-            <div class="datatablex datatable-sm">
+            <div class="datatablex table-responsive datatable-sm">
               <table class="table align-items-center mb-0">
                 <thead>
                   <tr>

@@ -500,4 +500,35 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             return json_encode(array("status" => false, "message" => 'Jurnal tidak ditemukan'));
         }
     }
+
+    public function duplicate_rab(Request $request)
+    {
+        $year1 = date('Y');
+        $year2 = date('Y') + 1;
+        $year_periode = $year1 . "-" . $year2;
+
+        $get_rab = Rabs::where('periode_tahun',CommonHelpers::periode())->get();
+        foreach($get_rab as $rab){
+            Rabs::create([
+                'periode_tahun' => $year_periode,
+                'fkDivisi_id' => $rab->fkDivisi_id,
+                'keperluan' => $rab->keperluan,
+                'periode' => $rab->periode,
+                'biaya' => $rab->biaya,
+                'bulan_1' => $rab->bulan_1,
+                'bulan_2' => $rab->bulan_2,
+                'bulan_3' => $rab->bulan_3,
+                'bulan_4' => $rab->bulan_4,
+                'bulan_5' => $rab->bulan_5,
+                'bulan_6' => $rab->bulan_6,
+                'bulan_7' => $rab->bulan_7,
+                'bulan_8' => $rab->bulan_8,
+                'bulan_9' => $rab->bulan_9,
+                'bulan_10' => $rab->bulan_10,
+                'bulan_11' => $rab->bulan_11,
+                'bulan_12' => $rab->bulan_12,
+            ]);
+        }
+        return json_encode(array("status" => true, "message" => 'Berhasil menduplikasi RAB Tahunan'));
+    }
 }

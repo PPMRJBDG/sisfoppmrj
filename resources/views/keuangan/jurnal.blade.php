@@ -46,7 +46,7 @@
             <div class="tab-pane fade show active" id="nav-pengeluaran" role="tabpanel" aria-labelledby="nav-pengeluaran-tab">
                 <div class="card border" id="pengeluaran">
                     <div class="card-header p-2">
-                        <div class="datatablex datatable-sm">
+                        <div class="datatablex table-responsive datatable-sm">
                             <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
@@ -135,7 +135,7 @@
             <div class="tab-pane fade show" id="nav-penerimaan" role="tabpanel" aria-labelledby="nav-penerimaan-tab">
                 <div class="card border" id="penerimaan">
                     <div class="card-header p-2">
-                        <div class="datatablex datatable-sm">
+                        <div class="datatablex table-responsive datatable-sm">
                             <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
@@ -226,7 +226,7 @@
             <div class="tab-pane fade show" id="nav-pengambilan" role="tabpanel" aria-labelledby="nav-pengambilan-tab">
                 <div class="card border" id="pengambilan">
                     <div class="card-header p-2">
-                        <div class="datatablex datatable-sm">
+                        <div class="datatablex table-responsive datatable-sm">
                             <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
@@ -280,7 +280,7 @@
 
     <div class="card border mt-2">
         <div class="card-body p-0">
-            <div class="datatablex datatable-sm">
+            <div class="datatablex table-responsive datatable-sm">
                 <table class="table align-items-center mb-0 table-bordered text-sm text-uppercase" style="font-size:0.8rem !important">
                     <thead style="background-color:#f6f9fc;">
                         <tr>

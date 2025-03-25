@@ -470,7 +470,7 @@ if(isset(auth()->user()->santri)){
                             </center>
                         </div>
                     </div>
-                    <div class="datatablex datatable-sm" data-mdb-pagination="false">
+                    <div class="datatablex table-responsive datatable-sm" data-mdb-pagination="false">
                         <div class="card-table" id="card-table" style="display:none;">
                             <table id="tab-table" class="table align-items-center mb-0">
                                 <thead class="thead-light">

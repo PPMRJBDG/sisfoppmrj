@@ -1,77 +1,94 @@
-<style>
-    .table>:not(caption)>*>* {
-        padding: 0;
-    }
-    .table>:not(caption)>*>* {
-        border-bottom-width: 0;
-    }
-</style>
+@if ($errors->any())
+<div class="alert alert-danger text-white">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+@if (session('success'))
+<div class="alert alert-success text-white">
+    {{ session('success') }}
+</div>
+@endif
 
 <input class="form-control" type="hidden" value="" id="rab_id" />
+<div class="mb-2">
+    <div class="alert alert-success text-white mb-0" style="display:none;padding:12px!important;"></div>
+    <div class="alert alert-danger text-white mb-0" style="display:none;padding:12px!important;"></div>
+</div>
 <div class="card">
-    <div class="card-header p-2">
-        <div class="">
-            <table class="table align-items-center mb-0">
-                <tbody>
-                    <tr class="">
-                        <td>
-                            <label>Periode Tahun</label>
-                            <select data-mdb-filter="true" class="select form-control" value="" id="periode_tahun" name="periode_tahun">
-                                @foreach($periodes as $periode)
-                                <option {{ ($select_periode==$periode->periode_tahun) ? 'selected' : ''; }}>{{$periode->periode_tahun}}</option>
-                                @endforeach
-                                <?php
-                                $year1 = date('Y');
-                                $year2 = date('Y') + 1;
-                                $year_periode = $year1 . "-" . $year2;
-                                ?>
-                                <option {{ ($select_periode==$year_periode) ? 'selected' : ''; }}>{{$year_periode}}</option>
-                            </select>
-                        </td>
-                        <td>
-                            <label id="status" style="display:none;">Status</label>
-                            <div class="alert alert-success text-white mb-0" style="display:none;padding:12px!important;">
+    <div class="card-header p-0">
+        <div class="p-2">
+            <div class="col-md-6 mb-2 text-start">
+                @if(auth()->user()->hasRole('superadmin'))
+                    <a href="#" class="btn btn-outline-secondary" onclick="duplicateRab()">
+                        <i class="fas fa-clone" aria-hidden="true"></i>
+                        DUPLICATE KE PERIODE BARU
+                    </a>
+                @endif
+            </div>
 
-                            </div>
-                            <div class="alert alert-danger text-white mb-0" style="display:none;padding:12px!important;">
-
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="">
-                        <td>
-                            <label>Divisi</label>
-                            <select data-mdb-filter="true" class="select form-control" value="" id="divisi" name="divisi" required>
-                                @foreach($divisis as $divisi)
-                                <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <label>Keperluan</label>
-                            <input class="form-control" type="text" value="" id="keperluan" name="keperluan" required />
-                        </td>
-                        <td>
-                            <label>Periode</label>
-                            <select data-mdb-filter="true" class="select form-control" value="" id="periode" name="periode" required>
-                                <option value="tahunan">Tahunan</option>
-                                <option value="bulanan">Bulanan</option>
-                                <option value="mingguan">Mingguan</option>
-                                <option value="duamingguan">2 Mingguan</option>
-                            </select>
-                        </td>
-                        <td>
-                            <label>Jumlah</label>
-                            <input class="form-control btn-warning" type="submit" value="Set" id="set" name="set" onclick="setPeriode(1)" />
-                        </td>
-                        <td>
-                            <label>Biaya</label>
-                            <input class="form-control" type="number" value="" id="biaya" name="biaya" required />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="ms-auto text-end p-2">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <label>Periode Tahun</label>
+                        <select data-mdb-filter="true" class="select form-control" value="" id="periode_tahun" name="periode_tahun">
+                            @foreach($periodes as $periode)
+                            <option {{ ($select_periode==$periode->periode_tahun) ? 'selected' : ''; }}>{{$periode->periode_tahun}}</option>
+                            @endforeach
+                            <?php
+                            $year1 = date('Y');
+                            $year2 = date('Y') + 1;
+                            $year_periode = $year1 . "-" . $year2;
+                            ?>
+                            <option {{ ($select_periode==$year_periode) ? 'selected' : ''; }}>{{$year_periode}}</option>
+                        </select>
+                    </div>  
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <label>Divisi</label>
+                        <select data-mdb-filter="true" class="select form-control" value="" id="divisi" name="divisi" required>
+                            @foreach($divisis as $divisi)
+                            <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <label>Keperluan</label>
+                        <input class="form-control" type="text" value="" id="keperluan" name="keperluan" required />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <label>Periode</label>
+                        <select class="form-control" value="" id="periode" name="periode" required>
+                            <option value="tahunan">Tahunan</option>
+                            <option value="bulanan">Bulanan</option>
+                            <option value="mingguan">Mingguan</option>
+                            <option value="duamingguan">2 Mingguan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <label>Jumlah</label>
+                        <input class="form-control btn-warning" type="submit" value="Set" id="set" name="set" onclick="setPeriode(1)" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" style="margin-bottom: 5px !important;">
+                        <label>Biaya</label>
+                        <input class="form-control" type="number" value="" id="biaya" name="biaya" required />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 ms-auto text-end">
                 <a href="#" id="btn-batal" class="btn btn-danger" onclick="clearAll()" style="display:none;">
                     <i class="fas fa-trash" aria-hidden="true"></i>
                     BATAL
@@ -84,63 +101,77 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <div class="datatable datatable-sm" data-mdb-entries="200">
-            <table class="table align-items-center mb-4 text-uppercase">
+        <div class="datatablex table-responsive datatable-sm" data-mdb-entries="200">
+            <table class="table table-bordered align-items-center mb-4 text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th class="text-uppercase text-start text-secondary font-weight-bolder ps-2">Divisi</th>
-                        <th class="text-uppercase text-start text-secondary font-weight-bolder ps-2">Pengeluaran</th>
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Periode</th>
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Jumlah</th>
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Biaya</th>
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Total/Tahun</th>
-                        <!-- <th class="text-uppercase text-center text-secondary font-weight-bolder">Realisasi</th> -->
-                        <th class="text-uppercase text-center text-secondary font-weight-bolder">Action</th>
+                        <th class="text-uppercase text-start font-weight-bolder ps-2">Divisi</th>
+                        <th class="text-uppercase text-start font-weight-bolder ps-2">Pengeluaran</th>
+                        <th class="text-uppercase text-center font-weight-bolder">Periode</th>
+                        <th class="text-uppercase text-center font-weight-bolder">Jumlah</th>
+                        <th class="text-uppercase text-center font-weight-bolder">Biaya</th>
+                        <th class="text-uppercase text-center font-weight-bolder">Total</th>
+                        <!-- <th class="text-uppercase text-center font-weight-bolder">Realisasi</th> -->
+                        <th class="text-uppercase text-center font-weight-bolder">Action</th>
                     </tr>
                 </thead>
+                <?php $total_rab = 0; ?>
                 <tbody id="rab-data">
                     @if(count($rabs)>0)
-                    @foreach ($rabs as $rab)
-                    <?php
-                    $total = 0;
-                    $jumlah = 0;
-                    for ($i = 1; $i <= 12; $i++) {
-                        $bulan = json_decode($rab['bulan_' . $i]);
-                        if ($bulan != null)
-                            for ($x = 1; $x <= 5; $x++) {
-                                if ($bulan[$x - 1][1]) {
-                                    $jumlah++;
-                                    $total += $rab->biaya;
-                                }
+                        @foreach ($rabs as $rab)
+                            <?php
+                            $total = 0;
+                            $jumlah = 0;
+                            for ($i = 1; $i <= 12; $i++) {
+                                $bulan = json_decode($rab['bulan_' . $i]);
+                                if ($bulan != null)
+                                    for ($x = 1; $x <= 5; $x++) {
+                                        if ($bulan[$x - 1][1]) {
+                                            $jumlah++;
+                                            $total += $rab->biaya;
+                                        }
+                                    }
                             }
-                    }
-                    ?>
-                    <tr id="rab-{{$rab->id}}">
-                        <td>{{strtoupper($rab->divisi->divisi)}}</td>
-                        <td>{{$rab->keperluan}}</td>
-                        <td class="text-center">{{$rab->periode}}</td>
-                        <td class="text-center">
-                            <a block-id="return-false" class="btn btn-warning btn-sm mb-0" style="padding:5px 15px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
-                                ({{$jumlah}})
-                            </a>
-                        </td>
-                        <td class="new-td text-end">{{number_format($rab->biaya,0)}}</td>
-                        <td class="new-td text-end">
-                            {{number_format($total,0)}}
-                        </td>
-                        <!-- <td></td> -->
-                        <td class="text-center">
-                            <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
-                                <i class="fas fa-edit" aria-hidden="true"></i>
-                            </a>
-                            <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
-                                <i class="fas fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
+                            $total_rab = $total_rab + $total;
+                            ?>
+                            <tr id="rab-{{$rab->id}}">
+                                <td>{{strtoupper($rab->divisi->divisi)}}</td>
+                                <td>{{$rab->keperluan}}</td>
+                                <td class="text-center">{{$rab->periode}}</td>
+                                <td class="text-center">
+                                    <a block-id="return-false" class="btn btn-warning btn-sm mb-0 text-black" style="padding:5px 15px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
+                                        ({{$jumlah}})
+                                    </a>
+                                </td>
+                                <td class="new-td text-end">{{number_format($rab->biaya,0)}}</td>
+                                <td class="new-td text-end">
+                                    {{number_format($total,0)}}
+                                </td>
+                                <!-- <td></td> -->
+                                <td class="text-center">
+                                    <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </a>
+                                    <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
                     @endif
                 </tbody>
+                <tfooter>
+                    <tr>
+                        <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
+                        <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
+                        <th class="text-uppercase text-center font-weight-bolder"></th>
+                        <th class="text-uppercase text-center font-weight-bolder"></th>
+                        <th class="text-uppercase text-center font-weight-bolder"></th>
+                        <th class="text-uppercase text-center font-weight-bolder">{{number_format($total_rab,0)}}</th>
+                        <!-- <th class="text-uppercase text-center font-weight-bolder">Realisasi</th> -->
+                        <th class="text-uppercase text-center font-weight-bolder"></th>
+                    </tr>
+                </tfooter>
             </table>
         </div>
     </div>
@@ -211,13 +242,16 @@
     }
 
     function ubahRab(data) {
+        var elem = document.getElementById("section-top");
+        elem.scrollIntoView();
+
         $("#periode_tahun").focus();
         $("#btn-batal").show();
         $("#rab_id").val(data.id);
         $("#periode_tahun").val(data.periode_tahun);
         $("#divisi").val(data.fkDivisi_id);
         $("#keperluan").val(data.keperluan);
-        $("#periode").val(data.periode);
+        document.getElementById('periode').value = data.periode;
         $("#biaya").val(data.biaya);
 
         for (var i = 1; i <= 12; i++) {
@@ -270,6 +304,7 @@
             datax['bulan_' + i] = JSON.stringify(ival);
         }
 
+        $("#loadingSubmit").show();
         $.post("{{ route('store rab tahunan') }}", datax,
             function(data, status) {
                 var return_data = JSON.parse(data);
@@ -290,6 +325,7 @@
 
     function hapusRab(id) {
         if (confirm('Apakah RAB ini yakin akan dihapus ?')) {
+            $("#loadingSubmit").show();
             $.get(`{{ url("/") }}/keuangan/rab-tahunan/delete/` + id,
                 function(data, status) {
                     var return_data = JSON.parse(data);
@@ -304,6 +340,7 @@
                         $(".alert-danger").fadeIn();
                         $(".alert-danger").html(return_data.message);
                     }
+                    $("#loadingSubmit").hide();
                 }
             )
         }
