@@ -303,7 +303,7 @@
                             <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
                             <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
                             <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
-                            <td class="new-td">{{($jurnal->fkRab_id=='') ? '' : $jurnal->rab->keperluan}}</td>
+                            <td class="new-td">{{($jurnal->rab) ? $jurnal->rab->keperluan : ''}}</td>
                             <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d-m-Y")}}</td>
                             <td class="new-td">{{$jurnal->uraian}}</td>
                             <td class="new-td text-center">{{$jurnal->qty}}</td>
@@ -499,16 +499,18 @@
             var kuop = ['out', 'in'];
 
             kuop.forEach(function(dt) {
+                var ket = $("#keterangan-kuop").val();
                 if (dt == 'in') {
                     datax['fkBank_id'] = 1;
                 } else {
                     datax['fkBank_id'] = 2;
+                    ket = 'Pengambilan untuk OP';
                 }
                 datax['status'] = dt;
                 datax['fkPos_id'] = $("#pos-kuop").val();
                 datax['tanggal'] = $("#tanggal-kuop").val();
                 datax['jenis'] = x;
-                datax['keterangan'] = $("#keterangan-kuop").val();
+                datax['keterangan'] = ket;
                 datax['nominal'] = $("#nominal-kuop").val();
 
                 postInOut(datax, x)

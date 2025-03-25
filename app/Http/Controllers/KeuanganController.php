@@ -207,9 +207,9 @@ Adapun kekurangannya masih senilai: *Rp ' . number_format($nominal_kekurangan, 0
 ' . $history_payment . $text_kekurangan;
                     WaSchedules::save('[ORTU] Sodaqoh: [' . $check_nominal->santri->angkatan . '] ' . $check_nominal->santri->user->fullname . ' - ' . $check_nominal->periode, $caption, WaSchedules::getContactId($check_nominal->santri->nohp_ortu));
                     WaSchedules::save('[SANTRI] Sodaqoh: [' . $check_nominal->santri->angkatan . '] ' . $check_nominal->santri->user->fullname . ' - ' . $check_nominal->periode, $caption, WaSchedules::getContactId($check_nominal->santri->user->nohp));
-                    return json_encode(array("status" => true, "message" => 'Pembayaran berhasil dikonfirmasi dengan status "Approved'));
+                    return json_encode(array("status" => true, "message" => 'Pembayaran berhasil dikonfirmasi dengan status "Approved"'));
                 }else{
-                    return json_encode(array("status" => false, "message" => 'Pembayaran berhasil dikonfirmasi dengan status "Rejected'));
+                    return json_encode(array("status" => false, "message" => 'Pembayaran berhasil dikonfirmasi dengan status "Rejected"'));
                 }
             }
         } else {
@@ -410,6 +410,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'uraian' => $request->input('keterangan'),
                     'qty' => $request->input('qty'),
                     'nominal' => $request->input('nominal'),
+                    'created_by' => auth()->user()->fullname,
                     'tipe_pengeluaran' => $request->input('tipe_pengeluaran')
                 ]);
             } elseif ($request->input('jenis') == 'in') {
@@ -422,6 +423,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'jenis' => $request->input('jenis'),
                     'uraian' => $request->input('keterangan'),
                     'nominal' => $request->input('nominal'),
+                    'created_by' => auth()->user()->fullname,
                     'tipe_penerimaan' => $request->input('tipe_penerimaan')
                 ]);
             } elseif ($request->input('jenis') == 'kuop') {
@@ -432,29 +434,10 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'jenis' => $request->input('status'),
                     'sub_jenis' => $request->input('jenis'),
                     'uraian' => $request->input('keterangan'),
-                    'nominal' => $request->input('nominal')
+                    'nominal' => $request->input('nominal'),
+                    'created_by' => auth()->user()->fullname
                 ]);
             }
-        } else {
-            // $data = Rabs::find($request->input('rab_id'));
-            // $data->periode_tahun = $request->input('periode_tahun');
-            // $data->fkDivisi_id = $request->input('fkDivisi_id');
-            // $data->keperluan = $request->input('keperluan');
-            // $data->periode = $request->input('periode');
-            // $data->biaya = $request->input('biaya');
-            // $data->bulan_1 = $request->input('bulan_1');
-            // $data->bulan_2 = $request->input('bulan_2');
-            // $data->bulan_3 = $request->input('bulan_3');
-            // $data->bulan_4 = $request->input('bulan_4');
-            // $data->bulan_5 = $request->input('bulan_5');
-            // $data->bulan_6 = $request->input('bulan_6');
-            // $data->bulan_7 = $request->input('bulan_7');
-            // $data->bulan_8 = $request->input('bulan_8');
-            // $data->bulan_9 = $request->input('bulan_9');
-            // $data->bulan_10 = $request->input('bulan_10');
-            // $data->bulan_11 = $request->input('bulan_11');
-            // $data->bulan_12 = $request->input('bulan_12');
-            // $data->save();
         }
 
         if ($data) {
