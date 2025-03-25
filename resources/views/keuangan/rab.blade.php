@@ -13,6 +13,15 @@
 </div>
 @endif
 
+<?php
+$lock = 0;
+if(count($rabs)>0){
+    if($rabs[0]->is_lock==1){
+        $lock = 1;
+    }
+}
+?>
+
 <input class="form-control" type="hidden" value="" id="rab_id" />
 <div class="mb-2">
     <div class="alert alert-success text-white mb-0" style="display:none;padding:12px!important;"></div>
@@ -27,9 +36,14 @@
                         <i class="fas fa-clone" aria-hidden="true"></i>
                         DUPLICATE KE PERIODE BARU
                     </a>
+                    <a href="#" class="btn btn-outline-secondary" onclick="lockUnlockRab('{{$select_periode}}')">
+                        <i class="fas fa-lock" aria-hidden="true"></i>
+                        BUKA KUNCI RAB
+                    </a>
                 @endif
             </div>
 
+            
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group" style="margin-bottom: 5px !important;">
@@ -47,6 +61,7 @@
                         </select>
                     </div>  
                 </div>
+                @if(!$lock)
                 <div class="col-md-2">
                     <div class="form-group" style="margin-bottom: 5px !important;">
                         <label>Divisi</label>
@@ -86,18 +101,23 @@
                         <input class="form-control" type="number" value="" id="biaya" name="biaya" required />
                     </div>
                 </div>
+                @endif
             </div>
             
-            <div class="col-md-6 ms-auto text-end">
-                <a href="#" id="btn-batal" class="btn btn-danger" onclick="clearAll()" style="display:none;">
-                    <i class="fas fa-trash" aria-hidden="true"></i>
-                    BATAL
-                </a>
-                <a href="#" class="btn btn-primary" onclick="simpanRab()">
-                    <i class="fas fa-save" aria-hidden="true"></i>
-                    SIMPAN
-                </a>
+            @if(!$lock)
+            <div id="submit-rab">
+                <div class="col-md-6 ms-auto text-end">
+                    <a href="#" id="btn-batal" class="btn btn-danger" onclick="clearAll()" style="display:none;">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        BATAL
+                    </a>
+                    <a href="#" class="btn btn-primary" onclick="simpanRab()">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                        SIMPAN
+                    </a>
+                </div>
             </div>
+            @endif
         </div>
     </div>
     <div class="card-body p-0">
@@ -149,12 +169,14 @@
                                 </td>
                                 <!-- <td></td> -->
                                 <td class="text-center">
-                                    <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
-                                        <i class="fas fa-edit" aria-hidden="true"></i>
-                                    </a>
-                                    <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
-                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                    </a>
+                                    @if($rab->is_lock==0)
+                                        <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
+                                            <i class="fas fa-edit" aria-hidden="true"></i>
+                                        </a>
+                                        <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Hapus" onclick="hapusRab({{$rab->id}})">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -201,15 +223,17 @@
         $("#close_2").hide();
         $("#close_" + st).show();
         $('#modalPeriode').fadeIn();
-        $('#modalPeriode').css('background', 'rgba(0, 0, 0, 0.7)');
-        $('#modalPeriode').css('z-index', '10000');
-        // $('#modalPeriode').css('display', 'inline-table');
+
+        if(st==1){
+            $("#btn-check-x").show();
+        }else{
+            $("#btn-check-x").hide();
+        }
 
         for (var i = 1; i <= 12; i++) {
             for (var x = 1; x <= 5; x++) {
                 const el = document.querySelector("#bln-" + i + "-mg-" + x);
                 if (data == null) {
-                    // el.checked = data_bulan[(x - 1)][1];
                     el.disabled = false;
                 } else {
                     if (data['bulan_' + i] != null) {

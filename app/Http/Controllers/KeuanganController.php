@@ -501,6 +501,21 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
     }
 
+    public function lock_unlock(Request $request)
+    {
+        $get_rab = Rabs::where('periode_tahun',$request->input('periode_tahun'))->get();
+        foreach($get_rab as $rab){
+            $lock_unlock = Rabs::find($rab->id);
+            $lock = 1;
+            if($lock_unlock->is_lock==1){
+                $lock = 0;
+            }
+            $lock_unlock->is_lock = $lock;
+            $lock_unlock->save();
+        }
+        return json_encode(array("status" => true, "message" => 'Berhasil membuka atau mengunci RAB Tahunan'));
+    }
+
     public function duplicate_rab(Request $request)
     {
         $year1 = date('Y');

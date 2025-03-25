@@ -105,7 +105,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 <h6 class="modal-title" id="modalPeriodeLabel">Set Periode</h6>
             </div>
             <div class="modal-body p-0">
-                <div class="row p-2">
+                <div class="row p-2" id="btn-check-x">
                     <div class="col-md-6">
                         <label class="font-weight-bolder">Setiap Bulan Kalender Akademik</label>
                         <br>
@@ -403,6 +403,20 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 }
             );
         }
+    }
+
+    function lockUnlockRab(periode){
+        $("#loadingSubmit").show();
+        var datax = {};
+        datax['periode_tahun'] = periode;
+        $.post("{{ route('lock unlock rab') }}", datax,
+            function(dataz, status) {
+                var return_data = JSON.parse(dataz);
+                alert(return_data.message);
+                $("#loadingSubmit").show();
+                window.location.reload();
+            }
+        );
     }
 
     function actionPayment(tipe,id,msg){
