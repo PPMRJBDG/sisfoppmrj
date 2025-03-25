@@ -13,26 +13,20 @@
     }
 </style>
 
-<div class="card border p-2">
+<div class="card border p-2 mb-2">
     <div class="row">
         <div class="col-md-2">
-            <label class="ms-0">Periode Tahun</label>
-            <select data-mdb-filter="true" class="select form-control" value="" id="periode_tahun" name="periode_tahun">
-                @foreach($periodes as $periode)
-                <option {{ ($select_periode==$periode->periode_tahun) ? 'selected' : ''; }}>{{$periode->periode_tahun}}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label class="ms-0">Periode Bulan</label>
+            <label class="ms-0">Periode Tahun-Bulan</label>
             <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan">
-                <option value="all">Seluruh Bulan</option>
+                <option value="all">Seluruh Tahun-Bulan</option>
                 @foreach($bulans as $bulan)
-                <option {{ ($select_bulan==$bulan) ? 'selected' : ''; }}>{{$bulan}}</option>
+                <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
                 @endforeach
             </select>
         </div>
     </div>
+</div>
+<div class="card border p-2">
     <nav>
         <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
             <a data-mdb-ripple-init class="nav-link active font-weight-bolder" id="nav-pengeluaran-tab" data-bs-toggle="tab" href="#nav-pengeluaran" role="tab" aria-controls="nav-pengeluaran" aria-selected="true">
@@ -46,17 +40,17 @@
             </a>
         </div>
 
-        <input class="form-control" type="hidden" value="" id="inout_id" />
+        <input class="form-control" type="hidden" value="" id="jurnal_id" />
 
         <div class="tab-content p-0 mt-2" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-pengeluaran" role="tabpanel" aria-labelledby="nav-pengeluaran-tab">
-                <div class="card shadow border" id="pengeluaran">
+                <div class="card border" id="pengeluaran">
                     <div class="card-header p-2">
                         <div class="datatablex datatable-sm">
-                            <table class="table align-items-center mb-0 text-xs">
+                            <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
-                                        <td class="m-0 p-0 pb-2" style="width:120px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Keluar Dari</label>
                                             <select class="form-control" value="" id="fkBank_id_out" name="fkBank_id_out" required>
                                                 @foreach($banks as $bank)
@@ -64,7 +58,7 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:80px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Pos</label>
                                             <select class="form-control" value="" id="pos-out" name="pos-out" required>
                                                 @foreach($poses as $pos)
@@ -72,7 +66,7 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Divisi</label>
                                             <select class="form-control" value="" id="fkDivisi_id-out" name="fkDivisi_id-out" required onchange="reloadKategori(this,'out')">
                                                 <option value="">--pilih divisi--</option>
@@ -81,7 +75,7 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:180px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Kategori</label>
                                             <select class="form-control" value="" id="fkRab_id-out" name="fkRab_id-out" required>
                                                 <option value="">--pilih kategori--</option>
@@ -90,26 +84,26 @@
                                                     @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Tanggal</label>
                                             <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="tanggal-out" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2">
+                                        <td class="m-0 p-0 pb-2" style="width:20%;">
                                             <label>Keterangan</label>
                                             <input class="form-control" type="text" value="" id="keterangan-out" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Pengeluaran</label>
                                             <select class="form-control" value="" id="tipe_pengeluaran-out" name="tipe_pengeluaran-out" required>
                                                 <option value="Rutin">Rutin</option>
                                                 <option value="Non Rutin">Non Rutin</option>
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:80px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>QTY</label>
                                             <input class="form-control" type="number" value="1" id="qty-out" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Nominal</label>
                                             <input class="form-control" type="number" value="" id="nominal-out" required>
                                         </td>
@@ -129,7 +123,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                     BATAL
                                 </a>
-                                <a href="#" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('out')">
+                                <a href="#" id="simpan-pengeluaran" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('out')">
                                     <i class="fas fa-save" aria-hidden="true"></i>
                                     SIMPAN PENGELUARAN
                                 </a>
@@ -139,13 +133,13 @@
                 </div>
             </div>
             <div class="tab-pane fade show" id="nav-penerimaan" role="tabpanel" aria-labelledby="nav-penerimaan-tab">
-                <div class="card shadow border" id="penerimaan">
+                <div class="card border" id="penerimaan">
                     <div class="card-header p-2">
                         <div class="datatablex datatable-sm">
-                            <table class="table align-items-center mb-0 text-xs">
+                            <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
-                                        <td class="m-0 p-0 pb-2" style="width:120px;">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Masuk Ke</label>
                                             <select class="form-control" value="" id="fkBank_id_in" name="fkBank_id_in" required>
                                                 @foreach($banks as $bank)
@@ -153,7 +147,7 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:80px;">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Pos</label>
                                             <select class="form-control" value="" id="pos-in" name="pos-in" required>
                                                 @foreach($poses as $pos)
@@ -161,22 +155,22 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Tanggal</label>
                                             <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="tanggal-in" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Penerimaan</label>
                                             <select class="form-control" value="" id="tipe_penerimaan-in" name="tipe_penerimaan-in" required onchange="changeIfTahunan(this.value)">
                                                 <option value="">--pilih penerimaan--</option>
-                                                <option value="Sodaqoh Tahunan">Sodaqoh Tahunan</option>
+                                                <!-- <option value="Sodaqoh Tahunan">Sodaqoh Tahunan</option> -->
                                                 <option value="Sodaqoh Fasilitas">Sodaqoh Fasilitas</option>
                                                 <option value="Sodaqoh Ramadhan">Sodaqoh Ramadhan</option>
                                                 <option value="Sodaqoh Lainnya">Sodaqoh Lainnya</option>
                                                 <option value="Kembalian">Kembalian</option>
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;display:none;" id="td_fkDivisi_id-in">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;display:none;" id="td_fkDivisi_id-in">
                                             <label>Divisi</label>
                                             <select class="form-control" value="" id="fkDivisi_id-in" name="fkDivisi_id-in" required>
                                                 <option value="">--pilih divisi--</option>
@@ -185,7 +179,7 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;display:none;" id="td_fkSodaqoh_id-in">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;display:none;" id="td_fkSodaqoh_id-in">
                                             <label>Ortu-Mahasiswa</label>
                                             <select data-mdb-filter="true" class="select form-control" value="" id="fkSodaqoh_id" name="fkSodaqoh_id-in">
                                                 <option value="">--pilih penerimaan--</option>
@@ -196,11 +190,11 @@
                                                 @endif
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Keterangan</label>
                                             <input class="form-control" type="text" value="" id="keterangan-in" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Nominal</label>
                                             <input class="form-control" type="number" value="" id="nominal-in" required>
                                         </td>
@@ -220,7 +214,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                     BATAL
                                 </a>
-                                <a href="#" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('in')">
+                                <a href="#" id="simpan-penerimaan" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('in')">
                                     <i class="fas fa-save" aria-hidden="true"></i>
                                     SIMPAN PENERIMAAN
                                 </a>
@@ -230,13 +224,13 @@
                 </div>
             </div>
             <div class="tab-pane fade show" id="nav-pengambilan" role="tabpanel" aria-labelledby="nav-pengambilan-tab">
-                <div class="card shadow border" id="pengambilan">
+                <div class="card border" id="pengambilan">
                     <div class="card-header p-2">
                         <div class="datatablex datatable-sm">
-                            <table class="table align-items-center mb-0 text-xs">
+                            <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
-                                        <td class="m-0 p-0 pb-2" style="width:80px;">
+                                        <td class="m-0 p-0 pb-2" style="width:25%;">
                                             <label>Pos</label>
                                             <select class="form-control" value="" id="pos-kuop" name="pos-kuop" required>
                                                 @foreach($poses as $pos)
@@ -244,15 +238,15 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:25%;">
                                             <label>Tanggal</label>
                                             <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="tanggal-kuop" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:150px;">
+                                        <td class="m-0 p-0 pb-2" style="width:25%;">
                                             <label>Nominal Pengambilan</label>
                                             <input class="form-control" type="number" value="" id="nominal-kuop" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:100px;">
+                                        <td class="m-0 p-0 pb-2" style="width:25%;">
                                             <label>Keterangan</label>
                                             <input class="form-control" type="text" value="" id="keterangan-kuop" required>
                                         </td>
@@ -272,7 +266,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                     BATAL
                                 </a>
-                                <a href="#" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('kuop')">
+                                <a href="#" id="simpan-pengambilan" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('kuop')">
                                     <i class="fas fa-save" aria-hidden="true"></i>
                                     SIMPAN PENGAMBILAN
                                 </a>
@@ -284,48 +278,46 @@
         </div>
     </nav>
 
-    <div class="card shadow border mt-2">
+    <div class="card border mt-2">
         <div class="card-body p-0">
             <div class="datatablex datatable-sm">
-                <table class="table align-items-center mb-0 text-xs text-uppercase">
+                <table class="table align-items-center mb-0 table-bordered text-sm text-uppercase" style="font-size:0.8rem !important">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2">Bank</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2">Untuk</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2">Divisi</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2">Kategori</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2">Tanggal</th>
-                            <!-- <th class="text-uppercase text-secondary font-weight-bolder text-center">IN/OUT</th> -->
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2">Keterangan</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder text-center">QTY</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder text-end pe-2">Masuk</th>
-                            <th class="text-uppercase text-secondary font-weight-bolder text-end pe-2">Keluar</th>
-                            <!-- <th class="text-uppercase text-secondary font-weight-bolder">Sisa Saldo</th> -->
-                            <th class="text-uppercase text-secondary font-weight-bolder ps-2"></th>
+                            <th class="text-uppercase font-weight-bolder ps-2">Bank</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">Untuk</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">Divisi</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">Kategori</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">Tanggal</th>
+                            <th class="text-uppercase font-weight-bolder ps-2">Keterangan</th>
+                            <th class="text-uppercase font-weight-bolder text-center">QTY</th>
+                            <th class="text-uppercase font-weight-bolder text-end pe-2">Masuk</th>
+                            <th class="text-uppercase font-weight-bolder text-end pe-2">Keluar</th>
+                            <th class="text-uppercase font-weight-bolder ps-2"></th>
                         </tr>
                     </thead>
                     <tbody id="rab-data">
-                        @if(count($rabinouts)>0)
-                        @foreach ($rabinouts as $inout)
-                        <tr id="inout-{{$inout->id}}">
-                            <td class="new-td text-uppercase">{{$inout->bank->name}}</td>
-                            <td class="new-td text-uppercase">{{$inout->pos->name}}</td>
-                            <td class="new-td text-uppercase">{{($inout->fkDivisi_id=='') ? '' : strtoupper($inout->divisi->divisi)}}</td>
-                            <td class="new-td">{{($inout->fkRab_id=='') ? '' : $inout->rab->keperluan}}</td>
-                            <td class="new-td">{{date_format(date_create($inout->tanggal), "Y-m-d")}}</td>
-                            <!-- <td class="text-uppercase text-center">{{$inout->jenis}}</td> -->
-                            <td class="new-td">{{$inout->uraian}}</td>
-                            <td class="new-td text-center">{{$inout->qty}}</td>
-                            <td class="new-td text-end">{{($inout->jenis=='in') ? number_format($inout->nominal,0) : ''}}</td>
-                            <td class="new-td text-end">{{($inout->jenis=='out') ? number_format($inout->nominal,0) : ''}}</td>
-                            <!-- <td></td> -->
+                        @if(count($jurnals)>0)
+                        @foreach ($jurnals as $jurnal)
+                        <tr id="jurnal-{{$jurnal->id}}">
+                            <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
+                            <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
+                            <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
+                            <td class="new-td">{{($jurnal->fkRab_id=='') ? '' : $jurnal->rab->keperluan}}</td>
+                            <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d-m-Y")}}</td>
+                            <td class="new-td">{{$jurnal->uraian}}</td>
+                            <td class="new-td text-center">{{$jurnal->qty}}</td>
+                            <td class="new-td text-end">{{($jurnal->jenis=='in') ? number_format($jurnal->nominal,0) : ''}}</td>
+                            <td class="new-td text-end">{{($jurnal->jenis=='out') ? number_format($jurnal->nominal,0) : ''}}</td>
                             <td class="p-0 text-center">
-                                <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout({{$inout}})">
+                                <!-- <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout({{$jurnal}})">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
-                                </a>
-                                <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusInout({{$inout->id}})">
-                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                </a>
+                                </a> -->
+                                @if($jurnal->tipe_penerimaan!='Sodaqoh Tahunan')
+                                    <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;border-radius:0px;font-size: .5rem !important;" type="submit" value="Hapus" onclick="hapusInout({{$jurnal->id}})">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -338,12 +330,10 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <!-- <td></td> -->
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <!-- <td></td> -->
                             <td></td>
                         </tr>
                     </tfoot>
@@ -360,13 +350,8 @@
         window.location.replace(`{{ url("/") }}`)
     }
 
-    $('#periode_tahun').change((e) => {
-        var periode_bulan = $('#periode_bulan').val();
-        getPage(`{{ url("/") }}/keuangan/jurnal/${$(e.currentTarget).val()}/` + periode_bulan)
-    })
     $('#periode_bulan').change((e) => {
-        var periode_tahun = $('#periode_tahun').val();
-        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode_tahun + `/${$(e.currentTarget).val()}`)
+        getPage(`{{ url("/") }}/keuangan/jurnal/${$(e.currentTarget).val()}`)
     })
 
     function changeIfTahunan(data) {
@@ -397,7 +382,6 @@
 
     function clear() {
         $("#rab_id").val('');
-        $("#periode_tahun").val();
 
         $("#fkDivisi_id-out").val('');
         $("#fkRab_id-out").val('');
@@ -416,11 +400,8 @@
     }
 
     function ubahInout(data) {
-        alert();
-        $("#periode_tahun").focus();
         $("#btn-batal").show();
         $("#rab_id").val(data.id);
-        $("#periode_tahun").val(data.periode_tahun);
         $("#divisi").val(data.fkDivisi_id);
         $("#keperluan").val(data.keperluan);
         $("#periode").val(data.periode);
@@ -444,8 +425,7 @@
         $("#alert-danger-" + x).html('');
 
         var datax = {};
-        datax['inout_id'] = $("#inout_id").val();
-        datax['periode_tahun'] = $("#periode_tahun").val();
+        datax['jurnal_id'] = $("#jurnal_id").val();
 
         if (x == 'out') {
             if ($("#fkDivisi_id-out").val() == '') {
@@ -516,7 +496,7 @@
                 return false;
             }
 
-            var kuop = ['in', 'out'];
+            var kuop = ['out', 'in'];
 
             kuop.forEach(function(dt) {
                 if (dt == 'in') {
@@ -537,6 +517,9 @@
     }
 
     function postInOut(datax, x) {
+        document.getElementById("simpan-pengeluaran").disabled = true;
+        document.getElementById("simpan-penerimaan").disabled = true;
+        document.getElementById("simpan-pengambilan").disabled = true;
         $.post("{{ route('store jurnal') }}", datax,
             function(data, status) {
                 var return_data = JSON.parse(data);
@@ -545,24 +528,30 @@
                     $("#alert-success-" + x).fadeIn();
                     $("#alert-success-" + x).html(return_data.message);
                     clear();
-                    if (datax['inout_id'] == '') {
+                    if (datax['jurnal_id'] == '') {
                         $("#rab-data").html($("#rab-data").html() + return_data.content);
                     }
                 } else {
                     $("#alert-danger-" + x).fadeIn();
                     $("#alert-danger-" + x).html(return_data.message);
                 }
+
+                document.getElementById("simpan-pengeluaran").disabled = false;
+                document.getElementById("simpan-penerimaan").disabled = false;
+                document.getElementById("simpan-pengambilan").disabled = false;
             }
         )
     }
 
     function hapusInout(id) {
         if (confirm('Apakah jurnal ini yakin akan dihapus ?')) {
-            $.get(`{{ url("/") }}/keuangan/jurnal/delete/` + id,
+            var datax = {};
+            datax['id'] = id;
+            $.post("{{ route('delete jurnal') }}", datax,
                 function(data, status) {
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
-                        const element = document.getElementById("inout-" + id);
+                        const element = document.getElementById("jurnal-" + id);
                         element.remove();
                     } else {
                         alert(return_data.message);

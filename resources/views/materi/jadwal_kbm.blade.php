@@ -5,7 +5,7 @@
                 <div class="card-header p-2 ps-0">
                     <p class="mb-0">Silahkan memilih jam KBM, setiap sesi: <b>Durasinya -+ 1 Jam 30 Menit</b></p>
                 </div>
-                <div class="datatable datatable-sm">
+                <div class="datatablex datatable-sm">
                     <table class="table align-items-center mb-2">
                         <thead>
                             <tr class="text-center">

@@ -12,7 +12,7 @@ use App\Models\Settings;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Helpers\WaSchedules;
 use App\Helpers\CommonHelpers;
-use App\Models\RabInouts;
+use App\Models\Jurnals;
 use App\Models\Banks;
 use App\Models\Poses;
 use App\Models\Santri;
@@ -162,6 +162,20 @@ Bukti Transfer: '.$setting->host_url.'/storage/bukti_transfer/'.$created->bukti_
             $check->status = $request->input('tipe');
             if($check->save()){
                 if($request->input('tipe')=="approved"){
+                    // start jurnal
+                    $jurnal = Jurnals::create([
+                        'fkBank_id' => 2,
+                        'fkPos_id' => 1,
+                        'periode_tahun' => CommonHelpers::periode(),
+                        'fkSodaqoh_id' => $check->sodaqoh->id,
+                        'tanggal' => $check->pay_date,
+                        'jenis' => 'in',
+                        'uraian' => 'Sodaqoh Tahunan '.$check->sodaqoh->periode.': '.$check->santri->user->fullname,
+                        'nominal' => $check->nominal,
+                        'tipe_penerimaan' => 'Sodaqoh Tahunan'
+                    ]);
+                    // end jurnal
+
                     $update_payment = SodaqohHistoris::where('fkSodaqoh_id',$check->fkSodaqoh_id)->where('fkSantri_id',$check->fkSantri_id)->where('status','approved')->get();
                     if($update_payment){
                         $total = 0;
@@ -330,51 +344,65 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
     }
 
-    public function jurnal($select_periode = null, $select_bulan = null)
+    public function jurnal($select_bulan = null)
     {
-        $bulans = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-
-        if ($select_periode == null) {
-            $select_periode = CommonHelpers::periode();
+        $check = SodaqohHistoris::get();
+        if ($check) {
+            foreach($check as $c){
+                if($c->status=="approved"){
+                    $jurnal = Jurnals::create([
+                        'fkBank_id' => 2,
+                        'fkPos_id' => 1,
+                        'fkSodaqoh_id' => $c->sodaqoh->id,
+                        'tanggal' => $c->pay_date,
+                        'jenis' => 'in',
+                        'uraian' => 'Sodaqoh Tahunan '.$c->sodaqoh->periode.': '.$c->santri->user->fullname,
+                        'nominal' => $c->nominal,
+                        'tipe_penerimaan' => 'Sodaqoh Tahunan'
+                    ]);
+                }
+            }
         }
+
+        $bulans = DB::table('jurnals')
+                ->select(DB::raw('DATE_FORMAT(tanggal, "%Y-%m") as ym'))
+                ->groupBy('ym')
+                ->orderBy('ym', 'DESC')
+                ->get();
 
         if ($select_bulan == 'all') {
-            $rabinout = RabInouts::where('periode_tahun', $select_periode)->get();
+            $jurnals = Jurnals::orderBy('tanggal','ASC')->get();
         } else {
             if ($select_bulan == null) {
-                $select_bulan = date('m');
+                $select_bulan = date('Y-m');
             }
-            $rabinout = RabInouts::where('periode_tahun', $select_periode)->where('tanggal', 'like', date('Y') . '-' . $select_bulan . '%')->get();
+            $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')->orderBy('tanggal','ASC')->get();
         }
-        $rabs = Rabs::where('periode_tahun', $select_periode)->get();
-        $sodaqohs = Sodaqoh::where('periode', $select_periode)->get();
+        $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->get();
+        $sodaqohs = Sodaqoh::where('periode', CommonHelpers::periode())->get();
         $divisis = Divisies::where('active', 1)->get();
         $banks = Banks::get();
         $poses = Poses::get();
-        $periodes = Periode::get();
 
         return view('keuangan.jurnal', [
             'rabs' => $rabs,
-            'rabinouts' => $rabinout,
+            'jurnals' => $jurnals,
             'sodaqohs' => $sodaqohs,
             'divisis' => $divisis,
             'banks' => $banks,
             'poses' => $poses,
-            'periodes' => $periodes,
             'bulans' => $bulans,
-            'select_periode' => $select_periode,
             'select_bulan' => $select_bulan,
         ]);
     }
 
     public function jurnal_store(Request $request)
     {
-        if ($request->input('inout_id') == '') {
+        if ($request->input('jurnal_id') == '') {
             if ($request->input('jenis') == 'out') {
-                $data = RabInouts::create([
+                $data = Jurnals::create([
                     'fkBank_id' => $request->input('fkBank_id'),
                     'fkPos_id' => $request->input('fkPos_id'),
-                    'periode_tahun' => $request->input('periode_tahun'),
                     'fkDivisi_id' => $request->input('fkDivisi_id'),
                     'fkRab_id' => $request->input('fkRab_id'),
                     'tanggal' => $request->input('tanggal'),
@@ -385,10 +413,9 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'tipe_pengeluaran' => $request->input('tipe_pengeluaran')
                 ]);
             } elseif ($request->input('jenis') == 'in') {
-                $data = RabInouts::create([
+                $data = Jurnals::create([
                     'fkBank_id' => $request->input('fkBank_id'),
                     'fkPos_id' => $request->input('fkPos_id'),
-                    'periode_tahun' => $request->input('periode_tahun'),
                     'fkDivisi_id' => $request->input('fkDivisi_id'),
                     'fkSodaqoh_id' => $request->input('fkSodaqoh_id'),
                     'tanggal' => $request->input('tanggal'),
@@ -398,12 +425,12 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'tipe_penerimaan' => $request->input('tipe_penerimaan')
                 ]);
             } elseif ($request->input('jenis') == 'kuop') {
-                $data = RabInouts::create([
+                $data = Jurnals::create([
                     'fkBank_id' => $request->input('fkBank_id'),
                     'fkPos_id' => $request->input('fkPos_id'),
-                    'periode_tahun' => $request->input('periode_tahun'),
                     'tanggal' => $request->input('tanggal'),
                     'jenis' => $request->input('status'),
+                    'sub_jenis' => $request->input('jenis'),
                     'uraian' => $request->input('keterangan'),
                     'nominal' => $request->input('nominal')
                 ]);
@@ -440,31 +467,29 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 '<td class="new-td text-uppercase">' . $data->pos->name . '</td>' .
                 '<td class="new-td text-uppercase">' . $divisi . '</td>' .
                 '<td class="new-td">' . $rab . '</td>' .
-                '<td class="new-td">' . date_format(date_create($data->tanggal), "Y-m-d") . '</td>' .
-                '<!-- <td class="text-uppercase text-center">' . $data->jenis . '</td> -->' .
+                '<td class="new-td">' . date_format(date_create($data->tanggal), "d-m-Y") . '</td>' .
                 '<td class="new-td">' . $data->uraian . '</td>' .
                 '<td class="new-td text-center">' . $data->qty . '</td>' .
                 '<td class="new-td text-end">' . $masuk . '</td>' .
                 '<td class="new-td text-end">' . $keluar . '</td>' .
-                '<!-- <td></td> -->' .
                 '<td class="p-0 text-center">' .
-                '<a class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout(' . $data . ')">' .
-                '<i class="fas fa-edit" aria-hidden="true"></i>' .
-                '</a>' .
-                '<a class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusInout(' . $data->id . ')">' .
+                '<a class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;border-radius:0px;font-size: .5rem !important;" type="submit" value="Hapus" onclick="hapusInout(' . $data->id . ')">' .
                 '<i class="fas fa-trash" aria-hidden="true"></i>' .
                 '</a>' .
                 '</td>' .
                 '</tr>';
+                // '<a class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout(' . $data . ')">' .
+                // '<i class="fas fa-edit" aria-hidden="true"></i>' .
+                // '</a>' .
             return json_encode(array("status" => true, "message" => 'Berhasil menyimpan jurnal', "content" => $content));
         } else {
             return json_encode(array("status" => false, "message" => 'Gagal menyimpan jurnal'));
         }
     }
 
-    public function jurnal_delete($id)
+    public function jurnal_delete(Request $request)
     {
-        $data = RabInouts::find($id);
+        $data = Jurnals::find($request->input('id'));
         if ($data) {
             if ($data->delete()) {
                 return json_encode(array("status" => true, "message" => 'Berhasil menghapus jurnal'));

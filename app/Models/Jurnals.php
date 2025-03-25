@@ -9,7 +9,7 @@ use App\Models\Rabs;
 use App\Models\Banks;
 use App\Models\Poses;
 
-class RabInouts extends Model
+class Jurnals extends Model
 {
     protected $fillable = [
         'fkBank_id',
@@ -18,6 +18,7 @@ class RabInouts extends Model
         'fkRab_id',
         'tanggal',
         'jenis',
+        'sub_jenis',
         'uraian',
         'qty',
         'nominal',
