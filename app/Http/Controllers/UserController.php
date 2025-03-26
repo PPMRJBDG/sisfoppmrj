@@ -176,10 +176,6 @@ class UserController extends Controller
 
     public function list_others()
     {
-        // $users = DB::table('users')
-        //     ->join('model_has_roles', 'model_id', '=', 'users.id')
-        //     ->whereIn('model_has_roles.role_id', [1, 6, 11])
-        //     ->get();
         $users = User::whereHas('model_has_roles', function ($query) {
             $query->whereIn('role_id', [1, 6, 11]);
         })->get();
@@ -198,23 +194,13 @@ class UserController extends Controller
         return view('user.list_pelanggaran', ['users' => $users]);
     }
 
-    /**
-     * Show the create form of lorong.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function create()
     {
         $lorongs = Lorong::all();
 
         return view('user.create', ['lorongs' => $lorongs]);
     }
-
-    /**
-     * Insert user.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    
     public function store(Request $request)
     {
         if (!auth()->user()->can('create users')) return redirect()->route('presence report');
@@ -395,7 +381,7 @@ class UserController extends Controller
         $user->birthdate = $request->input('birthdate');
         $user->gender = $request->input('gender');
 
-        if ($request->input('exit_at'))
+        if ($request->input('exit_at')){
             $user->password = Hash::make('Bismillah@354');
 
             // DELETE DATA DI FINGERPRINT
@@ -419,6 +405,7 @@ class UserController extends Controller
                 curl_close($ch);
             }
             // END DELETE
+        }
 
         if ($request->input('password'))
             $user->password = Hash::make($request->input('password'));

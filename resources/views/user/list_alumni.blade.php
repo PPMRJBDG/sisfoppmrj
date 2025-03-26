@@ -45,12 +45,8 @@
         <tbody>
           @foreach($users as $user)
           <tr>
-            <td class="text-sm">
-              <div class="d-flex px-2 py-1">
-                <div class="d-flex flex-column justify-content-center">
-                  <h6 class="mb-0 text-sm">{{ $user->fullname }}</h6>
-                </div>
-              </div>
+            <td class="text-sm font-weight-bolder">
+              {{ $user->fullname }}
             </td>
             <td class="text-sm">
               {{ $user->nohp }}

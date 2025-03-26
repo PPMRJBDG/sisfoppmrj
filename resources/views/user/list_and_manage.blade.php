@@ -77,28 +77,24 @@
               </a>
             </td>
             <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')" style="cursor:pointer;">
-              <div class="d-flex px-2 py-1">
-                <div class="d-flex flex-column justify-content-center">
-                  <?php
-                  $is_kl = false;
-                  foreach ($user->getRoleNames() as $role) {
-                    if ($role == 'koor lorong') {
-                      $is_kl = true;
-                    }
+              <?php
+                $is_kl = false;
+                foreach ($user->getRoleNames() as $role) {
+                  if ($role == 'koor lorong') {
+                    $is_kl = true;
                   }
-                  $unkl = '';
-                  if ($user->santri->fkLorong_id == '' && !$is_kl) {
-                    $unkl = 'text-warning';
+                }
+                $unkl = '';
+                if ($user->santri->fkLorong_id == '' && !$is_kl) {
+                  $unkl = 'text-warning';
+                }
+                foreach ($lorong as $l) {
+                  if ($l->fkSantri_leaderId == $user->santri->id) {
+                    $unkl = 'text-primary';
                   }
-                  foreach ($lorong as $l) {
-                    if ($l->fkSantri_leaderId == $user->santri->id) {
-                      $unkl = 'text-primary';
-                    }
-                  }
-                  ?>
-                  <h6 class="mb-0 text-sm {{ $unkl }}">{{ $user->fullname }}</h6>
-                </div>
-              </div>
+                }
+                ?>
+                <span class="mb-0 font-weight-bolder text-sm {{ $unkl }}">{{ $user->fullname }}</span>
             </td>
             <td class="text-sm">
               {{ $user->nohp }}

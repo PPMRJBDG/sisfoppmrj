@@ -27,22 +27,18 @@
             <table id="table" class="table align-items-center mb-0">
                 <thead>
                     <tr>
-                        <th class="text-uppercase text-xxs font-weight-bolder">Nama</th>
-                        <th class="text-uppercase text-xxs font-weight-bolder ps-2">Email</th>
-                        <th class="text-uppercase text-xxs font-weight-bolder ps-2">No HP</th>
-                        <th class="text-uppercase text-xxs font-weight-bolder ps-2">Role</th>
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder">Action</th>
+                        <th class="text-uppercase text-sm font-weight-bolder">Nama</th>
+                        <th class="text-uppercase text-sm font-weight-bolder ps-2">Email</th>
+                        <th class="text-uppercase text-sm font-weight-bolder ps-2">No HP</th>
+                        <th class="text-uppercase text-sm font-weight-bolder ps-2">Role</th>
+                        <th class="text-center text-uppercase text-sm font-weight-bolder">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($users as $user)
                     <tr>
-                        <td class="text-sm">
-                            <div class="d-flex px-2 py-1">
-                                <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">{{ $user->fullname }}</h6>
-                                </div>
-                            </div>
+                        <td class="text-sm font-weight-bolder">
+                            {{ $user->fullname }}
                         </td>
                         <td class="text-sm">
                             {{ $user->email }}
@@ -52,17 +48,13 @@
                         </td>
                         <td class="text-sm">
                             @foreach ($user->getRoleNames() as $role)
-                            <span class="badge badge-success">{{ $role }}</span>
+                                <span class="badge badge-success">{{ $role }}</span>
                             @endforeach
                         </td>
                         <td class="align-middle text-center text-sm">
-                            @can('update users')
-                            @foreach ($user->getRoleNames() as $role)
-                            @if($role!='superadmin')
-                            <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Ubah</a>
+                            @if(auth()->user()->hasRole('superadmin'))
+                                <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Ubah</a>
                             @endif
-                            @endforeach
-                            @endcan
                         </td>
                     </tr>
                     @endforeach

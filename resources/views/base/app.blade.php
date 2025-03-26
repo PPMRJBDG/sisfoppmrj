@@ -273,6 +273,7 @@ if (auth()->user()->hasRole('barcode')) {
           <div class="spinner-grow text-warning" role="status"></div>
           <div class="spinner-grow text-danger" role="status"></div>
         </center>
+        <div id="loadingSubmitInfo"></div>
       </div>
     </div>
   </main>

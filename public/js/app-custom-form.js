@@ -25,23 +25,31 @@ $(document.body).ready(function () {
             }
         }
 
-        $.ajax(option).done(function (data) {
-            if (data == 'reload') {
-                window.location.reload();
-            } else {
-                $("#loadingSubmit").hide();
-                window.scrollTo(0, 0);
+        try{
+            $.ajax(option).done(function (data) {
+                try{
+                    if (data == 'reload') {
+                        window.location.reload();
+                    } else {
+                        $("#loadingSubmit").hide();
+                        window.scrollTo(0, 0);
 
-                var include_start = '<div data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">';
-                var include_end = '</div>' +
-                    '<script type="text/javascript" src="./../ui-kit/js/mdb-v2.min.js"></script>' +
-                    '<script type="text/javascript" src="./../js/app-custom-form.js"></script>';
-                $('#content-app').html(include_start + data + include_end);
+                        var include_start = '<div data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left">';
+                        var include_end = '</div>' +
+                            '<script type="text/javascript" src="./../ui-kit/js/mdb-v2.min.js"></script>' +
+                            '<script type="text/javascript" src="./../js/app-custom-form.js"></script>';
+                        $('#content-app').html(include_start + data + include_end);
 
-                setTimeout(function () {
-                    $(".alert").fadeOut();
-                }, 8000);
-            }
-        });
+                        setTimeout(function () {
+                            $(".alert").fadeOut();
+                        }, 8000);
+                    }
+                }catch(err){
+                    console.log(err.message)
+                }
+            });
+        }catch(err){
+            console.log(err)
+        }
     });
 });
