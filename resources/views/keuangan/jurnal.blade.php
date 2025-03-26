@@ -14,15 +14,9 @@
 </style>
 
 <div class="card border p-2 mb-2">
-    <div class="row">
-        <div class="col-md-2">
-            <label class="ms-0">Periode Tahun-Bulan</label>
-            <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan">
-                <option value="all">Seluruh Tahun-Bulan</option>
-                @foreach($bulans as $bulan)
-                <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
-                @endforeach
-            </select>
+    <div class="row align-items-center justify-content-center text-center">
+        <div class="col-md-12">
+            <h6 class="m-0">Jurnal Operasional {{ App\Helpers\CommonHelpers::periode() }}</h6>
         </div>
     </div>
 </div>
@@ -71,7 +65,13 @@
                                             <select class="form-control" value="" id="fkDivisi_id-out" name="fkDivisi_id-out" required onchange="reloadKategori(this,'out')">
                                                 <option value="">--pilih divisi--</option>
                                                 @foreach($divisis as $divisi)
-                                                <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                                                    @if($select_divisi!="all")
+                                                        @if($select_divisi==$divisi->id)
+                                                            <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </td>
@@ -123,7 +123,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                     BATAL
                                 </a>
-                                <a href="#" id="simpan-pengeluaran" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('out')">
+                                <a href="#" id="simpan-pengeluaran" class="btn btn-primary btn-sm mb-0" onclick="simpanJurnal('out')">
                                     <i class="fas fa-save" aria-hidden="true"></i>
                                     SIMPAN PENGELUARAN
                                 </a>
@@ -214,7 +214,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                     BATAL
                                 </a>
-                                <a href="#" id="simpan-penerimaan" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('in')">
+                                <a href="#" id="simpan-penerimaan" class="btn btn-primary btn-sm mb-0" onclick="simpanJurnal('in')">
                                     <i class="fas fa-save" aria-hidden="true"></i>
                                     SIMPAN PENERIMAAN
                                 </a>
@@ -248,7 +248,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:25%;">
                                             <label>Keterangan</label>
-                                            <input class="form-control" type="text" value="" id="keterangan-kuop" required>
+                                            <input class="form-control" type="text" value="Operasional Masuk" id="keterangan-kuop" required>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -266,7 +266,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                     BATAL
                                 </a>
-                                <a href="#" id="simpan-pengambilan" class="btn btn-primary btn-sm mb-0" onclick="simpanInOut('kuop')">
+                                <a href="#" id="simpan-pengambilan" class="btn btn-primary btn-sm mb-0" onclick="simpanJurnal('kuop')">
                                     <i class="fas fa-save" aria-hidden="true"></i>
                                     SIMPAN PENGAMBILAN
                                 </a>
@@ -281,10 +281,52 @@
     <div class="card border mt-2">
         <div class="card-body p-0">
             <div class="datatablex table-responsive datatable-sm">
-                <table class="table align-items-center mb-0 table-bordered text-sm text-uppercase" style="font-size:0.8rem !important">
+                <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase" style="font-size:0.8rem !important">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
-                            <th class="text-uppercase font-weight-bolder ps-2">Bank</th>
+                            <th class="text-uppercase font-weight-bolder ps-2"></th>
+                            <th class="text-uppercase font-weight-bolder ps-2"></th>
+                            <th class="text-uppercase font-weight-bolder ps-2">
+                                <select data-mdb-filter="true" class="select form-control" id="filter-fkDivisi_id" name="filter-fkDivisi_id">
+                                    <option value="all">--filter divisi--</option>
+                                    @foreach($divisis as $divisi)
+                                    <option {{ ($select_divisi==$divisi->id) ? 'selected' : '' }} value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                                    @endforeach
+                                </select>
+                            </th>
+                            <th class="text-uppercase font-weight-bolder ps-2">
+                                <select data-mdb-filter="true" class="select form-control" id="filter-fkRab_id" name="filter-fkRab_id">
+                                    <option value="all">--filter kategori--</option>
+                                        @foreach($rabs as $rab)
+                                        <option {{ ($select_rab==$rab->id) ? 'selected' : '' }} value="{{$rab->id}}">{{strtoupper($rab->keperluan)}}</option>
+                                        @endforeach
+                                </select>
+                            </th>
+                            <th class="text-uppercase font-weight-bolder ps-2">
+                            <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan">
+                                <option value="all">--seluruh tahun-bulan--</option>
+                                @foreach($bulans as $bulan)
+                                <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
+                                @endforeach
+                            </select>
+                            </th>
+                            <th class="text-uppercase font-weight-bolder ps-2">
+                                <select data-mdb-filter="true" class="select form-control" value="" id="filter-tipe_penerimaan" name="filter-tipe_penerimaan">
+                                    <option {{ ($select_penerimaan=='all') ? 'selected' : ''; }} value="all">--filter penerimaan--</option>
+                                    <option {{ ($select_penerimaan=='Sodaqoh Tahunan') ? 'selected' : ''; }} value="Sodaqoh Tahunan">Sodaqoh Tahunan</option>
+                                    <option {{ ($select_penerimaan=='Sodaqoh Fasilitas') ? 'selected' : ''; }} value="Sodaqoh Fasilitas">Sodaqoh Fasilitas</option>
+                                    <option {{ ($select_penerimaan=='Sodaqoh Ramadhan') ? 'selected' : ''; }} value="Sodaqoh Ramadhan">Sodaqoh Ramadhan</option>
+                                    <option {{ ($select_penerimaan=='Sodaqoh Lainnya') ? 'selected' : ''; }} value="Sodaqoh Lainnya">Sodaqoh Lainnya</option>
+                                    <option {{ ($select_penerimaan=='Kembalian') ? 'selected' : ''; }} value="Kembalian">Kembalian</option>
+                                </select>
+                            </th>
+                            <th class="text-uppercase font-weight-bolder text-center"></th>
+                            <th class="text-uppercase font-weight-bolder text-end pe-2"></th>
+                            <th class="text-uppercase font-weight-bolder text-end pe-2"></th>
+                            <th class="text-uppercase font-weight-bolder ps-2"></th>
+                        </tr>
+                        <tr>
+                            <th class="text-uppercase font-weight-bolder ps-2">Pos</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Untuk</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Divisi</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Kategori</th>
@@ -297,30 +339,43 @@
                         </tr>
                     </thead>
                     <tbody id="rab-data">
+                        <?php
+                            $total_masuk = 0;
+                            $total_keluar = 0;
+                        ?>
                         @if(count($jurnals)>0)
-                        @foreach ($jurnals as $jurnal)
-                        <tr id="jurnal-{{$jurnal->id}}">
-                            <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
-                            <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
-                            <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
-                            <td class="new-td">{{($jurnal->rab) ? $jurnal->rab->keperluan : ''}}</td>
-                            <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d-m-Y")}}</td>
-                            <td class="new-td">{{$jurnal->uraian}}</td>
-                            <td class="new-td text-center">{{$jurnal->qty}}</td>
-                            <td class="new-td text-end">{{($jurnal->jenis=='in') ? number_format($jurnal->nominal,0) : ''}}</td>
-                            <td class="new-td text-end">{{($jurnal->jenis=='out') ? number_format($jurnal->nominal,0) : ''}}</td>
-                            <td class="p-0 text-center">
-                                <!-- <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout({{$jurnal}})">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                </a> -->
-                                @if($jurnal->tipe_penerimaan!='Sodaqoh Tahunan')
-                                    <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;border-radius:0px;font-size: .5rem !important;" type="submit" value="Hapus" onclick="hapusInout({{$jurnal->id}})">
-                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                    </a>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
+                            @foreach ($jurnals as $jurnal)
+                            <tr id="jurnal-{{$jurnal->id}}">
+                                <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
+                                <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
+                                <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
+                                <td class="new-td">{{($jurnal->rab) ? $jurnal->rab->keperluan : ''}}</td>
+                                <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d-m-Y")}}</td>
+                                <td class="new-td">{{$jurnal->uraian}}</td>
+                                <td class="new-td text-center">{{$jurnal->qty}}</td>
+                                <td class="new-td text-end">{{($jurnal->jenis=='in') ? number_format($jurnal->nominal,0) : ''}}</td>
+                                <td class="new-td text-end">{{($jurnal->jenis=='out') ? number_format($jurnal->nominal,0) : ''}}</td>
+                                <td class="p-0 text-center">
+                                    @if($jurnal->tipe_penerimaan!='Sodaqoh Tahunan')
+                                        @if($jurnal->sub_jenis=="")
+                                        <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubahJurnal({{$jurnal}})">
+                                            <i class="fas fa-edit" aria-hidden="true"></i>
+                                        </a>
+                                        @endif
+                                        <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal({{$jurnal->id}})">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    @endif
+                                </td>
+                                <?php
+                                if($jurnal->jenis=='in'){
+                                    $total_masuk = $total_masuk + $jurnal->nominal;
+                                }elseif($jurnal->jenis=='out'){
+                                    $total_keluar = $total_keluar + $jurnal->nominal;
+                                }
+                                ?>
+                            </tr>
+                            @endforeach
                         @endif
                     </tbody>
                     <tfoot style="background-color:#f6f9fc;">
@@ -332,8 +387,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
+                            <td class="font-weight-bolder text-end">{{number_format($total_masuk,0)}}</td>
+                            <td class="font-weight-bolder text-end">{{number_format($total_keluar,0)}}</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -351,7 +406,28 @@
     }
 
     $('#periode_bulan').change((e) => {
-        getPage(`{{ url("/") }}/keuangan/jurnal/${$(e.currentTarget).val()}`)
+        var divisi = $('#filter-fkDivisi_id').val();
+        var rab = $('#filter-fkRab_id').val();
+        getPage(`{{ url("/") }}/keuangan/jurnal/${$(e.currentTarget).val()}/` + divisi + `/` + rab);
+    })
+
+    $('#filter-fkDivisi_id').change((e) => {
+        var periode = $('#periode_bulan').val();
+        var rab = $('#filter-fkRab_id').val();
+        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/${$(e.currentTarget).val()}/` + rab);
+    })
+
+    $('#filter-fkRab_id').change((e) => {
+        var periode = $('#periode_bulan').val();
+        var divisi = $('#filter-fkDivisi_id').val();
+        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/` + divisi + `/${$(e.currentTarget).val()}`);
+    })
+
+    $('#filter-tipe_penerimaan').change((e) => {
+        var periode = $('#periode_bulan').val();
+        var divisi = '-';
+        var rab = '-';
+        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/` + divisi + `/` + rab + `/${$(e.currentTarget).val()}`);
     })
 
     function changeIfTahunan(data) {
@@ -366,7 +442,7 @@
 
     function reloadKategori(data, x) {
         var rabs = <?php echo $rabs; ?>;
-        var option = '';
+        var option = '<option value="">--pilih kategori--</option>';
         rabs.forEach(function(rab) {
             if (data.value == rab.fkDivisi_id) {
                 option += '<option value="' + rab.id + '">' + rab.keperluan + '</option>';
@@ -399,26 +475,39 @@
         $("#nominal-kuop").val('');
     }
 
-    function ubahInout(data) {
-        $("#btn-batal").show();
-        $("#rab_id").val(data.id);
-        $("#divisi").val(data.fkDivisi_id);
-        $("#keperluan").val(data.keperluan);
-        $("#periode").val(data.periode);
-        $("#biaya").val(data.biaya);
+    function ubahJurnal(data) {
+        var elem = document.getElementById("section-top");
+        elem.scrollIntoView();
+        
+        if(data.jenis=="in"){
+            $("#nav-penerimaan-tab").tab("show");
 
-        for (var i = 1; i <= 12; i++) {
-            for (var x = 1; x <= 5; x++) {
-                const el = document.querySelector("#bln-" + i + "-mg-" + x);
-                if (data['bulan_' + i] != null) {
-                    const data_bulan = JSON.parse(data['bulan_' + i]);
-                    el.checked = data_bulan[(x - 1)][1];
-                }
-            }
+            $("#btn-batal-in").show();
+            $("#fkBank_id_in").val(data.fkBank_id);
+            $("#pos-in").val(data.fkPos_id);
+            $("#tanggal-in").val(data.tanggal);
+            $("#tipe_penerimaan-in").val(data.tipe_penerimaan);
+            $("#fkDivisi_id-in").val(data.fkDivisi_id);
+            $("#fkSodaqoh_id-in").val(data.fkSodaqoh_id);
+            $("#keterangan-in").val(data.uraian);
+            $("#nominal-in").val(data.nominal);
+        }else if(data.jenis=="out"){
+            $("#nav-pengeluaran-tab").tab("show");
+
+            $("#btn-batal-out").show();
+            $("#fkBank_id_out").val(data.fkBank_id);
+            $("#pos-out").val(data.fkPos_id);
+            $("#fkDivisi_id-out").val(data.fkDivisi_id);
+            $("#fkRab_id-out").val(data.fkRab_id);
+            $("#tanggal-out").val(data.tanggal);
+            $("#tipe_pengeluaran-out").val(data.tipe_pengeluaran);
+            $("#keterangan-out").val(data.uraian);
+            $("#nominal-out").val(data.nominal);
+            $("#qty-out").val(data.qty);
         }
     }
 
-    function simpanInOut(x) {
+    function simpanJurnal(x) {
         $("#alert-success-" + x).fadeOut();
         $("#alert-danger-" + x).fadeOut();
         $("#alert-success-" + x).html('');
@@ -460,7 +549,7 @@
             datax['qty'] = $("#qty-out").val();
             datax['nominal'] = $("#nominal-out").val();
 
-            postInOut(datax, x)
+            postJurnal(datax, x)
         } else if (x == 'in') {
             if ($("#keterangan-in").val() == '') {
                 $("#alert-danger-" + x).fadeIn();
@@ -483,7 +572,7 @@
             datax['keterangan'] = $("#keterangan-in").val();
             datax['nominal'] = $("#nominal-in").val();
 
-            postInOut(datax, x)
+            postJurnal(datax, x)
         } else if (x == 'kuop') {
             if ($("#keterangan-kuop").val() == '') {
                 $("#alert-danger-" + x).fadeIn();
@@ -513,12 +602,12 @@
                 datax['keterangan'] = ket;
                 datax['nominal'] = $("#nominal-kuop").val();
 
-                postInOut(datax, x)
+                postJurnal(datax, x)
             })
         }
     }
 
-    function postInOut(datax, x) {
+    function postJurnal(datax, x) {
         document.getElementById("simpan-pengeluaran").disabled = true;
         document.getElementById("simpan-penerimaan").disabled = true;
         document.getElementById("simpan-pengambilan").disabled = true;
@@ -545,7 +634,7 @@
         )
     }
 
-    function hapusInout(id) {
+    function hapusJurnal(id) {
         if (confirm('Apakah jurnal ini yakin akan dihapus ?')) {
             var datax = {};
             datax['id'] = id;

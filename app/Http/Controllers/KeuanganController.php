@@ -267,7 +267,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         if ($select_periode == null) {
             $select_periode = CommonHelpers::periode();
         }
-        $rabs = Rabs::where('periode_tahun', $select_periode)->get();
+        $rabs = Rabs::where('periode_tahun', $select_periode)->orderBy('fkDivisi_id','ASC')->get();
         $divisis = Divisies::where('active', 1)->get();
         $periodes = Periode::get();
 
@@ -344,7 +344,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
     }
 
-    public function jurnal($select_bulan = null)
+    public function jurnal($select_bulan = null, $select_divisi = 'all', $select_rab = 'all', $select_penerimaan = 'all')
     {
         // $check = SodaqohHistoris::get();
         // if ($check) {
@@ -370,15 +370,55 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 ->orderBy('ym', 'DESC')
                 ->get();
 
-        if ($select_bulan == 'all') {
-            $jurnals = Jurnals::orderBy('tanggal','ASC')->get();
-        } else {
-            if ($select_bulan == null) {
-                $select_bulan = date('Y-m');
+        if ($select_bulan == null) {
+            $select_bulan = date('Y-m');
+        }
+
+        if($select_penerimaan!='all'){
+            if($select_bulan=='all'){
+                $jurnals = Jurnals::where('tipe_penerimaan',$select_penerimaan)
+                            ->orderBy('tanggal','ASC')->get();
+            }else{
+                $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')
+                            ->where('tipe_penerimaan',$select_penerimaan)
+                            ->orderBy('tanggal','ASC')->get();
             }
+            $select_divisi = 'all';
+            $select_rab = 'all';
+        } else if ($select_bulan == 'all' && $select_divisi == 'all' && $select_rab == 'all') { // 0 0 0
+            $jurnals = Jurnals::orderBy('tanggal','ASC')->get();
+        } else if ($select_bulan != 'all' && $select_divisi != 'all' && $select_rab != 'all') { // 1 1 1
+            $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')
+                        ->where('fkDivisi_id',$select_divisi)
+                        ->where('fkRab_id',$select_rab)
+                        ->orderBy('tanggal','ASC')->get();
+        } else if($select_bulan!='all' && $select_divisi != 'all' && $select_rab == 'all'){ // 1 1 0
+            $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')
+                        ->where('fkDivisi_id',$select_divisi)
+                        ->orderBy('tanggal','ASC')->get();
+        } else if($select_bulan=='all' && $select_divisi != 'all' && $select_rab != 'all'){ // 0 1 1
+            $jurnals = Jurnals::where('fkDivisi_id',$select_divisi)
+                        ->where('fkRab_id',$select_rab)
+                        ->orderBy('tanggal','ASC')->get();
+        } else if($select_bulan!='all' && $select_divisi == 'all' && $select_rab != 'all'){ // 1 0 1
+            $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')
+                        ->where('fkRab_id',$select_rab)
+                        ->orderBy('tanggal','ASC')->get();
+        } else if($select_bulan=='all' && $select_divisi == 'all' && $select_rab != 'all'){ // 0 0 1
+            $jurnals = Jurnals::where('fkRab_id',$select_rab)
+                        ->orderBy('tanggal','ASC')->get();
+        } else if($select_bulan=='all' && $select_divisi != 'all' && $select_rab == 'all'){ // 0 1 0
+            $jurnals = Jurnals::where('fkDivisi_id',$select_divisi)
+                        ->orderBy('tanggal','ASC')->get();
+        } else { // 1 0 0
             $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')->orderBy('tanggal','ASC')->get();
         }
-        $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->get();
+
+        if($select_divisi!="all"){
+            $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('fkDivisi_id',$select_divisi)->get();
+        }else{
+            $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->get();
+        }
         $sodaqohs = Sodaqoh::where('periode', CommonHelpers::periode())->get();
         $divisis = Divisies::where('active', 1)->get();
         $banks = Banks::get();
@@ -393,6 +433,9 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             'poses' => $poses,
             'bulans' => $bulans,
             'select_bulan' => $select_bulan,
+            'select_divisi' => $select_divisi,
+            'select_rab' => $select_rab,
+            'select_penerimaan' => $select_penerimaan,
         ]);
     }
 
@@ -456,14 +499,14 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 '<td class="new-td text-end">' . $masuk . '</td>' .
                 '<td class="new-td text-end">' . $keluar . '</td>' .
                 '<td class="p-0 text-center">' .
-                '<a class="btn btn-danger btn-sm mb-0" style="padding:5px 15px;border-radius:0px;font-size: .5rem !important;" type="submit" value="Hapus" onclick="hapusInout(' . $data->id . ')">' .
+                '<a class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubahJurnal(' . $data . ')">' .
+                '<i class="fas fa-edit" aria-hidden="true"></i>' .
+                '</a>' .
+                '<a class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal(' . $data->id . ')">' .
                 '<i class="fas fa-trash" aria-hidden="true"></i>' .
                 '</a>' .
                 '</td>' .
                 '</tr>';
-                // '<a class="btn btn-success btn-sm mb-0" style="padding:5px 15px;border-radius:0px;" type="submit" value="Edit" onclick="ubahInout(' . $data . ')">' .
-                // '<i class="fas fa-edit" aria-hidden="true"></i>' .
-                // '</a>' .
             return json_encode(array("status" => true, "message" => 'Berhasil menyimpan jurnal', "content" => $content));
         } else {
             return json_encode(array("status" => false, "message" => 'Gagal menyimpan jurnal'));

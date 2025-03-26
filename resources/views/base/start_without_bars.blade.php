@@ -29,7 +29,7 @@ $setting = App\Models\Settings::first();
 
 <style>
   body, .table, .form-control, .select-option {
-    font-size: .9rem !important;
+    font-size: .8rem !important;
   }
 
   .datatable tbody {

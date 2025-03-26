@@ -33,7 +33,7 @@ if (auth()->user()->hasRole('barcode')) {
 
 <style>
   body, .table, .form-control, .select-option {
-    font-size: .9rem !important;
+    font-size: .8rem !important;
   }
   .datatable tbody {
     font-weight: 400;
@@ -42,7 +42,7 @@ if (auth()->user()->hasRole('barcode')) {
     font-size: .5rem !important;
   }
   .btn {
-    font-size: .8rem !important;
+    font-size: .7rem !important;
   }
 
   .form-group {
