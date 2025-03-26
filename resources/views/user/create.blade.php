@@ -87,18 +87,20 @@
       </div>
       <div class="row ms-4">
         <div class="row">
-          <!-- <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Superadmin</label>
-              <input class="form-check-input" type="checkbox" name="role-superadmin">
+          @if(auth()->user()->hasRole('superadmin'))
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Superadmin</label>
+                <input class="form-check-input" type="checkbox" name="role-superadmin">
+              </div>
             </div>
-          </div> -->
-          <!-- <div class="col-md-4">
-            <div class="form-group form-check">
-              <label class="custom-control-label" for="customCheck1">Dewan Guru</label>
-              <input class="form-check-input" type="checkbox" name="role-dewan-guru">
+            <div class="col-md-4">
+              <div class="form-group form-check">
+                <label class="custom-control-label" for="customCheck1">Dewan Guru</label>
+                <input class="form-check-input" type="checkbox" name="role-dewan-guru">
+              </div>
             </div>
-          </div> -->
+          @endif
           <!-- <div class="col-md-4">
             <div class="form-group form-check">
               <label class="custom-control-label" for="customCheck1">Pengabsen</label>

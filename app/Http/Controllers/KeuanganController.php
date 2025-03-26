@@ -375,7 +375,10 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
 
         if($select_penerimaan!='all'){
-            if($select_bulan=='all'){
+            if($select_bulan!='all'){
+                $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')
+                            ->orderBy('tanggal','ASC')->get();
+            }elseif($select_bulan=='all'){
                 $jurnals = Jurnals::where('tipe_penerimaan',$select_penerimaan)
                             ->orderBy('tanggal','ASC')->get();
             }else{
@@ -481,11 +484,38 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'created_by' => auth()->user()->fullname
                 ]);
             }
+        }else{
+            $data = Jurnals::find($request->input('jurnal_id'));
+            if ($request->input('jenis') == 'out') {
+                $data->fkBank_id = $request->input('fkBank_id');
+                $data->fkPos_id = $request->input('fkPos_id');
+                $data->fkDivisi_id = $request->input('fkDivisi_id');
+                $data->fkRab_id = $request->input('fkRab_id');
+                $data->tanggal = $request->input('tanggal');
+                $data->jenis = $request->input('jenis');
+                $data->uraian = $request->input('keterangan');
+                $data->qty = $request->input('qty');
+                $data->nominal = $request->input('nominal');
+                $data->created_by = auth()->user()->fullname;
+                $data->tipe_pengeluaran = $request->input('tipe_pengeluaran');
+            } elseif ($request->input('jenis') == 'in') {
+                $data->fkBank_id = $request->input('fkBank_id');
+                $data->fkPos_id = $request->input('fkPos_id');
+                $data->fkDivisi_id = $request->input('fkDivisi_id');
+                $data->fkSodaqoh_id = $request->input('fkSodaqoh_id');
+                $data->tanggal = $request->input('tanggal');
+                $data->jenis = $request->input('jenis');
+                $data->uraian = $request->input('keterangan');
+                $data->nominal = $request->input('nominal');
+                $data->created_by = auth()->user()->fullname;
+                $data->tipe_penerimaan = $request->input('tipe_penerimaan');
+            }
+            $data->save();
         }
 
         if ($data) {
-            $divisi = ($data->fkDivisi_id == '') ? '' : $data->divisi->divisi;
-            $rab = ($data->fkRab_id == '') ? '' : $data->rab->keperluan;
+            $divisi = (!$data->divisi) ? '' : $data->divisi->divisi;
+            $rab = (!$data->rab) ? '' : $data->rab->keperluan;
             $masuk = ($data->jenis == 'in') ? number_format($data->nominal, 0) : '';
             $keluar = ($data->jenis == 'out') ? number_format($data->nominal, 0) : '';
             $content = '<tr id="inout-' . $data->id . '" style="background: #f3d4cd;">' .

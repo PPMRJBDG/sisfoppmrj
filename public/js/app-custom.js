@@ -12,6 +12,12 @@ $('#closeb').click(function () {
     $('#contentReport').html('<tr><td colspan="3"><span class="text-center">Loading...</span></td></tr>');
 });
 
+function toNumber(val){
+    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(
+        val,
+      )
+}
+
 function matchArray(list_tab, value) {
     for (var i = 0; i < list_tab.length; i++) {
         if (list_tab[i] == value) {

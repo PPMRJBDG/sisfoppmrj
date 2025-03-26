@@ -77,7 +77,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Kategori</label>
-                                            <select class="form-control" value="" id="fkRab_id-out" name="fkRab_id-out" required>
+                                            <select class="form-control" value="" id="fkRab_id-out" name="fkRab_id-out" required onchange="reloadRab(this)">
                                                 <option value="">--pilih kategori--</option>
                                                     @foreach($rabs as $rab)
                                                     <option value="{{$rab->id}}">{{strtoupper($rab->keperluan)}}</option>
@@ -112,6 +112,9 @@
                             </table>
                             <div class="ms-auto text-end p-0 mt-2">
                                 <div class="m-0 p-0" style="border:none;">
+                                    <div id="info-rab-out" class="text-sm alert-success text-white mb-0 mb-2" style="display:none;padding:8px!important;border-radius:0;">
+
+                                    </div>
                                     <div id="alert-success-out" class="text-sm alert alert-success text-white mb-0 mb-2" style="display:none;padding:8px!important;border-radius:0;">
 
                                     </div>
@@ -425,8 +428,8 @@
 
     $('#filter-tipe_penerimaan').change((e) => {
         var periode = $('#periode_bulan').val();
-        var divisi = '-';
-        var rab = '-';
+        var divisi = 'all';
+        var rab = 'all';
         getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/` + divisi + `/` + rab + `/${$(e.currentTarget).val()}`);
     })
 
@@ -441,6 +444,8 @@
     }
 
     function reloadKategori(data, x) {
+        $("#info-rab-out").hide();
+        $("#info-rab-out").html("");
         var rabs = <?php echo $rabs; ?>;
         var option = '<option value="">--pilih kategori--</option>';
         rabs.forEach(function(rab) {
@@ -449,6 +454,16 @@
             }
         })
         $("#fkRab_id-" + x).html(option)
+    }
+
+    function reloadRab(id) {
+        var rabs = <?php echo $rabs; ?>;
+        rabs.forEach(function(rab) {
+            if (id.value == rab.id) {
+                $("#info-rab-out").show();
+                $("#info-rab-out").html("<b>Periode "+rab.periode+" dengan estimasi biaya "+toNumber(rab.biaya)+"</b>");
+            }
+        })
     }
 
     function clearAll(x) {
@@ -479,6 +494,7 @@
         var elem = document.getElementById("section-top");
         elem.scrollIntoView();
         
+        $("#jurnal_id").val(data.id);
         if(data.jenis=="in"){
             $("#nav-penerimaan-tab").tab("show");
 
