@@ -37,8 +37,13 @@ if(count($rabs)>0){
                         DUPLICATE KE PERIODE BARU
                     </a>
                     <a href="#" class="btn btn-outline-secondary" onclick="lockUnlockRab('{{$select_periode}}')">
-                        <i class="fas fa-lock" aria-hidden="true"></i>
-                        BUKA KUNCI RAB
+                        @if($lock)
+                            <i class="fas fa-unlock" aria-hidden="true"></i>
+                            UNLOCK RAB
+                        @else
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                            LOCK RAB
+                        @endif
                     </a>
                 @endif
             </div>
