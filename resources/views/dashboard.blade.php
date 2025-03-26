@@ -294,7 +294,7 @@ if(isset(auth()->user()->santri)){
                 </a>
                 @endif
                 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
-                <a data-mdb-ripple-init class="nav-link active font-weight-bolder" id="nav-dashboard-tab" data-bs-toggle="tab" href="#nav-dashboard" role="tab" aria-controls="nav-dashboard" aria-selected="true">
+                <a data-mdb-ripple-init class="nav-link {{(auth()->user()->hasRole('superadmin')) ? 'active' : ''}} font-weight-bolder" id="nav-dashboard-tab" data-bs-toggle="tab" href="#nav-dashboard" role="tab" aria-controls="nav-dashboard" aria-selected="true">
                     Dashboard
                 </a>
                 <a data-mdb-ripple-init class="nav-link font-weight-bolder" id="nav-table-tab" onclick="openTab('{{$presence_group}}')" data-bs-toggle="tab" href="#nav-table" role="tab" aria-controls="nav-table" aria-selected="false">
@@ -376,7 +376,7 @@ if(isset(auth()->user()->santri)){
                     </div>
                 @endif
                 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
-                <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
+                <div class="tab-pane fade show {{(auth()->user()->hasRole('superadmin')) ? 'active' : ''}}" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
                     <div class="datatable datatable-sm border" data-mdb-pagination="false" data-mdb-fixed-header="true">
                         <table id="table-hadir" class="table align-items-center mb-0">
                             <thead>
