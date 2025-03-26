@@ -422,7 +422,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }else{
             $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->get();
         }
-        $sodaqohs = Sodaqoh::where('periode', CommonHelpers::periode())->get();
+        $sodaqohs = DB::table('v_user_santri')->orderBy('fullname','ASC')->get();
         $divisis = Divisies::where('active', 1)->get();
         $banks = Banks::get();
         $poses = Poses::get();

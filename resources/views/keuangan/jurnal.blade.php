@@ -188,7 +188,7 @@
                                                 <option value="">--pilih penerimaan--</option>
                                                 @if(count($sodaqohs)>0)
                                                 @foreach($sodaqohs as $sodaqoh)
-                                                <option value="{{$sodaqoh->id}}">{{$sodaqoh->santri->nama_ortu}} - {{$sodaqoh->santri->user->fullname}}</option>
+                                                <option value="{{$sodaqoh->santri_id}}">{{$sodaqoh->nama_ortu}} - {{$sodaqoh->fullname}}</option>
                                                 @endforeach
                                                 @endif
                                             </select>
