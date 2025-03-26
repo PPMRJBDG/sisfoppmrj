@@ -503,6 +503,9 @@
             $("#pos-in").val(data.fkPos_id);
             $("#tanggal-in").val(data.tanggal);
             $("#tipe_penerimaan-in").val(data.tipe_penerimaan);
+            if(data.fkDivisi_id!=""){
+                $("#td_fkDivisi_id-in").show();
+            }
             $("#fkDivisi_id-in").val(data.fkDivisi_id);
             $("#fkSodaqoh_id-in").val(data.fkSodaqoh_id);
             $("#keterangan-in").val(data.uraian);
