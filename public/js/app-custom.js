@@ -13,9 +13,13 @@ $('#closeb').click(function () {
 });
 
 function toNumber(val){
-    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(
-        val,
-      )
+    const format = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+    return format.format(val);
 }
 
 function matchArray(list_tab, value) {
@@ -114,6 +118,11 @@ function showCacahJiwa() {
     $('#cacahJiwaModal').fadeIn();
 }
 
+function dateFormat(date){
+    let tanggalSekarang = new Date(date);
+    return new Intl.DateTimeFormat('id-ID', {    year: 'numeric',    month: '2-digit',    day: '2-digit'}).format(tanggalSekarang);
+}
+
 function openTab(data_presence_group) {
         var angkatan = $('#select_angkatan').val();
         var tb = $('#select_tb').val();
@@ -132,8 +141,7 @@ function openTab(data_presence_group) {
 
                 // TABLE
                 Object.keys(datax).forEach(function (index) {
-                    let tanggalSekarang = new Date(index);
-                    let formatIndonesia = new Intl.DateTimeFormat('id-ID', {    year: 'numeric',    month: '2-digit',    day: '2-digit'}).format(tanggalSekarang);
+                    let formatIndonesia = dateFormat(index);
                     
                     data_body = data_body + '<tr class="text-sm">' +
                         '<td class="text-center">' + no + '</td>' +
@@ -608,8 +616,6 @@ function actionSavePermit(action) {
 
 function getMateri(santri_id, nama) {
     $('#exampleModalMateri').fadeIn();
-    $('#exampleModalMateri').css('background', 'rgba(0, 0, 0, 0.7)');
-    $('#exampleModalMateri').css('z-index', '10000');
     $('#exampleModalLabelMateri span#nm').text(nama);
     $.post(base_url + `/materi/monitoring/materi_santri`, {
         santri_id: santri_id

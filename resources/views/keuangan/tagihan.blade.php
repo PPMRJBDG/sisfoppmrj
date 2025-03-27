@@ -17,7 +17,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 </div>
 @endif
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
+@if(auth()->user()->hasRole('superadmin') || (auth()->user()->hasRole('ku') && !isset(auth()->user()->santri)))
     <h6>Butuh Persetujuan</h6>
     <div class="card border py-2">
         <div class="datatable datatable-sm align-items-center justify-content-center" data-mdb-entries="20">

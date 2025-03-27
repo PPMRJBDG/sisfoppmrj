@@ -120,6 +120,7 @@
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-keuangan">
         @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
+        @if(!isset(auth()->user()->santri))
         <li>
           <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
             <span class="sidenav-link-text ms-1">Tagihan</span>
@@ -130,6 +131,7 @@
             <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
           </a>
         </li>
+        @endif
         <li>
           <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
             <span class="sidenav-link-text ms-1">Jurnal</span>

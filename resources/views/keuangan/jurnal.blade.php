@@ -184,7 +184,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:12%;display:none;" id="td_fkSodaqoh_id-in">
                                             <label>Ortu-Mahasiswa</label>
-                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkSodaqoh_id" name="fkSodaqoh_id-in">
+                                            <select data-mdb-filter="true" class="select form-control" value="" id="fkSodaqoh_id-in" name="fkSodaqoh_id-in">
                                                 <option value="">--pilih penerimaan--</option>
                                                 @if(count($sodaqohs)>0)
                                                 @foreach($sodaqohs as $sodaqoh)
@@ -287,10 +287,17 @@
                 <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase" style="font-size:0.8rem !important">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
-                            <th class="text-uppercase font-weight-bolder ps-2"></th>
+                            <th class="text-uppercase font-weight-bolder ps-2">
+                                <select data-mdb-filter="true" class="select form-control" value="" id="filter-fkBank_id" name="filter-fkBank_id" onchange="filterOnchange()">
+                                    <option value="all">--filter bank--</option>
+                                    @foreach($banks as $bank)
+                                    <option {{ ($select_bank==$bank->id) ? 'selected' : '' }} value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
+                                    @endforeach
+                                </select>
+                            </th>
                             <th class="text-uppercase font-weight-bolder ps-2"></th>
                             <th class="text-uppercase font-weight-bolder ps-2">
-                                <select data-mdb-filter="true" class="select form-control" id="filter-fkDivisi_id" name="filter-fkDivisi_id">
+                                <select data-mdb-filter="true" class="select form-control" id="filter-fkDivisi_id" name="filter-fkDivisi_id" onchange="filterOnchange()">
                                     <option value="all">--filter divisi--</option>
                                     @foreach($divisis as $divisi)
                                     <option {{ ($select_divisi==$divisi->id) ? 'selected' : '' }} value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
@@ -298,7 +305,7 @@
                                 </select>
                             </th>
                             <th class="text-uppercase font-weight-bolder ps-2">
-                                <select data-mdb-filter="true" class="select form-control" id="filter-fkRab_id" name="filter-fkRab_id">
+                                <select data-mdb-filter="true" class="select form-control" id="filter-fkRab_id" name="filter-fkRab_id" onchange="filterOnchange()">
                                     <option value="all">--filter kategori--</option>
                                         @foreach($rabs as $rab)
                                         <option {{ ($select_rab==$rab->id) ? 'selected' : '' }} value="{{$rab->id}}">{{strtoupper($rab->keperluan)}}</option>
@@ -306,7 +313,7 @@
                                 </select>
                             </th>
                             <th class="text-uppercase font-weight-bolder ps-2">
-                            <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan">
+                            <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan" onchange="filterOnchange()">
                                 <option value="all">--seluruh tahun-bulan--</option>
                                 @foreach($bulans as $bulan)
                                 <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
@@ -314,7 +321,7 @@
                             </select>
                             </th>
                             <th class="text-uppercase font-weight-bolder ps-2">
-                                <select data-mdb-filter="true" class="select form-control" value="" id="filter-tipe_penerimaan" name="filter-tipe_penerimaan">
+                                <select data-mdb-filter="true" class="select form-control" value="" id="filter-tipe_penerimaan" name="filter-tipe_penerimaan" onchange="filterOnchange(true)">
                                     <option {{ ($select_penerimaan=='all') ? 'selected' : ''; }} value="all">--filter penerimaan--</option>
                                     <option {{ ($select_penerimaan=='Sodaqoh Tahunan') ? 'selected' : ''; }} value="Sodaqoh Tahunan">Sodaqoh Tahunan</option>
                                     <option {{ ($select_penerimaan=='Sodaqoh Fasilitas') ? 'selected' : ''; }} value="Sodaqoh Fasilitas">Sodaqoh Fasilitas</option>
@@ -323,14 +330,13 @@
                                     <option {{ ($select_penerimaan=='Kembalian') ? 'selected' : ''; }} value="Kembalian">Kembalian</option>
                                 </select>
                             </th>
-                            <th class="text-uppercase font-weight-bolder text-center"></th>
-                            <th class="text-uppercase font-weight-bolder text-end pe-2"></th>
-                            <th class="text-uppercase font-weight-bolder text-end pe-2"></th>
-                            <th class="text-uppercase font-weight-bolder ps-2"></th>
+                            <th colspan="5" class="text-uppercase font-weight-bolder text-center">
+                                <small>Saldo Awal</small> RP {{number_format($saldo,0, ',', '.')}}
+                            </th>
                         </tr>
                         <tr>
+                            <th class="text-uppercase font-weight-bolder ps-2">Bank</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Pos</th>
-                            <th class="text-uppercase font-weight-bolder ps-2">Untuk</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Divisi</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Kategori</th>
                             <th class="text-uppercase font-weight-bolder ps-2">Tanggal</th>
@@ -338,6 +344,7 @@
                             <th class="text-uppercase font-weight-bolder text-center">QTY</th>
                             <th class="text-uppercase font-weight-bolder text-end pe-2">Masuk</th>
                             <th class="text-uppercase font-weight-bolder text-end pe-2">Keluar</th>
+                            <th class="text-uppercase font-weight-bolder text-end pe-2">Saldo</th>
                             <th class="text-uppercase font-weight-bolder ps-2"></th>
                         </tr>
                     </thead>
@@ -352,12 +359,22 @@
                                 <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
                                 <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
                                 <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
-                                <td class="new-td">{{($jurnal->rab) ? $jurnal->rab->keperluan : ''}}</td>
-                                <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d-m-Y")}}</td>
-                                <td class="new-td">{{$jurnal->uraian}}</td>
+                                <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
+                                <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
+                                <td class="new-td">{{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}</td>
                                 <td class="new-td text-center">{{$jurnal->qty}}</td>
-                                <td class="new-td text-end">{{($jurnal->jenis=='in') ? number_format($jurnal->nominal,0) : ''}}</td>
-                                <td class="new-td text-end">{{($jurnal->jenis=='out') ? number_format($jurnal->nominal,0) : ''}}</td>
+                                <td class="new-td text-end" id="nominal-in" val-in="{{($jurnal->jenis=='in') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='in') ? 'RP '.number_format($jurnal->nominal,0, ',', '.') : ''}}</td>
+                                <td class="new-td text-end" id="nominal-out" val-out="{{($jurnal->jenis=='out') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='out') ? 'RP '.number_format($jurnal->nominal,0, ',', '.') : ''}}</td>
+                                <td class="new-td text-end">
+                                    <?php 
+                                        if($jurnal->jenis=="in"){
+                                            $saldo = $saldo + $jurnal->nominal;
+                                        }else if($jurnal->jenis=="out"){
+                                            $saldo = $saldo - $jurnal->nominal;
+                                        }
+                                        echo number_format($saldo,0, ',', '.');
+                                    ?>
+                                </td>
                                 <td class="p-0 text-center">
                                     @if($jurnal->tipe_penerimaan!='Sodaqoh Tahunan')
                                         @if($jurnal->sub_jenis=="")
@@ -365,7 +382,7 @@
                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                         </a>
                                         @endif
-                                        <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal({{$jurnal->id}})">
+                                        <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal({{$jurnal}})">
                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                         </a>
                                     @endif
@@ -390,8 +407,9 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="font-weight-bolder text-end">{{number_format($total_masuk,0)}}</td>
-                            <td class="font-weight-bolder text-end">{{number_format($total_keluar,0)}}</td>
+                            <td id="total_masuk" class="font-weight-bolder text-end">RP {{number_format($total_masuk,0, ',', '.')}}</td>
+                            <td id="total_keluar" class="font-weight-bolder text-end">RP {{number_format($total_keluar,0, ',', '.')}}</td>
+                            <td class="font-weight-bolder text-end">RP {{number_format($saldo,0, ',', '.')}}</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -408,30 +426,19 @@
         window.location.replace(`{{ url("/") }}`)
     }
 
-    $('#periode_bulan').change((e) => {
-        var divisi = $('#filter-fkDivisi_id').val();
-        var rab = $('#filter-fkRab_id').val();
-        getPage(`{{ url("/") }}/keuangan/jurnal/${$(e.currentTarget).val()}/` + divisi + `/` + rab);
-    })
-
-    $('#filter-fkDivisi_id').change((e) => {
-        var periode = $('#periode_bulan').val();
-        var rab = $('#filter-fkRab_id').val();
-        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/${$(e.currentTarget).val()}/` + rab);
-    })
-
-    $('#filter-fkRab_id').change((e) => {
+    function filterOnchange(tipe=false){
+        var bank = $('#filter-fkBank_id').val();
         var periode = $('#periode_bulan').val();
         var divisi = $('#filter-fkDivisi_id').val();
-        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/` + divisi + `/${$(e.currentTarget).val()}`);
-    })
+        var rab = $('#filter-fkRab_id').val();
+        var penerimaan = $('#filter-tipe_penerimaan').val();
 
-    $('#filter-tipe_penerimaan').change((e) => {
-        var periode = $('#periode_bulan').val();
-        var divisi = 'all';
-        var rab = 'all';
-        getPage(`{{ url("/") }}/keuangan/jurnal/` + periode + `/` + divisi + `/` + rab + `/${$(e.currentTarget).val()}`);
-    })
+        if(tipe){
+            var divisi = 'all';
+            var rab = 'all';
+        }
+        getPage(`{{ url("/") }}/keuangan/jurnal/` + bank + `/` + divisi + `/` + rab + `/` + periode +`/` + penerimaan);
+    }
 
     function changeIfTahunan(data) {
         if (data == 'Kembalian') {
@@ -503,11 +510,16 @@
             $("#pos-in").val(data.fkPos_id);
             $("#tanggal-in").val(data.tanggal);
             $("#tipe_penerimaan-in").val(data.tipe_penerimaan);
-            if(data.fkDivisi_id!=""){
+            if(data.fkDivisi_id!="" && data.tipe_penerimaan=="Kembalian"){
                 $("#td_fkDivisi_id-in").show();
             }
-            $("#fkDivisi_id-in").val(data.fkDivisi_id);
+            if(data.tipe_penerimaan!="" && data.tipe_penerimaan!="Kembalian"){
+                $("#td_fkSodaqoh_id-in").show();
+            }
+            
             $("#fkSodaqoh_id-in").val(data.fkSodaqoh_id);
+
+            $("#fkDivisi_id-in").val(data.fkDivisi_id);
             $("#keterangan-in").val(data.uraian);
             $("#nominal-in").val(data.nominal);
         }else if(data.jenis=="out"){
@@ -627,9 +639,9 @@
     }
 
     function postJurnal(datax, x) {
-        document.getElementById("simpan-pengeluaran").disabled = true;
-        document.getElementById("simpan-penerimaan").disabled = true;
-        document.getElementById("simpan-pengambilan").disabled = true;
+        $("#loadingSubmit").show();
+        $("#info-rab-out").html("");
+        $("#info-rab-out").hide();
         $.post("{{ route('store jurnal') }}", datax,
             function(data, status) {
                 var return_data = JSON.parse(data);
@@ -639,35 +651,62 @@
                     $("#alert-success-" + x).html(return_data.message);
                     clear();
                     if (datax['jurnal_id'] == '') {
-                        $("#rab-data").html($("#rab-data").html() + return_data.content);
+                        var content = '<a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubahJurnal('+return_data.data+')">' +
+                            '<i class="fas fa-edit" aria-hidden="true"></i>' +
+                            '</a>' +
+                            '<a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal('+return_data.data+')">' +
+                            '<i class="fas fa-trash" aria-hidden="true"></i>' +
+                            '</a>' +
+                            '</td>' +
+                            '</tr>';
+
+                        $("#rab-data").html($("#rab-data").html() + return_data.content + content);
                     }
                 } else {
                     $("#alert-danger-" + x).fadeIn();
                     $("#alert-danger-" + x).html(return_data.message);
                 }
 
-                document.getElementById("simpan-pengeluaran").disabled = false;
-                document.getElementById("simpan-penerimaan").disabled = false;
-                document.getElementById("simpan-pengambilan").disabled = false;
+                $("#loadingSubmit").hide();
+                reCalculate();
             }
         )
     }
 
-    function hapusJurnal(id) {
+    function hapusJurnal(value) {
         if (confirm('Apakah jurnal ini yakin akan dihapus ?')) {
             var datax = {};
-            datax['id'] = id;
+            datax['id'] = value.id;
             $.post("{{ route('delete jurnal') }}", datax,
                 function(data, status) {
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
-                        const element = document.getElementById("jurnal-" + id);
+                        const element = document.getElementById("jurnal-" + value.id);
                         element.remove();
+                        reCalculate();
                     } else {
                         alert(return_data.message);
                     }
                 }
             )
         }
+    }
+
+    function reCalculate(){
+        const nom_in = document.querySelectorAll("#nominal-in");
+        var total_masuk = 0;
+        for (let i = 0; i < nom_in.length; i++) {
+            var x = nom_in[i].getAttribute("val-in")
+            total_masuk = total_masuk + Number(x)
+        }
+
+        const nom_out = document.querySelectorAll("#nominal-out");
+        var total_keluar = 0;
+        for (let i = 0; i < nom_out.length; i++) {
+            var y = nom_out[i].getAttribute("val-out")
+            total_keluar = total_keluar + Number(y)
+        }
+        $("#total_masuk").html(toNumber(total_masuk));
+        $("#total_keluar").html(toNumber(total_keluar));
     }
 </script>

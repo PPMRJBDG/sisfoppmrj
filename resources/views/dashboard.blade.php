@@ -247,7 +247,7 @@ if(isset(auth()->user()->santri)){
 </div>
 @endif
 
-@if(auth()->user()->hasRole('ku'))
+@if(auth()->user()->hasRole('ku') && !isset(auth()->user()->santri))
 <div class="card border p-2">
     <h6 class="mt-1">Selamat datang, {{auth()->user()->fullname}}</h6>
 </div>
