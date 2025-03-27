@@ -101,7 +101,7 @@ function getPage(url) {
         error: function () {
             $("#loading").hide();
             $("#al-danger").show();
-            $("#al-danger").html('Sedang terjadi kesalahan');
+            $("#al-danger").html('Sedang terjadi kesalahan<br><a href="/home" class="btn btn-sm btn-info">Back to Home</a>');
         }
     });
 }

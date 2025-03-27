@@ -362,15 +362,15 @@
                                 <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
                                 <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
                                 <td class="new-td">{{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}</td>
-                                <td class="new-td text-center">{{$jurnal->qty}}</td>
-                                <td class="new-td text-end" id="nominal-in" val-in="{{($jurnal->jenis=='in') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='in') ? 'RP '.number_format($jurnal->nominal,0, ',', '.') : ''}}</td>
-                                <td class="new-td text-end" id="nominal-out" val-out="{{($jurnal->jenis=='out') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='out') ? 'RP '.number_format($jurnal->nominal,0, ',', '.') : ''}}</td>
+                                <td class="new-td text-start">{{($jurnal->qty=="") ? 1 : $jurnal->qty}} * {{number_format($jurnal->nominal,0, ',', '.')}}</td>
+                                <td class="new-td text-end" id="nominal-in" val-in="{{($jurnal->jenis=='in') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='in') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
+                                <td class="new-td text-end" id="nominal-out" val-out="{{($jurnal->jenis=='out') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='out') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
                                 <td class="new-td text-end">
                                     <?php 
                                         if($jurnal->jenis=="in"){
-                                            $saldo = $saldo + $jurnal->nominal;
+                                            $saldo = $saldo + ($jurnal->qty*$jurnal->nominal);
                                         }else if($jurnal->jenis=="out"){
-                                            $saldo = $saldo - $jurnal->nominal;
+                                            $saldo = $saldo - ($jurnal->qty*$jurnal->nominal);
                                         }
                                         echo number_format($saldo,0, ',', '.');
                                     ?>
@@ -389,9 +389,9 @@
                                 </td>
                                 <?php
                                 if($jurnal->jenis=='in'){
-                                    $total_masuk = $total_masuk + $jurnal->nominal;
+                                    $total_masuk = $total_masuk + ($jurnal->qty*$jurnal->nominal);
                                 }elseif($jurnal->jenis=='out'){
-                                    $total_keluar = $total_keluar + $jurnal->nominal;
+                                    $total_keluar = $total_keluar + ($jurnal->qty*$jurnal->nominal);
                                 }
                                 ?>
                             </tr>
