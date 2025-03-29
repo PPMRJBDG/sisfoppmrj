@@ -179,16 +179,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $total = 0; $total_realisasi = 0; ?>
                     @foreach($detail_manag_buildings as $mb)
                         <tr>
                             <td>{{$mb->uraian}}</td>
                             <td class="text-center">{{$mb->qty}}</td>
                             <td class="text-center">{{$mb->satuan}}</td>
                             <td class="text-end">{{number_format($mb->biaya,0, ',', '.')}}</td>
+                            <?php $total = $total + ($mb->qty*$mb->biaya); ?>
                             <td class="text-end">{{number_format(($mb->qty*$mb->biaya),0, ',', '.')}}</td>
                             <td class="text-center">{{$mb->qty_realisasi}}</td>
                             <td class="text-center">{{$mb->satuan_realisasi}}</td>
                             <td class="text-end">{{number_format($mb->biaya_realisasi,0, ',', '.')}}</td>
+                            <?php $total_realisasi = $total_realisasi + ($mb->qty_realisasi*$mb->biaya_realisasi); ?>
                             <td class="text-end">{{number_format(($mb->qty_realisasi*$mb->biaya_realisasi),0, ',', '.')}}</td>
                             <td class="text-end">
                                 <?php
@@ -210,6 +213,19 @@
                     @endforeach
                 </tbody>
                 <tfooter style="background-color:#f6f9fc;">
+                    <tr>
+                        <th class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total,0, ',', '.')}}</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_realisasi,0, ',', '.')}}</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                        <th class="text-uppercase font-weight-bolder ps-2"></th>
+                    </tr>
                     <tr>
                         <th colspan="11" class="text-uppercase font-weight-bolder ps-2 text-center">
                             @if($detail_of->status=='draft')
