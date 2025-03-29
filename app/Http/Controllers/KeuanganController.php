@@ -16,6 +16,8 @@ use App\Models\Jurnals;
 use App\Models\Banks;
 use App\Models\Poses;
 use App\Models\Santri;
+use App\Models\RabManagBuildingDetails;
+use App\Models\RabManagBuildings;
 use Illuminate\Support\Facades\DB;
 
 class KeuanganController extends Controller
@@ -174,6 +176,7 @@ Bukti Transfer: '.$setting->host_url.'/storage/bukti_transfer/'.$created->bukti_
                         'fkSodaqoh_id' => $check->sodaqoh->id,
                         'tanggal' => $check->pay_date,
                         'jenis' => 'in',
+                        'qty' => 1,
                         'uraian' => 'Sodaqoh Tahunan '.$check->sodaqoh->periode.': '.$check->santri->user->fullname,
                         'nominal' => $check->nominal,
                         'tipe_penerimaan' => 'Sodaqoh Tahunan'
@@ -588,5 +591,136 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             ]);
         }
         return json_encode(array("status" => true, "message" => 'Berhasil menduplikasi RAB Tahunan'));
+    }
+
+    public function rab_management_building($id=null){
+        $manag_buildings = RabManagBuildings::get();
+        $detail_manag_buildings = null;
+        if($id!=null){
+            $detail_manag_buildings = RabManagBuildingDetails::where('fkRabManagBuilding_id',$id)->get();
+        }
+        return view('keuangan.management_building', [
+            'detail_of' => RabManagBuildings::find($id),
+            'manag_buildings' => $manag_buildings,
+            'detail_manag_buildings' => $detail_manag_buildings,
+        ]);
+    }
+
+    public function store_management_building(Request $request){
+        if($request->input('parent_id')==""){
+            $create = RabManagBuildings::create([
+                'nama' => $request->input('name'),
+                'periode_bulan' => $request->input('date')
+            ]);
+            if($create){
+                return redirect()->route('rab management building')->with('success', 'Berhasil menambah pengajuan');
+            }else{
+                return redirect()->route('rab management building')->withErrors(['failed' => 'Gagal menambah pengajuan']);
+            }
+        }else{
+            $create = RabManagBuildings::find($request->input('parent_id'));
+            if($request->input('status')!=null){
+                $create->status = $request->input('status');
+                $create->save();
+                if($create){
+                    if($request->input('status')=='posted'){
+                        // posting jurnal
+                        $check_posted_jurnal = Jurnals::where('fkRabManagBuilding_id',$create->id)->first();
+                        if($check_posted_jurnal==null){
+                            $data = Jurnals::create([
+                                'fkBank_id' => 2,
+                                'fkPos_id' => 1,
+                                'tanggal' => $create->periode_bulan,
+                                'jenis' => 'out',
+                                'uraian' => $create->nama,
+                                'qty' => 1,
+                                'nominal' => $create->total_biaya(),
+                                'created_by' => auth()->user()->fullname,
+                                'tipe_pengeluaran' => 'Non Rutin',
+                                'fkRabManagBuilding_id' => $create->id
+                            ]);
+                        }else{
+                            $check_posted_jurnal->tanggal = $create->periode_bulan;
+                            $check_posted_jurnal->uraian = $create->nama;
+                            $check_posted_jurnal->nominal = $create->total_biaya();
+                            $check_posted_jurnal->created_by = auth()->user()->fullname;
+                            $check_posted_jurnal->save();
+                        }
+                    }
+                    return json_encode(array("status" => true, "message" => 'Berhasil mengubah status pengajuan'));
+                }else{
+                    return json_encode(array("status" => false, "message" => 'Gagal mengubah status pengajuan'));
+                }
+            }else{
+                $create->nama = $request->input('name');
+                $create->periode_bulan = $request->input('date');
+                $create->save();
+                if($create){
+                    return redirect()->route('rab management building')->with('success', 'Berhasil update pengajuan');
+                }else{
+                    return redirect()->route('rab management building')->withErrors(['failed' => 'Gagal update pengajuan']);
+                }
+            }
+        }
+    }
+
+    public function store_detail_management_building(Request $request){
+        if($request->input('id')==""){
+            $create = RabManagBuildingDetails::create([
+                'fkRabManagBuilding_id' => $request->input('parent_id_detail'),
+                'uraian' => $request->input('uraian'),
+                'qty' => $request->input('qty'),
+                'satuan' => $request->input('satuan'),
+                'biaya' => $request->input('biaya'),
+                'realisasi' => $request->input('realisasi'),
+            ]);
+            if($create){
+                return redirect()->route('rab management building id',$request->input('parent_id_detail'))->with('success', 'Berhasil menambah detail pengajuan');
+            }else{
+                return redirect()->route('rab management building id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Gagal menambah detail pengajuan']);
+            }
+        }else{
+            $create = RabManagBuildingDetails::find($request->input('id'));
+            $create->uraian = $request->input('uraian');
+            $create->qty = $request->input('qty');
+            $create->satuan = $request->input('satuan');
+            $create->biaya = $request->input('biaya');
+            $create->qty_realisasi = $request->input('qty_realisasi');
+            $create->satuan_realisasi = $request->input('satuan_realisasi');
+            $create->biaya_realisasi = $request->input('biaya_realisasi');
+            $create->save();
+            if($create){
+                return redirect()->route('rab management building id',$request->input('parent_id_detail'))->with('success', 'Berhasil update detail pengajuan');
+            }else{
+                return redirect()->route('rab management building id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Gagal update detail pengajuan']);
+            }
+        }
+    }
+
+    public function delete_management_building($id){
+        $data = RabManagBuildings::find($id);
+        if ($data) {
+            if ($data->delete()) {
+                RabManagBuildingDetails::where('fkRabManagBuilding_id',$id)->delete();
+                return json_encode(array("status" => true, "message" => 'Berhasil menghapus pengajuan'));
+            } else {
+                return json_encode(array("status" => false, "message" => 'Gagal menghapus pengajuan'));
+            }
+        } else {
+            return json_encode(array("status" => false, "message" => 'Pengajuan tidak ditemukan'));
+        }
+    }
+
+    public function delete_detail_management_building($id){
+        $data = RabManagBuildingDetails::find($id);
+        if ($data) {
+            if ($data->delete()) {
+                return json_encode(array("status" => true, "message" => 'Berhasil menghapus detail pengajuan'));
+            } else {
+                return json_encode(array("status" => false, "message" => 'Gagal menghapus detail pengajuan'));
+            }
+        } else {
+            return json_encode(array("status" => false, "message" => 'Detail pengajuan tidak ditemukan'));
+        }
     }
 }

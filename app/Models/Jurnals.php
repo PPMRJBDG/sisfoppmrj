@@ -8,6 +8,7 @@ use App\Models\Divisies;
 use App\Models\Rabs;
 use App\Models\Banks;
 use App\Models\Poses;
+use App\Models\RabManagBuildings;
 
 class Jurnals extends Model
 {
@@ -27,12 +28,18 @@ class Jurnals extends Model
         'periode_tahun',
         'is_deleted',
         'created_by',
-        'fkSodaqoh_id'
+        'fkSodaqoh_id',
+        'fkRabManagBuilding_id',
     ];
 
     public function divisi()
     {
         return $this->belongsTo(Divisies::class, 'fkDivisi_id');
+    }
+
+    public function managBuilding()
+    {
+        return $this->belongsTo(RabManagBuildings::class, 'fkRabManagBuilding_id');
     }
 
     public function rab()

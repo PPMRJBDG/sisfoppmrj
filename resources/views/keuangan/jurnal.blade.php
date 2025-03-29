@@ -48,7 +48,7 @@
                                             <label>Keluar Dari</label>
                                             <select class="form-control" value="" id="fkBank_id_out" name="fkBank_id_out" required>
                                                 @foreach($banks as $bank)
-                                                <option value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
+                                                <option {{(auth()->user()->hasRole('ku') && !isset(auth()->user()->santri) && $bank->id==2) ? 'selected' : ''}} value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -146,7 +146,7 @@
                                             <label>Masuk Ke</label>
                                             <select class="form-control" value="" id="fkBank_id_in" name="fkBank_id_in" required>
                                                 @foreach($banks as $bank)
-                                                <option value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
+                                                <option {{(auth()->user()->hasRole('ku') && !isset(auth()->user()->santri) && $bank->id==2) ? 'selected' : ''}} value="{{$bank->id}}">{{strtoupper($bank->name)}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -361,7 +361,12 @@
                                 <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
                                 <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
                                 <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
-                                <td class="new-td">{{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}</td>
+                                <td class="new-td">
+                                    @if($jurnal->fkRabManagBuilding_id!=0)
+                                        <a href="{{route('rab management building id',$jurnal->fkRabManagBuilding_id)}}" class="badge badge-secondary">#{{$jurnal->fkRabManagBuilding_id}}</a>
+                                    @endif
+                                    {{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}
+                                </td>
                                 <td class="new-td text-start">{{($jurnal->qty=="") ? 1 : $jurnal->qty}} * {{number_format($jurnal->nominal,0, ',', '.')}}</td>
                                 <td class="new-td text-end" id="nominal-in" val-in="{{($jurnal->jenis=='in') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='in') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
                                 <td class="new-td text-end" id="nominal-out" val-out="{{($jurnal->jenis=='out') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='out') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
@@ -484,7 +489,7 @@
         $("#fkDivisi_id-out").val('');
         $("#fkRab_id-out").val('');
         $("#keterangan-out").val('');
-        $("#qty-out").val('');
+        $("#qty-out").val('1');
         $("#nominal-out").val('');
 
         $("#tipe_penerimaan-in").val('');
@@ -646,6 +651,7 @@
             function(data, status) {
                 var return_data = JSON.parse(data);
                 if (return_data.status) {
+                    window.location.reload();
                     $("#btn-batal-" + x).hide();
                     $("#alert-success-" + x).fadeIn();
                     $("#alert-success-" + x).html(return_data.message);

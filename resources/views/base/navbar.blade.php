@@ -50,11 +50,13 @@
       </a>
     </li>
 
+    @if(auth()->user()->hasRole('santri'))
     <li class="sidenav-item">
       <a class="sidenav-link d-flex" aria-current="page" href="{{ url('/keuangan/tagihan') }}">
         <i class="fa fa-money-bill pe-3"></i>Tagihan
       </a>
     </li>
+    @endif
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
@@ -123,7 +125,7 @@
         @if(!isset(auth()->user()->santri))
         <li>
           <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
-            <span class="sidenav-link-text ms-1">Tagihan</span>
+            <span class="sidenav-link-text ms-1">Tagihan (Approval)</span>
           </a>
         </li>
         <li>
@@ -143,11 +145,13 @@
             <span class="sidenav-link-text ms-1">RAB Tahunan</span>
           </a>
         </li>
+        @if(!isset(auth()->user()->santri))
         <li>
-          <a class="sidenav-link" href="{{ url('keuangan/rab-pengadaan') }}">
-            <span class="sidenav-link-text ms-1">RAB Pengadaan</span>
+          <a class="sidenav-link" href="{{ url('keuangan/rab-management-building') }}">
+            <span class="sidenav-link-text ms-1">RAB Manag. Building</span>
           </a>
         </li>
+        @endif
         <li>
           <a class="sidenav-link" href="{{ url('keuangan/rab-kegiatan') }}">
             <span class="sidenav-link-text ms-1">RAB Kegiatan</span>
