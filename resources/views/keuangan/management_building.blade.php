@@ -159,8 +159,8 @@
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
-                        <th class="text-uppercase font-weight-bolder ps-2 text-center" colspan="4">RAB</th>
-                        <th class="text-uppercase font-weight-bolder ps-2 text-center" colspan="4">REALISASI</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center bg-info text-white" colspan="4">RAB</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center bg-secondary text-white" colspan="4">REALISASI</th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                     </tr>
