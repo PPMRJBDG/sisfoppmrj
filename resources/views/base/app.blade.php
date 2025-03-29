@@ -86,8 +86,8 @@ if (auth()->user()->hasRole('barcode')) {
   .alert-success,
   .bg-success {
     background-color: #00c851 !important;
-    background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
-    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
+    background: -webkit-linear-gradient(to right, #48ef82, #2f9e56) !important;
+    background: linear-gradient(to right, #48ef82, #2f9e56) !important
   }
 
   /* .btn-secondary, */

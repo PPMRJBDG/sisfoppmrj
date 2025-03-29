@@ -283,7 +283,7 @@
 
     <div class="card border mt-2">
         <div class="card-body p-0">
-            <div class="datatablex table-responsive datatable-sm">
+            <div data-mdb-pagination="false" class="datatablex table-responsive datatable-sm text-uppercase">
                 <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase" style="font-size:0.8rem !important">
                     <thead style="background-color:#f6f9fc;">
                         <tr>
@@ -362,6 +362,7 @@
                                 <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
                                 <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
                                 <td class="new-td">
+                                    <span class="badge badge-{{($jurnal->jenis=='in') ? 'primary' : 'danger'}}">{{$jurnal->jenis}}</span>
                                     @if($jurnal->fkRabManagBuilding_id!=0)
                                         <a href="{{route('rab management building id',$jurnal->fkRabManagBuilding_id)}}" class="badge badge-secondary">#{{$jurnal->fkRabManagBuilding_id}}</a>
                                     @endif
