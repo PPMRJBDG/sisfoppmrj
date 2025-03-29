@@ -627,7 +627,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                             $data = Jurnals::create([
                                 'fkBank_id' => 2,
                                 'fkPos_id' => 1,
-                                'tanggal' => $create->periode_bulan,
+                                'tanggal' => date('Y-m-d H:i:s'),
                                 'jenis' => 'out',
                                 'uraian' => $create->nama,
                                 'qty' => 1,

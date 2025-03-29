@@ -87,7 +87,7 @@
     <div class="row align-items-center justify-content-center">
         <div class="col-md-12 text-center mb-2">
             <h6 class="m-0">
-                Detail Management Building: <b class="badge badge-primary">{{ucwords($detail_of->nama)}}</b> 
+                Detail Management Building: <b class="badge badge-primary">{{strtoupper($detail_of->nama)}}</b> 
                 <?php
                     $badge = 'warning';
                     if($detail_of->status=='approved'){
