@@ -559,11 +559,11 @@
                 $("#alert-danger-" + x).html('Divisi harap dipilih');
                 return false;
             }
-            if ($("#keterangan-out").val() == '') {
-                $("#alert-danger-" + x).fadeIn();
-                $("#alert-danger-" + x).html('Keterangan harap diisi');
-                return false;
-            }
+            // if ($("#keterangan-out").val() == '') {
+            //     $("#alert-danger-" + x).fadeIn();
+            //     $("#alert-danger-" + x).html('Keterangan harap diisi');
+            //     return false;
+            // }
             if ($("#qty-out").val() == '' || $("#qty-out").val() == 0) {
                 $("#alert-danger-" + x).fadeIn();
                 $("#alert-danger-" + x).html('QTY harap diisi');
@@ -588,11 +588,11 @@
 
             postJurnal(datax, x)
         } else if (x == 'in') {
-            if ($("#keterangan-in").val() == '') {
-                $("#alert-danger-" + x).fadeIn();
-                $("#alert-danger-" + x).html('Keterangan harap diisi');
-                return false;
-            }
+            // if ($("#keterangan-in").val() == '') {
+            //     $("#alert-danger-" + x).fadeIn();
+            //     $("#alert-danger-" + x).html('Keterangan harap diisi');
+            //     return false;
+            // }
             if ($("#nominal-in").val() == '' || $("#nominal-in").val() == 0) {
                 $("#alert-danger-" + x).fadeIn();
                 $("#alert-danger-" + x).html('Nominal harap diisi');
@@ -611,11 +611,11 @@
 
             postJurnal(datax, x)
         } else if (x == 'kuop') {
-            if ($("#keterangan-kuop").val() == '') {
-                $("#alert-danger-" + x).fadeIn();
-                $("#alert-danger-" + x).html('Keterangan harap diisi');
-                return false;
-            }
+            // if ($("#keterangan-kuop").val() == '') {
+            //     $("#alert-danger-" + x).fadeIn();
+            //     $("#alert-danger-" + x).html('Keterangan harap diisi');
+            //     return false;
+            // }
             if ($("#nominal-kuop").val() == '' || $("#nominal-kuop").val() == 0) {
                 $("#alert-danger-" + x).fadeIn();
                 $("#alert-danger-" + x).html('Nominal harap diisi');
