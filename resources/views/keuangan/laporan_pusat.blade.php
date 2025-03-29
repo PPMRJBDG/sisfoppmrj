@@ -1,0 +1,419 @@
+@if($print)
+    @include('base.start_without_bars', ['title' => "Laporan Keuangan"])
+@endif
+
+<style>
+    .form-control {
+        border-radius: 0px !important;
+        padding: 3px !important;
+    }
+
+    .table> :not(:first-child) {
+        border-top: 1px solid #e9ecef;
+    }
+
+    .new-td {
+        padding: 0px 10px !important;
+    }
+</style>
+
+@if($print)
+<div class="card border p-2 mb-4" style="border-bottom:solid 2px #42c19c!important;">
+    <div class="row align-items-center justify-content-center text-center">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="{{ url('storage/logo-apps/' . App\Helpers\CommonHelpers::settings()->logoImgUrl) }}" height="48" alt="PPM Logo" loading="lazy" />
+            </div>
+            <div class="col-md-6">
+                <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">PPM ROUDHOTUL JANNAH BANDUNG SELATAN 2</h6>
+                <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">LPJ BULAN {{date_format(date_create($select_bulan),'M Y')}} & RAB BULAN {{date_format(date_create($nextmonth),'M Y')}}</h6>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+</div>
+@else
+<div class="card border p-2 mb-2">
+    <div class="row align-items-center justify-content-center text-center">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-2">
+            <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">Laporan Keuangan {{ App\Helpers\CommonHelpers::periode() }}</h6>
+            <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan" onchange="filterOnchange()">
+                <option value="all">--seluruh tahun-bulan--</option>
+                @foreach($bulans as $bulan)
+                <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-5 text-end">
+            <script>
+                function openTab(){
+                    window.open("{{route('print laporan pusat',[$select_bulan,true])}}", "_blank");
+                }
+            </script>
+            <a onclick="openTab()" href="#" class="btn btn-sm btn-primary"><i class="fas fa-print" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>
+@endif
+
+<h6 class="text-uppercase font-weight-bolder">Laporan Posisi Keuangan {{date_format(date_create($select_bulan),'M Y')}}</h6>
+<div class="card border mt-2">
+    <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
+        <thead style="background-color:#f6f9fc;">
+            <tr>
+                <th rowspan="2" class="text-uppercase font-weight-bolder ps-2">Saldo Akhir Bulan Lalu</th>
+                <th rowspan="2" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
+                <th colspan="2" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
+                <th rowspan="2" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
+            </tr>
+            <tr>
+                <th class="text-uppercase font-weight-bolder ps-2">Rutin</th>
+                <th class="text-uppercase font-weight-bolder ps-2">Non Rutin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($saldo,0, ',', '.')}}</th>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_in,0, ',', '.')}}</th>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_out_rutin,0, ',', '.')}}</th>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_out_nonrutin,0, ',', '.')}}</th>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($saldo+$total_in-$total_out_rutin-$total_out_nonrutin,0, ',', '.')}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<br>
+<h6 class="text-uppercase font-weight-bolder">Jurnal Keuangan {{date_format(date_create($select_bulan),'M Y')}}</h6>
+<div class="card border mt-2">
+    <div class="card-body p-0">
+        <div data-mdb-pagination="false" class="datatablex table-responsive datatable-sm text-uppercase">
+            <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
+                <thead style="background-color:#f6f9fc;">
+                    <tr>
+                        <th colspan="6" class="text-uppercase font-weight-bolder ps-2">
+                           
+                        </th>
+                        <th colspan="4" class="text-uppercase font-weight-bolder text-center">
+                            <small>Saldo Awal</small> RP {{number_format($saldo,0, ',', '.')}}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="text-uppercase font-weight-bolder ps-2">Bank</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Pos</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Divisi</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Kategori</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Tanggal</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Keterangan</th>
+                        <th class="text-uppercase font-weight-bolder text-center">QTY</th>
+                        <th class="text-uppercase font-weight-bolder text-end pe-2">Masuk</th>
+                        <th class="text-uppercase font-weight-bolder text-end pe-2">Keluar</th>
+                        <th class="text-uppercase font-weight-bolder text-end pe-2">Saldo</th>
+                    </tr>
+                </thead>
+                <tbody id="rab-data">
+                    <?php
+                        $total_masuk = 0;
+                        $total_keluar = 0;
+                    ?>
+                    @if(count($jurnals)>0)
+                        @foreach ($jurnals as $jurnal)
+                        <tr id="jurnal-{{$jurnal->id}}">
+                            <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
+                            <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
+                            <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
+                            <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
+                            <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
+                            <td class="new-td">
+                                <span class="badge badge-{{($jurnal->jenis=='in') ? 'primary' : 'danger'}}">{{$jurnal->jenis}}</span>
+                                @if($jurnal->fkRabManagBuilding_id!=0)
+                                    <a href="{{route('rab management building id',$jurnal->fkRabManagBuilding_id)}}" class="badge badge-secondary">#{{$jurnal->fkRabManagBuilding_id}}</a>
+                                @endif
+                                {{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}
+                            </td>
+                            <td class="new-td text-start">{{($jurnal->qty=="") ? 1 : $jurnal->qty}} * {{number_format($jurnal->nominal,0, ',', '.')}}</td>
+                            <td class="new-td text-end" id="nominal-in" val-in="{{($jurnal->jenis=='in') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='in') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
+                            <td class="new-td text-end" id="nominal-out" val-out="{{($jurnal->jenis=='out') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='out') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
+                            <td class="new-td text-end">
+                                <?php 
+                                    if($jurnal->jenis=="in"){
+                                        $saldo = $saldo + ($jurnal->qty*$jurnal->nominal);
+                                    }else if($jurnal->jenis=="out"){
+                                        $saldo = $saldo - ($jurnal->qty*$jurnal->nominal);
+                                    }
+                                    echo number_format($saldo,0, ',', '.');
+                                ?>
+                            </td>
+                            <?php
+                            if($jurnal->jenis=='in'){
+                                $total_masuk = $total_masuk + ($jurnal->qty*$jurnal->nominal);
+                            }elseif($jurnal->jenis=='out'){
+                                $total_keluar = $total_keluar + ($jurnal->qty*$jurnal->nominal);
+                            }
+                            ?>
+                        </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+                <tfoot style="background-color:#f6f9fc;">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td id="total_masuk" class="font-weight-bolder text-end">RP {{number_format($total_masuk,0, ',', '.')}}</td>
+                        <td id="total_keluar" class="font-weight-bolder text-end">RP {{number_format($total_keluar,0, ',', '.')}}</td>
+                        <td class="font-weight-bolder text-end">RP {{number_format($saldo,0, ',', '.')}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if(count($manag_building)>0)
+    <br>
+    <h6 class="text-uppercase font-weight-bolder">Rincian Pengeluaran Non Rutin {{date_format(date_create($select_bulan),'M Y')}}</h6>
+    @foreach($manag_building as $mngbuild)
+        @if($mngbuild->fkRabManagBuilding_id!=0)
+            <div class="card border p-2 mt-2">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-12 text-start mb-2">
+                        <h6 class="m-0">
+                            Management Building: <b class="badge badge-primary">{{strtoupper($mngbuild->managBuilding->nama)}}</b> 
+                        </h6>
+                    </div>
+                    
+                    <div class="datatablex table-responsive datatable-sm">
+                        <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
+                            <thead style="background-color:#f6f9fc;">
+                                <tr>
+                                    <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #e7a2a2;" colspan="4">RAB</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #42c19c;" colspan="4">REALISASI</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-uppercase font-weight-bolder ps-2">URAIAN</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">SELISIH</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $total = 0; $total_realisasi = 0; ?>
+                                @foreach($mngbuild->details() as $mb)
+                                    <tr>
+                                        <td class="new-td">{{$mb->uraian}}</td>
+                                        <td class="new-td text-center">{{$mb->qty}}</td>
+                                        <td class="new-td text-center">{{$mb->satuan}}</td>
+                                        <td class="new-td text-end">{{number_format($mb->biaya,0, ',', '.')}}</td>
+                                        <?php $total = $total + ($mb->qty*$mb->biaya); ?>
+                                        <td class="new-td text-end">{{number_format(($mb->qty*$mb->biaya),0, ',', '.')}}</td>
+                                        <td class="new-td text-center">{{$mb->qty_realisasi}}</td>
+                                        <td class="new-td text-center">{{$mb->satuan_realisasi}}</td>
+                                        <td class="new-td text-end">{{number_format($mb->biaya_realisasi,0, ',', '.')}}</td>
+                                        <?php $total_realisasi = $total_realisasi + ($mb->qty_realisasi*$mb->biaya_realisasi); ?>
+                                        <td class="new-td text-end">{{number_format(($mb->qty_realisasi*$mb->biaya_realisasi),0, ',', '.')}}</td>
+                                        <td class="new-td text-end">
+                                            <?php
+                                            $selisih = ($mb->qty*$mb->biaya)-($mb->qty_realisasi*$mb->biaya_realisasi);
+                                            ?>
+                                            {{number_format($selisih,0, ',', '.')}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfooter style="background-color:#f6f9fc;">
+                                <tr>
+                                    <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total,0, ',', '.')}}</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_realisasi,0, ',', '.')}}</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                </tr>
+                            </tfooter>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
+@endif
+
+<br>
+<h6 class="text-uppercase font-weight-bolder">RAB RUTIN {{date_format(date_create($nextmonth),'M Y')}}</h6>
+<div class="card border mt-2">
+    <div class="datatablex table-responsive datatable-sm">
+        <table class="table table-bordered align-items-center text-uppercase mb-0">
+            <thead style="background-color:#f6f9fc;">
+                <tr>
+                    <th class="text-uppercase text-start font-weight-bolder ps-2">Divisi</th>
+                    <th class="text-uppercase text-start font-weight-bolder ps-2">Pengeluaran</th>
+                    <th class="text-uppercase text-center font-weight-bolder">Periode</th>
+                    <th class="text-uppercase text-center font-weight-bolder">Biaya</th>
+                    <?php for ($x = 1; $x <= 5; $x++) { ?>
+                        <th class="text-uppercase text-center font-weight-bolder">M-{{$x}}</th>
+                    <?php } ?>
+                    <th class="text-uppercase text-center font-weight-bolder">Total</th>
+                </tr>
+            </thead>
+            <?php $total_rab = 0; ?>
+            <tbody id="rab-data">
+                @if(count($rabs)>0)
+                <?php $total_biaya = 0; ?>
+                    @foreach ($rabs as $rab)
+                        <?php
+                            $month = intval(date_format(date_create($nextmonth),'m'));
+                            $check_minggu = json_decode($rab['bulan_'.$month]);
+                            $check = 0;
+                            for ($x = 1; $x <= 5; $x++) {
+                                if($check_minggu[$x-1][1]){
+                                    $check = true;
+                                }
+                            }
+                            $total = 0;
+                        ?>
+                        @if($check)
+                            <tr>
+                                <td class="new-td">{{strtoupper($rab->divisi->divisi)}}</td>
+                                <td class="new-td">{{$rab->keperluan}}</td>
+                                <td class="new-td text-center">{{$rab->periode}}</td>
+                                <td class="new-td text-end">{{number_format($rab->biaya,0)}}</td>
+                                <?php for ($x = 1; $x <= 5; $x++) { ?>
+                                    <td class="new-td text-center">
+                                        <?php
+                                            $month = intval(date_format(date_create($nextmonth),'m'));
+                                            $check_minggu = json_decode($rab['bulan_'.$month]);
+                                            echo ($check_minggu[$x-1][1]) ? '<i class="fa fa-square-check text-primary"></i>' : '';
+
+                                            if($check_minggu[$x-1][1]){
+                                                $total = $total + ($rab->biaya);
+                                            }
+                                        ?>
+                                    </td>
+                                <?php } $total_biaya = $total_biaya + $total; ?>
+                                <td class="new-td text-end">{{number_format($total,0)}}</td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @endif
+            </tbody>
+            <tfooter>
+                <tr>
+                    <th colspan="9" class="text-uppercase text-center font-weight-bolder">Total RAB</th>
+                    <th class="text-uppercase text-center font-weight-bolder">{{number_format($total_biaya,0)}}</th>
+                </tr>
+            </tfooter>
+        </table>
+    </div>
+</div>
+
+@if(count($pengajuan_manag_buildings)>0)
+    <br>
+    <h6 class="text-uppercase font-weight-bolder">RAB Pengajuan Non Rutin {{date_format(date_create($select_bulan),'M Y')}}</h6>
+    @foreach($pengajuan_manag_buildings as $mngbuild)
+        <div class="card border p-2 mt-2">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-12 text-start mb-2">
+                    <h6 class="m-0">
+                        Management Building: <b class="badge badge-primary">{{strtoupper($mngbuild->nama)}}</b> 
+                    </h6>
+                </div>
+                
+                <div class="datatablex table-responsive datatable-sm">
+                    <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
+                        <thead style="background-color:#f6f9fc;">
+                            <tr>
+                                <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #e7a2a2;" colspan="4">RAB</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #42c19c;" colspan="4">REALISASI</th>
+                                <th class="text-uppercase font-weight-bolder ps-2"></th>
+                            </tr>
+                            <tr>
+                                <th class="text-uppercase font-weight-bolder ps-2">URAIAN</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">SELISIH</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $total = 0; $total_realisasi = 0; ?>
+                            @foreach($mngbuild->details as $mb)
+                                <tr>
+                                    <td class="new-td">{{$mb->uraian}}</td>
+                                    <td class="new-td text-center">{{$mb->qty}}</td>
+                                    <td class="new-td text-center">{{$mb->satuan}}</td>
+                                    <td class="new-td text-end">{{number_format($mb->biaya,0, ',', '.')}}</td>
+                                    <?php $total = $total + ($mb->qty*$mb->biaya); ?>
+                                    <td class="new-td text-end">{{number_format(($mb->qty*$mb->biaya),0, ',', '.')}}</td>
+                                    <td class="new-td text-center">{{$mb->qty_realisasi}}</td>
+                                    <td class="new-td text-center">{{$mb->satuan_realisasi}}</td>
+                                    <td class="new-td text-end">{{number_format($mb->biaya_realisasi,0, ',', '.')}}</td>
+                                    <?php $total_realisasi = $total_realisasi + ($mb->qty_realisasi*$mb->biaya_realisasi); ?>
+                                    <td class="new-td text-end">{{number_format(($mb->qty_realisasi*$mb->biaya_realisasi),0, ',', '.')}}</td>
+                                    <td class="new-td text-end">
+                                        <?php
+                                        $selisih = ($mb->qty*$mb->biaya)-($mb->qty_realisasi*$mb->biaya_realisasi);
+                                        ?>
+                                        {{number_format($selisih,0, ',', '.')}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfooter style="background-color:#f6f9fc;">
+                            <tr>
+                                <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total,0, ',', '.')}}</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_realisasi,0, ',', '.')}}</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                            </tr>
+                        </tfooter>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endforeach
+@endif
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+
+    function filterOnchange(tipe=false){
+        var periode = $('#periode_bulan').val();
+        getPage(`{{ url("/") }}/keuangan/laporan-pusat/` + periode);
+    }
+</script>

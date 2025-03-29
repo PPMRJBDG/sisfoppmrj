@@ -122,23 +122,28 @@
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-keuangan">
         @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
-        @if(!isset(auth()->user()->santri))
-        <li>
-          <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
-            <span class="sidenav-link-text ms-1">Tagihan (Approval)</span>
-          </a>
-        </li>
-        <li>
-          <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
-            <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
-          </a>
-        </li>
-        @endif
-        <li>
-          <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
-            <span class="sidenav-link-text ms-1">Jurnal Harian</span>
-          </a>
-        </li>
+          @if(!isset(auth()->user()->santri))
+          <li>
+            <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
+              <span class="sidenav-link-text ms-1">Tagihan (Approval)</span>
+            </a>
+          </li>
+          <li>
+            <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
+              <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
+            </a>
+          </li>
+          <li>
+            <a class="sidenav-link" href="{{ url('/keuangan/laporan-pusat') }}">
+              <span class="sidenav-link-text ms-1">Laporan Pusat</span>
+            </a>
+          </li>
+          @endif
+          <li>
+            <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
+              <span class="sidenav-link-text ms-1">Jurnal Harian</span>
+            </a>
+          </li>
         @endif
         <li>
           <a class="sidenav-link" href="{{ url('keuangan/rab-tahunan') }}">
@@ -146,17 +151,17 @@
           </a>
         </li>
         @if(!isset(auth()->user()->santri))
-        <li>
-          <a class="sidenav-link" href="{{ url('keuangan/rab-management-building') }}">
-            <span class="sidenav-link-text ms-1">RAB Manag. Building</span>
-          </a>
-        </li>
+          <li>
+            <a class="sidenav-link" href="{{ url('keuangan/rab-management-building') }}">
+              <span class="sidenav-link-text ms-1">RAB Manag. Building</span>
+            </a>
+          </li>
         @endif
-        <li>
-          <a class="sidenav-link" href="{{ url('keuangan/rab-kegiatan') }}">
-            <span class="sidenav-link-text ms-1">RAB Kegiatan</span>
-          </a>
-        </li>
+          <li>
+            <a class="sidenav-link" href="{{ url('keuangan/rab-kegiatan') }}">
+              <span class="sidenav-link-text ms-1">RAB Kegiatan</span>
+            </a>
+          </li>
       </ul>
     </li>
     @endif

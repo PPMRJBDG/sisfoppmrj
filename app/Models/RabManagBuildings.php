@@ -13,6 +13,11 @@ class RabManagBuildings extends Model
         'status',
     ];
 
+    public function details()
+    {
+        return $this->hasMany(RabManagBuildingDetails::class, 'fkRabManagBuilding_id');
+    }
+
     public function total_biaya()
     {
         $details = RabManagBuildingDetails::where('fkRabManagBuilding_id',$this->id)->get();

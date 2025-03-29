@@ -98,7 +98,7 @@
                         $badge = 'success';
                     }
                 ?>
-                <span class="badge badge-{{$badge}}">{{$detail_of->status}} : menunggu persetujuan pusat</span>
+                <span class="badge badge-{{$badge}}">{{$detail_of->status}} {{ ($badge=='submit') ? ': menunggu persetujuan pusat' : '' }}</span>
             </h6>
         </div>
         <form action="{{ route('store detail management building') }}" method="POST" enctype="multipart/form-data">
@@ -159,8 +159,8 @@
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
-                        <th class="text-uppercase font-weight-bolder ps-2 text-center bg-primary text-white" colspan="4">RAB</th>
-                        <th class="text-uppercase font-weight-bolder ps-2 text-center bg-secondary text-white" colspan="4">REALISASI</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #e7a2a2;" colspan="4">RAB</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #42c19c;" colspan="4">REALISASI</th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                     </tr>

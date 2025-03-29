@@ -212,6 +212,9 @@ Route::post('/keuangan/rab-management-building/store', [App\Http\Controllers\Keu
 Route::post('/keuangan/rab-detail-management-building/store', [App\Http\Controllers\KeuanganController::class, 'store_detail_management_building'])->name('store detail management building')->middleware('role:superadmin|ku');
 Route::get('/keuangan/rab-management-building/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_management_building'])->name('delete management building')->middleware('role:superadmin|ku');
 Route::get('/keuangan/rab-management-building/delete-detail/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_detail_management_building'])->name('delete detail management building')->middleware('role:superadmin|ku');
+Route::get('/keuangan/laporan-pusat', [App\Http\Controllers\KeuanganController::class, 'laporan_pusat'])->name('laporan pusat')->middleware('role:superadmin|ku');
+Route::get('/keuangan/laporan-pusat/{tahun_bulan}', [App\Http\Controllers\KeuanganController::class, 'laporan_pusat'])->name('laporan pusat')->middleware('role:superadmin|ku');
+Route::get('/keuangan/laporan-pusat/{tahun_bulan}/{print}', [App\Http\Controllers\KeuanganController::class, 'laporan_pusat'])->name('print laporan pusat')->middleware('role:superadmin|ku');
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');

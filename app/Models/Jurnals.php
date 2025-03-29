@@ -32,6 +32,12 @@ class Jurnals extends Model
         'fkRabManagBuilding_id',
     ];
 
+    public function details()
+    {
+        $details = RabManagBuildingDetails::where('fkRabManagBuilding_id',$this->fkRabManagBuilding_id)->get();
+        return $details;
+    }
+
     public function divisi()
     {
         return $this->belongsTo(Divisies::class, 'fkDivisi_id');
