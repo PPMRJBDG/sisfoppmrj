@@ -194,7 +194,7 @@
                                             </select>
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:12%;">
-                                            <label>Keterangan <small>(kosongkan jika tidak ada klarifikasi)</small></label>
+                                            <label>Keterangan</label>
                                             <input class="form-control" type="text" value="" id="keterangan-in">
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:12%;">
@@ -459,14 +459,24 @@
     function reloadKategori(data, x) {
         $("#info-rab-out").hide();
         $("#info-rab-out").html("");
-        var rabs = <?php echo $rabs; ?>;
-        var option = '<option value="">--pilih kategori--</option>';
-        rabs.forEach(function(rab) {
-            if (data.value == rab.fkDivisi_id) {
-                option += '<option value="' + rab.id + '">' + rab.keperluan + '</option>';
-            }
-        })
-        $("#fkRab_id-" + x).html(option)
+        if(data.value==13){
+            $("#qty-out").prop('readonly', true);
+            $("#nominal-out").prop('readonly', true);
+            $("#info-rab-out").show();
+            $("#info-rab-out").html("Untuk Pengeluaran Ukhro Akan Digenerate Otomatis");
+            $("#fkRab_id-" + x).html('<option value="">--pilih kategori--</option>')
+        }else{
+            $("#qty-" + x).prop('readonly', false);
+            $("#nominal-" + x).prop('readonly', false);
+            var rabs = <?php echo $rabs; ?>;
+            var option = '<option value="">--pilih kategori--</option>';
+            rabs.forEach(function(rab) {
+                if (data.value == rab.fkDivisi_id) {
+                    option += '<option value="' + rab.id + '">' + rab.keperluan + '</option>';
+                }
+            })
+            $("#fkRab_id-" + x).html(option)
+        }
     }
 
     function reloadRab(id) {
@@ -559,20 +569,18 @@
                 $("#alert-danger-" + x).html('Divisi harap dipilih');
                 return false;
             }
-            // if ($("#keterangan-out").val() == '') {
-            //     $("#alert-danger-" + x).fadeIn();
-            //     $("#alert-danger-" + x).html('Keterangan harap diisi');
-            //     return false;
-            // }
-            if ($("#qty-out").val() == '' || $("#qty-out").val() == 0) {
-                $("#alert-danger-" + x).fadeIn();
-                $("#alert-danger-" + x).html('QTY harap diisi');
-                return false;
-            }
-            if ($("#nominal-out").val() == '' || $("#nominal-out").val() == 0) {
-                $("#alert-danger-" + x).fadeIn();
-                $("#alert-danger-" + x).html('Nominal harap diisi');
-                return false;
+            
+            if($("#fkDivisi_id-out").val()!=13){
+                if ($("#qty-out").val() == '' || $("#qty-out").val() == 0) {
+                    $("#alert-danger-" + x).fadeIn();
+                    $("#alert-danger-" + x).html('QTY harap diisi');
+                    return false;
+                }
+                if ($("#nominal-out").val() == '' || $("#nominal-out").val() == 0) {
+                    $("#alert-danger-" + x).fadeIn();
+                    $("#alert-danger-" + x).html('Nominal harap diisi');
+                    return false;
+                }
             }
 
             datax['fkBank_id'] = $("#fkBank_id_out").val();
@@ -588,11 +596,6 @@
 
             postJurnal(datax, x)
         } else if (x == 'in') {
-            // if ($("#keterangan-in").val() == '') {
-            //     $("#alert-danger-" + x).fadeIn();
-            //     $("#alert-danger-" + x).html('Keterangan harap diisi');
-            //     return false;
-            // }
             if ($("#nominal-in").val() == '' || $("#nominal-in").val() == 0) {
                 $("#alert-danger-" + x).fadeIn();
                 $("#alert-danger-" + x).html('Nominal harap diisi');
@@ -611,11 +614,6 @@
 
             postJurnal(datax, x)
         } else if (x == 'kuop') {
-            // if ($("#keterangan-kuop").val() == '') {
-            //     $("#alert-danger-" + x).fadeIn();
-            //     $("#alert-danger-" + x).html('Keterangan harap diisi');
-            //     return false;
-            // }
             if ($("#nominal-kuop").val() == '' || $("#nominal-kuop").val() == 0) {
                 $("#alert-danger-" + x).fadeIn();
                 $("#alert-danger-" + x).html('Nominal harap diisi');
@@ -653,22 +651,6 @@
                 var return_data = JSON.parse(data);
                 if (return_data.status) {
                     window.location.reload();
-                    $("#btn-batal-" + x).hide();
-                    $("#alert-success-" + x).fadeIn();
-                    $("#alert-success-" + x).html(return_data.message);
-                    clear();
-                    if (datax['jurnal_id'] == '') {
-                        var content = '<a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubahJurnal('+return_data.data+')">' +
-                            '<i class="fas fa-edit" aria-hidden="true"></i>' +
-                            '</a>' +
-                            '<a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal('+return_data.data+')">' +
-                            '<i class="fas fa-trash" aria-hidden="true"></i>' +
-                            '</a>' +
-                            '</td>' +
-                            '</tr>';
-
-                        $("#rab-data").html($("#rab-data").html() + return_data.content + content);
-                    }
                 } else {
                     $("#alert-danger-" + x).fadeIn();
                     $("#alert-danger-" + x).html(return_data.message);

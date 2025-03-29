@@ -205,7 +205,7 @@ Route::post('/keuangan/rab-tahunan/lock-unlock', [App\Http\Controllers\KeuanganC
 Route::get('/keuangan/jurnal', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
 Route::get('/keuangan/jurnal/{bank}/{divisi}/{rab}/{tahun_bulan}/{penerimaan}', [App\Http\Controllers\KeuanganController::class, 'jurnal'])->name('view jurnal')->middleware('role:superadmin|ku|rj1');
 Route::post('/keuangan/jurnal/store', [App\Http\Controllers\KeuanganController::class, 'jurnal_store'])->name('store jurnal')->middleware('role:superadmin|ku|rj1');
-Route::post('/keuangan/jurnal/delete', [App\Http\Controllers\KeuanganController::class, 'delete_jurnal'])->name('delete jurnal')->middleware('role:superadmin|ku|rj1');
+Route::post('/keuangan/jurnal/delete', [App\Http\Controllers\KeuanganController::class, 'jurnal_delete'])->name('delete jurnal')->middleware('role:superadmin|ku|rj1');
 Route::get('/keuangan/rab-management-building', [App\Http\Controllers\KeuanganController::class, 'rab_management_building'])->name('rab management building')->middleware('role:superadmin|ku');
 Route::get('/keuangan/rab-management-building/{id}', [App\Http\Controllers\KeuanganController::class, 'rab_management_building'])->name('rab management building id')->middleware('role:superadmin|ku');
 Route::post('/keuangan/rab-management-building/store', [App\Http\Controllers\KeuanganController::class, 'store_management_building'])->name('store management building')->middleware('role:superadmin|ku');

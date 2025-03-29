@@ -436,19 +436,38 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
     {
         if ($request->input('jurnal_id') == '') {
             if ($request->input('jenis') == 'out') {
-                $data = Jurnals::create([
-                    'fkBank_id' => $request->input('fkBank_id'),
-                    'fkPos_id' => $request->input('fkPos_id'),
-                    'fkDivisi_id' => $request->input('fkDivisi_id'),
-                    'fkRab_id' => $request->input('fkRab_id'),
-                    'tanggal' => $request->input('tanggal'),
-                    'jenis' => $request->input('jenis'),
-                    'uraian' => $request->input('keterangan'),
-                    'qty' => $request->input('qty'),
-                    'nominal' => $request->input('nominal'),
-                    'created_by' => auth()->user()->fullname,
-                    'tipe_pengeluaran' => $request->input('tipe_pengeluaran')
-                ])->id;
+                if($request->input('fkDivisi_id')==13){
+                    $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('fkDivisi_id',13)->get();
+                    foreach($rabs as $ukhro){
+                        $data = Jurnals::create([
+                            'fkBank_id' => $request->input('fkBank_id'),
+                            'fkPos_id' => $request->input('fkPos_id'),
+                            'fkDivisi_id' => $request->input('fkDivisi_id'),
+                            'fkRab_id' => $ukhro->id,
+                            'tanggal' => $request->input('tanggal'),
+                            'jenis' => $request->input('jenis'),
+                            'uraian' => $request->input('keterangan'),
+                            'qty' => 1,
+                            'nominal' => $ukhro->biaya,
+                            'created_by' => auth()->user()->fullname,
+                            'tipe_pengeluaran' => $request->input('tipe_pengeluaran')
+                        ]);
+                    }
+                }else{
+                    $data = Jurnals::create([
+                        'fkBank_id' => $request->input('fkBank_id'),
+                        'fkPos_id' => $request->input('fkPos_id'),
+                        'fkDivisi_id' => $request->input('fkDivisi_id'),
+                        'fkRab_id' => $request->input('fkRab_id'),
+                        'tanggal' => $request->input('tanggal'),
+                        'jenis' => $request->input('jenis'),
+                        'uraian' => $request->input('keterangan'),
+                        'qty' => $request->input('qty'),
+                        'nominal' => $request->input('nominal'),
+                        'created_by' => auth()->user()->fullname,
+                        'tipe_pengeluaran' => $request->input('tipe_pengeluaran')
+                    ]);
+                }
             } elseif ($request->input('jenis') == 'in') {
                 $data = Jurnals::create([
                     'fkBank_id' => $request->input('fkBank_id'),
@@ -461,7 +480,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'nominal' => $request->input('nominal'),
                     'created_by' => auth()->user()->fullname,
                     'tipe_penerimaan' => $request->input('tipe_penerimaan')
-                ])->id;
+                ]);
             } elseif ($request->input('jenis') == 'kuop') {
                 $data = Jurnals::create([
                     'fkBank_id' => $request->input('fkBank_id'),
@@ -472,7 +491,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'uraian' => $request->input('keterangan'),
                     'nominal' => $request->input('nominal'),
                     'created_by' => auth()->user()->fullname
-                ])->id;
+                ]);
             }
             $data = Jurnals::find($data);
         }else{
@@ -505,29 +524,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
 
         if ($data) {
-            $divisi = (!$data->divisi) ? '' : $data->divisi->divisi;
-            $rab = (!$data->rab) ? '' : $data->rab->keperluan;
-            $masuk = ($data->jenis == 'in') ? 'RP '.number_format($data->qty*$data->nominal, 0, ',', '.') : '';
-            $keluar = ($data->jenis == 'out') ? 'RP '.number_format($data->qty*$data->nominal, 0, ',', '.') : '';
-            $content = '<tr id="jurnal-' . $data->id . '" style="background: #f3d4cd;">' .
-                '<td class="new-td text-uppercase">' . $data->bank->name . '</td>' .
-                '<td class="new-td text-uppercase">' . $data->pos->name . '</td>' .
-                '<td class="new-td text-uppercase">' . $divisi . '</td>' .
-                '<td class="new-td">' . $rab . '</td>' .
-                '<td class="new-td">' . date_format(date_create($data->tanggal), "d/m/Y") . '</td>' .
-                '<td class="new-td">' . $data->uraian . '</td>' .
-                '<td class="new-td text-center">' . ($data->qty=="") ? 1 : $data->qty .'*'. number_format($data->nominal,0, ",", ".") . '</td>' .
-                '<td class="new-td text-end">' . $masuk . '</td>' .
-                '<td class="new-td text-end">' . $keluar . '</td>' .
-                '<td class="p-0 text-center">' ;
-                // '<a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubahJurnal('.$data.')">' .
-                // '<i class="fas fa-edit" aria-hidden="true"></i>' .
-                // '</a>' .
-                // '<a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapusJurnal('.$data.')">' .
-                // '<i class="fas fa-trash" aria-hidden="true"></i>' .
-                // '</a>' .
-
-            return json_encode(array("status" => true, "message" => 'Berhasil menyimpan jurnal', "content" => $content, "data" => json_encode($data)));
+            return json_encode(array("status" => true, "message" => 'Berhasil menyimpan jurnal'));
         } else {
             return json_encode(array("status" => false, "message" => 'Gagal menyimpan jurnal'));
         }
