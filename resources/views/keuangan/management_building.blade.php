@@ -190,7 +190,7 @@
                                 <?php
                                 $selisih = ($mb->qty*$mb->biaya)-($mb->qty_realisasi*$mb->biaya_realisasi);
                                 ?>
-                                {{($selisih>0) ? '(Sisa)' : '(Kurang)'}} {{number_format($selisih,0, ',', '.')}}
+                                {{number_format($selisih,0, ',', '.')}}
                             </td>
                             <td class="text-center">
                                 @if($detail_of->status!='posted' && $detail_of->status!='rejected')

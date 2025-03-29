@@ -89,8 +89,8 @@
                                             <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="tanggal-out" required>
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:20%;">
-                                            <label>Keterangan</label>
-                                            <input class="form-control" type="text" value="" id="keterangan-out" required>
+                                            <label>Keterangan <small>(kosongkan jika tidak ada klarifikasi)</small></label>
+                                            <input class="form-control" type="text" value="" id="keterangan-out">
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Pengeluaran</label>
@@ -194,8 +194,8 @@
                                             </select>
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:12%;">
-                                            <label>Keterangan</label>
-                                            <input class="form-control" type="text" value="" id="keterangan-in" required>
+                                            <label>Keterangan <small>(kosongkan jika tidak ada klarifikasi)</small></label>
+                                            <input class="form-control" type="text" value="" id="keterangan-in">
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:12%;">
                                             <label>Nominal</label>
@@ -250,8 +250,8 @@
                                             <input class="form-control" type="number" value="" id="nominal-kuop" required>
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:25%;">
-                                            <label>Keterangan</label>
-                                            <input class="form-control" type="text" value="Operasional Masuk" id="keterangan-kuop" required>
+                                            <label>Keterangan <small>(kosongkan jika tidak ada klarifikasi)</small></label>
+                                            <input class="form-control" type="text" value="Operasional Masuk" id="keterangan-kuop">
                                         </td>
                                     </tr>
                                 </tbody>
