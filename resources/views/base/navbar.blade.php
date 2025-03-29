@@ -136,7 +136,7 @@
         @endif
         <li>
           <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
-            <span class="sidenav-link-text ms-1">Jurnal</span>
+            <span class="sidenav-link-text ms-1">Jurnal Harian</span>
           </a>
         </li>
         @endif

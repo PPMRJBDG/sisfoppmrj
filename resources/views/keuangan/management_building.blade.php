@@ -98,7 +98,7 @@
                         $badge = 'success';
                     }
                 ?>
-                <span class="badge badge-{{$badge}}">{{$detail_of->status}}</span>
+                <span class="badge badge-{{$badge}}">{{$detail_of->status}} : menunggu persetujuan pusat</span>
             </h6>
         </div>
         <form action="{{ route('store detail management building') }}" method="POST" enctype="multipart/form-data">
@@ -159,17 +159,19 @@
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
-                        <th class="text-uppercase font-weight-bolder ps-2 text-center" colspan="3">RAB</th>
-                        <th class="text-uppercase font-weight-bolder ps-2 text-center" colspan="3">REALISASI</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center" colspan="4">RAB</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center" colspan="4">REALISASI</th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                     </tr>
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2">URAIAN</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                        <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-end">SELISIH</th>
@@ -181,9 +183,11 @@
                         <tr>
                             <td>{{$mb->uraian}}</td>
                             <td class="text-center">{{$mb->qty}}</td>
+                            <td class="text-center">{{$mb->satuan}}</td>
                             <td class="text-end">{{number_format($mb->biaya,0, ',', '.')}}</td>
                             <td class="text-end">{{number_format(($mb->qty*$mb->biaya),0, ',', '.')}}</td>
                             <td class="text-center">{{$mb->qty_realisasi}}</td>
+                            <td class="text-center">{{$mb->satuan_realisasi}}</td>
                             <td class="text-end">{{number_format($mb->biaya_realisasi,0, ',', '.')}}</td>
                             <td class="text-end">{{number_format(($mb->qty_realisasi*$mb->biaya_realisasi),0, ',', '.')}}</td>
                             <td class="text-end">
@@ -207,7 +211,7 @@
                 </tbody>
                 <tfooter style="background-color:#f6f9fc;">
                     <tr>
-                        <th colspan="9" class="text-uppercase font-weight-bolder ps-2 text-center">
+                        <th colspan="11" class="text-uppercase font-weight-bolder ps-2 text-center">
                             @if($detail_of->status=='draft')
                             <button type="submit" id="submit" class="btn btn-warning btn-sm mb-0" onclick="submitManagBuilding('submit',{{$detail_of}})">
                                 <i class="fas fa-file-arrow-up" aria-hidden="true"></i>
