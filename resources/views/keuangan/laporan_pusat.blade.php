@@ -1,5 +1,5 @@
 @if($print)
-    @include('base.start_without_bars', ['title' => "Laporan Keuangan"])
+    @include('base.start_without_bars', ['title' => "LPJ BULAN ".date_format(date_create($select_bulan),'M Y')." & RAB BULAN ".date_format(date_create($nextmonth),'M Y')." - PPM RJ BS2"])
 @endif
 
 <style>
@@ -26,11 +26,65 @@
             </div>
             <div class="col-md-6">
                 <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">PPM ROUDHOTUL JANNAH BANDUNG SELATAN 2</h6>
-                <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">LPJ BULAN {{date_format(date_create($select_bulan),'M Y')}} & RAB BULAN {{date_format(date_create($nextmonth),'M Y')}}</h6>
+                <h6 class="m-0 text-uppercase font-weight-bolder">LPJ BULAN {{date_format(date_create($select_bulan),'M Y')}} & RAB BULAN {{date_format(date_create($nextmonth),'M Y')}}</h6>
             </div>
             <div class="col-md-3">
             </div>
         </div>
+    </div>
+</div>
+
+<div class="card border mb-2 p-5">
+    <div class="p-2 text-start h6">
+        Kepada Yang Terhormat<br>
+        Bapak Imam / Wakil 4<br>
+        Di Tempat
+    </div>
+    <div class="p-2 text-center h6">
+        السلام عليكم ورحمة الله وبر كاته
+    </div>
+    <div class="p-2 text-start h6">
+        Yang bertandatangan dibawah ini kami Kyai Daerah beserta Pengurus PPM Bandung Selatan 2, 
+        dengan ini kami melaporkan Laporan Pertanggungjawaban Keuangan Bulan {{date_format(date_create($select_bulan),'M Y')}} dengan 
+        Total Pengeluaran Senilai Rp {{number_format($total_out_rutin+$total_out_nonrutin,0, ',', '.')}}.<br>
+        Serta kami mengajukan RAB Bulan {{date_format(date_create($nextmonth),'M Y')}} dengan estimasi pengeluaran senilai <span id="estimasi-out-nextmonth"></span>.
+        <br>
+        <br>
+        Demikian LPJ Bulan {{date_format(date_create($select_bulan),'M Y')}} dan RAB Bulan {{date_format(date_create($nextmonth),'M Y')}} yang dapat kami sampaikan, adapun rinciannya ada dibawah ini.
+    </div>
+    <div class="p-2 text-center h6">
+        الحمد لله جزاكم الله خيرا 
+        <br>
+        و السلام عليكم و رحمة اللّٰه و بركاته
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="row text-center h6">
+                <div class="col-md-4">
+                    Ketua PPM
+                    <br>
+                    <img src="{{ url('storage/logo-apps/ttd_muhammad_yusuf.png') }}" height="48" alt="PPM Logo" loading="lazy" />
+                    <br>
+                    Muhammad Yusuf
+                </div>
+                <div class="col-md-4">
+                    KU Daerah
+                    <br>
+                    <img src="{{ url('storage/logo-apps/ttd_kuda.png') }}" height="48" alt="PPM Logo" loading="lazy" />
+                    <br>
+                    H. Sutrisno
+                </div>
+                <div class="col-md-4">
+                    Kyai Daerah
+                    <br>
+                    <img src="{{ url('storage/logo-apps/ttd_kida.png') }}" height="48" alt="PPM Logo" loading="lazy" />
+                    <br>
+                    H. Yayat Hernawan
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
     </div>
 </div>
 @else
@@ -64,14 +118,14 @@
     <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
         <thead style="background-color:#f6f9fc;">
             <tr>
-                <th rowspan="2" class="text-uppercase font-weight-bolder ps-2">Saldo Akhir Bulan Lalu</th>
-                <th rowspan="2" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
-                <th colspan="2" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
-                <th rowspan="2" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Akhir Bulan Lalu</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
+                <th colspan="2" width="40%" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
             </tr>
             <tr>
-                <th class="text-uppercase font-weight-bolder ps-2">Rutin</th>
-                <th class="text-uppercase font-weight-bolder ps-2">Non Rutin</th>
+                <th width="20%" class="text-uppercase font-weight-bolder ps-2">Rutin</th>
+                <th width="20%" class="text-uppercase font-weight-bolder ps-2">Non Rutin</th>
             </tr>
         </thead>
         <tbody>
@@ -80,10 +134,50 @@
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_in,0, ',', '.')}}</th>
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_out_rutin,0, ',', '.')}}</th>
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_out_nonrutin,0, ',', '.')}}</th>
-                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($saldo+$total_in-$total_out_rutin-$total_out_nonrutin,0, ',', '.')}}</th>
+                <?php $posisi_total = $saldo+$total_in-$total_out_rutin-$total_out_nonrutin; ?>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($posisi_total,0, ',', '.')}}</th>
             </tr>
         </tbody>
     </table>
+</div>
+<h6 class="mt-2 text-uppercase font-weight-bolder">Estimasi Posisi Keuangan {{date_format(date_create($nextmonth),'M Y')}}</h6>
+<div class="card border mt-2">
+    <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
+        <thead style="background-color:#f6f9fc;">
+            <tr>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Awal</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
+                <th colspan="2" width="40%" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
+            </tr>
+            <tr>
+                <th width="20%" class="text-uppercase font-weight-bolder ps-2">Rutin</th>
+                <th width="20%" class="text-uppercase font-weight-bolder ps-2">Non Rutin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($posisi_total,0, ',', '.')}}</th>
+                <th class="text-uppercase font-weight-bolder ps-2">RP 0</th>
+                <th class="text-uppercase font-weight-bolder ps-2" id="estimasi-posisi-rutin"></th>
+                <th class="text-uppercase font-weight-bolder ps-2" id="estimasi-posisi-nonrutin"></th>
+                <th class="text-uppercase font-weight-bolder ps-2" id="estimasi-posisi-total"></th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<br>
+<div class="card border p-2" style="border-bottom:solid 2px #d96262!important;">
+    <div class="row align-items-center justify-content-center text-center">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <h6 class="m-0 text-uppercase font-weight-bolder">LAPORAN PERTANGGUNGJAWABAN {{strtoupper(date_format(date_create($select_bulan),'M Y'))}}</h6>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
 </div>
 
 <br>
@@ -259,6 +353,20 @@
 @endif
 
 <br>
+<div class="card border p-2" style="border-bottom:solid 2px #d96262!important;">
+    <div class="row align-items-center justify-content-center text-center">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <h6 class="m-0 text-uppercase font-weight-bolder">RAB {{strtoupper(date_format(date_create($nextmonth),'M Y'))}}</h6>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</div>
+
+<?php $estimasi_posisi_rutin = 0; $estimasi_posisi_nonrutin = 0; $estimasi_posisi_total = 0; ?>
+<br>
 <h6 class="text-uppercase font-weight-bolder">RAB RUTIN {{date_format(date_create($nextmonth),'M Y')}}</h6>
 <div class="card border mt-2">
     <div class="datatablex table-responsive datatable-sm">
@@ -320,6 +428,7 @@
                 <tr>
                     <th colspan="9" class="text-uppercase text-center font-weight-bolder">Total RAB</th>
                     <th class="text-uppercase text-center font-weight-bolder">{{number_format($total_biaya,0)}}</th>
+                    <?php $estimasi_posisi_rutin = $total_biaya; ?>
                 </tr>
             </tfooter>
         </table>
@@ -361,14 +470,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $total = 0; $total_realisasi = 0; ?>
+                            <?php $total_nonrutin = 0; $total_realisasi = 0; ?>
                             @foreach($mngbuild->details as $mb)
                                 <tr>
                                     <td class="new-td">{{$mb->uraian}}</td>
                                     <td class="new-td text-center">{{$mb->qty}}</td>
                                     <td class="new-td text-center">{{$mb->satuan}}</td>
                                     <td class="new-td text-end">{{number_format($mb->biaya,0, ',', '.')}}</td>
-                                    <?php $total = $total + ($mb->qty*$mb->biaya); ?>
+                                    <?php $total_nonrutin = $total_nonrutin + ($mb->qty*$mb->biaya); ?>
                                     <td class="new-td text-end">{{number_format(($mb->qty*$mb->biaya),0, ',', '.')}}</td>
                                     <td class="new-td text-center">{{$mb->qty_realisasi}}</td>
                                     <td class="new-td text-center">{{$mb->satuan_realisasi}}</td>
@@ -390,13 +499,16 @@
                                 <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
-                                <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total,0, ',', '.')}}</th>
+                                <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_nonrutin,0, ',', '.')}}</th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_realisasi,0, ',', '.')}}</th>
                                 <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
                             </tr>
+                            <?php
+                            $estimasi_posisi_nonrutin = $estimasi_posisi_nonrutin + $total_nonrutin;
+                            ?>
                         </tfooter>
                     </table>
                 </div>
@@ -405,12 +517,23 @@
     @endforeach
 @endif
 
+@if($print)
+    <script type="text/javascript" src="{{ asset('js/app-custom.js') }}"></script>
+@endif
 <script>
     try {
         $(document).ready();
     } catch (e) {
         window.location.replace(`{{ url("/") }}`)
     }
+
+    var posisi_total = "<?php echo $posisi_total; ?>"
+    var estimasi_posisi_rutin = "<?php echo $estimasi_posisi_rutin; ?>"
+    var estimasi_posisi_nonrutin = "<?php echo $estimasi_posisi_nonrutin; ?>"
+    $("#estimasi-posisi-rutin").html(toNumber(estimasi_posisi_rutin))
+    $("#estimasi-posisi-nonrutin").html(toNumber(estimasi_posisi_nonrutin))
+    $("#estimasi-posisi-total").html(toNumber(posisi_total-estimasi_posisi_rutin-estimasi_posisi_nonrutin))
+    $("#estimasi-out-nextmonth").html(toNumber(parseFloat(estimasi_posisi_rutin)+parseFloat(estimasi_posisi_nonrutin)))
 
     function filterOnchange(tipe=false){
         var periode = $('#periode_bulan').val();

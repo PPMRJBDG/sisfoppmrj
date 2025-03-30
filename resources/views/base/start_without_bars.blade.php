@@ -12,8 +12,8 @@ $setting = App\Models\Settings::first();
   @if($setting->logoImgUrl!='')
   <link rel="icon" type="image/png" href="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}">
   @endif
-  <title>
-    {{$setting->apps_name}}
+  <title class="text-uppercase">
+    {{($title) ? strtoupper($title) : $setting->apps_name}}
   </title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
