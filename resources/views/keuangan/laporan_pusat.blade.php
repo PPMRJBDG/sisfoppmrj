@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<div class="card border mb-2 p-5">
+<div class="card border mb-2 p-5" style="border:solid 2px #42c19c!important;">
     <div class="p-2 text-start h6">
         Kepada Yang Terhormat<br>
         Bapak Imam / Wakil 4<br>
@@ -282,6 +282,10 @@
                         <h6 class="m-0">
                             Management Building: <b class="badge badge-primary">{{strtoupper($mngbuild->managBuilding->nama)}}</b> 
                         </h6>
+                        <p class="m-0 quote">
+                            Deskripsi:<br>
+                            {{ucwords($mngbuild->managBuilding->deskripsi)}}
+                        </p>
                     </div>
                     
                     <div class="datatablex table-responsive datatable-sm">
@@ -445,6 +449,10 @@
                     <h6 class="m-0">
                         Management Building: <b class="badge badge-primary">{{strtoupper($mngbuild->nama)}}</b> 
                     </h6>
+                    <p class="m-0 quote">
+                        Deskripsi:<br>
+                        {{ucwords($mngbuild->deskripsi)}}
+                    </p>
                 </div>
                 
                 <div class="datatablex table-responsive datatable-sm">

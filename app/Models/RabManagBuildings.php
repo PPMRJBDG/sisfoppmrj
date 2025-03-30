@@ -11,6 +11,7 @@ class RabManagBuildings extends Model
         'nama',
         'periode_bulan',
         'status',
+        'deskripsi'
     ];
 
     public function details()
@@ -24,7 +25,7 @@ class RabManagBuildings extends Model
         $total_biaya = 0;
         if($details!=null){
             foreach($details as $d){
-                $total_biaya = $total_biaya + ($d->qty*$d->biaya);
+                $total_biaya = $total_biaya + ($d->qty_realisasi*$d->biaya_realisasi);
             }
         }
         return $total_biaya;

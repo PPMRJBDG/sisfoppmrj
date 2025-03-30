@@ -611,7 +611,8 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         if($request->input('parent_id')==""){
             $create = RabManagBuildings::create([
                 'nama' => $request->input('name'),
-                'periode_bulan' => $request->input('date')
+                'periode_bulan' => $request->input('date'),
+                'deskripsi' => $request->input('deskripsi')
             ]);
             if($create){
                 return redirect()->route('rab management building')->with('success', 'Berhasil menambah pengajuan');
@@ -655,6 +656,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             }else{
                 $create->nama = $request->input('name');
                 $create->periode_bulan = $request->input('date');
+                $create->deskripsi = $request->input('deskripsi');
                 $create->save();
                 if($create){
                     return redirect()->route('rab management building')->with('success', 'Berhasil update pengajuan');

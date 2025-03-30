@@ -10,14 +10,17 @@
     <div class="card-body p-0">
         <form action="{{ route('store management building') }}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="parent_id" id="parent_id" value="" required>
-            <div class="row align-items-center justify-content-center p-2">
-                <div class="col-md-4">
+            <div class="row p-2">
+                <div class="col-md-3">
                     <input class="form-control" type="text" placeholder="Nama Pengajuan" id="name" name="name" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <input class="form-control" type="date" value="{{date('Y-m')}}" id="date" name="date" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
+                    <textarea rows="5" class="form-control" type="textarea" placeholder="Deskripsi" id="deskripsi" name="deskripsi"></textarea>
+                </div>
+                <div class="col-md-1">
                     <button type="submit" class="btn btn-primary btn-sm mb-0">
                         <i class="fas fa-save" aria-hidden="true"></i>
                         SIMPAN
@@ -30,13 +33,14 @@
 
 <div class="card border mt-2">
     <div class="card-body p-0">
-        <div class="datatable table-responsive datatable-sm text-uppercase">
+        <div class="datatable datatable-sm text-uppercase">
             <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2">NAMA</th>
                         <th class="text-uppercase font-weight-bolder ps-2">PERIODE</th>
                         <th class="text-uppercase font-weight-bolder ps-2">TOTAL BIAYA</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">DESKRIPSI</th>
                         <th class="text-uppercase font-weight-bolder ps-2">DETIL</th>
                         <th class="text-uppercase font-weight-bolder ps-2">STATUS</th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
@@ -49,6 +53,7 @@
                                 <td>{{$mb->nama}}</td>
                                 <td>{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
                                 <td>{{number_format($mb->total_biaya(),0, ',', '.')}}</td>
+                                <td >{{$mb->deskripsi}}</td>
                                 <td><a href="{{route('rab management building id',$mb->id)}}" class="btn btn-sm btn-outline-secondary">Lihat Detil</a></td>
                                 <td>
                                     <?php
@@ -100,6 +105,11 @@
                 ?>
                 <span class="badge badge-{{$badge}}">{{$detail_of->status}} {{ ($badge=='submit') ? ': menunggu persetujuan pusat' : '' }}</span>
             </h6>
+        </div>
+        <div class="p-3">
+            <h6 class="mb-0">Deskripsi:</h6>
+            {{ucwords($detail_of->deskripsi)}}
+            <hr>
         </div>
         <form action="{{ route('store detail management building') }}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" id="id" value="" required>
@@ -269,6 +279,7 @@ function ubah(x,data,status){
         $("#parent_id").val(data.id);
         $("#name").val(data.nama);
         $("#date").val(data.periode_bulan);
+        $("#deskripsi").val(data.deskripsi);
     }else if(x=="detil"){
         $("#id").val(data.id);
         $("#uraian").val(data.uraian);
