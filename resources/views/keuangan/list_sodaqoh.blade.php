@@ -194,9 +194,9 @@
                                     <b>{{ number_format($kekurangan,0) }}</b>
                                 </td>
                                 <td>
-                                    <a block-id="return-false" href="{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan, $select_lunas])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                                    <a block-id="return-false" onclick="getPage(`{{ route('delete sodaqoh', [$data->id, $periode, $select_angkatan, $select_lunas])}}`)" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
                                     @if($data->status_lunas=='')
-                                    <a block-id="return-false" onclick="reminderSodaqoh({{$data}})" id="ingatkan{{$data->id}}" class="btn btn-warning btn-sm mb-0">Ingatkan</a>
+                                        <a block-id="return-false" onclick="reminderSodaqoh({{$data}})" id="ingatkan{{$data->id}}" class="btn btn-warning btn-sm mb-0">Ingatkan</a>
                                     @endif
                                 </td>
                             </tr>
