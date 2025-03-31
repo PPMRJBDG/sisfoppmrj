@@ -223,6 +223,10 @@ Route::post('/keuangan/rab-kegiatan/store', [App\Http\Controllers\KeuanganContro
 Route::post('/keuangan/rab-detail-kegiatan/store', [App\Http\Controllers\KeuanganController::class, 'store_detail_rab_kegiatan'])->name('store detail rab kegiatan')->middleware('role:superadmin|ku|santri');
 Route::get('/keuangan/rab-kegiatan/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_rab_kegiatan'])->name('delete rab kegiatan')->middleware('role:superadmin|ku|santri');
 Route::get('/keuangan/rab-kegiatan/delete-detail/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_detail_rab_kegiatan'])->name('delete detail rab kegiatan')->middleware('role:superadmin|ku|santri');
+Route::get('/rab/{ids}', [App\Http\Controllers\PublicController::class, 'rab_kegiatan'])->name('rab kegiatan public');
+Route::post('/rab/store-detail', [App\Http\Controllers\PublicController::class, 'store_detail_rab_kegiatan'])->name('store detail rab kegiatan public');
+Route::get('/rab/delete-detail/{id}', [App\Http\Controllers\PublicController::class, 'delete_detail_rab_kegiatan'])->name('delete detail rab kegiatan public');
+Route::get('/ku/{tahun_bulan}/{print}', [App\Http\Controllers\PublicController::class, 'laporan_pusat'])->name('print laporan pusat public');
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');

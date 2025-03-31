@@ -1,5 +1,14 @@
 @if($print)
     @include('base.start_without_bars', ['title' => "LPJ BULAN ".date_format(date_create($select_bulan),'M Y')." & RAB BULAN ".date_format(date_create($nextmonth),'M Y')." - PPM RJ BS2"])
+    <script>
+    // function passwordCheck(){
+    //     var password = prompt("Masukkan kode rahasia!");
+    //     if (password !== "RJBS2@354"){
+    //         passwordCheck();
+    //     }
+    // }
+    // window.onbeforeunload = passwordCheck();
+    </script>
 @endif
 
 <style>
@@ -95,7 +104,6 @@
         <div class="col-md-2">
             <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">Laporan Keuangan {{ App\Helpers\CommonHelpers::periode() }}</h6>
             <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan" onchange="filterOnchange()">
-                <option value="all">--seluruh tahun-bulan--</option>
                 @foreach($bulans as $bulan)
                 <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
                 @endforeach
@@ -103,11 +111,16 @@
         </div>
         <div class="col-md-5 text-end">
             <script>
-                function openTab(){
-                    window.open("{{route('print laporan pusat',[$select_bulan,true])}}", "_blank");
+                function openTab(x){
+                    if(x=="public"){
+                        window.open("{{route('print laporan pusat public',[$select_bulan,true])}}", "_blank");
+                    }else{
+                        window.open("{{route('print laporan pusat',[$select_bulan,true])}}", "_blank");
+                    }
                 }
             </script>
-            <a onclick="openTab()" href="#" class="btn btn-sm btn-primary"><i class="fas fa-print" aria-hidden="true"></i></a>
+            <a onclick="openTab('')" href="#" class="btn btn-sm btn-primary"><i class="fas fa-print" aria-hidden="true"></i></a>
+            <a onclick="openTab('public')" href="#" class="btn btn-sm btn-primary"><i class="fas fa-earth-asia" aria-hidden="true"></i></a>
         </div>
     </div>
 </div>
@@ -224,7 +237,9 @@
                             <td class="new-td">
                                 <span class="badge badge-{{($jurnal->jenis=='in') ? 'primary' : 'danger'}}">{{$jurnal->jenis}}</span>
                                 @if($jurnal->fkRabManagBuilding_id!=0)
-                                    <a href="{{route('rab management building id',$jurnal->fkRabManagBuilding_id)}}" class="badge badge-secondary">#{{$jurnal->fkRabManagBuilding_id}}</a>
+                                    <a onclick="document.getElementById('NR{{$jurnal->fkRabManagBuilding_id}}').scrollIntoView()" href="#NR{{$jurnal->fkRabManagBuilding_id}}" class="badge badge-secondary">#NR{{$jurnal->fkRabManagBuilding_id}}</a>
+                                @elseif($jurnal->fkRabKegiatan_id!=0)
+                                    <a onclick="document.getElementById('KR{{$jurnal->fkRabKegiatan_id}}').scrollIntoView()" href="#KR{{$jurnal->fkRabKegiatan_id}}" class="badge badge-secondary">#KR{{$jurnal->fkRabKegiatan_id}}</a>
                                 @endif
                                 {{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}
                             </td>
@@ -271,16 +286,120 @@
     </div>
 </div>
 
+@if(count($rab_kegiatan)>0)
+    <br>
+    <h6 class="text-uppercase font-weight-bolder">Rincian Pengeluaran Kegiatan Rutin {{date_format(date_create($select_bulan),'M Y')}}</h6>
+    @foreach($rab_kegiatan as $mngbuild)
+        @if($mngbuild->fkRabKegiatan_id!=0)
+            <div class="card border p-2 mt-2" id="KR{{$mngbuild->kegiatan->id}}">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-12 text-start mb-2">
+                        <h6 class="m-0">
+                            Kegiatan: <span class="badge badge-secondary">#KR{{$mngbuild->kegiatan->id}}</span> <b class="badge badge-primary">{{strtoupper($mngbuild->kegiatan->nama)}}</b> 
+                        </h6>
+                        <h6 class="mb-0">Budget: <b>Rp {{number_format($mngbuild->kegiatan->rab->biaya,0, ',', '.')}}</b></h6>
+                        <p class="m-0 quote">
+                            Deskripsi:<br>
+                            {{ucwords($mngbuild->kegiatan->deskripsi)}}
+                        </p>
+                    </div>
+                    
+                    <div class="datatablex table-responsive datatable-sm">
+                        <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
+                            <thead style="background-color:#f6f9fc;">
+                                <tr>
+                                    <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #e7a2a2;" colspan="4">RAB</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center" style="border-bottom:solid 2px #42c19c;" colspan="4">REALISASI</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-uppercase font-weight-bolder ps-2">URAIAN</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">QTY</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center">SAT</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">BIAYA</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">TOTAL</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">SELISIH</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $total = 0; $total_realisasi = 0; ?>
+                                @foreach($mngbuild->detail_kegiatans() as $mb)
+                                    <tr>
+                                        <td class="new-td">{{$mb->uraian}}</td>
+                                        <td class="new-td text-center">{{$mb->qty}}</td>
+                                        <td class="new-td text-center">{{$mb->satuan}}</td>
+                                        <td class="new-td text-end">{{number_format($mb->biaya,0, ',', '.')}}</td>
+                                        <?php $total = $total + ($mb->qty*$mb->biaya); ?>
+                                        <td class="new-td text-end">{{number_format(($mb->qty*$mb->biaya),0, ',', '.')}}</td>
+                                        <td class="new-td text-center">{{$mb->qty_realisasi}}</td>
+                                        <td class="new-td text-center">{{$mb->satuan_realisasi}}</td>
+                                        <td class="new-td text-end">{{number_format($mb->biaya_realisasi,0, ',', '.')}}</td>
+                                        <?php $total_realisasi = $total_realisasi + ($mb->qty_realisasi*$mb->biaya_realisasi); ?>
+                                        <td class="new-td text-end">{{number_format(($mb->qty_realisasi*$mb->biaya_realisasi),0, ',', '.')}}</td>
+                                        <td class="new-td text-end">
+                                            <?php
+                                            $selisih = ($mb->qty*$mb->biaya)-($mb->qty_realisasi*$mb->biaya_realisasi);
+                                            ?>
+                                            {{number_format($selisih,0, ',', '.')}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfooter style="background-color:#f6f9fc;">
+                                <tr>
+                                    <th class="text-uppercase font-weight-bolder ps-2"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total,0, ',', '.')}}</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_realisasi,0, ',', '.')}}</th>
+                                    <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
+                                </tr>
+                                @if($mngbuild->kegiatan->rab->biaya<$total || $mngbuild->kegiatan->rab->biaya<$total_realisasi)
+                                    <tr>
+                                        <th class="text-uppercase font-weight-bolder ps-2">Justifikasi</th>
+                                        <th colspan="4" class="text-uppercase font-weight-bolder ps-2 text-center">
+                                            @if($mngbuild->kegiatan->rab->biaya<$total)
+                                                Budget < Total RAB
+                                                <textarea {{($mngbuild->kegiatan->status=="posted") ? 'readonly' : ''}} rows="3" class="form-control" name="justifikasi-rab" id="justifikasi-rab">{{$mngbuild->kegiatan->justifikasi_rab}}</textarea>
+                                            @endif
+                                        </th>
+                                        <th colspan="4" class="text-uppercase font-weight-bolder ps-2 text-center">
+                                            @if($total<$total_realisasi)
+                                                Total RAB < Total Realisasi
+                                                <textarea {{($mngbuild->kegiatan->status=="posted") ? 'readonly' : ''}} rows="3" class="form-control" name="justifikasi-realisasi" id="justifikasi-realisasi">{{$mngbuild->kegiatan->justifikasi_realisasi}}</textarea>
+                                            @endif
+                                        </th>
+                                        <th colspan="2" class="text-uppercase font-weight-bolder ps-2"></th>
+                                    </tr>
+                                @endif
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
+@endif
+
 @if(count($manag_building)>0)
     <br>
     <h6 class="text-uppercase font-weight-bolder">Rincian Pengeluaran Non Rutin {{date_format(date_create($select_bulan),'M Y')}}</h6>
     @foreach($manag_building as $mngbuild)
         @if($mngbuild->fkRabManagBuilding_id!=0)
-            <div class="card border p-2 mt-2">
+            <div class="card border p-2 mt-2" id="NR{{$mngbuild->managBuilding->id}}">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-12 text-start mb-2">
                         <h6 class="m-0">
-                            Management Building: <b class="badge badge-primary">{{strtoupper($mngbuild->managBuilding->nama)}}</b> 
+                            Management Building: <span class="badge badge-secondary">#NR{{$mngbuild->managBuilding->id}}</span> <b class="badge badge-primary">{{strtoupper($mngbuild->managBuilding->nama)}}</b> 
                         </h6>
                         <p class="m-0 quote">
                             Deskripsi:<br>
@@ -347,7 +466,7 @@
                                     <th class="text-uppercase font-weight-bolder ps-2 text-end">{{number_format($total_realisasi,0, ',', '.')}}</th>
                                     <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
                                 </tr>
-                            </tfooter>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -428,13 +547,13 @@
                     @endforeach
                 @endif
             </tbody>
-            <tfooter>
+            <tfoot>
                 <tr>
                     <th colspan="9" class="text-uppercase text-center font-weight-bolder">Total RAB</th>
                     <th class="text-uppercase text-center font-weight-bolder">{{number_format($total_biaya,0)}}</th>
                     <?php $estimasi_posisi_rutin = $total_biaya; ?>
                 </tr>
-            </tfooter>
+            </tfoot>
         </table>
     </div>
 </div>
@@ -517,7 +636,7 @@
                             <?php
                             $estimasi_posisi_nonrutin = $estimasi_posisi_nonrutin + $total_nonrutin;
                             ?>
-                        </tfooter>
+                        </tfoot>
                     </table>
                 </div>
             </div>

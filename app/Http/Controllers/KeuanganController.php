@@ -748,72 +748,80 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
 
     public function laporan_pusat($select_bulan = null, $print = false)
     {
-        $bulans = DB::table('jurnals')
-                ->select(DB::raw('DATE_FORMAT(tanggal, "%Y-%m") as ym'))
-                ->groupBy('ym')
-                ->orderBy('ym', 'DESC')
-                ->get();
-
         if ($select_bulan == null) {
             $select_bulan = date('Y-m');
         }
 
-        $nextmonth = strtotime('+1 month', strtotime($select_bulan));
-        $nextmonth = date('Y-m', $nextmonth);
-        $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('biaya','!=',0)->orderBy('fkDivisi_id','ASC')->get();
+        return (new PublicController)->laporan_pusat($select_bulan, $print);
 
-        if($select_bulan=="all"){
-            $jurnals = Jurnals::orderBy('tanggal','ASC')->get();
-        }else{
-            $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')->orderBy('tanggal','ASC')->get();
-        }
+        // $bulans = DB::table('jurnals')
+        //         ->select(DB::raw('DATE_FORMAT(tanggal, "%Y-%m") as ym'))
+        //         ->groupBy('ym')
+        //         ->orderBy('ym', 'DESC')
+        //         ->get();
 
-        $total_in = 0;
-        foreach($jurnals->where('jenis','in') as $in){
-            $total_in = $total_in + ($in->qty*$in->nominal);
-        }
+        // if ($select_bulan == null) {
+        //     $select_bulan = date('Y-m');
+        // }
 
-        $total_out_rutin = 0;
-        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Rutin') as $outr){
-            $total_out_rutin = $total_out_rutin + ($outr->qty*$outr->nominal);
-        }
-        $total_out_nonrutin = 0;
-        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Non Rutin') as $outnr){
-            $total_out_nonrutin = $total_out_nonrutin + ($outnr->qty*$outnr->nominal);
-        }
+        // $nextmonth = strtotime('+1 month', strtotime($select_bulan));
+        // $nextmonth = date('Y-m', $nextmonth);
+        // $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('biaya','!=',0)->orderBy('fkDivisi_id','ASC')->get();
 
-        $manag_building = $jurnals->whereNotNull('fkRabManagBuilding_id')->where('fkRabManagBuilding_id','!=',0);
+        // if($select_bulan=="all"){
+        //     $jurnals = Jurnals::orderBy('tanggal','ASC')->get();
+        // }else{
+        //     $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')->orderBy('tanggal','ASC')->get();
+        // }
 
-        $pengajuan_manag_buildings = RabManagBuildings::where('status','submit')->get();
+        // $total_in = 0;
+        // foreach($jurnals->where('jenis','in') as $in){
+        //     $total_in = $total_in + ($in->qty*$in->nominal);
+        // }
+
+        // $total_out_rutin = 0;
+        // foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Rutin') as $outr){
+        //     $total_out_rutin = $total_out_rutin + ($outr->qty*$outr->nominal);
+        // }
+        // $total_out_nonrutin = 0;
+        // foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Non Rutin') as $outnr){
+        //     $total_out_nonrutin = $total_out_nonrutin + ($outnr->qty*$outnr->nominal);
+        // }
+
+        // $manag_building = $jurnals->whereNotNull('fkRabManagBuilding_id')->where('fkRabManagBuilding_id','!=',0);
+        // $rab_kegiatan = $jurnals->whereNotNull('fkRabKegiatan_id')->where('fkRabKegiatan_id','!=',0);
+
+        // $pengajuan_manag_buildings = RabManagBuildings::where('status','submit')->get();
         
-        $saldo = 0;
-        if($select_bulan!='all'){
-            $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-1')->orderBy('tanggal','ASC')->get();
-            if($saldo_jurnal!=null){
-                foreach($saldo_jurnal as $j){
-                    if($j->jenis=="in"){
-                        $saldo = $saldo + $j->nominal;
-                    }else if($j->jenis=="out"){
-                        $saldo = $saldo - $j->nominal;
-                    }
-                }
-            }
-        }
+        // $saldo = 0;
+        // if($select_bulan!='all'){
+        //     $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-1')->orderBy('tanggal','ASC')->get();
+        //     if($saldo_jurnal!=null){
+        //         foreach($saldo_jurnal as $j){
+        //             if($j->jenis=="in"){
+        //                 $saldo = $saldo + $j->nominal;
+        //             }else if($j->jenis=="out"){
+        //                 $saldo = $saldo - $j->nominal;
+        //             }
+        //         }
+        //     }
+        // }
         
-        return view('keuangan.laporan_pusat', [
-            'print' => $print,
-            'saldo' => $saldo,
-            'jurnals' => $jurnals,
-            'bulans' => $bulans,
-            'select_bulan' => $select_bulan,
-            'manag_building' => $manag_building,
-            'pengajuan_manag_buildings' => $pengajuan_manag_buildings,
-            'nextmonth' => $nextmonth,
-            'rabs' => $rabs,
-            'total_in' => $total_in,
-            'total_out_rutin' => $total_out_rutin,
-            'total_out_nonrutin' => $total_out_nonrutin,
-        ]);
+        // return view('keuangan.laporan_pusat', [
+        //     'print' => $print,
+        //     'saldo' => $saldo,
+        //     'jurnals' => $jurnals,
+        //     'bulans' => $bulans,
+        //     'select_bulan' => $select_bulan,
+        //     'manag_building' => $manag_building,
+        //     'rab_kegiatan' => $rab_kegiatan,
+        //     'pengajuan_manag_buildings' => $pengajuan_manag_buildings,
+        //     'nextmonth' => $nextmonth,
+        //     'rabs' => $rabs,
+        //     'total_in' => $total_in,
+        //     'total_out_rutin' => $total_out_rutin,
+        //     'total_out_nonrutin' => $total_out_nonrutin,
+        // ]);
     }
 
     public function rab_kegiatan($id=null){
@@ -855,6 +863,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 'deskripsi' => $request->input('deskripsi'),
                 'fkSantri_id_ketua' => $request->input('fkSantri_id_ketua'),
                 'fkSantri_id_bendahara' => $request->input('fkSantri_id_bendahara'),
+                'ids' => uniqid()
             ]);
             if($create){
                 return redirect()->route('rab kegiatan')->with('success', 'Berhasil menambah pengajuan');
@@ -865,6 +874,8 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             $create = RabKegiatans::find($request->input('parent_id'));
             if($request->input('status')!=null){
                 $create->status = $request->input('status');
+                $create->justifikasi_rab = $request->input('justifikasi_rab');
+                $create->justifikasi_realisasi = $request->input('justifikasi_realisasi');
                 $create->save();
                 if($create){
                     if($request->input('status')=='posted'){
@@ -904,6 +915,9 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 $create->deskripsi = $request->input('deskripsi');
                 $create->fkSantri_id_ketua = $request->input('fkSantri_id_ketua');
                 $create->fkSantri_id_bendahara = $request->input('fkSantri_id_bendahara');
+                if($create->ids==""){
+                    $create->ids = uniqid();
+                }
                 $create->save();
                 if($create){
                     return redirect()->route('rab kegiatan')->with('success', 'Berhasil update pengajuan');
@@ -919,19 +933,23 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             return redirect()->route('dashboard');
         }
         if($request->input('id')==""){
-            $create = RabKegiatanDetails::create([
-                'fkRabKegiatan_id' => $request->input('parent_id_detail'),
-                'uraian' => $request->input('uraian'),
-                'qty' => $request->input('qty'),
-                'satuan' => $request->input('satuan'),
-                'biaya' => $request->input('biaya'),
-                'realisasi' => $request->input('realisasi'),
-                'divisi' => $request->input('divisi'),
-            ]);
-            if($create){
-                return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->with('success', 'Berhasil menambah detail pengajuan');
+            if($request->input('status')!="approved"){
+                $create = RabKegiatanDetails::create([
+                    'fkRabKegiatan_id' => $request->input('parent_id_detail'),
+                    'uraian' => $request->input('uraian'),
+                    'qty' => $request->input('qty'),
+                    'satuan' => $request->input('satuan'),
+                    'biaya' => $request->input('biaya'),
+                    'realisasi' => $request->input('realisasi'),
+                    'divisi' => $request->input('divisi'),
+                ]);
+                if($create){
+                    return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->with('success', 'Berhasil menambah detail pengajuan');
+                }else{
+                    return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Gagal menambah detail pengajuan']);
+                }
             }else{
-                return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Gagal menambah detail pengajuan']);
+                return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Status Approved tidak dapat menambah item baru']);
             }
         }else{
             $create = RabKegiatanDetails::find($request->input('id'));

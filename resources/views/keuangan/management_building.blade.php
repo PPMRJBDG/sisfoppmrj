@@ -266,7 +266,7 @@
                             </button>
                         </th>
                     </tr>
-                </tfooter>
+                </tfoot>
             </table>
         </div>
     </div>

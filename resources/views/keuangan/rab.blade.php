@@ -193,7 +193,7 @@ if(count($rabs)>0){
                         @endforeach
                     @endif
                 </tbody>
-                <tfooter>
+                <tfoot>
                     <tr>
                         <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
                         <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
@@ -205,7 +205,7 @@ if(count($rabs)>0){
                         <!-- <th class="text-uppercase text-center font-weight-bolder">Realisasi</th> -->
                         <th class="text-uppercase text-center font-weight-bolder"></th>
                     </tr>
-                </tfooter>
+                </tfoot>
             </table>
         </div>
     </div>

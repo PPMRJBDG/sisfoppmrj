@@ -14,7 +14,10 @@ class RabKegiatans extends Model
         'status',
         'deskripsi',
         'fkSantri_id_ketua',
-        'fkSantri_id_bendahara'
+        'fkSantri_id_bendahara',
+        'ids',
+        'justifikasi_rab',
+        'justifikasi_realisasi',
     ];
 
     public function rab()

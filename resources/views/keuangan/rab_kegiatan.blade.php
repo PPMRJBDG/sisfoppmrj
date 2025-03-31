@@ -4,7 +4,17 @@
     }
 </style>
 
-<div class="card border p-2 mb-2">
+@if ($errors->any())
+<div class="alert alert-danger text-white">
+    <ul class="m-0">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+<div class="card border p-2 mb-2" style="border-bottom:solid 2px #93c2f2!important;">
     <div class="row align-items-center justify-content-center text-center">
         <div class="col-md-12">
             <h6 class="m-0">RAB Kegiatan</h6>
@@ -63,8 +73,9 @@
             <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th class="text-uppercase font-weight-bolder ps-2">KEGIATAN</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">NAMA</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">LINK</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">RAB</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">NAMA KEGIATAN</th>
                         <th class="text-uppercase font-weight-bolder ps-2">PERIODE</th>
                         <th class="text-uppercase font-weight-bolder ps-2">TOTAL BIAYA</th>
                         <th class="text-uppercase font-weight-bolder ps-2">DESKRIPSI</th>
@@ -77,6 +88,11 @@
                     @if($kegiatans)
                         @foreach($kegiatans as $mb)
                             <tr>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
+                                        <i onclick="copyLink('{{$mb->ids}}')" class="fa fa-copy text-white"></i>
+                                    </button>
+                                </td>
                                 <td>{{$mb->rab->keperluan}}</td>
                                 <td>{{$mb->nama}}</td>
                                 <td>{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
@@ -134,12 +150,14 @@
                 <span class="badge badge-{{$badge}}">{{$detail_of->status}} {{ ($badge=='submit') ? ': menunggu persetujuan pusat' : '' }}</span>
             </h6>
         </div>
-        <div class="p-3 pt-0">
+        <div class="p-3 pt-0 pb-0">
+            <h6 class="mb-0">Budget: <b>Rp {{number_format($detail_of->rab->biaya,0, ',', '.')}}</b></h6>
             <h6 class="mb-0">Deskripsi:</h6>
             {{ucwords($detail_of->deskripsi)}}
             <hr>
         </div>
         <form action="{{ route('store detail rab kegiatan') }}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="status" id="status" value="{{$detail_of->status}}" required>
             <input type="hidden" name="id" id="id" value="" required>
             <input type="hidden" name="parent_id_detail" id="parent_id_detail" value="{{$detail_of->id}}" required>
             <div class="row">
@@ -150,6 +168,8 @@
                         <option value="KONSUMSI">KONSUMSI</option>
                         <option value="ACARA">ACARA</option>
                         <option value="PUBDOK">PUBDOK</option>
+                        <option value="KEBERSIHAN">KEBERSIHAN</option>
+                        <option value="HUMAS">HUMAS</option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -231,7 +251,7 @@
                     @foreach($detail_kegiatans as $mb)
                         @if($mb->divisi!=$divisi)
                             <tr style="background:#f7f9fd;">
-                                <td colspan="11" class="font-weight-bolder text-italic"><span class="badge badge-secondary">{{$mb->divisi}}</span></td>
+                                <td colspan="11" class="new-td font-weight-bolder text-italic"><span class="badge badge-secondary">{{$mb->divisi}}</span></td>
                             </tr>
                         @endif
                         <?php $divisi = $mb->divisi; ?>
@@ -268,7 +288,7 @@
                         </tr>
                     @endforeach
                 </tbody>
-                <tfooter style="background-color:#f6f9fc;">
+                <tfoot style="background-color:#f6f9fc;">
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                         <th class="text-uppercase font-weight-bolder ps-2 text-center"></th>
@@ -282,6 +302,22 @@
                         <th class="text-uppercase font-weight-bolder ps-2 text-end"></th>
                         <th class="text-uppercase font-weight-bolder ps-2"></th>
                     </tr>
+                    @if($detail_of->rab->biaya<$total || $detail_of->rab->biaya<$total_realisasi)
+                        <tr>
+                            <th class="text-uppercase font-weight-bolder ps-2">Justifikasi</th>
+                            <th colspan="4" class="text-uppercase font-weight-bolder ps-2 text-center">
+                                @if($detail_of->rab->biaya<$total)
+                                    <textarea {{($detail_of->status=="posted") ? 'readonly' : ''}} rows="3" class="form-control" name="justifikasi-rab" id="justifikasi-rab">{{$detail_of->justifikasi_rab}}</textarea>
+                                @endif
+                            </th>
+                            <th colspan="4" class="text-uppercase font-weight-bolder ps-2 text-center">
+                                @if($total<$total_realisasi)
+                                    <textarea {{($detail_of->status=="posted") ? 'readonly' : ''}} rows="3" class="form-control" name="justifikasi-realisasi" id="justifikasi-realisasi">{{$detail_of->justifikasi_realisasi}}</textarea>
+                                @endif
+                            </th>
+                            <th colspan="2" class="text-uppercase font-weight-bolder ps-2"></th>
+                        </tr>
+                    @endif
                     <tr>
                         <th colspan="11" class="text-uppercase font-weight-bolder ps-2 text-center">
                             @if($detail_of->status=='approved')
@@ -317,7 +353,7 @@
                             @endif
                         </th>
                     </tr>
-                </tfooter>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -325,6 +361,11 @@
 @endif
 
 <script>
+function copyLink(ids){
+    var route = `{{ url("/") }}/keuangan/rab-kegiatan/public/`+ids;
+    navigator.clipboard.writeText(route);
+}
+
 function ubah(x,data,status){
     if(x=="parent"){
         $("#fkRab_id").val(data.fkRab_id);
@@ -373,11 +414,30 @@ function hapus(x,id){
 }
 
 function submitKegiatan(tipe,detail_of){
+    if(tipe=="submit" || tipe=="posted"){
+        var budget = <?php echo $detail_of->rab->biaya; ?>;
+        var total_rab = <?php echo $total; ?>;
+        var total_realisasi = <?php echo $total_realisasi; ?>;
+        if(tipe=="submit"){
+            if(budget<total_rab && $("#justifikasi-rab").val()==""){
+                alert("Berikan Justifikasi pada RAB");
+                return false;
+            }
+        }
+        if(tipe=="posted"){
+            if(total_rab<total_realisasi && $("#justifikasi-realisasi").val()==""){
+                alert("Berikan Justifikasi pada Realisasi");
+                return false;
+            }
+        }
+    }
     if (confirm('Apakah RAB ini yakin akan di '+tipe+' ?')) {
         $("#loadingSubmit").show();
         var datax = {};
         datax['parent_id'] = detail_of.id;
         datax['status'] = tipe;
+        datax['justifikasi_rab'] = $("#justifikasi-rab").val();
+        datax['justifikasi_realisasi'] = $("#justifikasi-realisasi").val();
         $.post("{{ route('store rab kegiatan') }}", datax,
             function(data, status) {
                 var return_data = JSON.parse(data);

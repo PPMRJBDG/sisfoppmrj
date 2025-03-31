@@ -27,6 +27,12 @@ use App\Models\ReminderTatatertib;
 use App\Models\CatatanPenghubungs;
 use App\Models\JagaMalams;
 use App\Models\LaporanKeamanans;
+use App\Models\RabManagBuildings;
+use App\Models\RabManagBuildingDetails;
+use App\Models\RabKegiatans;
+use App\Models\RabKegiatanDetails;
+use App\Models\Rabs;
+use App\Models\jurnals;
 
 use Illuminate\Support\Facades\DB;
 
@@ -855,6 +861,133 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             'pelanggaran' => $pelanggaran,
             'catatan_penghubungs' => $catatan_penghubungs,
             'sodaqoh' => $sodaqoh
+        ]);
+    }
+
+    public function rab_kegiatan($ids=null){
+        $kegiatans = RabKegiatans::where('ids',$ids)->first();
+        $detail_kegiatans = RabKegiatanDetails::where('fkRabKegiatan_id',$kegiatans->id)->get();
+        
+        return view('keuangan.rab_kegiatan_public', [
+            'ids' => $ids,
+            'detail_of' => $kegiatans,
+            'detail_kegiatans' => $detail_kegiatans,
+        ]);
+    }
+
+    public function store_detail_rab_kegiatan(Request $request){
+        if($request->input('id')==""){
+            if($request->input('status')!="approved"){
+                $create = RabKegiatanDetails::create([
+                    'fkRabKegiatan_id' => $request->input('parent_id_detail'),
+                    'uraian' => $request->input('uraian'),
+                    'qty' => $request->input('qty'),
+                    'satuan' => $request->input('satuan'),
+                    'biaya' => $request->input('biaya'),
+                    'realisasi' => $request->input('realisasi'),
+                    'divisi' => $request->input('divisi'),
+                ]);
+                return redirect()->route('rab kegiatan public',$request->input('ids'));
+            }else{
+                return redirect()->route('rab kegiatan public',$request->input('ids'))->withErrors(['failed' => 'Status Approved tidak dapat menambah item baru']);
+            }
+        }else{
+            $create = RabKegiatanDetails::find($request->input('id'));
+            $create->uraian = $request->input('uraian');
+            $create->qty = $request->input('qty');
+            $create->satuan = $request->input('satuan');
+            $create->biaya = $request->input('biaya');
+            $create->qty_realisasi = $request->input('qty_realisasi');
+            $create->satuan_realisasi = $request->input('satuan_realisasi');
+            $create->biaya_realisasi = $request->input('biaya_realisasi');
+            $create->divisi = $request->input('divisi');
+            $create->save();
+            return redirect()->route('rab kegiatan public',$request->input('ids'));
+        }
+    }
+
+    public function delete_detail_rab_kegiatan($id){
+        $data = RabKegiatanDetails::find($id);
+        if ($data) {
+            if ($data->delete()) {
+                return json_encode(array("status" => true, "message" => 'Berhasil menghapus detail pengajuan'));
+            } else {
+                return json_encode(array("status" => false, "message" => 'Gagal menghapus detail pengajuan'));
+            }
+        } else {
+            return json_encode(array("status" => false, "message" => 'Detail pengajuan tidak ditemukan'));
+        }
+    }
+
+    public function laporan_pusat($select_bulan = null, $print = false)
+    {
+        $bulans = DB::table('jurnals')
+                ->select(DB::raw('DATE_FORMAT(tanggal, "%Y-%m") as ym'))
+                ->groupBy('ym')
+                ->orderBy('ym', 'DESC')
+                ->get();
+
+        if ($select_bulan == null) {
+            $select_bulan = date('Y-m');
+        }
+
+        $nextmonth = strtotime('+1 month', strtotime($select_bulan));
+        $nextmonth = date('Y-m', $nextmonth);
+        $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('biaya','!=',0)->orderBy('fkDivisi_id','ASC')->get();
+
+        if($select_bulan=="all"){
+            $jurnals = Jurnals::orderBy('tanggal','ASC')->get();
+        }else{
+            $jurnals = Jurnals::where('tanggal', 'like', $select_bulan . '%')->orderBy('tanggal','ASC')->get();
+        }
+
+        $total_in = 0;
+        foreach($jurnals->where('jenis','in') as $in){
+            $total_in = $total_in + ($in->qty*$in->nominal);
+        }
+
+        $total_out_rutin = 0;
+        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Rutin') as $outr){
+            $total_out_rutin = $total_out_rutin + ($outr->qty*$outr->nominal);
+        }
+        $total_out_nonrutin = 0;
+        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Non Rutin') as $outnr){
+            $total_out_nonrutin = $total_out_nonrutin + ($outnr->qty*$outnr->nominal);
+        }
+
+        $manag_building = $jurnals->whereNotNull('fkRabManagBuilding_id')->where('fkRabManagBuilding_id','!=',0);
+        $rab_kegiatan = $jurnals->whereNotNull('fkRabKegiatan_id')->where('fkRabKegiatan_id','!=',0);
+
+        $pengajuan_manag_buildings = RabManagBuildings::where('status','submit')->get();
+        
+        $saldo = 0;
+        if($select_bulan!='all'){
+            $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-1')->orderBy('tanggal','ASC')->get();
+            if($saldo_jurnal!=null){
+                foreach($saldo_jurnal as $j){
+                    if($j->jenis=="in"){
+                        $saldo = $saldo + $j->nominal;
+                    }else if($j->jenis=="out"){
+                        $saldo = $saldo - $j->nominal;
+                    }
+                }
+            }
+        }
+        
+        return view('keuangan.laporan_pusat', [
+            'print' => $print,
+            'saldo' => $saldo,
+            'jurnals' => $jurnals,
+            'bulans' => $bulans,
+            'select_bulan' => $select_bulan,
+            'manag_building' => $manag_building,
+            'rab_kegiatan' => $rab_kegiatan,
+            'pengajuan_manag_buildings' => $pengajuan_manag_buildings,
+            'nextmonth' => $nextmonth,
+            'rabs' => $rabs,
+            'total_in' => $total_in,
+            'total_out_rutin' => $total_out_rutin,
+            'total_out_nonrutin' => $total_out_nonrutin,
         ]);
     }
 
