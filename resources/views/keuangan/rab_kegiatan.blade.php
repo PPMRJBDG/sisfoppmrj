@@ -363,7 +363,7 @@
 
 <script>
 function copyLink(ids){
-    var route = `{{ url("/") }}/keuangan/rab-kegiatan/public/`+ids;
+    var route = `{{ url("/") }}/rab/`+ids;
     navigator.clipboard.writeText(route);
 }
 
