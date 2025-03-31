@@ -32,7 +32,7 @@ use App\Models\RabManagBuildingDetails;
 use App\Models\RabKegiatans;
 use App\Models\RabKegiatanDetails;
 use App\Models\Rabs;
-use App\Models\jurnals;
+use App\Models\Jurnals;
 
 use Illuminate\Support\Facades\DB;
 
