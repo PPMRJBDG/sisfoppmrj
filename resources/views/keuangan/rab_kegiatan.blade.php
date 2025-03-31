@@ -415,7 +415,7 @@ function hapus(x,id){
 
 function submitKegiatan(tipe,detail_of){
     if(tipe=="submit" || tipe=="posted"){
-        var budget = <?php echo $detail_of->rab->biaya; ?>;
+        var budget = 0; <?php //echo $detail_of->rab->biaya; ?>;
         var total_rab = <?php echo $total; ?>;
         var total_realisasi = <?php echo $total_realisasi; ?>;
         if(tipe=="submit"){
