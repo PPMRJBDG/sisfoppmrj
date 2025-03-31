@@ -411,7 +411,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         
         $saldo = 0;
         if($select_bulan!='all'){
-            $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-1')->orderBy('tanggal','ASC')->get();
+            $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-01')->orderBy('tanggal','ASC')->get();
             if($select_bank!="all"){
                 $saldo_jurnal = $saldo_jurnal->where('fkBank_id',$select_bank);
             }
