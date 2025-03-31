@@ -418,9 +418,9 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             if($saldo_jurnal!=null){
                 foreach($saldo_jurnal as $j){
                     if($j->jenis=="in"){
-                        $saldo = $saldo + $j->nominal;
+                        $saldo = $saldo + ($j->qty*$j->nominal);
                     }else if($j->jenis=="out"){
-                        $saldo = $saldo - $j->nominal;
+                        $saldo = $saldo - ($j->qty*$j->nominal);
                     }
                 }
             }
