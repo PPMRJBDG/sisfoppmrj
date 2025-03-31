@@ -393,7 +393,7 @@ function ubah(x,data,status){
 function hapus(x,id){
     if (confirm('Apakah RAB ini yakin akan dihapus ?')) {
         $("#loadingSubmit").show();
-        route = `rab-kegiatan/delete-detail`;
+        var route = `rab-kegiatan/delete-detail`;
         if(x=="parent"){
             route = `rab-kegiatan/delete`;
         }
