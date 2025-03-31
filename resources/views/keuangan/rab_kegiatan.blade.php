@@ -415,9 +415,9 @@ function hapus(x,id){
 
 function submitKegiatan(tipe,detail_of){
     if(tipe=="submit" || tipe=="posted"){
-        var budget = 0; <?php //echo $detail_of->rab->biaya; ?>;
-        var total_rab = <?php echo $total; ?>;
-        var total_realisasi = <?php echo $total_realisasi; ?>;
+        var budget = parseFloat("<?php echo $detail_of->rab->biaya; ?>");
+        var total_rab = parseFloat("<?php echo $total; ?>");
+        var total_realisasi = parseFloat("<?php echo $total_realisasi; ?>");
         if(tipe=="submit"){
             if(budget<total_rab && $("#justifikasi-rab").val()==""){
                 alert("Berikan Justifikasi pada RAB");
