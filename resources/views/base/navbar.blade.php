@@ -150,7 +150,7 @@
             </a>
           </li>
         @endif
-        @if(!App\Helpers\CommonHelpers::isKetuaBendahara() || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
+        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
           <li>
             <a class="sidenav-link" href="{{ url('keuangan/rab-tahunan') }}">
               <span class="sidenav-link-text ms-1">RAB Tahunan</span>
@@ -164,11 +164,13 @@
             </a>
           </li>
         @endif
+        @if(App\Helpers\CommonHelpers::isKetuaBendahara())
           <li>
             <a class="sidenav-link" href="{{ url('keuangan/rab-kegiatan') }}">
               <span class="sidenav-link-text ms-1">RAB Kegiatan</span>
             </a>
           </li>
+          @endif
       </ul>
     </li>
     @endif

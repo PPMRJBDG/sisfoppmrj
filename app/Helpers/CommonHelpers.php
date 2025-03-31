@@ -267,7 +267,7 @@ class CommonHelpers
         if(count($get)>0){
             return true;
         }else{
-            if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku')){
+            if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')){
                 return true;
             }else{
                 return false;
