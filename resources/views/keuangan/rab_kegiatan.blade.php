@@ -131,6 +131,7 @@
     </div>
 </div>
 
+<?php $total = 0; $total_realisasi = 0; $divisi = "";?>
 @if($detail_kegiatans!=null)
 <div class="card border p-2 mt-2" style="border-top:solid 2px #f29393!important;">
     <div class="row align-items-center justify-content-center">
@@ -415,9 +416,9 @@ function hapus(x,id){
 
 function submitKegiatan(tipe,detail_of){
     if(tipe=="submit" || tipe=="posted"){
-        var budget = parseFloat("<?php echo $detail_of->rab->biaya; ?>");
-        var total_rab = parseFloat("<?php echo $total; ?>");
-        var total_realisasi = parseFloat("<?php echo $total_realisasi; ?>");
+        var budget = detail_of.rab.biaya;
+        var total_rab = <?php echo $total; ?>;
+        var total_realisasi = <?php echo$total_realisasi; ?>;
         if(tipe=="submit"){
             if(budget<total_rab && $("#justifikasi-rab").val()==""){
                 alert("Berikan Justifikasi pada RAB");
