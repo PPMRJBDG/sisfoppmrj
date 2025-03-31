@@ -129,12 +129,12 @@
                         <td class="align-middle text-center text-sm" id="slbtnh-{{$present->fkSantri_id}}">
                             @if($update)
                             <small style="font-size: 9px;">{{ ($present->updated_by=='') ? '' : 'Updated by '.$present->updated_by}}</small><br>
-                            <a class="btn btn-danger btn-block btn-xs mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
+                            <a class="btn btn-danger btn-block btn-sm mb-0" href="#" onclick="selectForAlpha(<?php echo $present->fkSantri_id; ?>)">Alpha</a>
 
                             <!-- @if($present->is_late) -->
-                            <!-- <a class="btn btn-primary btn-xs mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
+                            <!-- <a class="btn btn-primary btn-sm mb-0" href="{{ route('is not late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin tidak telat?')">Tidak Telat</a> -->
                             <!-- @else -->
-                            <!-- <a class="btn btn-warning btn-xs mb-0" href="{{ route('is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a> -->
+                            <!-- <a class="btn btn-warning btn-sm mb-0" href="{{ route('is late', ['id' => $present->fkPresence_id, 'santriId' => $present->fkSantri_id]) }}" onclick="return confirm('Yakin telat?')">Telat</a> -->
                             <!-- @endif -->
                             @endif
                         </td>
@@ -214,7 +214,7 @@
                     </td>
                     <td class="align-middle text-center text-sm" id="slbtna-{{$mhs['santri_id']}}">
                         @if($update)
-                        <a class="btn btn-primary btn-block btn-xs mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
+                        <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
                         @endif
                     </td>
                 </tr>
@@ -334,7 +334,7 @@ try {
                         '</td>' +
                         '<td class="align-middle text-center text-sm" id="slbtn' + x + '-' + santriId + '">' +
                         '<small style="font-size: 9px;">Updated by ' + user + '</small><br>' +
-                        '<a class = "btn btn-' + btn + ' btn-block btn-xs mb-0" href = "#" onclick = "selectFor' + tedf + '(' + santriId + ')">' + tedf + '</a>' +
+                        '<a class = "btn btn-' + btn + ' btn-block btn-sm mb-0" href = "#" onclick = "selectFor' + tedf + '(' + santriId + ')">' + tedf + '</a>' +
                         '</td>' +
                         '</tr>';
 

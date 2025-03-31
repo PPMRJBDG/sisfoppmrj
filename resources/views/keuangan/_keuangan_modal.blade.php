@@ -405,10 +405,11 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         }
     }
 
-    function lockUnlockRab(periode){
+    function lockUnlockRab(lock,periode){
         $("#loadingSubmit").show();
         var datax = {};
         datax['periode_tahun'] = periode;
+        datax['lock'] = parseInt(lock);
         $.post("{{ route('lock unlock rab') }}", datax,
             function(dataz, status) {
                 var return_data = JSON.parse(dataz);

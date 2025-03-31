@@ -135,11 +135,11 @@
                             {{ $data->keterangan }}
                         </td>
                         <td class="align-middle text-center text-sm">
-                            <a href="{{ route('edit pelanggaran', [$data->id])}}" class="btn btn-primary btn-xs mb-0">Lihat</a>
+                            <a href="{{ route('edit pelanggaran', [$data->id])}}" class="btn btn-primary btn-sm mb-0">Lihat</a>
                             @if(!$is_archive)
-                            <a href="{{ route('archive pelanggaran', [$data->id])}}" class="btn btn-success btn-xs mb-0" onclick="confirm('Yakin data akan diarsipkan ?')">Arsip</a>
+                            <a href="{{ route('archive pelanggaran', [$data->id])}}" class="btn btn-success btn-sm mb-0" onclick="confirm('Yakin data akan diarsipkan ?')">Arsip</a>
                             @endif
-                            <a href="{{ route('delete pelanggaran', [$data->id])}}" class="btn btn-danger btn-xs mb-0" onclick="confirm('Yakin data akan dihapus ?')">Hapus</a>
+                            <a href="{{ route('delete pelanggaran', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="confirm('Yakin data akan dihapus ?')">Hapus</a>
                         </td>
                     </tr>
                     @endforeach

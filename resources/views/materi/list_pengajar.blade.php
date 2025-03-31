@@ -63,8 +63,8 @@
                                             {{App\Helpers\CountDashboard::sumPresentByPengajar('persentase',null, $data->id)}}%
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <a block-id="return-false" href="#" onclick="return ubahPengajar(<?php echo $data->id; ?>)" class="btn btn-primary btn-xs mb-0">Ubah</a>
-                                            <a block-id="return-false" href="#" onclick="return deletePengajar(<?php echo $data->id; ?>)" class="btn btn-danger btn-xs mb-0">Hapus</a>
+                                            <a block-id="return-false" href="#" onclick="return ubahPengajar(<?php echo $data->id; ?>)" class="btn btn-primary btn-sm mb-0">Ubah</a>
+                                            <a block-id="return-false" href="#" onclick="return deletePengajar(<?php echo $data->id; ?>)" class="btn btn-danger btn-sm mb-0">Hapus</a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -101,8 +101,8 @@
                     // var add_pengajar = '<tr class="text-sm" id="p' + return_data.id + '">' +
                     //     '<td><input tytpe="text" class="form-control" disabled value="' + $("#pengajar").val() + '" id="data-name' + return_data.id + '"></td>' +
                     //     '<td class="align-middle text-center text-sm">' +
-                    //     '<a href="#" onclick="return ubahPengajar(' + return_data.id + ')" class="btn btn-primary btn-xs mb-0">Ubah</a>' +
-                    //     '<a href="#" onclick="return deletePengajar(' + return_data.id + ')" class="btn btn-danger btn-xs mb-0">Hapus</a>' +
+                    //     '<a href="#" onclick="return ubahPengajar(' + return_data.id + ')" class="btn btn-primary btn-sm mb-0">Ubah</a>' +
+                    //     '<a href="#" onclick="return deletePengajar(' + return_data.id + ')" class="btn btn-danger btn-sm mb-0">Hapus</a>' +
                     //     '</td></tr>';
                     // body_pengajar = add_pengajar + body_pengajar;
                     // $("#list-pengajar").html(body_pengajar);

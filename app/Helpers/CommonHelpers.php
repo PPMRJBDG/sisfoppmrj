@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Santri;
 use App\Models\Lorong;
 use App\Models\Permit;
+use App\Models\RabKegiatans;
 
 class CommonHelpers
 {
@@ -255,5 +256,22 @@ class CommonHelpers
 
         $data_kbm_ijin = ['kbm' => $get_total_kbm, 'ijin' => count($get_total_permit), 'status' => $status_ijin, 'kuota' => $kuota];
         return $data_kbm_ijin;
+    }
+
+    public static function isKetuaBendahara(){
+        $santri_id = null;
+        if(isset(auth()->user()->santri)){
+            $santri_id = auth()->user()->santri->id;
+        }
+        $get = RabKegiatans::where('fkSantri_id_ketua', $santri_id)->orWhere('fkSantri_id_bendahara', $santri_id)->get();
+        if(count($get)>0){
+            return true;
+        }else{
+            if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku')){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 }

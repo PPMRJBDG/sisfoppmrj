@@ -22398,7 +22398,8 @@ fieldset:disabled .btn-group-vertical {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 250px;
-    padding: 1rem 1.4rem;
+    /* padding: 1rem 1.4rem; */
+    padding: 4px 6px;
     vertical-align: middle !important;
 }
 

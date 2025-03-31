@@ -26,7 +26,8 @@ class Rabs extends Model
         'bulan_10',
         'bulan_11',
         'bulan_12',
-        'is_lock'
+        'is_lock',
+        'create_rab'
     ];
 
     public function divisi()

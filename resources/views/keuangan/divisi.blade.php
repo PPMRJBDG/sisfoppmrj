@@ -61,8 +61,8 @@
                                     {{App\Helpers\CountDashboard::sumPresentByPengajar('persentase',null, $data->id)}}%
                                 </td>
                                 <td class="align-middle text-center text-sm">
-                                    <a href="#" onclick="return ubahPengajar(<?php echo $data->id; ?>)" class="btn btn-primary btn-xs mb-0">Ubah</a>
-                                    <a href="#" onclick="return deletePengajar(<?php echo $data->id; ?>)" class="btn btn-danger btn-xs mb-0">Hapus</a>
+                                    <a href="#" onclick="return ubahPengajar(<?php echo $data->id; ?>)" class="btn btn-primary btn-sm mb-0">Ubah</a>
+                                    <a href="#" onclick="return deletePengajar(<?php echo $data->id; ?>)" class="btn btn-danger btn-sm mb-0">Hapus</a>
                                 </td>
                             </tr>
                             @endforeach

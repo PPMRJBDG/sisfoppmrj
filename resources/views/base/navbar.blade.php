@@ -115,29 +115,34 @@
     </li>
     @endif
 
-    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || App\Helpers\CommonHelpers::isKetuaBendahara())
     <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-keuangan" role="button" aria-expanded="false">
         <i class="fa fa-money pe-3"></i>Keuangan
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-keuangan">
+        <li>
+          <a class="sidenav-link" href="{{ url('/keuangan/mekanisme') }}">
+            <span class="sidenav-link-text ms-1">Mekanisme Keuangan</span>
+          </a>
+        </li>
         @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
           @if(!isset(auth()->user()->santri))
-          <li>
-            <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
-              <span class="sidenav-link-text ms-1">Tagihan (Approval)</span>
-            </a>
-          </li>
-          <li>
-            <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
-              <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
-            </a>
-          </li>
-          <li>
-            <a class="sidenav-link" href="{{ url('/keuangan/laporan-pusat') }}">
-              <span class="sidenav-link-text ms-1">Laporan Pusat</span>
-            </a>
-          </li>
+            <li>
+              <a class="sidenav-link" href="{{ url('/keuangan/tagihan') }}">
+                <span class="sidenav-link-text ms-1">Tagihan (Approval)</span>
+              </a>
+            </li>
+            <li>
+              <a class="sidenav-link" href="{{ url('/keuangan/sodaqoh') }}">
+                <span class="sidenav-link-text ms-1">Sodaqoh Tahunan</span>
+              </a>
+            </li>
+            <li>
+              <a class="sidenav-link" href="{{ url('/keuangan/laporan-pusat') }}">
+                <span class="sidenav-link-text ms-1">Laporan Pusat</span>
+              </a>
+            </li>
           @endif
           <li>
             <a class="sidenav-link" href="{{ url('keuangan/jurnal') }}">
@@ -145,11 +150,13 @@
             </a>
           </li>
         @endif
-        <li>
-          <a class="sidenav-link" href="{{ url('keuangan/rab-tahunan') }}">
-            <span class="sidenav-link-text ms-1">RAB Tahunan</span>
-          </a>
-        </li>
+        @if(!App\Helpers\CommonHelpers::isKetuaBendahara() || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))
+          <li>
+            <a class="sidenav-link" href="{{ url('keuangan/rab-tahunan') }}">
+              <span class="sidenav-link-text ms-1">RAB Tahunan</span>
+            </a>
+          </li>
+        @endif
         @if(!isset(auth()->user()->santri))
           <li>
             <a class="sidenav-link" href="{{ url('keuangan/rab-management-building') }}">
@@ -186,7 +193,7 @@
     </li>
     @endif
 
-    @if(!auth()->user()->hasRole('ku'))
+    @if((auth()->user()->hasRole('ku') && isset(auth()->user()->santri)) || auth()->user()->hasRole('superadmin'))
     <li class="sidenav-item">
       <a data-mdb-dropdown-init class="sidenav-link d-flex" block-id="return-false" href="#" id="navbarDropdownMenuLink-jadwalkbm" role="button" aria-expanded="false">
         <i class="fa fa-calendar pe-3"></i>Jadwal KBM

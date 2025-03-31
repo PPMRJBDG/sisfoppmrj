@@ -233,7 +233,7 @@
                             <table class="table align-items-center mb-0 text-sm">
                                 <tbody>
                                     <tr class="">
-                                        <td class="m-0 p-0 pb-2" style="width:25%;">
+                                        <td class="m-0 p-0 pb-2" style="width:15%;">
                                             <label>Pos</label>
                                             <select class="form-control" value="" id="pos-kuop" name="pos-kuop" required>
                                                 @foreach($poses as $pos)
@@ -241,17 +241,41 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:25%;">
+                                        <td class="m-0 p-0 pb-2" style="width:15%;">
+                                            <label>Divisi</label>
+                                            <select class="form-control" value="" id="fkDivisi_id-kuop" name="fkDivisi_id-kuop" required onchange="reloadKategori(this,'kuop')">
+                                                <option value="">--pilih divisi--</option>
+                                                @foreach($divisis as $divisi)
+                                                    @if($select_divisi!="all")
+                                                        @if($select_divisi==$divisi->id)
+                                                            <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="{{$divisi->id}}">{{strtoupper($divisi->divisi)}}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="m-0 p-0 pb-2" style="width:15%;">
+                                            <label>Kategori</label>
+                                            <select class="form-control" value="" id="fkRab_id-kuop" name="fkRab_id-kuop" required onchange="reloadRab(this)">
+                                                <option value="">--pilih kategori--</option>
+                                                    @foreach($rabs as $rab)
+                                                    <option value="{{$rab->id}}">{{strtoupper($rab->keperluan)}}</option>
+                                                    @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="m-0 p-0 pb-2" style="width:15%;">
                                             <label>Tanggal</label>
                                             <input class="form-control" type="datetime-local" value="{{date('Y-m-d H:i:s')}}" id="tanggal-kuop" required>
                                         </td>
-                                        <td class="m-0 p-0 pb-2" style="width:25%;">
+                                        <td class="m-0 p-0 pb-2" style="width:15%;">
                                             <label>Nominal Pengambilan</label>
                                             <input class="form-control" type="number" value="" id="nominal-kuop" required>
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:25%;">
                                             <label>Keterangan <small>(kosongkan jika tidak ada klarifikasi)</small></label>
-                                            <input class="form-control" type="text" value="Operasional Masuk" id="keterangan-kuop">
+                                            <input class="form-control" type="text" value="OP Masuk dari BMT ke Bendahara" id="keterangan-kuop">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -332,6 +356,7 @@
                             </th>
                             <th colspan="5" class="text-uppercase font-weight-bolder text-center">
                                 <small>Saldo Awal</small> RP {{number_format($saldo,0, ',', '.')}}
+                                <?php $saldo_awal = $saldo; ?>
                             </th>
                         </tr>
                         <tr>
@@ -364,7 +389,9 @@
                                 <td class="new-td">
                                     <span class="badge badge-{{($jurnal->jenis=='in') ? 'primary' : 'danger'}}">{{$jurnal->jenis}}</span>
                                     @if($jurnal->fkRabManagBuilding_id!=0)
-                                        <a href="{{route('rab management building id',$jurnal->fkRabManagBuilding_id)}}" class="badge badge-secondary">#{{$jurnal->fkRabManagBuilding_id}}</a>
+                                        <a href="{{route('rab management building id',$jurnal->fkRabManagBuilding_id)}}" class="badge badge-secondary">#NR{{$jurnal->fkRabManagBuilding_id}}</a>
+                                    @elseif($jurnal->fkRabKegiatan_id!=0)
+                                        <a href="{{route('rab kegiatan id',$jurnal->fkRabKegiatan_id)}}" class="badge badge-secondary">#KR{{$jurnal->fkRabKegiatan_id}}</a>
                                     @endif
                                     {{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}
                                 </td>
@@ -383,7 +410,7 @@
                                 </td>
                                 <td class="p-0 text-center">
                                     @if($jurnal->tipe_penerimaan!='Sodaqoh Tahunan')
-                                        @if($jurnal->sub_jenis=="")
+                                        @if($jurnal->sub_jenis=="" && ($jurnal->fkRabManagBuilding_id==0 && $jurnal->fkRabKegiatan_id==0))
                                         <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubahJurnal({{$jurnal}})">
                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                         </a>
@@ -415,7 +442,7 @@
                             <td></td>
                             <td id="total_masuk" class="font-weight-bolder text-end">RP {{number_format($total_masuk,0, ',', '.')}}</td>
                             <td id="total_keluar" class="font-weight-bolder text-end">RP {{number_format($total_keluar,0, ',', '.')}}</td>
-                            <td class="font-weight-bolder text-end">RP {{number_format($saldo,0, ',', '.')}}</td>
+                            <td id="total_sisa_saldo" class="font-weight-bolder text-end">RP {{number_format($saldo,0, ',', '.')}}</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -628,8 +655,10 @@
                     datax['fkBank_id'] = 1;
                 } else {
                     datax['fkBank_id'] = 2;
-                    ket = 'Pengambilan untuk OP';
+                    ket = 'PENGAMBILAN UNTUK OP';
                 }
+                datax['fkDivisi_id'] = $("#fkDivisi_id-kuop").val();
+                datax['fkRab_id'] = $("#fkRab_id-kuop").val();
                 datax['status'] = dt;
                 datax['fkPos_id'] = $("#pos-kuop").val();
                 datax['tanggal'] = $("#tanggal-kuop").val();
@@ -697,5 +726,8 @@
         }
         $("#total_masuk").html(toNumber(total_masuk));
         $("#total_keluar").html(toNumber(total_keluar));
+
+        var saldo_awal = <?php echo $saldo_awal; ?>;
+        $("#total_sisa_saldo").html(toNumber(saldo_awal+total_masuk-total_keluar));
     }
 </script>

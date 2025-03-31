@@ -30,11 +30,18 @@ class Jurnals extends Model
         'created_by',
         'fkSodaqoh_id',
         'fkRabManagBuilding_id',
+        'fkRabKegiatan_id',
     ];
 
     public function details()
     {
         $details = RabManagBuildingDetails::where('fkRabManagBuilding_id',$this->fkRabManagBuilding_id)->get();
+        return $details;
+    }
+
+    public function detail_kegiatans()
+    {
+        $details = RabKegiatanDetails::where('fkRabKegiatan_id',$this->fkRabKegiatan_id)->get();
         return $details;
     }
 
@@ -46,6 +53,11 @@ class Jurnals extends Model
     public function managBuilding()
     {
         return $this->belongsTo(RabManagBuildings::class, 'fkRabManagBuilding_id');
+    }
+
+    public function kegiatan()
+    {
+        return $this->belongsTo(RabKegiatans::class, 'fkRabKegiatan_id');
     }
 
     public function rab()

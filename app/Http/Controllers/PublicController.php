@@ -858,228 +858,228 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         ]);
     }
 
-    public function view_permit($ids)
-    {
-        $permit = Permit::where('ids', $ids)->first();
-        $message = '';
-        if ($permit != null) {
-            if ($permit->status == 'approved') {
-                $message = 'Permintaan ijin sudah disetujui';
-            } elseif ($permit->status == 'pending') {
-                $message = 'Permintaan ijin masih pending';
-            } else {
-                $message = 'Permintaan ijin sudah ditolak';
-            }
-        } else {
-            $message = 'Perijinan tidak ditemukan.';
-        }
-        return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
-    }
+//     public function view_permit($ids)
+//     {
+//         $permit = Permit::where('ids', $ids)->first();
+//         $message = '';
+//         if ($permit != null) {
+//             if ($permit->status == 'approved') {
+//                 $message = 'Permintaan ijin sudah disetujui';
+//             } elseif ($permit->status == 'pending') {
+//                 $message = 'Permintaan ijin masih pending';
+//             } else {
+//                 $message = 'Permintaan ijin sudah ditolak';
+//             }
+//         } else {
+//             $message = 'Perijinan tidak ditemukan.';
+//         }
+//         return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+//     }
 
-    public function reject_permit($ids, Request $request)
-    {
-        $permit = Permit::where('ids', $ids)->first();
-        $message = '';
-        $statusx = false;
-        if ($permit != null) {
-            try {
-                if (isset(auth()->user()->fullname)) {
-                    $rejected_by = auth()->user()->fullname;
-                } else {
-                    $rejected_by = $_SERVER['HTTP_USER_AGENT'];
-                }
-            } catch (Exception  $err) {
-                $rejected_by = $_SERVER['HTTP_USER_AGENT'];
-            }
+//     public function reject_permit($ids, Request $request)
+//     {
+//         $permit = Permit::where('ids', $ids)->first();
+//         $message = '';
+//         $statusx = false;
+//         if ($permit != null) {
+//             try {
+//                 if (isset(auth()->user()->fullname)) {
+//                     $rejected_by = auth()->user()->fullname;
+//                 } else {
+//                     $rejected_by = $_SERVER['HTTP_USER_AGENT'];
+//                 }
+//             } catch (Exception  $err) {
+//                 $rejected_by = $_SERVER['HTTP_USER_AGENT'];
+//             }
 
-            $permit->status = 'rejected';
-            $permit->rejected_by = $rejected_by;
-            $permit->alasan_rejected = $request->get('alasan');
-            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+//             $permit->status = 'rejected';
+//             $permit->rejected_by = $rejected_by;
+//             $permit->alasan_rejected = $request->get('alasan');
+//             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
-            if ($permit->save()) {
-                $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
-*Alasan Ditolak:* Karena ' . $permit->alasan_rejected;
-                WaSchedules::save('Permit Rejected', $caption, $setting->wa_info_presensi_group_id, null, true);
+//             if ($permit->save()) {
+//                 $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
+// *Alasan Ditolak:* Karena ' . $permit->alasan_rejected;
+//                 WaSchedules::save('Permit Rejected', $caption, $setting->wa_info_presensi_group_id, null, true);
 
-                $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
-                // kirim ke yg ijin
-                $nohp = $permit->santri->user->nohp;
-                if ($nohp != '') {
-                    if ($nohp[0] == '0') {
-                        $nohp = '62' . substr($nohp, 1);
-                    }
-                    $setting = Settings::find(1);
-                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                        $query->where('name', 'NOT LIKE', '%Bulk%');
-                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                    if ($wa_phone != null) {
-                        $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
-                        WaSchedules::save($name, $caption, $wa_phone->pid);
-                    }
-                }
+//                 $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
+//                 // kirim ke yg ijin
+//                 $nohp = $permit->santri->user->nohp;
+//                 if ($nohp != '') {
+//                     if ($nohp[0] == '0') {
+//                         $nohp = '62' . substr($nohp, 1);
+//                     }
+//                     $setting = Settings::find(1);
+//                     $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+//                         $query->where('name', 'NOT LIKE', '%Bulk%');
+//                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
+//                     if ($wa_phone != null) {
+//                         $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
+//                         WaSchedules::save($name, $caption, $wa_phone->pid);
+//                     }
+//                 }
 
-                // kirim ke orangtua
-                $nohp_ortu = $permit->santri->nohp_ortu;
-                if ($nohp_ortu != '') {
-                    if ($nohp_ortu[0] == '0') {
-                        $nohp_ortu = '62' . substr($nohp_ortu, 1);
-                    }
-                    $setting = Settings::find(1);
-                    $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                        $query->where('name', 'NOT LIKE', '%Bulk%');
-                    })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-                    if ($wa_phone != null) {
-                        $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
-                        WaSchedules::save($name, $caption, $wa_phone->pid, 2);
-                    }
-                }
-                $message = 'Permintaan ijin berhasil ditolak';
-                $statusx = true;
-            } else {
-                $message = 'Terjadi kesalahan sistem';
-            }
-        } else {
-            $message = 'Perijinan tidak ditemukan';
-        }
+//                 // kirim ke orangtua
+//                 $nohp_ortu = $permit->santri->nohp_ortu;
+//                 if ($nohp_ortu != '') {
+//                     if ($nohp_ortu[0] == '0') {
+//                         $nohp_ortu = '62' . substr($nohp_ortu, 1);
+//                     }
+//                     $setting = Settings::find(1);
+//                     $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
+//                         $query->where('name', 'NOT LIKE', '%Bulk%');
+//                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
+//                     if ($wa_phone != null) {
+//                         $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
+//                         WaSchedules::save($name, $caption, $wa_phone->pid, 2);
+//                     }
+//                 }
+//                 $message = 'Permintaan ijin berhasil ditolak';
+//                 $statusx = true;
+//             } else {
+//                 $message = 'Terjadi kesalahan sistem';
+//             }
+//         } else {
+//             $message = 'Perijinan tidak ditemukan';
+//         }
 
-        return json_encode(['status' => $statusx, 'permit' => $permit, 'message' => $message]);
-        // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
-    }
+//         return json_encode(['status' => $statusx, 'permit' => $permit, 'message' => $message]);
+//         // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+//     }
 
-    public function approve_permit($ids)
-    {
-        $permit = Permit::where('ids', $ids)->first();
-        $message = '';
-        if ($permit != null) {
-            $permit->status = 'approved';
+//     public function approve_permit($ids)
+//     {
+//         $permit = Permit::where('ids', $ids)->first();
+//         $message = '';
+//         if ($permit != null) {
+//             $permit->status = 'approved';
 
-            try {
-                if (isset(auth()->user()->fullname)) {
-                    $approved_by = auth()->user()->fullname;
-                } else {
-                    $approved_by = $_SERVER['HTTP_USER_AGENT'];
-                }
-            } catch (Exception  $err) {
-                $approved_by = $_SERVER['HTTP_USER_AGENT'];
-            }
+//             try {
+//                 if (isset(auth()->user()->fullname)) {
+//                     $approved_by = auth()->user()->fullname;
+//                 } else {
+//                     $approved_by = $_SERVER['HTTP_USER_AGENT'];
+//                 }
+//             } catch (Exception  $err) {
+//                 $approved_by = $_SERVER['HTTP_USER_AGENT'];
+//             }
 
-            $permit->approved_by = $approved_by;
-            $permit->alasan_rejected = '';
-            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+//             $permit->approved_by = $approved_by;
+//             $permit->alasan_rejected = '';
+//             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
 
-            if ($permit->save()) {
-                $message = 'Permintaan ijin berhasil disetujui';
-            }
-        } else {
-            $message = 'Perijinan tidak ditemukan';
-        }
+//             if ($permit->save()) {
+//                 $message = 'Permintaan ijin berhasil disetujui';
+//             }
+//         } else {
+//             $message = 'Perijinan tidak ditemukan';
+//         }
 
-        return redirect()->route('view permit', $ids)->with(['success', $message]);
-        // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
-    }
+//         return redirect()->route('view permit', $ids)->with(['success', $message]);
+//         // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
+//     }
 
-    // PRESENCE
-    public function presence_view($id, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $presence = Presence::find($id);
+//     // PRESENCE
+//     public function presence_view($id, Request $request)
+//     {
+//         $lorong = $request->get('lorong');
+//         if ($lorong == null) {
+//             $lorong = '-';
+//         }
+//         $presence = Presence::find($id);
 
-        $for = 'all';
-        // jumlah mhs / anggota lorong
-        $jumlah_mhs = CountDashboard::total_mhs($for, $lorong);
+//         $for = 'all';
+//         // jumlah mhs / anggota lorong
+//         $jumlah_mhs = CountDashboard::total_mhs($for, $lorong);
 
-        // hadir
-        $presents = CountDashboard::mhs_hadir($id, $for, $lorong);
+//         // hadir
+//         $presents = CountDashboard::mhs_hadir($id, $for, $lorong);
 
-        // ijin berdasarkan lorong masing2
-        $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
-        // need approval
-        $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
+//         // ijin berdasarkan lorong masing2
+//         $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
+//         // need approval
+//         $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
 
-        // alpha
-        $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
+//         // alpha
+//         $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
 
-        $update = true;
-        if ($presence != null) {
-            $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
-            $selisih = $selisih / 60 / 60 / 24;
-            if ($selisih > 1 && $for != 'all') {
-                $update = false;
-            }
-        }
+//         $update = true;
+//         if ($presence != null) {
+//             $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
+//             $selisih = $selisih / 60 / 60 / 24;
+//             if ($selisih > 1 && $for != 'all') {
+//                 $update = false;
+//             }
+//         }
 
-        return view('presence.view_public', [
-            'id' => $id,
-            'presence' => $presence,
-            'jumlah_mhs' => $jumlah_mhs,
-            'mhs_alpha' => $mhs_alpha,
-            'permits' => $permits,
-            'need_approval' => $need_approval,
-            'presents' => $presents == null ? [] : $presents,
-            'data_lorong' => Lorong::all(),
-            'lorong' => $lorong,
-            'update' => $update
-        ]);
-    }
+//         return view('presence.view_public', [
+//             'id' => $id,
+//             'presence' => $presence,
+//             'jumlah_mhs' => $jumlah_mhs,
+//             'mhs_alpha' => $mhs_alpha,
+//             'permits' => $permits,
+//             'need_approval' => $need_approval,
+//             'presents' => $presents == null ? [] : $presents,
+//             'data_lorong' => Lorong::all(),
+//             'lorong' => $lorong,
+//             'update' => $update
+//         ]);
+//     }
 
-    public function presence_delete_present($id, $santriId, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
+//     public function presence_delete_present($id, $santriId, Request $request)
+//     {
+//         $lorong = $request->get('lorong');
+//         if ($lorong == null) {
+//             $lorong = '-';
+//         }
+//         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
 
-        if ($present) {
-            $deleted = $present->delete();
+//         if ($present) {
+//             $deleted = $present->delete();
 
-            if (!$deleted)
-                return redirect()->route('dwngr view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
-        }
+//             if (!$deleted)
+//                 return redirect()->route('dwngr view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
+//         }
 
-        if ($request->get('json') == 'true') {
-            return json_encode(array("status" => true));
-        } else {
-            return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
-        }
-    }
+//         if ($request->get('json') == 'true') {
+//             return json_encode(array("status" => true));
+//         } else {
+//             return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
+//         }
+//     }
 
-    public function presence_is_present($id, $santriId, Request $request)
-    {
-        $lorong = $request->get('lorong');
-        if ($lorong == null) {
-            $lorong = '-';
-        }
-        $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
+//     public function presence_is_present($id, $santriId, Request $request)
+//     {
+//         $lorong = $request->get('lorong');
+//         if ($lorong == null) {
+//             $lorong = '-';
+//         }
+//         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
 
-        try {
-            if (isset(auth()->user()->fullname)) {
-                $presented_by = auth()->user()->fullname;
-            } else {
-                $presented_by = 'Dewan Guru';
-            }
-        } catch (Exception  $err) {
-            $presented_by = 'Dewan Guru';
-        }
+//         try {
+//             if (isset(auth()->user()->fullname)) {
+//                 $presented_by = auth()->user()->fullname;
+//             } else {
+//                 $presented_by = 'Dewan Guru';
+//             }
+//         } catch (Exception  $err) {
+//             $presented_by = 'Dewan Guru';
+//         }
 
-        if ($present == null) {
-            Present::create([
-                'fkSantri_id' => $santriId,
-                'fkPresence_id' => $id,
-                'is_late' => 0,
-                'updated_by' => $presented_by,
-                'metadata' => $_SERVER['HTTP_USER_AGENT']
-            ]);
-        }
+//         if ($present == null) {
+//             Present::create([
+//                 'fkSantri_id' => $santriId,
+//                 'fkPresence_id' => $id,
+//                 'is_late' => 0,
+//                 'updated_by' => $presented_by,
+//                 'metadata' => $_SERVER['HTTP_USER_AGENT']
+//             ]);
+//         }
 
-        if ($request->get('json') == 'true') {
-            return json_encode(array("status" => true));
-        } else {
-            return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menginput presensi');
-        }
-    }
+//         if ($request->get('json') == 'true') {
+//             return json_encode(array("status" => true));
+//         } else {
+//             return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menginput presensi');
+//         }
+//     }
 }

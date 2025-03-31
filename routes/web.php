@@ -186,6 +186,7 @@ Route::get('/pelanggaran/delete/{id}', [App\Http\Controllers\PelanggaranControll
 Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranController::class, 'archive'])->name('archive pelanggaran')->middleware('role:superadmin|rj1|wk');
 
 // KEUANGAN
+Route::get('/keuangan/mekanisme', [App\Http\Controllers\KeuanganController::class, 'mekanisme'])->name('mekanisme')->middleware('role:ku|superadmin|santri');
 Route::get('/keuangan/sodaqoh', [App\Http\Controllers\KeuanganController::class, 'list_sodaqoh'])->name('list sodaqoh')->middleware('role:ku|superadmin');
 Route::post('/keuangan/approve_payment', [App\Http\Controllers\KeuanganController::class, 'approve_payment'])->name('approve payment')->middleware('role:ku|superadmin');
 Route::get('/keuangan/delete_sodaqoh/{id}/{periode}/{angkatan}/{select_lunas}', [App\Http\Controllers\KeuanganController::class, 'delete_sodaqoh'])->name('delete sodaqoh')->middleware('role:ku|superadmin');
@@ -196,6 +197,7 @@ Route::get('/keuangan/sodaqoh/{periode}/{angkatan}/{status}', [App\Http\Controll
 Route::post('/keuangan/sodaqoh/store', [App\Http\Controllers\KeuanganController::class, 'store_sodaqoh'])->name('store sodaqoh')->middleware('role:ku|superadmin');
 Route::post('/keuangan/sodaqoh/store_santri', [App\Http\Controllers\KeuanganController::class, 'store_sodaqoh'])->name('store sodaqoh santri')->middleware('role:santri');
 Route::get('/keuangan/tagihan', [App\Http\Controllers\KeuanganController::class, 'tagihan'])->name('tagihan')->middleware('role:superadmin|ku|rj1|santri');
+Route::post('/keuangan/rab-tahunan/set-create', [App\Http\Controllers\KeuanganController::class, 'set_create_rab'])->name('set create rab')->middleware('role:superadmin|ku|rj');
 Route::get('/keuangan/rab-tahunan', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan'])->name('view rab tahunan')->middleware('role:superadmin|ku|rj1|wk');
 Route::get('/keuangan/rab-tahunan/{select_periode}', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan'])->name('view rab tahunan')->middleware('role:superadmin|ku|rj1|wk');
 Route::post('/keuangan/rab-tahunan/store', [App\Http\Controllers\KeuanganController::class, 'rab_tahunan_store'])->name('store rab tahunan')->middleware('role:superadmin|ku|rj1|wk');
@@ -215,6 +217,12 @@ Route::get('/keuangan/rab-management-building/delete-detail/{id}', [App\Http\Con
 Route::get('/keuangan/laporan-pusat', [App\Http\Controllers\KeuanganController::class, 'laporan_pusat'])->name('laporan pusat')->middleware('role:superadmin|ku');
 Route::get('/keuangan/laporan-pusat/{tahun_bulan}', [App\Http\Controllers\KeuanganController::class, 'laporan_pusat'])->name('laporan pusat')->middleware('role:superadmin|ku');
 Route::get('/keuangan/laporan-pusat/{tahun_bulan}/{print}', [App\Http\Controllers\KeuanganController::class, 'laporan_pusat'])->name('print laporan pusat')->middleware('role:superadmin|ku');
+Route::get('/keuangan/rab-kegiatan', [App\Http\Controllers\KeuanganController::class, 'rab_kegiatan'])->name('rab kegiatan')->middleware('role:superadmin|ku|santri');
+Route::get('/keuangan/rab-kegiatan/{id}', [App\Http\Controllers\KeuanganController::class, 'rab_kegiatan'])->name('rab kegiatan id')->middleware('role:superadmin|ku|santri');
+Route::post('/keuangan/rab-kegiatan/store', [App\Http\Controllers\KeuanganController::class, 'store_rab_kegiatan'])->name('store rab kegiatan')->middleware('role:superadmin|ku|santri');
+Route::post('/keuangan/rab-detail-kegiatan/store', [App\Http\Controllers\KeuanganController::class, 'store_detail_rab_kegiatan'])->name('store detail rab kegiatan')->middleware('role:superadmin|ku|santri');
+Route::get('/keuangan/rab-kegiatan/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_rab_kegiatan'])->name('delete rab kegiatan')->middleware('role:superadmin|ku|santri');
+Route::get('/keuangan/rab-kegiatan/delete-detail/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_detail_rab_kegiatan'])->name('delete detail rab kegiatan')->middleware('role:superadmin|ku|santri');
 
 // setting
 Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('list setting')->middleware('role:superadmin|rj1');

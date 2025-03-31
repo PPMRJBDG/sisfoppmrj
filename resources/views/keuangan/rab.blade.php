@@ -36,7 +36,7 @@ if(count($rabs)>0){
                         <i class="fas fa-clone" aria-hidden="true"></i>
                         DUPLICATE KE PERIODE BARU
                     </a>
-                    <a href="#" class="btn btn-outline-secondary" onclick="lockUnlockRab('{{$select_periode}}')">
+                    <a href="#" class="btn btn-outline-secondary" onclick="lockUnlockRab('{{$lock}}','{{$select_periode}}')">
                         @if($lock)
                             <i class="fas fa-unlock" aria-hidden="true"></i>
                             UNLOCK RAB
@@ -130,6 +130,7 @@ if(count($rabs)>0){
             <table class="table table-bordered align-items-center mb-4 text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
+                        <th class="text-uppercase text-center font-weight-bolder ps-2">RAB</th>
                         <th class="text-uppercase text-start font-weight-bolder ps-2">Divisi</th>
                         <th class="text-uppercase text-start font-weight-bolder ps-2">Pengeluaran</th>
                         <th class="text-uppercase text-center font-weight-bolder">Periode</th>
@@ -160,11 +161,16 @@ if(count($rabs)>0){
                             $total_rab = $total_rab + $total;
                             ?>
                             <tr id="rab-{{$rab->id}}">
+                                <td class="text-center">
+                                    <div class="mb-0">
+                                        <input onclick="setCreateRab({{$rab->id}})" {{($lock) ? 'disabled' : ''}} class="form-check-input m-0" type="checkbox" {{($rab->create_rab) ? 'checked' : ''}} id="create-rab-{{$rab->id}}" name="create-rab-{{$rab->id}}">
+                                    </div>
+                                </td>
                                 <td>{{strtoupper($rab->divisi->divisi)}}</td>
                                 <td>{{$rab->keperluan}}</td>
                                 <td class="text-center">{{$rab->periode}}</td>
                                 <td class="text-center">
-                                    <a block-id="return-false" class="btn btn-warning btn-sm mb-0 text-black" style="padding:5px 15px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
+                                    <a block-id="return-false" class="btn btn-warning btn-sm mb-0 text-black" style="padding:5px;" id="lihat-{{$rab->id}}" type="submit" onclick="setPeriode(2, {{$rab}})">
                                         ({{$jumlah}})
                                     </a>
                                 </td>
@@ -189,6 +195,7 @@ if(count($rabs)>0){
                 </tbody>
                 <tfooter>
                     <tr>
+                        <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
                         <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
                         <th class="text-uppercase text-start font-weight-bolder ps-2"></th>
                         <th class="text-uppercase text-center font-weight-bolder"></th>
@@ -347,6 +354,21 @@ if(count($rabs)>0){
                 } else {
                     $(".alert-danger").fadeIn();
                     $(".alert-danger").html(return_data.message);
+                }
+            }
+        )
+    }
+
+    function setCreateRab(id){
+        var datax = {};
+        datax['rab_id'] = id;
+        $("#loadingSubmit").show();
+        $.post("{{ route('set create rab') }}", datax,
+            function(data, status) {
+                var return_data = JSON.parse(data);
+                $("#loadingSubmit").hide();
+                if (!return_data.status) {
+                    alert("Gagal update")
                 }
             }
         )

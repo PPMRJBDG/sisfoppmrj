@@ -6,7 +6,7 @@
                     <p class="mb-0">Silahkan memilih jam KBM, setiap sesi: <b>Durasinya -+ 1 Jam 30 Menit</b></p>
                 </div>
                 <div class="datatablex table-responsive datatable-sm">
-                    <table class="table align-items-center mb-2">
+                    <table class="table align-items-center justify-content-center align-items-center mb-2">
                         <thead>
                             <tr class="text-center">
                                 <th></th>
@@ -26,7 +26,7 @@
                                 @endforeach
                             </tr>
                             @else
-                            <tr>
+                            <tr class="text-center">
                                 <th></th>
                                 @foreach($day_kbm as $dn)
                                 <th class="text-sm">
@@ -65,23 +65,23 @@
                                     ?>
 
                                     @if($hn->is_break || $hn->is_disable)
-                                    @if($hn->is_break)
-                                    <span class="badge badge-warning"><small>break</small></span>
+                                        @if($hn->is_break)
+                                            <span class="badge badge-warning"><small>break</small></span>
+                                        @else
+                                            <div class="">
+                                                <input style="background: grey;" disabled class="form-check-input" id="jdwl-{{$dn->id}}-{{$hn->id}}-disabled" type="checkbox">
+                                                <label class="form-check-label" for="jdwl-{{$dn->id}}-{{$hn->id}}-disabled"></label>
+                                            </div>
+                                        @endif
                                     @else
-                                    <div class="form-check">
-                                        <input style="background: grey;" disabled class="form-check-input" id="jdwl-{{$dn->id}}-{{$hn->id}}-disabled" type="checkbox">
-                                        <label class="form-check-label" for="jdwl-{{$dn->id}}-{{$hn->id}}-disabled"></label>
-                                    </div>
-                                    @endif
-                                    @else
-                                    @if(auth()->user()->hasRole('superadmin'))
-                                    <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge badge-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
-                                    @else
-                                    <div class="form-check">
-                                        <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">
-                                        <label class="form-check-label" for="jdwl-{{$dn->id}}-{{$hn->id}}"></label>
-                                    </div>
-                                    @endif
+                                        @if(auth()->user()->hasRole('superadmin'))
+                                            <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge badge-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
+                                        @else
+                                            <div class="">
+                                                <input {{$checked}} class="form-check-input" name-day="{{$dn->day_name}}" name-hour="{{$hn->hour_name}}" val-day="{{$dn->id}}" val-hour="{{$hn->id}}" type="checkbox" id="jdwl-{{$dn->id}}-{{$hn->id}}" name="item[]" onclick="return setJadwal(this,{{$dn->id}},{{$hn->id}})">
+                                                <label class="form-check-label" for="jdwl-{{$dn->id}}-{{$hn->id}}"></label>
+                                            </div>
+                                        @endif
                                     @endif
                                 </th>
                                 @endforeach

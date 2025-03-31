@@ -54,20 +54,20 @@
     <div class="mt-2">
       <div class="d-flex">
         <div class="col-4 p-0">
-          <a style="width:100%;" href="#" class="btn btn-outline-danger btn-sm btn-xs m-0" onclick="return actionSavePermit('delete');">
+          <a style="width:100%;" href="#" class="btn btn-outline-danger btn-sm btn-sm m-0" onclick="return actionSavePermit('delete');">
             Delete
           </a>
         </div>
         @if($status=='pending' || $status=='approved')
         <div class="col-4 p-0">
-          <a style="width:100%;" href="#" class="btn btn-outline-warning btn-sm btn-xs m-0" onclick="return actionSavePermit('reject');">
+          <a style="width:100%;" href="#" class="btn btn-outline-warning btn-sm btn-sm m-0" onclick="return actionSavePermit('reject');">
             Reject
           </a>
         </div>
         @endif
         @if($status=='pending' || $status=='rejected')
         <div class="col-4 p-0">
-          <a style="width:100%;" href="#" class="btn btn-outline-primary btn-sm btn-xs m-0" onclick="return actionSavePermit('approve');">
+          <a style="width:100%;" href="#" class="btn btn-outline-primary btn-sm btn-sm m-0" onclick="return actionSavePermit('approve');">
             Approve
           </a>
         </div>
@@ -197,7 +197,7 @@
           </td>
           <!-- <td>
               @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
-              <a id="return-false" onclick="return actionSaveRangePermit('{{$rpg->id}}','{{$rpg->fkSantri_id}}');" class="btn btn-success btn-xs mb-0">Approve</a>
+              <a id="return-false" onclick="return actionSaveRangePermit('{{$rpg->id}}','{{$rpg->fkSantri_id}}');" class="btn btn-success btn-sm mb-0">Approve</a>
               @endif
             </td> -->
           @endforeach
