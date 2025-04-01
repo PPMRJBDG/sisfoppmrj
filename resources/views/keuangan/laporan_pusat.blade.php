@@ -135,7 +135,7 @@
                 <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Akhir Bulan Lalu<br><small>(KU-BMT + BENDAHARA)</small></th>
                 <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
                 <th colspan="2" width="40%" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
-                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo<br><small>(by system)</small></th>
             </tr>
             <tr>
                 <th width="20%" class="text-uppercase font-weight-bolder ps-2">Rutin</th>
@@ -154,7 +154,9 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="4" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th colspan="4" class="text-uppercase font-weight-bolder ps-2">
+                    <textarea rows="3" class="form-control"></textarea>
+                </th>
                 <th class="text-uppercase font-weight-bolder ps-2">
                     <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
                         <tr>   
