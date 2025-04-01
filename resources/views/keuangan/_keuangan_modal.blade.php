@@ -48,7 +48,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                     <hr>
 
                     <div class="form-group">
-                        <label class="form-label m-0">Tanggal Pembayaran</label>
+                        <label class="form-label m-0">Tanggal Transfer Pembayaran</label>
                         <input class="form-control" type="date" id="date" value="{{date('Y-m-d')}}" name="date">
                     </div>
 

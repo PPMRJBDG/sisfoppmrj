@@ -431,26 +431,36 @@ function submitKegiatan(tipe,detail_of){
                 return false;
             }
         }
+        postData(tipe,detail_of)
+    }else if(tipe=="draft" && detail_of.status=="posted"){
+        if(confirm("Status POSTED, jika akan diubah menjadi DRAFT maka catatan di Jurnal Keuangan akan terhapus, apakah Anda yakin ?")){
+            postData(tipe,detail_of)
+        }
+    }else{
+        if (confirm('Apakah RAB ini yakin akan di '+tipe+' ?')) {
+            postData(tipe,detail_of)
+        }
     }
-    if (confirm('Apakah RAB ini yakin akan di '+tipe+' ?')) {
-        $("#loadingSubmit").show();
-        var datax = {};
-        datax['parent_id'] = detail_of.id;
-        datax['status'] = tipe;
-        datax['justifikasi_rab'] = $("#justifikasi-rab").val();
-        datax['justifikasi_realisasi'] = $("#justifikasi-realisasi").val();
-        $.post("{{ route('store rab kegiatan') }}", datax,
-            function(data, status) {
-                var return_data = JSON.parse(data);
-                if (return_data.status) {
-                    window.location.reload();
-                }else{
-                    $("#loadingSubmit").hide();
-                    $("#alertModal").fadeIn();
-                    $("#contentAlert").html(return_data.message);
-                }
+}
+
+function postData(tipe,detail_of){
+    $("#loadingSubmit").show();
+    var datax = {};
+    datax['parent_id'] = detail_of.id;
+    datax['status'] = tipe;
+    datax['justifikasi_rab'] = $("#justifikasi-rab").val();
+    datax['justifikasi_realisasi'] = $("#justifikasi-realisasi").val();
+    $.post("{{ route('store rab kegiatan') }}", datax,
+        function(data, status) {
+            var return_data = JSON.parse(data);
+            if (return_data.status) {
+                window.location.reload();
+            }else{
+                $("#loadingSubmit").hide();
+                $("#alertModal").fadeIn();
+                $("#contentAlert").html(return_data.message);
             }
-        )
-    }
+        }
+    )
 }
 </script>

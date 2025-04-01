@@ -104,8 +104,9 @@
         <div class="col-md-2">
             <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">Laporan Keuangan {{ App\Helpers\CommonHelpers::periode() }}</h6>
             <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan" onchange="filterOnchange()">
+                <option value=""></option>
                 @foreach($bulans as $bulan)
-                <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
+                    <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
                 @endforeach
             </select>
         </div>
@@ -131,7 +132,7 @@
     <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
         <thead style="background-color:#f6f9fc;">
             <tr>
-                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Akhir Bulan Lalu</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Akhir Bulan Lalu<br><small>(KU-BMT + BENDAHARA)</small></th>
                 <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
                 <th colspan="2" width="40%" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
                 <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
@@ -143,14 +144,27 @@
         </thead>
         <tbody>
             <tr>
-                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($saldo,0, ',', '.')}}</th>
+                <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($saldo_awal_kubmt+$saldo_awal_bendahara,0, ',', '.')}}</th>
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_in,0, ',', '.')}}</th>
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_out_rutin,0, ',', '.')}}</th>
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_out_nonrutin,0, ',', '.')}}</th>
-                <?php $posisi_total = $saldo+$total_in-$total_out_rutin-$total_out_nonrutin; ?>
+                <?php $posisi_total = ($saldo_awal_kubmt+$saldo_awal_bendahara)+$total_in-$total_out_rutin-$total_out_nonrutin; ?>
                 <th class="text-uppercase font-weight-bolder ps-2">RP {{number_format($posisi_total,0, ',', '.')}}</th>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th class="text-uppercase font-weight-bolder ps-2">
+                    <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
+                        <tr>   
+                            <td>KU-BMT<br><b id="saldo_kubmt"></b></td>
+                            <td>BENDAHARA<br><b id="saldo_bendahara"></b></td>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 <h6 class="mt-2 text-uppercase font-weight-bolder">Estimasi Posisi Keuangan {{date_format(date_create($nextmonth),'M Y')}}</h6>
@@ -158,7 +172,7 @@
     <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
         <thead style="background-color:#f6f9fc;">
             <tr>
-                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Awal</th>
+                <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Saldo Awal<br><small>(KU-BMT + BENDAHARA)</small></th>
                 <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
                 <th colspan="2" width="40%" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
                 <th rowspan="2" width="20%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
@@ -196,16 +210,16 @@
 <br>
 <h6 class="text-uppercase font-weight-bolder">Jurnal Keuangan {{date_format(date_create($select_bulan),'M Y')}}</h6>
 <div class="card border mt-2">
-    <div class="card-body p-0">
+    <div class="card-body p-2">
         <div data-mdb-pagination="false" class="datatablex table-responsive datatable-sm text-uppercase">
             <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th colspan="6" class="text-uppercase font-weight-bolder ps-2">
-                           
+                        <th colspan="7" class="text-uppercase font-weight-bolder ps-2">
+                           KU-BMT
                         </th>
                         <th colspan="4" class="text-uppercase font-weight-bolder text-center">
-                            <small>Saldo Awal</small> RP {{number_format($saldo,0, ',', '.')}}
+                            <small>Saldo Awal</small> RP {{number_format($saldo_awal_kubmt,0, ',', '.')}}
                         </th>
                     </tr>
                     <tr>
@@ -213,6 +227,7 @@
                         <th class="text-uppercase font-weight-bolder ps-2">Pos</th>
                         <th class="text-uppercase font-weight-bolder ps-2">Divisi</th>
                         <th class="text-uppercase font-weight-bolder ps-2">Kategori</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Rutin</th>
                         <th class="text-uppercase font-weight-bolder ps-2">Tanggal</th>
                         <th class="text-uppercase font-weight-bolder ps-2">Keterangan</th>
                         <th class="text-uppercase font-weight-bolder text-center">QTY</th>
@@ -227,12 +242,17 @@
                         $total_keluar = 0;
                     ?>
                     @if(count($jurnals)>0)
-                        @foreach ($jurnals as $jurnal)
+                        @foreach ($jurnals->where('fkBank_id',2) as $jurnal)
                         <tr id="jurnal-{{$jurnal->id}}">
                             <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
                             <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
                             <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
                             <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
+                            <td class="new-td">
+                                @if($jurnal->tipe_pengeluaran=="Rutin")
+                                    <i class="fa fa-square-check text-info"></i>
+                                @endif
+                            </td>
                             <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
                             <td class="new-td">
                                 <span class="badge badge-{{($jurnal->jenis=='in') ? 'primary' : 'danger'}}">{{$jurnal->jenis}}</span>
@@ -249,11 +269,11 @@
                             <td class="new-td text-end">
                                 <?php 
                                     if($jurnal->jenis=="in"){
-                                        $saldo = $saldo + ($jurnal->qty*$jurnal->nominal);
+                                        $saldo_awal_kubmt = $saldo_awal_kubmt + ($jurnal->qty*$jurnal->nominal);
                                     }else if($jurnal->jenis=="out"){
-                                        $saldo = $saldo - ($jurnal->qty*$jurnal->nominal);
+                                        $saldo_awal_kubmt = $saldo_awal_kubmt - ($jurnal->qty*$jurnal->nominal);
                                     }
-                                    echo number_format($saldo,0, ',', '.');
+                                    echo number_format($saldo_awal_kubmt,0, ',', '.');
                                 ?>
                             </td>
                             <?php
@@ -276,9 +296,105 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                         <td id="total_masuk" class="font-weight-bolder text-end">RP {{number_format($total_masuk,0, ',', '.')}}</td>
                         <td id="total_keluar" class="font-weight-bolder text-end">RP {{number_format($total_keluar,0, ',', '.')}}</td>
-                        <td class="font-weight-bolder text-end">RP {{number_format($saldo,0, ',', '.')}}</td>
+                        <td class="font-weight-bolder text-end">RP {{number_format($saldo_awal_kubmt,0, ',', '.')}}</td>
+                        <script>$("#saldo_kubmt").html("RP {{number_format($saldo_awal_kubmt,0, ',', '.')}}")</script>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div data-mdb-pagination="false" class="datatablex table-responsive datatable-sm text-uppercase mt-2">
+            <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
+                <thead style="background-color:#f6f9fc;">
+                    <tr>
+                        <th colspan="7" class="text-uppercase font-weight-bolder ps-2">
+                           BENDAHARA
+                        </th>
+                        <th colspan="4" class="text-uppercase font-weight-bolder text-center">
+                            <small>Saldo Awal</small> RP {{number_format($saldo_awal_bendahara,0, ',', '.')}}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="text-uppercase font-weight-bolder ps-2">Bank</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Pos</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Divisi</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Kategori</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Rutin</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Tanggal</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">Keterangan</th>
+                        <th class="text-uppercase font-weight-bolder text-center">QTY</th>
+                        <th class="text-uppercase font-weight-bolder text-end pe-2">Masuk</th>
+                        <th class="text-uppercase font-weight-bolder text-end pe-2">Keluar</th>
+                        <th class="text-uppercase font-weight-bolder text-end pe-2">Saldo</th>
+                    </tr>
+                </thead>
+                <tbody id="rab-data">
+                    <?php
+                        $total_masuk = 0;
+                        $total_keluar = 0;
+                    ?>
+                    @if(count($jurnals)>0)
+                        @foreach ($jurnals->where('fkBank_id',1) as $jurnal)
+                        <tr id="jurnal-{{$jurnal->id}}">
+                            <td class="new-td text-uppercase">{{$jurnal->bank->name}}</td>
+                            <td class="new-td text-uppercase">{{$jurnal->pos->name}}</td>
+                            <td class="new-td text-uppercase">{{($jurnal->fkDivisi_id=='') ? '' : strtoupper($jurnal->divisi->divisi)}}</td>
+                            <td class="new-td">{{($jurnal->rab) ? substr($jurnal->rab->keperluan, 0, 30) : ''}}</td>
+                            <td class="new-td">
+                                @if($jurnal->tipe_pengeluaran=="Rutin")
+                                    <i class="fa fa-square-check text-info"></i>
+                                @endif
+                            </td>
+                            <td class="new-td">{{date_format(date_create($jurnal->tanggal), "d/m/Y")}}</td>
+                            <td class="new-td">
+                                <span class="badge badge-{{($jurnal->jenis=='in') ? 'primary' : 'danger'}}">{{$jurnal->jenis}}</span>
+                                @if($jurnal->fkRabManagBuilding_id!=0)
+                                    <a onclick="document.getElementById('NR{{$jurnal->fkRabManagBuilding_id}}').scrollIntoView()" href="#NR{{$jurnal->fkRabManagBuilding_id}}" class="badge badge-secondary">#NR{{$jurnal->fkRabManagBuilding_id}}</a>
+                                @elseif($jurnal->fkRabKegiatan_id!=0)
+                                    <a onclick="document.getElementById('KR{{$jurnal->fkRabKegiatan_id}}').scrollIntoView()" href="#KR{{$jurnal->fkRabKegiatan_id}}" class="badge badge-secondary">#KR{{$jurnal->fkRabKegiatan_id}}</a>
+                                @endif
+                                {{substr(str_replace("sodaqoh tahunan","SOD THN",strtolower($jurnal->uraian)), 0, 40)}}
+                            </td>
+                            <td class="new-td text-start">{{($jurnal->qty=="") ? 1 : $jurnal->qty}} * {{number_format($jurnal->nominal,0, ',', '.')}}</td>
+                            <td class="new-td text-end" id="nominal-in" val-in="{{($jurnal->jenis=='in') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='in') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
+                            <td class="new-td text-end" id="nominal-out" val-out="{{($jurnal->jenis=='out') ? $jurnal->nominal : 0 }}">{{($jurnal->jenis=='out') ? 'RP '.number_format($jurnal->qty*$jurnal->nominal,0, ',', '.') : ''}}</td>
+                            <td class="new-td text-end">
+                                <?php 
+                                    if($jurnal->jenis=="in"){
+                                        $saldo_awal_bendahara = $saldo_awal_bendahara + ($jurnal->qty*$jurnal->nominal);
+                                    }else if($jurnal->jenis=="out"){
+                                        $saldo_awal_bendahara = $saldo_awal_bendahara - ($jurnal->qty*$jurnal->nominal);
+                                    }
+                                    echo number_format($saldo_awal_bendahara,0, ',', '.');
+                                ?>
+                            </td>
+                            <?php
+                            if($jurnal->jenis=='in'){
+                                $total_masuk = $total_masuk + ($jurnal->qty*$jurnal->nominal);
+                            }elseif($jurnal->jenis=='out'){
+                                $total_keluar = $total_keluar + ($jurnal->qty*$jurnal->nominal);
+                            }
+                            ?>
+                        </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+                <tfoot style="background-color:#f6f9fc;">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td id="total_masuk" class="font-weight-bolder text-end">RP {{number_format($total_masuk,0, ',', '.')}}</td>
+                        <td id="total_keluar" class="font-weight-bolder text-end">RP {{number_format($total_keluar,0, ',', '.')}}</td>
+                        <td class="font-weight-bolder text-end">RP {{number_format($saldo_awal_bendahara,0, ',', '.')}}</td>
+                        <script>$("#saldo_bendahara").html("RP {{number_format($saldo_awal_bendahara,0, ',', '.')}}")</script>
                     </tr>
                 </tfoot>
             </table>

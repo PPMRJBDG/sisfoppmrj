@@ -942,16 +942,16 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         }
 
         $total_in = 0;
-        foreach($jurnals->where('jenis','in') as $in){
+        foreach($jurnals->where('jenis','in')->whereNull('sub_jenis') as $in){ // ->where('fkBank_id',2)
             $total_in = $total_in + ($in->qty*$in->nominal);
         }
 
         $total_out_rutin = 0;
-        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Rutin') as $outr){
+        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Rutin')->whereNull('sub_jenis') as $outr){
             $total_out_rutin = $total_out_rutin + ($outr->qty*$outr->nominal);
         }
         $total_out_nonrutin = 0;
-        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Non Rutin') as $outnr){
+        foreach($jurnals->where('jenis','out')->where('tipe_pengeluaran','Non Rutin')->whereNull('sub_jenis') as $outnr){
             $total_out_nonrutin = $total_out_nonrutin + ($outnr->qty*$outnr->nominal);
         }
 
@@ -960,15 +960,23 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
         $pengajuan_manag_buildings = RabManagBuildings::where('status','submit')->get();
         
-        $saldo = 0;
+        $saldo_awal_kubmt = 0;
+        $saldo_awal_bendahara = 0;
         if($select_bulan!='all'){
             $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-1')->orderBy('tanggal','ASC')->get();
             if($saldo_jurnal!=null){
-                foreach($saldo_jurnal as $j){
+                foreach($saldo_jurnal->where('fkBank_id',2) as $j){
                     if($j->jenis=="in"){
-                        $saldo = $saldo + $j->nominal;
+                        $saldo_awal_kubmt = $saldo_awal_kubmt + ($j->qty*$j->nominal);
                     }else if($j->jenis=="out"){
-                        $saldo = $saldo - $j->nominal;
+                        $saldo_awal_kubmt = $saldo_awal_kubmt - ($j->qty*$j->nominal);
+                    }
+                }
+                foreach($saldo_jurnal->where('fkBank_id',1) as $j){
+                    if($j->jenis=="in"){
+                        $saldo_awal_bendahara = $saldo_awal_bendahara + ($j->qty*$j->nominal);
+                    }else if($j->jenis=="out"){
+                        $saldo_awal_bendahara = $saldo_awal_bendahara - ($j->qty*$j->nominal);
                     }
                 }
             }
@@ -976,7 +984,8 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         
         return view('keuangan.laporan_pusat', [
             'print' => $print,
-            'saldo' => $saldo,
+            'saldo_awal_kubmt' => $saldo_awal_kubmt,
+            'saldo_awal_bendahara' => $saldo_awal_bendahara,
             'jurnals' => $jurnals,
             'bulans' => $bulans,
             'select_bulan' => $select_bulan,

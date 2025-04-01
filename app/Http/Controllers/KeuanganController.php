@@ -641,33 +641,36 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }else{
             $create = RabManagBuildings::find($request->input('parent_id'));
             if($request->input('status')!=null){
+                if($request->input('status')=='posted'){
+                    // posting jurnal
+                    $check_posted_jurnal = Jurnals::where('fkRabManagBuilding_id',$create->id)->first();
+                    if($check_posted_jurnal==null){
+                        $data = Jurnals::create([
+                            'fkBank_id' => 2,
+                            'fkPos_id' => 1,
+                            'tanggal' => date('Y-m-d H:i:s'),
+                            'jenis' => 'out',
+                            'uraian' => $create->nama,
+                            'qty' => 1,
+                            'nominal' => $create->total_biaya(),
+                            'created_by' => auth()->user()->fullname,
+                            'tipe_pengeluaran' => 'Non Rutin',
+                            'fkRabManagBuilding_id' => $create->id
+                        ]);
+                    }else{
+                        $check_posted_jurnal->tanggal = $create->periode_bulan;
+                        $check_posted_jurnal->uraian = $create->nama;
+                        $check_posted_jurnal->nominal = $create->total_biaya();
+                        $check_posted_jurnal->created_by = auth()->user()->fullname;
+                        $check_posted_jurnal->save();
+                    }
+                }elseif($request->input('status')=='draft' && $create->status=="posted"){
+                    Jurnals::where('fkRabManagBuilding_id',$create->id)->first()->delete();
+                }
+
                 $create->status = $request->input('status');
                 $create->save();
                 if($create){
-                    if($request->input('status')=='posted'){
-                        // posting jurnal
-                        $check_posted_jurnal = Jurnals::where('fkRabManagBuilding_id',$create->id)->first();
-                        if($check_posted_jurnal==null){
-                            $data = Jurnals::create([
-                                'fkBank_id' => 2,
-                                'fkPos_id' => 1,
-                                'tanggal' => date('Y-m-d H:i:s'),
-                                'jenis' => 'out',
-                                'uraian' => $create->nama,
-                                'qty' => 1,
-                                'nominal' => $create->total_biaya(),
-                                'created_by' => auth()->user()->fullname,
-                                'tipe_pengeluaran' => 'Non Rutin',
-                                'fkRabManagBuilding_id' => $create->id
-                            ]);
-                        }else{
-                            $check_posted_jurnal->tanggal = $create->periode_bulan;
-                            $check_posted_jurnal->uraian = $create->nama;
-                            $check_posted_jurnal->nominal = $create->total_biaya();
-                            $check_posted_jurnal->created_by = auth()->user()->fullname;
-                            $check_posted_jurnal->save();
-                        }
-                    }
                     return json_encode(array("status" => true, "message" => 'Berhasil mengubah status pengajuan'));
                 }else{
                     return json_encode(array("status" => false, "message" => 'Gagal mengubah status pengajuan'));
@@ -873,37 +876,39 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }else{
             $create = RabKegiatans::find($request->input('parent_id'));
             if($request->input('status')!=null){
+                if($request->input('status')=='posted'){
+                    // posting jurnal
+                    $check_posted_jurnal = Jurnals::where('fkRabKegiatan_id',$create->id)->first();
+                    if($check_posted_jurnal==null){
+                        $data = Jurnals::create([
+                            'fkBank_id' => 1,
+                            'fkPos_id' => 1,
+                            'fkDivisi_id' => $create->rab->divisi->id,
+                            'fkRab_id' => $create->fkRab_id,
+                            'tanggal' => date('Y-m-d H:i:s'),
+                            'jenis' => 'out',
+                            'uraian' => $create->nama,
+                            'qty' => 1,
+                            'nominal' => $create->total_biaya(),
+                            'created_by' => auth()->user()->fullname,
+                            'tipe_pengeluaran' => 'Rutin',
+                            'fkRabKegiatan_id' => $create->id
+                        ]);
+                    }else{
+                        $check_posted_jurnal->tanggal = $create->periode_bulan;
+                        $check_posted_jurnal->uraian = $create->nama;
+                        $check_posted_jurnal->nominal = $create->total_biaya();
+                        $check_posted_jurnal->created_by = auth()->user()->fullname;
+                        $check_posted_jurnal->save();
+                    }
+                }elseif($request->input('status')=='draft' && $create->status=="posted"){
+                    Jurnals::where('fkRabKegiatan_id',$create->id)->first()->delete();
+                }
                 $create->status = $request->input('status');
                 $create->justifikasi_rab = $request->input('justifikasi_rab');
                 $create->justifikasi_realisasi = $request->input('justifikasi_realisasi');
                 $create->save();
                 if($create){
-                    if($request->input('status')=='posted'){
-                        // posting jurnal
-                        $check_posted_jurnal = Jurnals::where('fkRabKegiatan_id',$create->id)->first();
-                        if($check_posted_jurnal==null){
-                            $data = Jurnals::create([
-                                'fkBank_id' => 1,
-                                'fkPos_id' => 1,
-                                'fkDivisi_id' => $create->rab->divisi->id,
-                                'fkRab_id' => $create->fkRab_id,
-                                'tanggal' => date('Y-m-d H:i:s'),
-                                'jenis' => 'out',
-                                'uraian' => $create->nama,
-                                'qty' => 1,
-                                'nominal' => $create->total_biaya(),
-                                'created_by' => auth()->user()->fullname,
-                                'tipe_pengeluaran' => 'Rutin',
-                                'fkRabKegiatan_id' => $create->id
-                            ]);
-                        }else{
-                            $check_posted_jurnal->tanggal = $create->periode_bulan;
-                            $check_posted_jurnal->uraian = $create->nama;
-                            $check_posted_jurnal->nominal = $create->total_biaya();
-                            $check_posted_jurnal->created_by = auth()->user()->fullname;
-                            $check_posted_jurnal->save();
-                        }
-                    }
                     return json_encode(array("status" => true, "message" => 'Berhasil mengubah status pengajuan'));
                 }else{
                     return json_encode(array("status" => false, "message" => 'Gagal mengubah status pengajuan'));

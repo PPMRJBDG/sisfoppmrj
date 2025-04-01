@@ -238,27 +238,30 @@
                     </tr>
                     <tr>
                         <th colspan="11" class="text-uppercase font-weight-bolder ps-2 text-center">
-                            @if($detail_of->status=='draft')
-                            <button type="submit" id="submit" class="btn btn-warning btn-sm mb-0" onclick="submitManagBuilding('submit',{{$detail_of}})">
-                                <i class="fas fa-file-arrow-up" aria-hidden="true"></i>
-                                SUBMIT
-                            </button>
+                            @if($detail_of->status=='approved')
+                                <p class="m-1">Catatan: Sebelum Posting ke Jurnal, pastikan semua realisasi sudah tercatat di setiap Item.</p>
                             @endif
-                            <button type="submit" id="rejected" class="btn btn-danger btn-sm mb-0" onclick="submitManagBuilding('rejected',{{$detail_of}})">
-                                <i class="fas fa-xmark" aria-hidden="true"></i>
-                                REJECTED
-                            </button>
+                            @if($detail_of->status=='draft')
+                                <button type="submit" id="submit" class="btn btn-warning btn-sm mb-0" onclick="submitManagBuilding('submit',{{$detail_of}})">
+                                    <i class="fas fa-file-arrow-up" aria-hidden="true"></i>
+                                    SUBMIT
+                                </button>
+                            @endif
                             @if($detail_of->status=='submit')
-                            <button type="submit" id="approved" class="btn btn-primary btn-sm mb-0" onclick="submitManagBuilding('approved',{{$detail_of}})">
-                                <i class="fas fa-check-double" aria-hidden="true"></i>
-                                APPROVED
-                            </button>
+                                <button type="submit" id="rejected" class="btn btn-danger btn-sm mb-0" onclick="submitManagBuilding('rejected',{{$detail_of}})">
+                                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                                    REJECTED
+                                </button>
+                                <button type="submit" id="approved" class="btn btn-primary btn-sm mb-0" onclick="submitManagBuilding('approved',{{$detail_of}})">
+                                    <i class="fas fa-check-double" aria-hidden="true"></i>
+                                    APPROVED
+                                </button>
                             @endif
                             @if($detail_of->status=='approved')
-                            <button type="submit" id="posted" class="btn btn-secondary btn-sm mb-0" onclick="submitManagBuilding('posted',{{$detail_of}})">
-                                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
-                                POSTING JURNAL
-                            </button>
+                                <button type="submit" id="posted" class="btn btn-secondary btn-sm mb-0" onclick="submitManagBuilding('posted',{{$detail_of}})">
+                                    <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                                    POSTING JURNAL
+                                </button>
                             @endif
                             <button type="submit" id="posted" class="btn btn-success btn-sm mb-0" onclick="submitManagBuilding('draft',{{$detail_of}})">
                                 <i class="fab fa-firstdraft" aria-hidden="true"></i>
@@ -318,23 +321,33 @@ function hapus(x,id){
 }
 
 function submitManagBuilding(tipe,detail_of){
-    if (confirm('Apakah RAB ini yakin akan di '+tipe+' ?')) {
-        $("#loadingSubmit").show();
-        var datax = {};
-        datax['parent_id'] = detail_of.id;
-        datax['status'] = tipe;
-        $.post("{{ route('store management building') }}", datax,
-            function(data, status) {
-                var return_data = JSON.parse(data);
-                if (return_data.status) {
-                    window.location.reload();
-                }else{
-                    $("#loadingSubmit").hide();
-                    $("#alertModal").fadeIn();
-                    $("#contentAlert").html(return_data.message);
-                }
-            }
-        )
+    if(tipe=="draft" && detail_of.status=="posted"){
+        if(confirm("Status POSTED, jika akan diubah menjadi DRAFT maka catatan di Jurnal Keuangan akan terhapus, apakah Anda yakin ?")){
+            postData(tipe,detail_of)
+        }
+    }else{
+        if (confirm('Apakah RAB ini yakin akan di '+tipe+' ?')) {
+            postData(tipe,detail_of)
+        }
     }
+}
+
+function postData(tipe,detail_of){
+    $("#loadingSubmit").show();
+    var datax = {};
+    datax['parent_id'] = detail_of.id;
+    datax['status'] = tipe;
+    $.post("{{ route('store management building') }}", datax,
+        function(data, status) {
+            var return_data = JSON.parse(data);
+            if (return_data.status) {
+                window.location.reload();
+            }else{
+                $("#loadingSubmit").hide();
+                $("#alertModal").fadeIn();
+                $("#contentAlert").html(return_data.message);
+            }
+        }
+    )
 }
 </script>
