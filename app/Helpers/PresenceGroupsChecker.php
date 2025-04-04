@@ -9,7 +9,7 @@ use App\Models\Permit;
 use App\Models\Present;
 use App\Models\Liburan;
 use App\Models\Santri;
-use App\Models\JadwalPengajars;
+use App\Models\KalenderPpmTemplates;
 use App\Helpers\CountDashboard;
 
 class PresenceGroupsChecker
@@ -64,9 +64,9 @@ class PresenceGroupsChecker
                     continue;
                 }
 
-                $getPengajar1 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                $getPengajar1 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
                     ->where('day', $currentDay)->where('ppm', 1)->first();
-                $getPengajar2 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                $getPengajar2 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
                     ->where('day', $currentDay)->where('ppm', 2)->first();
 
                 $newPresenceInThisDate = Presence::create([
@@ -146,9 +146,9 @@ class PresenceGroupsChecker
                         continue;
                     }
 
-                    $getPengajar1 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                    $getPengajar1 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
                         ->where('day', $currentDay)->where('ppm', 1)->first();
-                    $getPengajar2 = JadwalPengajars::where('fkPresence_group_id', $presenceGroup->id)
+                    $getPengajar2 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
                         ->where('day', $currentDay)->where('ppm', 2)->first();
 
                     $newPresenceInThisDate = Presence::create([

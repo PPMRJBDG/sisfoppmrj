@@ -32,6 +32,27 @@
   </nav>
 </header>
 
+<?php 
+$periode = App\Helpers\CommonHelpers::periode();
+$periode = explode("-",$periode);
+$month = ['09','10','11','12','01','02','03','04','05','06','07','08'];
+$currentMonth = date("m");
+$year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1]];
+?>
+<footer id="footer-calendar" style="display:none;">
+  <nav class="navbar fixed-bottom fixed bg-white align-items-center justify-content-center" style="border-top:solid 2px #d6d6d6">
+    <div class="text-center">
+      <?php
+      for($i=0; $i<12; $i++){
+      ?>
+        <button onclick="document.getElementById('month-{{$i}}').scrollIntoView()" class="btn btn-floating btn-sm btn-{{($currentMonth==$month[$i]) ? 'danger' : 'primary'}}">{{$month[$i]}}</button>
+      <?php
+      }
+      ?>
+    </div>
+  </nav>
+</footer>
+
 <!-- Sidenav -->
 <div id="sidenav-1" class="sidenav" role="navigation">
   <div class="text-center mb-2 bg-primary justify-content-between align-items-center shadow-1-strong" style="height:60px;">
@@ -57,6 +78,12 @@
       </a>
     </li>
     @endif
+
+    <li>
+      <a class="sidenav-link" href="{{ url('kalender-ppm') }}">
+        <i class="fa fa-calendar pe-3"></i>Kalender PPM
+      </a>
+    </li>
 
     @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
     <li class="sidenav-item">
@@ -340,8 +367,8 @@
           </a>
         </li>
         <li>
-          <a class="sidenav-link" href="{{ url('dewan-pengajar/jadwal') }}">
-            <span class="sidenav-link-text ms-1">Jadwal Pengajar</span>
+          <a class="sidenav-link" href="{{ url('kalender-ppm/template') }}">
+            <span class="sidenav-link-text ms-1">Template Kalender</span>
           </a>
         </li>
         <li>

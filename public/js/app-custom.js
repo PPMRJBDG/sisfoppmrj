@@ -65,6 +65,7 @@ function getCookie(cname) {
 }
 
 function getPage(url) {
+    $("#footer-calendar").hide();
     $('#content-app').html('');
     $("#loading").fadeIn();
     $("#al-danger").hide();

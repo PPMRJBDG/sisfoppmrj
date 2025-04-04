@@ -1,5 +1,5 @@
 <style>
-    .new-td {
+    .new-td, .datatable.datatable-sm td {
         padding: 2px 5px !important;
     }
 </style>
@@ -73,33 +73,33 @@
             <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th class="text-uppercase font-weight-bolder ps-2">LINK</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">RAB</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">NAMA KEGIATAN</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">PERIODE</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">TOTAL BIAYA</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">DESKRIPSI</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">DETIL</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">STATUS</th>
-                        <th class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th class="text-uppercase font-weight-bolder">LINK</th>
+                        <th class="text-uppercase font-weight-bolder">RAB</th>
+                        <th class="text-uppercase font-weight-bolder">NAMA KEGIATAN</th>
+                        <th class="text-uppercase font-weight-bolder">PERIODE</th>
+                        <th class="text-uppercase font-weight-bolder">TOTAL BIAYA</th>
+                        <th class="text-uppercase font-weight-bolder">DESKRIPSI</th>
+                        <th class="text-uppercase font-weight-bolder">DETIL</th>
+                        <th class="text-uppercase font-weight-bolder">STATUS</th>
+                        <th class="text-uppercase font-weight-bolder"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($kegiatans)
                         @foreach($kegiatans as $mb)
                             <tr>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
+                                <td class="new-td text-center">
+                                    <button type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init>
                                         <i onclick="copyLink('{{$mb->ids}}')" class="fa fa-copy text-white"></i>
                                     </button>
                                 </td>
-                                <td>{{$mb->rab->keperluan}}</td>
-                                <td>{{$mb->nama}}</td>
-                                <td>{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
-                                <td>{{number_format($mb->total_biaya(),0, ',', '.')}}</td>
-                                <td >{{$mb->deskripsi}}</td>
-                                <td><a href="{{route('rab kegiatan id',$mb->id)}}" class="btn btn-sm btn-outline-secondary">Lihat Detil</a></td>
-                                <td>
+                                <td class="new-td">{{$mb->rab->keperluan}}</td>
+                                <td class="new-td">{{$mb->nama}}</td>
+                                <td class="new-td">{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
+                                <td class="new-td">{{number_format($mb->total_biaya(),0, ',', '.')}}</td>
+                                <td class="new-td">{{$mb->deskripsi}}</td>
+                                <td class="new-td"><a href="{{route('rab kegiatan id',$mb->id)}}" class="btn btn-sm btn-outline-secondary">Lihat Detil</a></td>
+                                <td class="new-td">
                                     <?php
                                         $badge = 'warning';
                                         if($mb->status=='approved'){
@@ -112,7 +112,7 @@
                                     ?>
                                     <span class="badge badge-{{$badge}}">{{$mb->status}}</span>
                                 </td>
-                                <td>
+                                <td class="new-td">
                                     @if($mb->status=='draft')
                                     <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubah('parent',{{$mb}})">
                                         <i class="fas fa-edit" aria-hidden="true"></i>

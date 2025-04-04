@@ -33,7 +33,11 @@ use App\Models\RabKegiatans;
 use App\Models\RabKegiatanDetails;
 use App\Models\Rabs;
 use App\Models\Jurnals;
-
+use App\Models\DewanPengajars;
+use App\Models\KalenderPpmTemplates;
+use App\Models\KalenderPpms;
+use Carbon\Carbon;
+use Error;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -998,6 +1002,16 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             'total_out_rutin' => $total_out_rutin,
             'total_out_nonrutin' => $total_out_nonrutin,
         ]);
+    }
+
+    public function kalender_ppm()
+    {
+        $today = date('Y-m-d', strtotime(today()));
+        $pengajars = DewanPengajars::all();
+        $template = KalenderPpmTemplates::select('sequence')->groupBy('sequence')->get();
+        $templates = KalenderPpmTemplates::orderBy('waktu', 'ASC')->get();
+        $kalenders = KalenderPpms::get();
+        return view('kalender_ppm', ['today' => $today, 'pengajars' => $pengajars, 'template' => $template, 'templates' => $templates, 'kalenders' => $kalenders]);
     }
 
 //     public function view_permit($ids)

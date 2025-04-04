@@ -120,7 +120,7 @@ if (auth()->user()->hasRole('barcode')) {
   }
   .modal{
       background: rgba(0, 0, 0, 0.7);
-      z-index: 10000;
+      z-index: 1000;
       width: 100% !important;
       height: 100% !important;
       overflow-x: auto; 
@@ -266,6 +266,36 @@ if (auth()->user()->hasRole('barcode')) {
       </div>
     </div>
 
+    <div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="showFormChange" tabindex="-1" role="dialog" aria-labelledby="showFormChangeLabel">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-body pb-0">
+                  <div class="card border p-4 mt-2 mb-2">
+                    <h6 class="font-weight-bolder mb-4" id="title-change-kalender-ppm"></h6>
+                    <input type="hidden" value="" id="ak-bulan">
+                    <input type="hidden" value="" id="ak-tanggal">
+                    <select name="ak-waktu" id="ak-waktu" class="select form-control cursor-pointer">
+                        <option value="malam">Malam</option>
+                        <option value="shubuh">Shubuh</option>
+                    </select>
+                    <br>
+                    <select onchange="changeFormKalenderAk(this.value)" data-mdb-filter="true" name="ak-nama" id="ak-nama" class="select form-control cursor-pointer">
+                        <option value="">-</option>
+                        <option value="reset">RESET</option>
+                        @foreach(App\Helpers\CommonHelpers::agendaKhusus() as $ak)
+                        <option value="{{$ak}}">{{$ak}}</option>
+                        @endforeach
+                    </select>
+                  </div>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="button" onclick="$('#showFormChange').hide()" class="btn btn-secondary mb-0" data-dismiss="modal">Keluar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
     <div class="modal" id="loadingSubmit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="background:rgba(0,0,0,0.8);">
       <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
         <center>
@@ -301,6 +331,7 @@ if (auth()->user()->hasRole('barcode')) {
       if (!matchArray(list_tab, e.target.id) && !matchArray(list_tab, e.target.getAttribute('block-id'))) {
         e.preventDefault();
         if (this.href != $("#base-url").val() + '/#' && !this.href.match("#")) {
+          $("#footer-calendar").hide();
           $("#sidenav-1").css('transform', 'translateX(-100%)');
           var sidenav = document.querySelectorAll(".sidenav-backdrop");
           if (sidenav != null) {
@@ -310,7 +341,6 @@ if (auth()->user()->hasRole('barcode')) {
           }
 
           getPage(this.href);
-          // $("#breadcrumb-item").html(e.target.innerText)
           return false;
         }
       }

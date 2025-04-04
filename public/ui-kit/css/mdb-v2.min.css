@@ -22595,7 +22595,7 @@ fieldset:disabled .btn-group-vertical {
 
 .datatable.datatable-sm tbody tr:last-child {
     border-bottom: transparent;
-    height: 55px;
+    height: 0; /* 55px */
 }
 
 .datatable.datatable-sm .datatable-pagination {

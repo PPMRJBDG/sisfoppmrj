@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Materi;
 use App\Models\DewanPengajars;
-use App\Models\JadwalPengajars;
+use App\Models\KalenderPpmTemplates;
+use App\Models\KalenderPpms;
 use App\Models\PresenceGroup;
 use App\Models\HourKbms;
 use App\Models\DayKbms;
 use App\Models\JadwalHariJamKbms;
+use Illuminate\Support\Facades\DB;
 
 class MateriController extends Controller
 {
@@ -208,35 +210,128 @@ class MateriController extends Controller
         return json_encode(['status' => true, 'message' => 'Berhasil menghapus pengajar']);
     }
 
-    public function jadwal()
-    {
-        $pengajar = DewanPengajars::all();
-        $jadwal_pengajar = JadwalPengajars::all();
-        $presence_group = PresenceGroup::whereIn('id', [1, 2])->get();
+    // public function jadwal()
+    // {
+    //     $pengajar = DewanPengajars::all();
+    //     $template_kalender = KalenderPpmTemplates::all();
+    //     $presence_group = PresenceGroup::whereIn('id', [1, 2])->get();
 
-        return view('materi.list_jadwal', ['jadwal_pengajar' => $jadwal_pengajar, 'presence_group' => $presence_group, 'pengajar' => $pengajar]);
+    //     return view('materi.list_jadwal', ['template_kalender' => $template_kalender, 'presence_group' => $presence_group, 'pengajar' => $pengajar]);
+    // }
+
+    // public function jadwal_store(Request $request)
+    // {
+    //     $pengajar = KalenderPpmTemplates::where('fkPresence_group_id', $request->input('presence'))->where('day', $request->input('day'))->where('ppm', $request->input('ppm'))->first();
+
+    //     if ($pengajar) {
+    //         $pengajar->fkDewan_pengajar_id = $request->input('pengajar');
+    //         $updated = $pengajar->save();
+    //     } else {
+    //         $updated = KalenderPpmTemplates::create([
+    //             'fkPresence_group_id' => $request->input('presence'),
+    //             'fkDewan_pengajar_id' => $request->input('pengajar'),
+    //             'day' => $request->input('day'),
+    //             'ppm' => $request->input('ppm')
+    //         ]);
+    //     }
+
+    //     if ($updated) {
+    //         return json_encode(['status' => true, 'message' => 'Berhasil mengubah pengajar']);
+    //     } else {
+    //         return json_encode(['status' => false, 'message' => 'Gagal mengubah pengajar']);
+    //     }
+    // }
+
+    public function template_kalender_ppm(){
+        $today = date('Y-m-d', strtotime(today()));
+        $pengajars = DewanPengajars::all();
+        $template = KalenderPpmTemplates::all();
+        $counts = DB::table('kalender_ppm_templates as a')
+                    ->select('a.fkDewanPengajar_id', 'b.name', DB::raw('count(a.id) as total'))
+                    ->leftJoin('dewan_pengajars as b', function ($join) {
+                        $join->on('a.fkDewanPengajar_id','=','b.id');
+                    })
+                    ->whereNotNull('a.fkDewanPengajar_id')
+                    ->groupBy('a.fkDewanPengajar_id', 'b.name')
+                    ->orderBy('b.name','ASC')
+                    ->get();
+        return view('materi.template_kalender_ppm', ['today' => $today, 'pengajars' => $pengajars, 'template' => $template, 'counts' => $counts]);
     }
 
-    public function jadwal_store(Request $request)
-    {
-        $pengajar = JadwalPengajars::where('fkPresence_group_id', $request->input('presence'))->where('day', $request->input('day'))->where('ppm', $request->input('ppm'))->first();
-
-        if ($pengajar) {
-            $pengajar->fkDewan_pengajar_id = $request->input('pengajar');
-            $updated = $pengajar->save();
-        } else {
-            $updated = JadwalPengajars::create([
-                'fkPresence_group_id' => $request->input('presence'),
-                'fkDewan_pengajar_id' => $request->input('pengajar'),
-                'day' => $request->input('day'),
-                'ppm' => $request->input('ppm')
-            ]);
+    public function store_template_kalender_ppm(Request $request){
+        $get = KalenderPpmTemplates::find($request->input('id'));
+        if(!$get){
+            $get = KalenderPpmTemplates::where('sequence',$request->input('sequence'))->where('waktu',$request->input('waktu'))->where('kelas',$request->input('kelas'))->first();
         }
 
-        if ($updated) {
-            return json_encode(['status' => true, 'message' => 'Berhasil mengubah pengajar']);
-        } else {
-            return json_encode(['status' => false, 'message' => 'Gagal mengubah pengajar']);
+        if(!$get){
+            $insert = KalenderPpmTemplates::create([
+                        'waktu' => $request->input('waktu'),
+                        'kelas' => $request->input('kelas'),
+                        'sequence' => $request->input('sequence'),
+                        'fkDewanPengajar_id' => $request->input('fkDewanPengajar_id'),
+                        'is_agenda_khusus' => $request->input('is_agenda_khusus'),
+                        'nama_agenda_khusus' => $request->input('nama_agenda_khusus'),
+                        'day' => $request->input('day'),
+                    ]);
+        }else{
+            $get->is_agenda_khusus = $request->input('is_agenda_khusus');
+            if($request->input('is_agenda_khusus')==1){
+                $get->nama_agenda_khusus = $request->input('nama_agenda_khusus');
+                $get->waktu = $request->input('waktu');
+                $get->kelas = null;
+                $get->fkDewanPengajar_id = null;
+            }else{
+                $get->nama_agenda_khusus = null;
+                $get->waktu = $request->input('waktu');
+                $get->kelas = $request->input('kelas');
+                $get->fkDewanPengajar_id = $request->input('fkDewanPengajar_id');
+            }
+            $get->save();
+            if($request->input('is_agenda_khusus')==1){
+                $delete = KalenderPpmTemplates::where('is_agenda_khusus',0)->where('waktu',$request->input('waktu'))->where('sequence',$request->input('sequence'))->delete();
+            }else{
+                $delete = KalenderPpmTemplates::where('is_agenda_khusus',1)->where('waktu',$request->input('waktu'))->where('sequence',$request->input('sequence'))->delete();
+            }
+        }
+    }
+
+    public function store_kalender_ppm(Request $request){
+        if($request->input('ak')==false){
+            $get = KalenderPpms::where('id',$request->input('id'))->where('x',$request->input('x'))->first();
+
+            if(!$get){
+                $insert = KalenderPpms::create([
+                            'x' => $request->input('x'),
+                            'bulan' => $request->input('bulan'),
+                            'start' => $request->input('start'),
+                        ]);
+            }else{
+                $get->x = $request->input('x');
+                $get->bulan = $request->input('bulan');
+                $get->start = $request->input('start');
+                $get->save();
+            }
+        }else{
+            $get = KalenderPpms::where('is_certain_conditions',1)->where('waktu_certain_conditions',$request->input('waktu'))->where('bulan',$request->input('bulan'))->where('start',$request->input('start'))->first();
+            if($get){
+                if($request->input('nama')=="reset"){
+                    $get->delete();
+                }else{
+                    $get->nama_certain_conditions = $request->input('nama');
+                    $get->save();
+                }
+            }else{
+                if($request->input('nama')!="reset"){
+                    $insert = KalenderPpms::create([
+                        'bulan' => $request->input('bulan'),
+                        'start' => $request->input('start'),
+                        'is_certain_conditions' => 1,
+                        'waktu_certain_conditions' => $request->input('waktu'),
+                        'nama_certain_conditions' => $request->input('nama'),
+                    ]);
+                }
+            }
         }
     }
 }

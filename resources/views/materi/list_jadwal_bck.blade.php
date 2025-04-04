@@ -31,7 +31,7 @@
                                         <option value="">-</option>
                                         @foreach($pengajar as $dp)
                                         <?php
-                                        $jadwal = App\Models\JadwalPengajars::where('fkPresence_group_id', $data->id)->where('fkDewan_pengajar_id', $dp->id)->where('day', trim($ed))->where('ppm', $x)->first();
+                                        $jadwal = App\Models\KalenderPpmTemplates::where('fkPresence_group_id', $data->id)->where('fkDewan_pengajar_id', $dp->id)->where('day', trim($ed))->where('ppm', $x)->first();
                                         $jadwal_id = 0;
                                         if ($jadwal != null) {
                                             $jadwal_id = $jadwal->fkDewan_pengajar_id;

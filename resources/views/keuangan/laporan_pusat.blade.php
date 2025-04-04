@@ -1,5 +1,5 @@
 @if($print)
-    @include('base.start_without_bars', ['title' => "LPJ BULAN ".date_format(date_create($select_bulan),'M Y')." & RAB BULAN ".date_format(date_create($nextmonth),'M Y')." - PPM RJ BS2"])
+    @include('base.start_without_bars', ['title' => "LPJ ".date_format(date_create($select_bulan),'M Y')." & RAB ".date_format(date_create($nextmonth),'M Y')." - PPM RJ BS2"])
     <script>
     // function passwordCheck(){
     //     var password = prompt("Masukkan kode rahasia!");

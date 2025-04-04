@@ -274,4 +274,60 @@ class CommonHelpers
             }
         }
     }
+
+    function weekNumberOfMonth($date) {
+        $tgl=date_parse($date);
+        $tanggal =  $tgl['day'];
+        $bulan   =  $tgl['month'];
+        $tahun   =  $tgl['year'];
+        //tanggal 1 tiap bulan
+        $tanggalAwalBulan = mktime(0, 0, 0, $bulan, 1, $tahun);
+        $mingguAwalBulan = (int) date('W', $tanggalAwalBulan);
+        //tanggal sekarang
+        $tanggalYangDicari = mktime(0, 0, 0, $bulan, $tanggal, $tahun);
+        $mingguTanggalYangDicari = (int) date('W', $tanggalYangDicari);
+        $mingguKe = $mingguTanggalYangDicari - $mingguAwalBulan + 1;
+        return $mingguKe;
+    }
+
+    function dayName($date){
+        $daftar_hari = array(
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu'
+        );
+        $namahari = date('l', strtotime($date));
+        return $daftar_hari[$namahari];
+    }
+
+    public static function agendaKhusus(){
+        $agenda_khusus = [
+            'PRA-PPM',
+            'SARASEHAN',
+            'MIMBER',
+            'HASDA-DALIL',
+            'HASDA-PPG',
+            'HASDA-ORGANISASI',
+            'HASDA-TEKS',
+            'HASDA-NASLIS',
+            'BACAAN PENDERESAN',
+            'KEAKRABAN ANGKATAN',
+            'KEAKRABAN UMUM',
+            'MANAJEMEN',
+            'NASEHAT PENGURUS',
+            'QURBAN',
+            'ASRAMA',
+            'PAT',
+            'ASAD',
+            'LEBARAN',
+            'LIBURAN',
+            'LIBUR'
+        ];
+
+        return $agenda_khusus;
+    }
 }

@@ -181,7 +181,8 @@ Bukti Transfer: '.$setting->host_url.'/storage/bukti_transfer/'.$created->bukti_
                         'qty' => 1,
                         'uraian' => 'Sodaqoh Tahunan '.$check->sodaqoh->periode.': '.$check->santri->user->fullname,
                         'nominal' => $check->nominal,
-                        'tipe_penerimaan' => 'Sodaqoh Tahunan'
+                        'tipe_penerimaan' => 'Sodaqoh Tahunan',
+                        'created_by' => auth()->user()->fullname
                     ]);
                     // end jurnal
 

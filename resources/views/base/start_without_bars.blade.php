@@ -115,6 +115,27 @@ $setting = App\Models\Settings::first();
   }
 </style>
 
+<?php 
+$periode = App\Helpers\CommonHelpers::periode();
+$periode = explode("-",$periode);
+$month = ['09','10','11','12','01','02','03','04','05','06','07','08'];
+$currentMonth = date("m");
+$year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1]];
+?>
+<footer id="footer-calendar" style="display:none;">
+  <nav class="navbar fixed-bottom fixed bg-white align-items-center justify-content-center" style="border-top:solid 2px #d6d6d6">
+    <div class="text-center">
+      <?php
+      for($i=0; $i<12; $i++){
+      ?>
+        <button onclick="document.getElementById('month-{{$i}}').scrollIntoView()" class="btn btn-floating btn-sm btn-{{($currentMonth==$month[$i]) ? 'danger' : 'primary'}}">{{$month[$i]}}</button>
+      <?php
+      }
+      ?>
+    </div>
+  </nav>
+</footer>
+
 <body class="g-sidenav-show bg-white">
   <div class="min-height-300 position-absolute w-100" style="min-height:100% !important;"></div>
   <main class="main-content position-relative border-radius-lg ">
