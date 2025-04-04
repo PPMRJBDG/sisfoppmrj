@@ -5,6 +5,7 @@
 @endif
 
 <?php
+$GLOBALS['total_ngajar_all'] = [];
 function build_calendar($month, $year, $today, $templates, $template, $start_seq, $start_tgl, $id_kalender_seq, $id_kalender_tgl, $kalender_conditions){
   $daysOfWeek = array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu');
   $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
@@ -12,6 +13,8 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
   $dateComponents = getdate($firstDayOfMonth);
   $monthName = $dateComponents['month'];
   $dayOfWeek = $dateComponents['wday'];
+
+  $total_ngajar = [];
 
   $selectoption = "";
   if(auth()->user()){
@@ -109,8 +112,11 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
             }
             $calendar .= '<br><small style="font-size:0.8em;"><span class="badge badge-'.$waktu.'">'.strtoupper($dt->waktu).'</span>: <span class="badge badge-'.$libur.'" style="font-size:1.0em!important;">'.strtoupper($dt->nama_agenda_khusus).'</span></small>';
           }elseif($dt->pengajar){
+            array_push($total_ngajar, $dt->pengajar->name);
+            array_push($GLOBALS['total_ngajar_all'], $dt->pengajar->name);
+            
             $name_degur = $dt->pengajar->name;
-            $calendar .= '<br><small style="font-size:0.8em;"><span class="badge badge-'.$waktu.'">'.strtoupper($dt->waktu).'</span> '.strtoupper($dt->kelas).': '.strtoupper($name_degur).'</small>';
+            $calendar .= '<br><small style="font-size:0.8em;"><span class="badge badge-'.$waktu.'">'.strtoupper($dt->waktu).'</span> '.strtoupper($dt->kelas).': <b>'.strtoupper($name_degur).'</b></small>';
           }
         }
       }
@@ -130,6 +136,18 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
   }
   $calendar .= "</tr>";
   $calendar .= "</table>";
+
+  // if(auth()->user()){
+    $calendar .= "<table>";
+    $dump_total_ngajar = array_count_values($total_ngajar);
+    foreach($dump_total_ngajar as $keydtn => $val){
+      if (str_contains($keydtn, 'Ust.')) {
+        $calendar .= "<tr class='font-weight-bolder'><td>$keydtn</td><td>: $val</td>";
+      }
+    }
+    $calendar .= "</table>";
+  // }
+
   return $calendar;
 }
 ?>
@@ -241,6 +259,20 @@ for($i=0; $i<12; $i++){
 <?php
 }
 ?>
+
+<div class="card border mb-5 p-3">
+<?php
+$table = "<table>";
+$dump_total_ngajar_all = array_count_values($GLOBALS['total_ngajar_all']);
+foreach($dump_total_ngajar_all as $keydtn => $val){
+  if (str_contains($keydtn, 'Ust.')) {
+    $table .= "<tr class='font-weight-bolder'><td width='15%'>$keydtn</td><td>: $val</td>";
+  }
+}
+$table .= "</table>";
+echo $table;
+?>
+</div>
 
 <script>
     try {
