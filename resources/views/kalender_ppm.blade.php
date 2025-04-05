@@ -31,7 +31,11 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
           $label_select = '<label>Sequence 1 Start Tanggal:</label>';
           $id_kalender = $id_kalender_tgl;
         }
-        $selectoption .= "<div class='col-md'>$label_select<select disabled={{($lock_calendar) ? 'true' : 'false'}} data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
+        $disabled = "";
+        if($lock_calendar){
+          $disabled = "disabled";
+        }
+        $selectoption .= "<div class='col-md'>$label_select<select $disabled data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
         $selectoption .= "<option value=''>--Pilih $option--</option>";
         foreach($template as $t){
           $selected = "";
