@@ -12,6 +12,7 @@ use App\Models\HourKbms;
 use App\Models\DayKbms;
 use App\Models\JadwalHariJamKbms;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\PresenceGroupsChecker;
 
 class MateriController extends Controller
 {
@@ -297,7 +298,7 @@ class MateriController extends Controller
     }
 
     public function store_kalender_ppm(Request $request){
-        if($request->input('ak')==false){
+        if($request->input('ak')=="false"){
             $get = KalenderPpms::where('id',$request->input('id'))->where('x',$request->input('x'))->first();
 
             if(!$get){
@@ -311,6 +312,7 @@ class MateriController extends Controller
                 $get->bulan = $request->input('bulan');
                 $get->start = $request->input('start');
                 $get->save();
+                PresenceGroupsChecker::createPresence(true);
             }
         }else{
             $get = KalenderPpms::where('is_certain_conditions',1)->where('waktu_certain_conditions',$request->input('waktu'))->where('bulan',$request->input('bulan'))->where('start',$request->input('start'))->first();
@@ -330,8 +332,10 @@ class MateriController extends Controller
                         'waktu_certain_conditions' => $request->input('waktu'),
                         'nama_certain_conditions' => $request->input('nama'),
                     ]);
+                    
                 }
             }
+            PresenceGroupsChecker::createPresence(true);
         }
     }
 }

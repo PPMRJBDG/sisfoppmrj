@@ -276,7 +276,7 @@ $table = "<table>";
 $dump_total_ngajar_all = array_count_values($GLOBALS['total_ngajar_all']);
 foreach($dump_total_ngajar_all as $keydtn => $val){
   if (str_contains($keydtn, 'Ust.')) {
-    $table .= "<tr class='font-weight-bolder'><td width='50%'>$keydtn</td><td>: $val</td>";
+    $table .= "<tr class='font-weight-bolder border-bottom'><td width='50%'>$keydtn</td><td>: $val</td>";
   }
 }
 $table .= "</table>";

@@ -30,11 +30,26 @@ class Presence extends Model
         'sign_in_degur2',
         'status_terlambat_degur1',
         'status_terlambat_degur2',
+        'pre_fkDewan_pengajar_mt',
+        'pre_fkDewan_pengajar_reg',
+        'pre_fkDewan_pengajar_pemb',
     ];
 
     /**
      * Get the user leader associated with the Lorong.
      */
+    public function dewanPengajar($kelas)
+    {
+        $fk = '';
+        if($kelas=="mt"){
+            $fk = 'pre_fkDewan_pengajar_mt';
+        }elseif($kelas=="reg"){
+            $fk = 'pre_fkDewan_pengajar_reg';
+        }elseif($kelas=="pemb"){
+            $fk = 'pre_fkDewan_pengajar_pemb';
+        }
+        return $this->belongsTo(DewanPengajars::class, $fk);
+    }
     public function dewanPengajar1()
     {
         return $this->belongsTo(DewanPengajars::class, 'fkDewan_pengajar_1');

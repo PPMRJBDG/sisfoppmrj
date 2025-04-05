@@ -16,10 +16,12 @@
 
 <script>
   function nextPage() {
-    getPage($("#current-url").val() + `?page={{ $page + 1 }}`)
+    var current = $("#current-url").val().split("?");
+    getPage(current[0] + `?page={{ $page + 1 }}`)
   }
 
   function previousPage() {
-    getPage($("#current-url").val() + `?page={{ $page - 1 }}`)
+    var current = $("#current-url").val().split("?");
+    getPage(current[0] + `?page={{ $page - 1 }}`)
   }
 </script>

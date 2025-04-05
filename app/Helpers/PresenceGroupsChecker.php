@@ -10,6 +10,7 @@ use App\Models\Present;
 use App\Models\Liburan;
 use App\Models\Santri;
 use App\Models\KalenderPpmTemplates;
+use App\Models\KalenderPpms;
 use App\Helpers\CountDashboard;
 
 class PresenceGroupsChecker
@@ -99,7 +100,7 @@ class PresenceGroupsChecker
         return $results;
     }
 
-    public static function createPresence()
+    public static function createPresence($reset=false)
     {
         $results = [
             'created_presences' => [],
@@ -109,13 +110,20 @@ class PresenceGroupsChecker
             'day' => ''
         ];
 
+        if($reset){
+            Presence::where('event_date','>', date('Y-m-d'))->delete();
+        }
+
         $tahun = date('Y');
         $bulan = date('m');
         $jumlah_tanggal = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
-
+        
         for($i=0; $i<$jumlah_tanggal; $i++){
-            // get current day
-            $currentDate = date('Y-m-d', strtotime('+'.$i.' day', strtotime(date('Y-m-d'))));;
+            if(intval(date('d')) >= $i && $reset){
+                continue;
+            }
+            // get the first day of the month
+            $currentDate = date('Y-m-d', strtotime('+'.$i.' day', strtotime(date('Y-m-00'))));
             $currentDateNumber = date_format(date_create($currentDate), 'd');
             $currentMonth = date_format(date_create($currentDate), 'm');
             $currentDay = strtolower(date_format(date_create($currentDate), 'l'));
@@ -129,13 +137,54 @@ class PresenceGroupsChecker
 
                 $results['presence_groups_have_schedules'] = $presenceGroups;
 
+                $data_calendar = PresenceGroupsChecker::getCalendar($tahun,intval($currentMonth),$currentDateNumber);
                 // start to check and create all of them
                 foreach ($presenceGroups as $presenceGroup) {
-                    if($currentDay=='saturday' && $presenceGroup->id==2){
-                        continue;
+                    $presenceName = $presenceGroup->name . ' ' . $currentDateNumber . '/' . $currentMonth;
+
+                    $degur_mt = null;
+                    $degur_reg = null;
+                    $degur_pemb = null;
+                    $is_hasda = 0;
+                    $is_put_together = 0;
+                    if($presenceGroup->id==1){ // shubuh
+                        if($data_calendar['shubuh']['is_agenda_khusus']==1){
+                            $presenceName .= " ".$data_calendar['shubuh']['nama'];
+                            if (str_contains($data_calendar['shubuh']['nama'], 'HASDA-')) {
+                                $is_hasda = 1;
+                            }
+                        }else{
+                            $degur_mt = $data_calendar['shubuh']['mt']['id_degur'];
+                            $degur_reg = $data_calendar['shubuh']['reguler']['id_degur'];
+                            $degur_pemb = $data_calendar['shubuh']['pemb']['id_degur'];
+                        }
+                    }elseif($presenceGroup->id==2){ // malam
+                        if($data_calendar['malam']['is_agenda_khusus']==1){
+                            $presenceName .= " ".$data_calendar['malam']['nama'];
+                            if (str_contains($data_calendar['malam']['nama'], 'HASDA-')) {
+                                $is_hasda = 1;
+                                if (str_contains($data_calendar['malam']['nama'], 'HASDA-TEKS') || 
+                                    str_contains($data_calendar['malam']['nama'], 'HASDA-ORGANISASI') || 
+                                    str_contains($data_calendar['malam']['nama'], 'ASAD') ||
+                                    str_contains($data_calendar['malam']['nama'], 'PRA-PPM') ||
+                                    str_contains($data_calendar['malam']['nama'], 'SARASEHAN') ||
+                                    str_contains($data_calendar['malam']['nama'], 'MANAJEMEN') ||
+                                    str_contains($data_calendar['malam']['nama'], 'NASEHAT PENGURUS') ||
+                                    str_contains($data_calendar['malam']['nama'], 'PAT')) {
+                                    $is_put_together = 1;
+                                }
+                            }
+                        }else{
+                            $degur_mt = $data_calendar['malam']['mt']['id_degur'];
+                            $degur_reg = $data_calendar['malam']['reguler']['id_degur'];
+                            $degur_pemb = $data_calendar['malam']['pemb']['id_degur'];
+                        }
                     }
 
-                    $presenceName = $presenceGroup->name . ' ' . $currentDateNumber . '/' . $currentMonth;
+                    // sabtu malam tidak ada KBM
+                    if($currentDay=='saturday' && $presenceGroup->id==2 && !str_contains($presenceName, 'PRA-PPM') && !str_contains($presenceName, 'SARASEHAN') && !str_contains($presenceName, 'MANAJEMEN')){
+                        continue;
+                    }
 
                     // check if the presenceGroup already has a presence in this day
                     $presenceInThisDate = Presence::where('fkPresence_group_id', $presenceGroup->id)
@@ -146,23 +195,21 @@ class PresenceGroupsChecker
                         continue;
                     }
 
-                    $getPengajar1 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
-                        ->where('day', $currentDay)->where('ppm', 1)->first();
-                    $getPengajar2 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
-                        ->where('day', $currentDay)->where('ppm', 2)->first();
-
                     $newPresenceInThisDate = Presence::create([
                         'fkPresence_group_id' => $presenceGroup->id,
-                        'name' => $presenceName,
+                        'name' => strtoupper($presenceName),
                         'event_date' => $currentDate,
                         'total_mhs' => CountDashboard::total_mhs('all'),
                         'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
                         'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour)),
                         'presence_start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour)),
                         'presence_end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour)),
-                        'fkDewan_pengajar_1' => ($getPengajar1 != null) ? $getPengajar1->fkDewan_pengajar_id : null,
-                        'fkDewan_pengajar_2' => ($getPengajar2 != null) ? $getPengajar2->fkDewan_pengajar_id : null,
+                        'pre_fkDewan_pengajar_mt' => $degur_mt,
+                        'pre_fkDewan_pengajar_reg' => $degur_reg,
+                        'pre_fkDewan_pengajar_pemb' => $degur_pemb,
                         'is_deleted' => ($i==0) ? 0 : 2,
+                        'is_hasda' => $is_hasda,
+                        'is_put_together' => $is_put_together,
                     ]);
 
                     if (!$newPresenceInThisDate) {
@@ -180,6 +227,66 @@ class PresenceGroupsChecker
         }
 
         return $results;
+    }
+
+    public static function getCalendar($year,$month,$today,$update=false,$reset=false){ // 04 - 20
+        $kalenders = KalenderPpms::get();
+        $templates = KalenderPpmTemplates::orderBy('waktu', 'ASC')->get();
+
+        $data_return = [];
+        $start_seq = 0;
+        $start_tgl = 0;
+        if($kalenders){
+            $kalenders1 = $kalenders->where('x',1)->where('bulan',$month)->first();
+            if($kalenders1){
+              $start_seq = $kalenders1->start; // 18
+            }
+            $kalenders2 = $kalenders->where('x',2)->where('bulan',$month)->first();
+            if($kalenders2){
+              $start_tgl = $kalenders2->start; // 12
+            }
+            $kalender_conditions = $kalenders->where('is_certain_conditions',1)->where('bulan',$month);
+
+
+            $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
+            $numberDays = date('t', $firstDayOfMonth);
+            $currentDay = 1;
+
+            while ($currentDay <= $numberDays) {
+                if($start_tgl == $currentDay){
+                    $start_seq = 1;
+                }
+
+                if($today==$currentDay){
+                    $get_data = $templates->where('sequence',$start_seq); // 18
+                    $certain_condition_waktu = "";
+                    foreach($get_data as $dt){
+                        $certain_condition = $kalender_conditions->where('waktu_certain_conditions',$dt->waktu)->where('start',$currentDay)->first();
+                        if($certain_condition){
+                            if($certain_condition_waktu != $dt->waktu){
+                                // nama agenda khusus
+                                $data_return[$dt->waktu]['is_agenda_khusus'] = 1;
+                                $data_return[$dt->waktu]['nama'] = strtoupper($certain_condition->nama_certain_conditions);
+                                $certain_condition_waktu = $dt->waktu;
+                            }
+                        }else{
+                            if($dt->is_agenda_khusus){
+                                $data_return[$dt->waktu]['is_agenda_khusus'] = 1;
+                                $data_return[$dt->waktu]['nama'] = strtoupper($dt->nama_agenda_khusus);
+                            }elseif($dt->pengajar){
+                                $data_return[$dt->waktu]['is_agenda_khusus'] = 0;
+                                $data_return[$dt->waktu][$dt->kelas]['nama'] = $dt->pengajar->name;
+                                $data_return[$dt->waktu][$dt->kelas]['id_degur'] = $dt->pengajar->id;
+                            }
+                        }
+                    }
+                }
+
+                $currentDay++;
+                $start_seq++;
+            }
+        }
+        return $data_return;
     }
 
     public static function checkPermitGenerators()
