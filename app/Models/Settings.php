@@ -50,5 +50,6 @@ class Settings extends Model
         'reminder_alpha_ortu',
         'status_perijinan',
         'status_scan_degur',
+        'lock_calendar'
     ];
 }

@@ -37,7 +37,7 @@
       <center>
         @include('components.presence_summary', ['presence' => $presence])
       </center>
-      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('kurikulum'))
+      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum') || auth()->user()->hasRole('dewan guru'))
       <div class="row p-2 ">
         <div class="card-body p-2" style="background:#f9f9f9;border:#ddd 1px solid;">
           <div class="col-12 pb-2" style="line-height: 0.8;">
@@ -130,7 +130,7 @@
   </div>
 
   <div class="card shadow border p-2 mb-2">
-    @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+    @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
     <div class="row">
       <div class="col-sm-12 col-md-12">
         <select data-mdb-filter="true" class="select select_lorong form-control" name="select_lorong" id="select_lorong">
@@ -158,7 +158,7 @@
             <div style="font-size:11px;">Sudah melakukan presensi: <span id="nact" class="text-bold"></span></div>
             @if($update)
             <div class="card-body p-0 py-2">
-              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
                 <a id="btn-select-all" class="btn btn-danger btn-sm btn-block mb-0" href="#" onclick="alphaAll()">Alphakan Semua</a>
               @endif
             </div>
@@ -225,7 +225,7 @@
                   </td>
                   <td class="align-middle text-center text-sm">
                     <span class="text-danger font-weight-bolder">{{ $na->status }}</span>
-                    @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                    @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
                     <br>
 
                     <?php
@@ -262,7 +262,7 @@
                     @if($update)
                     <a class="btn btn-warning btn-sm mb-0" id="return-false" onclick="promptRejectPermit('{{$url_promptRejectPermit}}','{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Reject</a>
                     
-                      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+                      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
                         <a class="btn btn-success btn-sm mb-0" id="return-false" onclick="promptDeleteAndPresent('{{$permit->ids}}','{{$permit->fkPresence_id}}','{{$permit->fkSantri_id}}')">Hadir</a>
                       @endif
                     @endif
@@ -282,7 +282,7 @@
         <div class="tab-pane fade show" id="nav-alpha" role="tabpanel" aria-labelledby="nav-alpha-tab">
           @if($update)
             <div class="card-body p-0">
-              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+              @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
                 <a id="btn-select-all" class="btn btn-primary btn-sm btn-block mb-0" href="#" onclick="hadirAll()">Hadirkan Semua</a>
               @endif
             </div>
@@ -297,20 +297,20 @@
               </thead>
               <tbody>
                 @foreach($mhs_alpha as $mhs)
-                @if($mhs['fkLorong_id']==$lorong || $lorong=='-')
-                <tr id="tra{{$mhs['santri_id']}}" class="dtmhsa" val-id="{{$mhs['santri_id']}}" val-name="{{$mhs['name']}}">
-                  <td class="text-sm">
-                    <b>{{ $mhs['name'] }}</b>
-                  </td>
-                  <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
-                    @if($update)
-                      @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
-                        <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
+                  @if($mhs['fkLorong_id']==$lorong || $lorong=='-')
+                  <tr id="tra{{$mhs['santri_id']}}" class="dtmhsa" val-id="{{$mhs['santri_id']}}" val-name="{{$mhs['name']}}">
+                    <td class="text-sm">
+                      <b>{{ $mhs['name'] }}</b>
+                    </td>
+                    <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
+                      @if($update)
+                        @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
+                          <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
+                        @endif
                       @endif
-                    @endif
-                  </td>
-                </tr>
-                @endif
+                    </td>
+                  </tr>
+                  @endif
                 @endforeach
               </tbody>
             </table>
@@ -334,18 +334,6 @@
   } catch (e) {
     window.location.replace(`{{ url("/") }}`)
   }
-
-  // $("#table-hadir").DataTable({
-  //   pagination: false,
-  //   info: false,
-  //   bPaginate: false
-  // })
-
-  // $("#table-alpha").DataTable({
-  //   pagination: false,
-  //   info: false,
-  //   bPaginate: false
-  // })
 
   cekKoorLorong();
 

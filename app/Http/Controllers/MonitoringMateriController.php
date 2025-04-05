@@ -74,8 +74,14 @@ class MonitoringMateriController extends Controller
      */
     public function edit($materiId, $santriId)
     {
-        if (!auth()->user()->can('update monitoring materis') && $santriId != auth()->user()->santri->id)
+
+        if(auth()->user()->santri){
+            if($santriId != auth()->user()->santri->id)
+                return abort(403);
+        }
+        if (!auth()->user()->santri && !auth()->user()->can('update monitoring materis') && !auth()->user()->hasRole('dewan guru'))
             return abort(403);
+
 
         $materi = Materi::find($materiId);
         $santri = Santri::find($santriId);

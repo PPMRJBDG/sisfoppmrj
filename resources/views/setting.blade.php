@@ -430,6 +430,19 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             </label>
                                             <input class="form-control" type="text" value="{{ ($list_setting) ? $list_setting->token_fs : '' }}" name="token_fs">
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Kunci Kalender PPM
+                                            </label>
+                                            <select class="select form-control" name="lock_calendar" id="lock_calendar">
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (0 == $list_setting->lock_calendar) ? 'selected' : '';
+                                                        } ?> value="0">Buka</option>
+                                                <option <?php if ($list_setting != null) {
+                                                            echo (1 == $list_setting->lock_calendar) ? 'selected' : '';
+                                                        } ?> value="1">Kunci</option>
+                                            </select>
+                                        </div>
 
                                         <h5><b>WhatsApp</b></h5>
                                         

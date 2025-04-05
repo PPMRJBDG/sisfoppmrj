@@ -266,7 +266,7 @@ if (auth()->user()->hasRole('barcode')) {
       </div>
     </div>
 
-    <div class="modal" data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="fade-in-left" id="showFormChange" tabindex="-1" role="dialog" aria-labelledby="showFormChangeLabel">
+    <div class="modal" aria-hidden="true" id="showFormChange" tabindex="-1" role="dialog" aria-labelledby="showFormChangeLabel">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
           <div class="modal-content">
               <div class="modal-body pb-0">
@@ -274,12 +274,12 @@ if (auth()->user()->hasRole('barcode')) {
                     <h6 class="font-weight-bolder mb-4" id="title-change-kalender-ppm"></h6>
                     <input type="hidden" value="" id="ak-bulan">
                     <input type="hidden" value="" id="ak-tanggal">
-                    <select name="ak-waktu" id="ak-waktu" class="select form-control cursor-pointer">
+                    <select name="ak-waktu" id="ak-waktu" class="form-control">
                         <option value="malam">Malam</option>
                         <option value="shubuh">Shubuh</option>
                     </select>
                     <br>
-                    <select onchange="changeFormKalenderAk(this.value)" data-mdb-filter="true" name="ak-nama" id="ak-nama" class="select form-control cursor-pointer">
+                    <select onchange="changeFormKalenderAk(this.value)" data-mdb-filter="true" name="ak-nama" id="ak-nama" class="form-control cursor-pointer">
                         <option value="">-</option>
                         <option value="reset">RESET</option>
                         @foreach(App\Helpers\CommonHelpers::agendaKhusus() as $ak)

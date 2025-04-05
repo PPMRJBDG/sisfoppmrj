@@ -16,7 +16,7 @@
                                 </th>
                                 @endforeach
                             </tr>
-                            @if (auth()->user()->hasRole('superadmin'))
+                            @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru'))
                             <tr class="text-center">
                                 <th></th>
                                 @foreach($day_kbm as $dn)
@@ -44,7 +44,7 @@
                                 @foreach($day_kbm as $dn)
                                 <th>
                                     <?php
-                                    if (auth()->user()->hasRole('superadmin')) {
+                                    if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru')) {
                                         $data_mhs = array();
                                         $get_data = App\Models\JadwalHariJamKbms::where('fkHari_kbm_id', $dn->id)->where('fkJam_kbm_id', $hn->id)->get();
                                         if (count($get_data) == 0) {
@@ -74,7 +74,7 @@
                                             </div>
                                         @endif
                                     @else
-                                        @if(auth()->user()->hasRole('superadmin'))
+                                        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru'))
                                             <span style="cursor: pointer;" onclick="viewMahasiswa({{json_encode($data_mhs)}},'{{$dn->day_name}}','{{$hn->hour_name}}')" class="badge badge-secondary" name-day="{{$dn->day_name}}" val-day-hour="{{$jumlah_mhs}}">{{$jumlah_mhs}}</span>
                                         @else
                                             <div class="">

@@ -176,6 +176,7 @@ class SettingController extends Controller
                 'reminder_nerobos' => $request->input('reminder_nerobos'),
                 'reminder_alpha_ortu' => $request->input('reminder_alpha_ortu'),
                 'status_scan_degur' => $request->input('status_scan_degur'),
+                'lock_calendar' => $request->input('lock_calendar'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -215,6 +216,7 @@ class SettingController extends Controller
             $setting->reminder_nerobos = $request->input('reminder_nerobos');
             $setting->reminder_alpha_ortu = $request->input('reminder_alpha_ortu');
             $setting->status_scan_degur = $request->input('status_scan_degur');
+            $setting->lock_calendar = $request->input('lock_calendar');
             $setting->save();
         }
 

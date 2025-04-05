@@ -90,14 +90,14 @@ Route::get('/presensi/list/{id}', [App\Http\Controllers\PresenceController::clas
 // Route::get('/presensi/list/{id}/{lorong}', [App\Http\Controllers\PresenceController::class, 'view'])->name('view presence lorong')->middleware('permission:view presences list');
 Route::get('/presensi/list/{id}/present/create', [App\Http\Controllers\PresenceController::class, 'create_present'])->name('create present')->middleware('permission:create presents');
 Route::post('/presensi/list/store', [App\Http\Controllers\PresenceController::class, 'store'])->name('store presence')->middleware('permission:create presents');
-Route::post('/presensi/list/update/{id}', [App\Http\Controllers\PresenceController::class, 'update'])->name('update presence')->middleware('role:superadmin|rj1|wk');
+Route::post('/presensi/list/update/{id}', [App\Http\Controllers\PresenceController::class, 'update'])->name('update presence')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
 Route::get('/presensi/list/edit/{id}', [App\Http\Controllers\PresenceController::class, 'edit'])->name('edit presence')->middleware('permission:update presences');
 Route::get('/presensi/list/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete'])->name('delete presence')->middleware('permission:delete presences');
 Route::get('/presensi/{id}', [App\Http\Controllers\PresenceController::class, 'create_my_present'])->name('create my present')->middleware('role:santri');
 Route::post('/presensi/{id}/store/me', [App\Http\Controllers\PresenceController::class, 'store_my_present'])->name('store my present')->middleware('role:santri');
 Route::post('/presensi/{id}/store', [App\Http\Controllers\PresenceController::class, 'store_present'])->name('store present')->middleware('permission:create presents');
-Route::get('/presensi/{id}/delete/{santriId}', [App\Http\Controllers\PresenceController::class, 'delete_present'])->name('delete present')->middleware('role:superadmin|rj1|wk|koor lorong'); //permission:delete presents
-Route::get('/presensi/{id}/present/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_present'])->name('is present')->middleware('role:superadmin|rj1|wk|koor lorong');
+Route::get('/presensi/{id}/delete/{santriId}', [App\Http\Controllers\PresenceController::class, 'delete_present'])->name('delete present')->middleware('role:superadmin|rj1|wk|koor lorong|dewan guru'); //permission:delete presents
+Route::get('/presensi/{id}/present/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_present'])->name('is present')->middleware('role:superadmin|rj1|wk|koor lorong|dewan guru');
 Route::get('/presensi/{id}/late/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_late'])->name('is late');
 Route::get('/presensi/{id}/notlate/{santriId}', [App\Http\Controllers\PresenceController::class, 'is_not_late'])->name('is not late');
 Route::get('/presensi/daily/{select_tb}/{select_kbm}', [App\Http\Controllers\PresenceController::class, 'daily_presences'])->name('view daily public presences recaps');
@@ -149,26 +149,24 @@ Route::get('/user/list/edit/{id}', [App\Http\Controllers\UserController::class, 
 Route::get('/user/list/delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('delete user')->middleware('permission:delete users');
 
 // materis
-Route::get('/materi/list', [App\Http\Controllers\MateriController::class, 'list_and_manage'])->name('materi tm')->middleware('permission:view materis list');
-Route::get('/materi/list/create', [App\Http\Controllers\MateriController::class, 'create'])->name('create materi')->middleware('permission:create materis');
-Route::post('/materi/list/store', [App\Http\Controllers\MateriController::class, 'store'])->name('store materi')->middleware('permission:create materis');
-Route::get('/materi/list/edit/{id}', [App\Http\Controllers\MateriController::class, 'edit'])->name('edit materi')->middleware('permission:update materis');
-Route::post('/materi/list/update/{id}', [App\Http\Controllers\MateriController::class, 'update'])->name('update materi')->middleware('permission:update materis');
-Route::get('/materi/list/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete'])->name('delete materi')->middleware('permission:delete materis');
+Route::get('/materi/list', [App\Http\Controllers\MateriController::class, 'list_and_manage'])->name('materi tm')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::get('/materi/list/create', [App\Http\Controllers\MateriController::class, 'create'])->name('create materi')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::post('/materi/list/store', [App\Http\Controllers\MateriController::class, 'store'])->name('store materi')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::get('/materi/list/edit/{id}', [App\Http\Controllers\MateriController::class, 'edit'])->name('edit materi')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::post('/materi/list/update/{id}', [App\Http\Controllers\MateriController::class, 'update'])->name('update materi')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::get('/materi/list/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete'])->name('delete materi')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
 
 // materis dewan pengajar
-Route::get('/jadwal-kbm', [App\Http\Controllers\MateriController::class, 'jadwal_kbm'])->name('jadwal kbm')->middleware('role:superadmin|santri');
-Route::post('/jadwal-kbm/store', [App\Http\Controllers\MateriController::class, 'jadwal_kbm_store'])->name('jadwal kbm store')->middleware('role:superadmin|santri');
-Route::get('/dewan-pengajar', [App\Http\Controllers\MateriController::class, 'list_pengajar'])->name('materi list pengajar')->middleware('permission:view materis list');
-Route::get('/dewan-pengajar/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete_pengajar'])->name('materi delete pengajar')->middleware('permission:delete materis');
-Route::post('/dewan-pengajar/store', [App\Http\Controllers\MateriController::class, 'store_pengajar'])->name('materi store pengajar')->middleware('permission:create materis');
-Route::post('/dewan-pengajar/update/{id}', [App\Http\Controllers\MateriController::class, 'update_pengajar'])->name('materi update pengajar')->middleware('permission:update materis');
-// Route::get('/dewan-pengajar/jadwal', [App\Http\Controllers\MateriController::class, 'jadwal'])->name('jadwal pengajar')->middleware('permission:view materis list');
-// Route::post('/dewan-pengajar/jadwal/store', [App\Http\Controllers\MateriController::class, 'jadwal_store'])->name('store jadwal pengajar')->middleware('permission:create materis');
+Route::get('/jadwal-kbm', [App\Http\Controllers\MateriController::class, 'jadwal_kbm'])->name('jadwal kbm')->middleware('role:superadmin|dewan guru|santri');
+Route::post('/jadwal-kbm/store', [App\Http\Controllers\MateriController::class, 'jadwal_kbm_store'])->name('jadwal kbm store')->middleware('role:superadmin|dewan guru|santri');
+Route::get('/dewan-pengajar', [App\Http\Controllers\MateriController::class, 'list_pengajar'])->name('materi list pengajar')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::get('/dewan-pengajar/delete/{id}', [App\Http\Controllers\MateriController::class, 'delete_pengajar'])->name('materi delete pengajar')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::post('/dewan-pengajar/store', [App\Http\Controllers\MateriController::class, 'store_pengajar'])->name('materi store pengajar')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
+Route::post('/dewan-pengajar/update/{id}', [App\Http\Controllers\MateriController::class, 'update_pengajar'])->name('materi update pengajar')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
 Route::get('/kalender-ppm', [App\Http\Controllers\PublicController::class, 'kalender_ppm'])->name('kalender_ppm');
-Route::get('/kalender-ppm/template', [App\Http\Controllers\MateriController::class, 'template_kalender_ppm'])->name('template_kalender_ppm')->middleware('permission:update materis');
-Route::post('/kalender-ppm/template/store', [App\Http\Controllers\MateriController::class, 'store_template_kalender_ppm'])->name('store_template_kalender_ppm')->middleware('permission:update materis');
-Route::post('/kalender-ppm/store', [App\Http\Controllers\MateriController::class, 'store_kalender_ppm'])->name('store_kalender_ppm')->middleware('permission:update materis');
+Route::get('/kalender-ppm/template', [App\Http\Controllers\MateriController::class, 'template_kalender_ppm'])->name('template_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
+Route::post('/kalender-ppm/template/store', [App\Http\Controllers\MateriController::class, 'store_template_kalender_ppm'])->name('store_template_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
+Route::post('/kalender-ppm/store', [App\Http\Controllers\MateriController::class, 'store_kalender_ppm'])->name('store_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
 
 // monitoring materis
 Route::get('/materi/monitoring/list', [App\Http\Controllers\MonitoringMateriController::class, 'list_and_manage'])->name('monitoring materi tm');

@@ -357,7 +357,7 @@ class PresenceController extends Controller
         }
 
         $for = '';
-        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk')) {
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru')) {
             $for = 'all';
         } elseif (auth()->user()->santri != '') {
             $for = 'lorong';

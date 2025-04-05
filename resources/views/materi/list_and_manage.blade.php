@@ -27,10 +27,11 @@
           @if(sizeof($materis) > 0)
           @foreach($materis as $materi)
           <tr>
-            <td>{{ $materi->name }}</td>
+            <td>{{ strtoupper($materi->name) }}</td>
             <td>{{ $materi->pageNumbers }}</td>
             <td>{{ $materi->for ? ucfirst($materi->for) : 'Reguler' }}</td>
             <td>
+              <center>
               <a class="btn btn-outline-danger btn-sm" href="{{ route('delete materi', $materi->id) }}" onclick="return confirm('Yakin ingin menghapus? Seluruh data terkait materi ini akan ikut terhapus.')"><i class="far fa-trash-alt me-2" aria-hidden="true"></i>Hapus</a>
               <a class="btn btn-outline-primary btn-sm" href="{{ route('edit materi', $materi->id) }}"><i class="fas fa-pencil-alt me-2" aria-hidden="true"></i>Ubah</a>
             </td>

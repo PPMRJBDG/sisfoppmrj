@@ -12,11 +12,17 @@
 </div>
 
 <?php 
+$lock_calendar = App\Helpers\CommonHelpers::settings()->lock_calendar;
 $agenda_khusus = App\Helpers\CommonHelpers::agendaKhusus();
 $hari = ['Sabtu','Minggu','Senin','Selasa','Rabu','Kamis','Jumat'];
 $seq = 1;
 $kelas = ['mt','reguler','pemb'];
 $ke = 0;
+?>
+
+<h6>Status Kalender:  {{($lock_calendar) ? 'Dikunci' : 'Dibuka'}}</h6>
+
+<?php
 for($i=1; $i<=8; $i++){
 ?>
 <div class="card border mb-2">
@@ -50,12 +56,12 @@ for($i=1; $i<=8; $i++){
                                     <br>
                                     <div class="form-group">
                                         <label>Khusus</label>
-                                        <input {{($checkbox_shubuh) ? 'checked' : ''}} onclick="onCheck('shubuh',{{$seq}})" class="form-check-input m-0" type="checkbox" id="check-{{$seq}}-shubuh" name="check-{{$seq}}-shubuh">
+                                        <input {{($lock_calendar) ? 'disabled readonly' : ''}} {{($checkbox_shubuh) ? 'checked' : ''}} onclick="onCheck('shubuh',{{$seq}})" class="form-check-input m-0" type="checkbox" id="check-{{$seq}}-shubuh" name="check-{{$seq}}-shubuh">
                                     </div>
                                 </td>
                                 <td>
                                     <div id="khusus-{{$seq}}-shubuh" style="display:{{($checkbox_shubuh) ? 'block' : 'none'}};">
-                                        <select onchange="onChange({{$data_shubuh_id}},'khusus','shubuh',{{$seq}})" data-mdb-filter="true" name="khusus-shubuh-{{$seq}}" id="khusus-shubuh-{{$seq}}" class="form-control cursor-pointer">
+                                        <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'khusus','shubuh',{{$seq}})" data-mdb-filter="true" name="khusus-shubuh-{{$seq}}" id="khusus-shubuh-{{$seq}}" class="form-control cursor-pointer">
                                             <option value="">-</option>
                                             @foreach($agenda_khusus as $ak)
                                             <option {{($checkbox_shubuh_val==$ak) ? 'selected' : ''}} value="{{$ak}}">{{$ak}}</option>
@@ -75,7 +81,7 @@ for($i=1; $i<=8; $i++){
                                                 }
                                             }
                                             ?>
-                                            <select onchange="onChange({{$data_shubuh_id}},'nonkhusus','shubuh',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-shubuh-{{$seq}}" id="{{$k}}-shubuh-{{$seq}}" class="form-control cursor-pointer">
+                                            <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'nonkhusus','shubuh',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-shubuh-{{$seq}}" id="{{$k}}-shubuh-{{$seq}}" class="form-control cursor-pointer">
                                                 <option value="">{{strtoupper($k)}} -</option>
                                                 @foreach($pengajars as $p)
                                                     <option {{($val_select_shubuh==$p->id) ? 'selected' : ''}} value="{{$p->id}}">{{strtoupper($k)}} | {{$p->name}}</option>
@@ -104,12 +110,12 @@ for($i=1; $i<=8; $i++){
                                     <br>
                                     <div class="form-group">
                                         <label>Khusus</label>
-                                        <input {{($checkbox_malam) ? 'checked' : ''}} onclick="onCheck('malam',{{$seq}})" class="form-check-input m-0" type="checkbox" id="check-{{$seq}}-malam" name="check-{{$seq}}-malam">
+                                        <input {{($lock_calendar) ? 'disabled readonly' : ''}} {{($checkbox_malam) ? 'checked' : ''}} onclick="onCheck('malam',{{$seq}})" class="form-check-input m-0" type="checkbox" id="check-{{$seq}}-malam" name="check-{{$seq}}-malam">
                                     </div>
                                 </td>
                                 <td>
                                     <div id="khusus-{{$seq}}-malam" style="display:{{($checkbox_malam) ? 'block' : 'none'}};">
-                                        <select onchange="onChange({{$data_malam_id}},'khusus','malam',{{$seq}})" data-mdb-filter="true" name="khusus-malam-{{$seq}}" id="khusus-malam-{{$seq}}" class="form-control cursor-pointer">
+                                        <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'khusus','malam',{{$seq}})" data-mdb-filter="true" name="khusus-malam-{{$seq}}" id="khusus-malam-{{$seq}}" class="form-control cursor-pointer">
                                             <option value="">-</option>
                                             @foreach($agenda_khusus as $ak)
                                             <option {{($checkbox_malam_val==$ak) ? 'selected' : ''}} value="{{$ak}}">{{$ak}}</option>
@@ -129,7 +135,7 @@ for($i=1; $i<=8; $i++){
                                                 }
                                             }
                                             ?>
-                                            <select onchange="onChange({{$data_malam_id}},'nonkhusus','malam',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-malam-{{$seq}}" id="{{$k}}-malam-{{$seq}}" class="form-control cursor-pointer">
+                                            <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'nonkhusus','malam',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-malam-{{$seq}}" id="{{$k}}-malam-{{$seq}}" class="form-control cursor-pointer">
                                                 <option value="">{{strtoupper($k)}} -</option>
                                                 @foreach($pengajars as $p)
                                                     <option {{($val_select_malam==$p->id) ? 'selected' : ''}} value="{{$p->id}}">{{strtoupper($k)}} | {{$p->name}}</option>

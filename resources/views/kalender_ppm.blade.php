@@ -5,8 +5,10 @@
 @endif
 
 <?php
+$GLOBALS['lock_calendar'] = App\Helpers\CommonHelpers::settings()->lock_calendar;
 $GLOBALS['total_ngajar_all'] = [];
 function build_calendar($month, $year, $today, $templates, $template, $start_seq, $start_tgl, $id_kalender_seq, $id_kalender_tgl, $kalender_conditions){
+  $lock_calendar = $GLOBALS['lock_calendar'];
   $daysOfWeek = array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu');
   $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year);
   $numberDays = date('t', $firstDayOfMonth);
@@ -18,7 +20,7 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
 
   $selectoption = "";
   if(auth()->user()){
-    if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('kurikulum')){
+    if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum')){
       for($x=2; $x>=1; $x--){
         if($x==1){
           $option = 'Sequence';
@@ -29,7 +31,7 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
           $label_select = '<label>Sequence 1 Start Tanggal:</label>';
           $id_kalender = $id_kalender_tgl;
         }
-        $selectoption .= "<div class='col-md'>$label_select<select data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
+        $selectoption .= "<div class='col-md'>$label_select<select disabled={{($lock_calendar) ? 'true' : 'false'}} data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
         $selectoption .= "<option value=''>--Pilih $option--</option>";
         foreach($template as $t){
           $selected = "";
@@ -78,7 +80,11 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
     }
     $label_seq = "";
     if(auth()->user()){
-      $label_seq = "| <a href='#' onclick='showFormChange($month,$start_seq,`$monthName`,$currentDay)' class='text-white'>Seq $start_seq <i class='fa fa-edit text-white'></i></a>";
+      if(!auth()->user()->hasRole('santri') || auth()->user()->hasRole('divisi kurikulum')){
+        if(!$lock_calendar){
+          $label_seq = "| <a href='#' onclick='showFormChange($month,$start_seq,`$monthName`,$currentDay)' class='text-white'>Seq $start_seq <i class='fa fa-edit text-white'></i></a>";
+        }
+      }
     }
 
     $calendar .= "<td class='day $css2' rel='$date'><span class='$css1 badge badge-secondary mb-1'>Tanggal $currentDay $label_seq<div class='calendar-presences-list'></div></span>";
@@ -86,7 +92,7 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
     $check_liburan = App\Models\Liburan::where('liburan_from', '<=', $date)->where('liburan_to', '>=', $date)->get();
     if(count($check_liburan) == 0){
       $get_data = $templates->where('sequence',$start_seq);
-      $certain_condition_x = 1;
+      $certain_condition_waktu = "";
       foreach($get_data as $dt){
         $waktu = 'success';
         if($dt->waktu=='malam'){
@@ -95,13 +101,13 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
 
         $certain_condition = $kalender_conditions->where('waktu_certain_conditions',$dt->waktu)->where('start',$currentDay)->first();
         if($certain_condition){
-          if($certain_condition_x==1){
+          if($certain_condition_waktu != $dt->waktu){
             $libur = 'primary';
             if($certain_condition->nama_certain_conditions=="LIBUR"){
               $libur = 'danger';
             }
             $calendar .= '<br><small style="font-size:0.8em;"><span class="badge badge-'.$waktu.'">'.strtoupper($certain_condition->waktu_certain_conditions).'</span>: <span class="badge badge-'.$libur.'" style="font-size:1.0em!important;">'.strtoupper($certain_condition->nama_certain_conditions).'</span></small>';
-            $certain_condition_x++;
+            $certain_condition_waktu = $dt->waktu;
           }
         }else{
           $name_degur = "";
@@ -266,7 +272,7 @@ $table = "<table>";
 $dump_total_ngajar_all = array_count_values($GLOBALS['total_ngajar_all']);
 foreach($dump_total_ngajar_all as $keydtn => $val){
   if (str_contains($keydtn, 'Ust.')) {
-    $table .= "<tr class='font-weight-bolder'><td width='15%'>$keydtn</td><td>: $val</td>";
+    $table .= "<tr class='font-weight-bolder'><td width='50%'>$keydtn</td><td>: $val</td>";
   }
 }
 $table .= "</table>";

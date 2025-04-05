@@ -45,57 +45,17 @@ function printMateriOptions($materis, $santri)
     </div>
 </div>
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum'))
-<div class="row">
-    <div class="col-md-6 mb-2">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="text-center text-lg text-primary mb-0">Kelas Reguler</h6>
-            </div>
-            <div class="card-body p-2">
-                @can('view monitoring materis list')
-                <div class="datatable datatable-sm" data-mdb-pagination="false">
-                    <table id="table-mhs-reg" class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
-                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($users as $user)
-                            @if(!$user->santri->user->hasRole('mubalegh'))
-                            <tr style="cursor:pointer;">
-                                <td>
-                                    {{$user->fullname}}
-                                    <br><small>
-                                        <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
-                                    </small>
-                                </td>
-                                <td>
-                                    <a class="btn btn-sm btn-outline-warning" onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" block-id="return-false">Cari</a>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-                        </tbody>
-                    </table>
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum') || auth()->user()->hasRole('dewan guru'))
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <div class="card">
+                <div class="card-header p-0">
+                    <h6 class="text-center text-lg text-white mb-0 bg-secondary p-2">Kelas Reguler</h6>
                 </div>
-                @endcan
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="text-center text-lg text-primary mb-0">Kelas Muballigh</h6>
-            </div>
-            <div class="card-body p-2">
-                <ul class="list-group">
+                <div class="card-body p-2">
                     @can('view monitoring materis list')
                     <div class="datatable datatable-sm" data-mdb-pagination="false">
-                        <table id="table-mhs-mt" class="table align-items-center mb-0">
+                        <table id="table-mhs-reg" class="table align-items-center mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
@@ -104,56 +64,96 @@ function printMateriOptions($materis, $santri)
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
-                                @if($user->santri->user->hasRole('mubalegh'))
-                                <tr>
-                                    <td>
-                                        {{$user->fullname}}
-                                        <br><small>
-                                            <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-outline-warning" onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" block-id="return-false">Cari</a>
-                                    </td>
-                                </tr>
-                                @endif
+                                    @if(!$user->santri->user->hasRole('mubalegh'))
+                                    <tr style="cursor:pointer;">
+                                        <td>
+                                            {{$user->fullname}}
+                                            <br><small>
+                                                <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-warning" onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" block-id="return-false">Cari</a>
+                                        </td>
+                                    </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     @endcan
-                </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header p-0">
+                    <h6 class="text-center text-lg text-white mb-0 bg-secondary p-2">Kelas Muballigh</h6>
+                </div>
+                <div class="card-body p-2">
+                    <ul class="list-group">
+                        @can('view monitoring materis list')
+                        <div class="datatable datatable-sm" data-mdb-pagination="false">
+                            <table id="table-mhs-mt" class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
+                                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($users as $user)
+                                    @if($user->santri->user->hasRole('mubalegh'))
+                                    <tr>
+                                        <td>
+                                            {{$user->fullname}}
+                                            <br><small>
+                                                <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-warning" onclick="getMateri('<?php echo $user->santri->id; ?>','<?php echo $user->fullname; ?>')" block-id="return-false">Cari</a>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endcan
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @else
-<div class="card shadow border mb-3">
-    <div class="card-body p-2">
-        @if (session('success'))
-        <div class="alert alert-success text-white">
-            {{ session('success') }}
-        </div>
-        @endif
+    <div class="card shadow border mb-3">
+        <div class="card-body p-2">
+            @if (session('success'))
+            <div class="alert alert-success text-white">
+                {{ session('success') }}
+            </div>
+            @endif
 
-        @if(sizeof($lorongs) >= 0)
-        <div class="datatable datatable-sm">
-            <table class="table align-items-center mb-0">
-                <thead>
-                    <tr>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">MATERI SAYA</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">PENCAPAIAN</th>
-                        <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php printMateriOptions($materis, auth()->user()->santri) ?>
-                </tbody>
-            </table>
+            @if(sizeof($lorongs) >= 0)
+                <div class="datatable datatable-sm">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">MATERI SAYA</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">PENCAPAIAN</th>
+                                <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php printMateriOptions($materis, auth()->user()->santri) ?>
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
-        @endif
     </div>
-</div>
 @endif
 
 <script>

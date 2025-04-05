@@ -130,7 +130,7 @@ class MateriController extends Controller
 
     public function jadwal_kbm()
     {
-        if (auth()->user()->hasRole('superadmin')) {
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru')) {
             $santri_id = 0;
         } else {
             $santri_id = auth()->user()->santri->id;
@@ -167,7 +167,7 @@ class MateriController extends Controller
 
     public function list_pengajar()
     {
-        $pengajar = DewanPengajars::all();
+        $pengajar = DewanPengajars::orderBy('name','DESC')->get();
         $presence = PresenceGroup::whereIn('id', [1, 2])->get();
 
         return view('materi.list_pengajar', ['pengajar' => $pengajar, 'presence' => $presence]);
