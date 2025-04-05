@@ -181,7 +181,11 @@ class PresenceGroupsChecker
                         }
                     }
 
-                    // sabtu malam tidak ada KBM
+                    if(str_contains($presenceName, 'LIBUR')){
+                        continue;
+                    }
+
+                    // sabtu malam tidak ada KBM kecuali xxx
                     if($currentDay=='saturday' && $presenceGroup->id==2 && !str_contains($presenceName, 'PRA-PPM') && !str_contains($presenceName, 'SARASEHAN') && !str_contains($presenceName, 'MANAJEMEN')){
                         continue;
                     }

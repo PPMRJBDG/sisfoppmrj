@@ -323,7 +323,6 @@ class CommonHelpers
             'ASRAMA',
             'PAT',
             'ASAD',
-            'LEBARAN',
             'LIBURAN',
             'LIBUR'
         ];
