@@ -627,6 +627,19 @@ function getMateri(santri_id, nama) {
     );
 }
 
+function setChangeLiburan(data){
+    $("#liburan_id").val(data.id);
+    $("#liburan_from").val(data.liburan_from);
+    $("#liburan_to").val(data.liburan_to);
+    $("#keterangan").val(data.keterangan);
+}
+
+function setChangePelanggaran(data){
+    $("#pelanggaran_id").val(data.id);
+    $("#jenis_pelanggaran").val(data.jenis_pelanggaran);
+    $("#kategori_pelanggaran").val(data.kategori_pelanggaran.toLowerCase());
+}
+
 // function actionSaveRangePermit(rpgId, santriId) {
 //     var datax = {};
 //     if (confirm('Apakah anda yakin untuk menyetujui perijinan berjangka ini ?')) {

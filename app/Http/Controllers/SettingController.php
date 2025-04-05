@@ -242,12 +242,19 @@ class SettingController extends Controller
             'liburan_to' => 'required',
             'keterangan' => 'required',
         ]);
-
-        Liburan::create([
-            'liburan_from' => $request->input('liburan_from'),
-            'liburan_to' => $request->input('liburan_to'),
-            'keterangan' => $request->input('keterangan')
-        ]);
+        if($request->input('liburan_id')==""){
+            Liburan::create([
+                'liburan_from' => $request->input('liburan_from'),
+                'liburan_to' => $request->input('liburan_to'),
+                'keterangan' => $request->input('keterangan')
+            ]);
+        }else{
+            $data = Liburan::find($request->input('liburan_id'));
+            $data->liburan_from = $request->input('liburan_from');
+            $data->liburan_to = $request->input('liburan_to');
+            $data->keterangan = $request->input('keterangan');
+            $data->save();
+        }
 
         return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil menambah liburan.');
     }
@@ -258,11 +265,17 @@ class SettingController extends Controller
             'jenis_pelanggaran' => 'required',
             'kategori_pelanggaran' => 'required',
         ]);
-
-        JenisPelanggaran::create([
-            'jenis_pelanggaran' => $request->input('jenis_pelanggaran'),
-            'kategori_pelanggaran' => $request->input('kategori_pelanggaran')
-        ]);
+        if($request->input('pelanggaran_id')==""){
+            JenisPelanggaran::create([
+                'jenis_pelanggaran' => $request->input('jenis_pelanggaran'),
+                'kategori_pelanggaran' => $request->input('kategori_pelanggaran')
+            ]);
+        }else{
+            $data = JenisPelanggaran::find($request->input('pelanggaran_id'));
+            $data->jenis_pelanggaran = $request->input('jenis_pelanggaran');
+            $data->kategori_pelanggaran = $request->input('kategori_pelanggaran');
+            $data->save();
+        }
 
         return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('list setting'))->with('success', 'Berhasil menambah jenis pelanggaran.');
     }

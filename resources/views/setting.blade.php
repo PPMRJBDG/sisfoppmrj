@@ -16,7 +16,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
 </div>
 @endif
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="col-md-12 mb-2">
             <h5 class="mb-0"><b>Profile</b></h5>
             
@@ -167,7 +167,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Tambah Periode">
+                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Simpan Periode">
                                         </div>
                                     </div>
                                 </div>
@@ -183,17 +183,23 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php $x = 1; ?>
                                         @if(isset($list_periode))
-                                        @foreach($list_periode as $data)
-                                        <tr class="text-sm">
-                                            <td>
-                                                {{ $data->periode_tahun }}
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <a href="{{ route('delete periode tahun', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                            @foreach($list_periode as $data)
+                                                <tr class="text-sm">
+                                                    <td>
+                                                        {{ $data->periode_tahun }}
+                                                    </td>
+                                                    <td class="align-middle text-center text-sm">
+                                                        @if(count($list_periode)==$x)
+                                                        <a href="{{ route('delete periode tahun', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <?php $x++; ?>
+                                            @endforeach
                                         @endif
                                     </tbody>
                                 </table>
@@ -228,7 +234,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Nominal per Tahun</label>
-                                    <input class="form-control" type="number" name="nominal" placeholder="3000000" required>
+                                    <input class="form-control" type="number" name="nominal" placeholder="5000000" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -253,30 +259,31 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <input type="hidden" id="liburan_id" name="liburan_id" value="">
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 <span class="text-warning text-xs mb-0 pb-0">Yang sudah lewat dihapus saja!</span>
                                                 <br>
                                                 Awal Liburan
                                             </label>
-                                            <input class="form-control" type="date" name="liburan_from" placeholder="Contoh: 27/03/2000" required>
+                                            <input class="form-control" type="date" name="liburan_from" id="liburan_from" placeholder="Contoh: 27/03/2000" required>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Akhir Liburan
                                             </label>
-                                            <input class="form-control" type="date" name="liburan_to" placeholder="Contoh: 27/03/2000" required>
+                                            <input class="form-control" type="date" name="liburan_to" id="liburan_to" placeholder="Contoh: 27/03/2000" required>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Keterangan
                                             </label>
-                                            <input class="form-control" type="text" name="keterangan" placeholder="" required>
+                                            <input class="form-control" type="text" name="keterangan" id="keterangan" placeholder="" required>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Tambah Liburan">
+                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Simpan Liburan">
                                         </div>
                                     </div>
                                 </div>
@@ -307,7 +314,12 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 {{ $data->keterangan }}
                                             </td>
                                             <td class="align-middle text-center text-sm">
-                                                <a href="{{ route('delete liburan', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
+                                                <a href="#" class="btn btn-warning btn-sm mb-0" onclick="setChangeLiburan({{$data}})">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                <a href="{{ route('delete liburan', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -332,17 +344,18 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <input type="hidden" id="pelanggaran_id" name="pelanggaran_id" value="">
                                         <div class="form-group">
                                             <label class="form-control-label">
-                                                Jenis Pelanggaran
+                                                Nama Pelanggaran
                                             </label>
-                                            <input class="form-control" type="text" name="jenis_pelanggaran" required>
+                                            <input class="form-control" type="text" name="jenis_pelanggaran" id="jenis_pelanggaran" required>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
                                                 Kategori Pelanggaran
                                             </label>
-                                            <select data-mdb-filter="true" class="select kategori_pelanggaran form-control" name="kategori_pelanggaran" id="kategori_pelanggaran">
+                                            <select class="kategori_pelanggaran form-control" name="kategori_pelanggaran" id="kategori_pelanggaran">
                                                 <option value="">Kategori Pelanggaran</option>
                                                 <option value="ringan">Ringan</option>
                                                 <option value="sedang">Sedang</option>
@@ -352,7 +365,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Tambah Pelanggaran">
+                                            <input class="btn btn-primary btn-sm btn-block mb-2" type="submit" value="Simpan Pelanggaran">
                                         </div>
                                     </div>
                                 </div>
@@ -364,22 +377,26 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Jenis</th>
-                                            <!-- <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2">Kategori</th> -->
                                             <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(isset($list_jenis_pelanggaran))
-                                        @foreach($list_jenis_pelanggaran as $data)
-                                        <tr class="text-sm">
-                                            <td>
-                                                <b>[{{ $data->kategori_pelanggaran }}]</b> {{ $data->jenis_pelanggaran }}
-                                            </td>
-                                            <td class="align-middle text-center text-xs">
-                                                <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">Hapus</a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                            @foreach($list_jenis_pelanggaran as $data)
+                                                <tr class="text-sm">
+                                                    <td>
+                                                        <b>[{{ $data->kategori_pelanggaran }}]</b> {{ $data->jenis_pelanggaran }}
+                                                    </td>
+                                                    <td class="align-middle text-center text-xs">
+                                                        <a href="#" class="btn btn-warning btn-sm mb-0" onclick="setChangePelanggaran({{$data}})">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                        <a href="{{ route('delete jenis pelanggaran', [$data->id])}}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus?')">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endif
                                     </tbody>
                                 </table>
@@ -390,7 +407,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <!-- WA Settings -->
         <div class="col-md-12 mb-2">
             <h5 class="mb-0"><b>Pengaturan</b></h5>
