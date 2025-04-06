@@ -211,38 +211,6 @@ class MateriController extends Controller
         return json_encode(['status' => true, 'message' => 'Berhasil menghapus pengajar']);
     }
 
-    // public function jadwal()
-    // {
-    //     $pengajar = DewanPengajars::all();
-    //     $template_kalender = KalenderPpmTemplates::all();
-    //     $presence_group = PresenceGroup::whereIn('id', [1, 2])->get();
-
-    //     return view('materi.list_jadwal', ['template_kalender' => $template_kalender, 'presence_group' => $presence_group, 'pengajar' => $pengajar]);
-    // }
-
-    // public function jadwal_store(Request $request)
-    // {
-    //     $pengajar = KalenderPpmTemplates::where('fkPresence_group_id', $request->input('presence'))->where('day', $request->input('day'))->where('ppm', $request->input('ppm'))->first();
-
-    //     if ($pengajar) {
-    //         $pengajar->fkDewan_pengajar_id = $request->input('pengajar');
-    //         $updated = $pengajar->save();
-    //     } else {
-    //         $updated = KalenderPpmTemplates::create([
-    //             'fkPresence_group_id' => $request->input('presence'),
-    //             'fkDewan_pengajar_id' => $request->input('pengajar'),
-    //             'day' => $request->input('day'),
-    //             'ppm' => $request->input('ppm')
-    //         ]);
-    //     }
-
-    //     if ($updated) {
-    //         return json_encode(['status' => true, 'message' => 'Berhasil mengubah pengajar']);
-    //     } else {
-    //         return json_encode(['status' => false, 'message' => 'Gagal mengubah pengajar']);
-    //     }
-    // }
-
     public function template_kalender_ppm(){
         $today = date('Y-m-d', strtotime(today()));
         $pengajars = DewanPengajars::all();

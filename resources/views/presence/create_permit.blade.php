@@ -139,7 +139,7 @@
                   <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
                   <select data-mdb-filter="true" name="fkPresenceGroup_id" required class="select form-control" required>
                     <option value="">Pilih presensi</option>
-                    <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam, MM Drh)</option>
+                    <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam, Agenda Bulanan)</option>
                     @foreach($presenceGroups as $presenceGroup)
                     <option value="{{ $presenceGroup->id }}">Hanya {{ $presenceGroup->name }} Saja</option>
                     @endforeach

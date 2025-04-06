@@ -1800,7 +1800,7 @@ class PresenceController extends Controller
             $openPresences = Presence::where('is_deleted', 0)->orderBy('event_date', 'DESC')->limit(4)->get();
         }
 
-        if (auth()->user()->hasRole('superadmin')) {
+        if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru')) {
             $usersWithSantri = User::whereHas('santri', function ($query) {
                 $query->whereNull('exit_at');
             })->orderBy('fullname')->get();

@@ -639,22 +639,3 @@ function setChangePelanggaran(data){
     $("#jenis_pelanggaran").val(data.jenis_pelanggaran);
     $("#kategori_pelanggaran").val(data.kategori_pelanggaran.toLowerCase());
 }
-
-// function actionSaveRangePermit(rpgId, santriId) {
-//     var datax = {};
-//     if (confirm('Apakah anda yakin untuk menyetujui perijinan berjangka ini ?')) {
-//         datax['rpgId'] = rpgId;
-//         datax['santriId'] = santriId;
-//         $.get(base_url + `/presensi/izin/pengajuan/berjangka/approve`, datax,
-//             function (data, status) {
-//                 var return_data = JSON.parse(data);
-//                 if (return_data.status) {
-//                     const element = document.getElementById("rpg-" + rpgId);
-//                     element.remove();
-//                 } else {
-//                     alert(return_data.message)
-//                 }
-//             }
-//         )
-//     }
-// }

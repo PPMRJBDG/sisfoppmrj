@@ -17,6 +17,7 @@ use App\Models\Liburan;
 use App\Models\PresenceGroup;
 use App\Models\Pelanggaran;
 use App\Models\Sodaqoh;
+use App\Models\SodaqohHistoris;
 use App\Models\Materi;
 use App\Models\Santri;
 use App\Models\Lorong;
@@ -935,6 +936,58 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             $select_bulan = date('Y-m');
         }
 
+        // laporan ke belakang
+        $periode = CommonHelpers::periode();
+        $periode = explode("-",$periode);
+        $month = ['09','10','11','12','01','02','03','04','05','06','07','08'];
+        $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1]];
+        $prev_total = null;
+
+        $prev_saldo_awal = 0;
+        $prev_saldo_jurnal = Jurnals::where('tanggal', '<', $year[0].'-'.$month[0].'-01')->orderBy('tanggal','ASC')->get();
+        if($prev_saldo_jurnal!=null){
+            foreach($prev_saldo_jurnal as $j){
+                if($j->jenis=="in"){
+                    $prev_saldo_awal = $prev_saldo_awal + ($j->qty*$j->nominal);
+                }else if($j->jenis=="out"){
+                    $prev_saldo_awal = $prev_saldo_awal - ($j->qty*$j->nominal);
+                }
+            }
+        }
+
+        for($x=0;$x<12;$x++){
+            $prev_total_in = 0;
+            $prev_total_out_rutin = 0;
+            $prev_total_out_nonrutin = 0;
+            $prev_year_month = date_format(date_create($year[$x].'-'.$month[$x]), 'Y-m');
+
+            $prev_jurnals = Jurnals::where('tanggal', 'like', $prev_year_month . '%')->orderBy('tanggal','ASC')->get();
+            $prev_total[$prev_year_month]['saldo_awal'] = $prev_saldo_awal;
+
+            foreach($prev_jurnals->where('jenis','in')->whereNull('sub_jenis') as $in){
+                $prev_total_in = $prev_total_in + ($in->qty*$in->nominal);
+            }
+            $prev_total[$prev_year_month]['total_in'] = $prev_total_in;
+            $prev_saldo_awal = $prev_saldo_awal + $prev_total_in;
+
+            foreach($prev_jurnals->where('jenis','out')->where('tipe_pengeluaran','Rutin')->whereNull('sub_jenis') as $outr){
+                $prev_total_out_rutin = $prev_total_out_rutin + ($outr->qty*$outr->nominal);
+            }
+            $prev_total[$prev_year_month]['total_out_rutin'] = $prev_total_out_rutin;
+            $prev_saldo_awal = $prev_saldo_awal - $prev_total_out_rutin;
+
+            foreach($prev_jurnals->where('jenis','out')->where('tipe_pengeluaran','Non Rutin')->whereNull('sub_jenis') as $outnr){
+                $prev_total_out_nonrutin = $prev_total_out_nonrutin + ($outnr->qty*$outnr->nominal);
+            }
+            $prev_total[$prev_year_month]['total_out_nonrutin'] = $prev_total_out_nonrutin;
+            $prev_saldo_awal = $prev_saldo_awal - $prev_total_out_nonrutin;
+
+            $prev_total[$prev_year_month]['saldo_akhir'] = $prev_saldo_awal;
+        }
+        // echo "<pre>".json_encode($prev_total, JSON_PRETTY_PRINT)."</pre>"; 
+        // exit;
+        // end
+
         $nextmonth = strtotime('+1 month', strtotime($select_bulan));
         $nextmonth = date('Y-m', $nextmonth);
         $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('biaya','!=',0)->orderBy('fkDivisi_id','ASC')->get();
@@ -967,7 +1020,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         $saldo_awal_kubmt = 0;
         $saldo_awal_bendahara = 0;
         if($select_bulan!='all'){
-            $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-1')->orderBy('tanggal','ASC')->get();
+            $saldo_jurnal = Jurnals::where('tanggal', '<', $select_bulan.'-01')->orderBy('tanggal','ASC')->get();
             if($saldo_jurnal!=null){
                 foreach($saldo_jurnal->where('fkBank_id',2) as $j){
                     if($j->jenis=="in"){
@@ -985,6 +1038,9 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
                 }
             }
         }
+
+        $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
+        $last_update = SodaqohHistoris::select('updated_at')->orderBy('updated_at', 'DESC')->limit(1)->first();
         
         return view('keuangan.laporan_pusat', [
             'print' => $print,
@@ -1001,6 +1057,9 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             'total_in' => $total_in,
             'total_out_rutin' => $total_out_rutin,
             'total_out_nonrutin' => $total_out_nonrutin,
+            'prev_total' => $prev_total,
+            'list_periode' => $list_periode,
+            'last_update' => $last_update,
         ]);
     }
 
@@ -1013,229 +1072,4 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         $kalenders = KalenderPpms::get();
         return view('kalender_ppm', ['today' => $today, 'pengajars' => $pengajars, 'template' => $template, 'templates' => $templates, 'kalenders' => $kalenders]);
     }
-
-//     public function view_permit($ids)
-//     {
-//         $permit = Permit::where('ids', $ids)->first();
-//         $message = '';
-//         if ($permit != null) {
-//             if ($permit->status == 'approved') {
-//                 $message = 'Permintaan ijin sudah disetujui';
-//             } elseif ($permit->status == 'pending') {
-//                 $message = 'Permintaan ijin masih pending';
-//             } else {
-//                 $message = 'Permintaan ijin sudah ditolak';
-//             }
-//         } else {
-//             $message = 'Perijinan tidak ditemukan.';
-//         }
-//         return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
-//     }
-
-//     public function reject_permit($ids, Request $request)
-//     {
-//         $permit = Permit::where('ids', $ids)->first();
-//         $message = '';
-//         $statusx = false;
-//         if ($permit != null) {
-//             try {
-//                 if (isset(auth()->user()->fullname)) {
-//                     $rejected_by = auth()->user()->fullname;
-//                 } else {
-//                     $rejected_by = $_SERVER['HTTP_USER_AGENT'];
-//                 }
-//             } catch (Exception  $err) {
-//                 $rejected_by = $_SERVER['HTTP_USER_AGENT'];
-//             }
-
-//             $permit->status = 'rejected';
-//             $permit->rejected_by = $rejected_by;
-//             $permit->alasan_rejected = $request->get('alasan');
-//             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
-
-//             if ($permit->save()) {
-//                 $caption = '*' . $rejected_by . '* Menolak perijinan dari *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . '
-// *Alasan Ditolak:* Karena ' . $permit->alasan_rejected;
-//                 WaSchedules::save('Permit Rejected', $caption, $setting->wa_info_presensi_group_id, null, true);
-
-//                 $name = 'Perijinan Dari ' . $permit->santri->user->fullname;
-//                 // kirim ke yg ijin
-//                 $nohp = $permit->santri->user->nohp;
-//                 if ($nohp != '') {
-//                     if ($nohp[0] == '0') {
-//                         $nohp = '62' . substr($nohp, 1);
-//                     }
-//                     $setting = Settings::find(1);
-//                     $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-//                         $query->where('name', 'NOT LIKE', '%Bulk%');
-//                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-//                     if ($wa_phone != null) {
-//                         $caption = 'Perijinan pada ' . $permit->presence->name . ' Anda di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
-//                         WaSchedules::save($name, $caption, $wa_phone->pid);
-//                     }
-//                 }
-
-//                 // kirim ke orangtua
-//                 $nohp_ortu = $permit->santri->nohp_ortu;
-//                 if ($nohp_ortu != '') {
-//                     if ($nohp_ortu[0] == '0') {
-//                         $nohp_ortu = '62' . substr($nohp_ortu, 1);
-//                     }
-//                     $setting = Settings::find(1);
-//                     $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-//                         $query->where('name', 'NOT LIKE', '%Bulk%');
-//                     })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-//                     if ($wa_phone != null) {
-//                         $caption = 'Perijinan *' . $permit->santri->user->fullname . '* pada ' . $permit->presence->name . ' di Tolak oleh Pengurus karena *' . $permit->alasan_rejected . '*.';
-//                         WaSchedules::save($name, $caption, $wa_phone->pid, 2);
-//                     }
-//                 }
-//                 $message = 'Permintaan ijin berhasil ditolak';
-//                 $statusx = true;
-//             } else {
-//                 $message = 'Terjadi kesalahan sistem';
-//             }
-//         } else {
-//             $message = 'Perijinan tidak ditemukan';
-//         }
-
-//         return json_encode(['status' => $statusx, 'permit' => $permit, 'message' => $message]);
-//         // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
-//     }
-
-//     public function approve_permit($ids)
-//     {
-//         $permit = Permit::where('ids', $ids)->first();
-//         $message = '';
-//         if ($permit != null) {
-//             $permit->status = 'approved';
-
-//             try {
-//                 if (isset(auth()->user()->fullname)) {
-//                     $approved_by = auth()->user()->fullname;
-//                 } else {
-//                     $approved_by = $_SERVER['HTTP_USER_AGENT'];
-//                 }
-//             } catch (Exception  $err) {
-//                 $approved_by = $_SERVER['HTTP_USER_AGENT'];
-//             }
-
-//             $permit->approved_by = $approved_by;
-//             $permit->alasan_rejected = '';
-//             $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
-
-//             if ($permit->save()) {
-//                 $message = 'Permintaan ijin berhasil disetujui';
-//             }
-//         } else {
-//             $message = 'Perijinan tidak ditemukan';
-//         }
-
-//         return redirect()->route('view permit', $ids)->with(['success', $message]);
-//         // return view('presence.view_permit', ['permit' => $permit, 'message' => $message]);
-//     }
-
-//     // PRESENCE
-//     public function presence_view($id, Request $request)
-//     {
-//         $lorong = $request->get('lorong');
-//         if ($lorong == null) {
-//             $lorong = '-';
-//         }
-//         $presence = Presence::find($id);
-
-//         $for = 'all';
-//         // jumlah mhs / anggota lorong
-//         $jumlah_mhs = CountDashboard::total_mhs($for, $lorong);
-
-//         // hadir
-//         $presents = CountDashboard::mhs_hadir($id, $for, $lorong);
-
-//         // ijin berdasarkan lorong masing2
-//         $permits = CountDashboard::mhs_ijin($id, $for, $lorong);
-//         // need approval
-//         $need_approval = Permit::where('fkPresence_id', $id)->whereNotIn('status', ['approved'])->get();
-
-//         // alpha
-//         $mhs_alpha = CountDashboard::mhs_alpha($id, $for, $presence->event_date, $lorong);
-
-//         $update = true;
-//         if ($presence != null) {
-//             $selisih = strtotime(date("Y-m-d")) - strtotime($presence->event_date);
-//             $selisih = $selisih / 60 / 60 / 24;
-//             if ($selisih > 1 && $for != 'all') {
-//                 $update = false;
-//             }
-//         }
-
-//         return view('presence.view_public', [
-//             'id' => $id,
-//             'presence' => $presence,
-//             'jumlah_mhs' => $jumlah_mhs,
-//             'mhs_alpha' => $mhs_alpha,
-//             'permits' => $permits,
-//             'need_approval' => $need_approval,
-//             'presents' => $presents == null ? [] : $presents,
-//             'data_lorong' => Lorong::all(),
-//             'lorong' => $lorong,
-//             'update' => $update
-//         ]);
-//     }
-
-//     public function presence_delete_present($id, $santriId, Request $request)
-//     {
-//         $lorong = $request->get('lorong');
-//         if ($lorong == null) {
-//             $lorong = '-';
-//         }
-//         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId);
-
-//         if ($present) {
-//             $deleted = $present->delete();
-
-//             if (!$deleted)
-//                 return redirect()->route('dwngr view presence', $id)->withErrors(['failed_deleting_present', 'Gagal menghapus presensi.']);
-//         }
-
-//         if ($request->get('json') == 'true') {
-//             return json_encode(array("status" => true));
-//         } else {
-//             return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menghapus presensi');
-//         }
-//     }
-
-//     public function presence_is_present($id, $santriId, Request $request)
-//     {
-//         $lorong = $request->get('lorong');
-//         if ($lorong == null) {
-//             $lorong = '-';
-//         }
-//         $present = Present::where('fkPresence_id', $id)->where('fkSantri_id', $santriId)->first();
-
-//         try {
-//             if (isset(auth()->user()->fullname)) {
-//                 $presented_by = auth()->user()->fullname;
-//             } else {
-//                 $presented_by = 'Dewan Guru';
-//             }
-//         } catch (Exception  $err) {
-//             $presented_by = 'Dewan Guru';
-//         }
-
-//         if ($present == null) {
-//             Present::create([
-//                 'fkSantri_id' => $santriId,
-//                 'fkPresence_id' => $id,
-//                 'is_late' => 0,
-//                 'updated_by' => $presented_by,
-//                 'metadata' => $_SERVER['HTTP_USER_AGENT']
-//             ]);
-//         }
-
-//         if ($request->get('json') == 'true') {
-//             return json_encode(array("status" => true));
-//         } else {
-//             return redirect()->route('dwngr view presence', [$id, 'lorong' => $lorong])->with('success', 'Berhasil menginput presensi');
-//         }
-//     }
 }

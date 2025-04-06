@@ -17,10 +17,10 @@
 </div>
 @endif
 
-@if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
+@if($santri && $lorong || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru'))
 <div class="card shadow border p-2">
   <div class="align-items-center">
-    @role('superadmin|rj1|wk|koor lorong')
+    @role('superadmin|rj1|wk|koor lorong|dewan guru')
     <div class="row mb-2">
       <div class="col-md">
         <a href="{{ route('create presence permit') }}" class="btn btn-primary btn-block">
@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    @if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin'))
+    @if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru'))
     <div class="mt-2">
       <div class="d-flex">
         <div class="col-4 p-0">
@@ -146,7 +146,7 @@
   </div>
 </div>
 
-@if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin'))
+@if(auth()->user()->hasRole('rj1') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru'))
 <div class="p-2 text-center font-weight-bolder">
   Berjangka <span class="badge badge-secondary">{{$status}}</span>
 </div>

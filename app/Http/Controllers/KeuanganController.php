@@ -65,7 +65,7 @@ class KeuanganController extends Controller
             ->orderBy('angkatan', 'ASC')
             ->get();
         $list_periode = Sodaqoh::select('periode')->groupBy('periode')->get();
-        $last_update = Sodaqoh::select('updated_at')->orderBy('updated_at', 'DESC')->limit(1)->first();
+        $last_update = SodaqohHistoris::select('updated_at')->orderBy('updated_at', 'DESC')->limit(1)->first();
 
         $st = null;
         if ($status == 1) {

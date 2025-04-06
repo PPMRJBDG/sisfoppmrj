@@ -39,7 +39,8 @@
                     <tr>
                         <th class="text-uppercase font-weight-bolder ps-2">NAMA</th>
                         <th class="text-uppercase font-weight-bolder ps-2">PERIODE</th>
-                        <th class="text-uppercase font-weight-bolder ps-2">TOTAL BIAYA</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">TOTAL RAB</th>
+                        <th class="text-uppercase font-weight-bolder ps-2">TOTAL REALISASI</th>
                         <th class="text-uppercase font-weight-bolder ps-2">DESKRIPSI</th>
                         <th class="text-uppercase font-weight-bolder ps-2">DETIL</th>
                         <th class="text-uppercase font-weight-bolder ps-2">STATUS</th>
@@ -52,7 +53,8 @@
                             <tr>
                                 <td>{{$mb->nama}}</td>
                                 <td>{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
-                                <td>{{number_format($mb->total_biaya(),0, ',', '.')}}</td>
+                                <td>{{number_format($mb->total_rab(),0, ',', '.')}}</td>
+                                <td>{{number_format($mb->total_realisasi(),0, ',', '.')}}</td>
                                 <td >{{$mb->deskripsi}}</td>
                                 <td><a href="{{route('rab management building id',$mb->id)}}" class="btn btn-sm btn-outline-secondary">Lihat Detil</a></td>
                                 <td>

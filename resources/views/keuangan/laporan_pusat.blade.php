@@ -27,104 +27,104 @@
 </style>
 
 @if($print)
-<div class="card border p-2 mb-4" style="border-bottom:solid 2px #42c19c!important;">
-    <div class="row align-items-center justify-content-center text-center">
-        <div class="row">
-            <div class="col-md-3">
-                <img src="{{ url('storage/logo-apps/' . App\Helpers\CommonHelpers::settings()->logoImgUrl) }}" height="48" alt="PPM Logo" loading="lazy" />
-            </div>
-            <div class="col-md-6">
-                <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">PPM ROUDHOTUL JANNAH BANDUNG SELATAN 2</h6>
-                <h6 class="m-0 text-uppercase font-weight-bolder">LPJ BULAN {{date_format(date_create($select_bulan),'M Y')}} & RAB BULAN {{date_format(date_create($nextmonth),'M Y')}}</h6>
-            </div>
-            <div class="col-md-3">
+    <div class="card border p-2 mb-4" style="border-bottom:solid 2px #42c19c!important;">
+        <div class="row align-items-center justify-content-center text-center">
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="{{ url('storage/logo-apps/' . App\Helpers\CommonHelpers::settings()->logoImgUrl) }}" height="48" alt="PPM Logo" loading="lazy" />
+                </div>
+                <div class="col-md-6">
+                    <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">PPM ROUDHOTUL JANNAH - BANDUNG SELATAN 2</h6>
+                    <h6 class="m-0 text-uppercase font-weight-bolder">LPJ BULAN {{date_format(date_create($select_bulan),'M Y')}} & RAB BULAN {{date_format(date_create($nextmonth),'M Y')}}</h6>
+                </div>
+                <div class="col-md-3">
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="card border mb-2 p-5" style="border:solid 2px #42c19c!important;">
-    <div class="p-2 text-start h6">
-        Kepada Yang Terhormat<br>
-        Bapak Imam / Wakil 4<br>
-        Di Tempat
-    </div>
-    <div class="p-2 text-center h6">
-        السلام عليكم ورحمة الله وبر كاته
-    </div>
-    <div class="p-2 text-start h6">
-        Yang bertandatangan dibawah ini kami Kyai Daerah beserta Pengurus PPM Bandung Selatan 2, 
-        dengan ini kami melaporkan Laporan Pertanggungjawaban Keuangan Bulan {{date_format(date_create($select_bulan),'M Y')}} dengan 
-        Total Pengeluaran Senilai Rp {{number_format($total_out_rutin+$total_out_nonrutin,0, ',', '.')}}.<br>
-        Serta kami mengajukan RAB Bulan {{date_format(date_create($nextmonth),'M Y')}} dengan estimasi pengeluaran senilai <span id="estimasi-out-nextmonth"></span>.
-        <br>
-        <br>
-        Demikian LPJ Bulan {{date_format(date_create($select_bulan),'M Y')}} dan RAB Bulan {{date_format(date_create($nextmonth),'M Y')}} yang dapat kami sampaikan, adapun rinciannya ada dibawah ini.
-    </div>
-    <div class="p-2 text-center h6">
-        الحمد لله جزاكم الله خيرا 
-        <br>
-        و السلام عليكم و رحمة اللّٰه و بركاته
-    </div>
-    <div class="row mt-4">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="row text-center h6">
-                <div class="col-md-4">
-                    Ketua PPM
-                    <br>
-                    <img src="{{ url('storage/logo-apps/ttd_muhammad_yusuf.png') }}" height="48" alt="PPM Logo" loading="lazy" />
-                    <br>
-                    Muhammad Yusuf
-                </div>
-                <div class="col-md-4">
-                    KU Daerah
-                    <br>
-                    <img src="{{ url('storage/logo-apps/ttd_kuda.png') }}" height="48" alt="PPM Logo" loading="lazy" />
-                    <br>
-                    H. Sutrisno
-                </div>
-                <div class="col-md-4">
-                    Kyai Daerah
-                    <br>
-                    <img src="{{ url('storage/logo-apps/ttd_kida.png') }}" height="48" alt="PPM Logo" loading="lazy" />
-                    <br>
-                    H. Yayat Hernawan
+    <div class="card border mb-2 p-5" style="border:solid 2px #42c19c!important;">
+        <div class="p-2 text-start h6">
+            Kepada Yang Terhormat<br>
+            Bapak Imam / Wakil 4<br>
+            Di Tempat
+        </div>
+        <div class="p-2 text-center h6">
+            السلام عليكم ورحمة الله وبر كاته
+        </div>
+        <div class="p-2 text-start h6">
+            Yang bertandatangan dibawah ini kami Kyai Daerah beserta Pengurus PPM Bandung Selatan 2, 
+            dengan ini kami melaporkan Laporan Pertanggungjawaban Keuangan Bulan {{date_format(date_create($select_bulan),'M Y')}} dengan 
+            Total Pengeluaran Senilai Rp {{number_format($total_out_rutin+$total_out_nonrutin,0, ',', '.')}}.<br>
+            Serta kami mengajukan RAB Bulan {{date_format(date_create($nextmonth),'M Y')}} dengan estimasi pengeluaran senilai <span id="estimasi-out-nextmonth"></span>.
+            <br>
+            <br>
+            Demikian LPJ Bulan {{date_format(date_create($select_bulan),'M Y')}} dan RAB Bulan {{date_format(date_create($nextmonth),'M Y')}} yang dapat kami sampaikan, adapun rinciannya ada dibawah ini.
+        </div>
+        <div class="p-2 text-center h6">
+            الحمد لله جزاكم الله خيرا 
+            <br>
+            و السلام عليكم و رحمة اللّٰه و بركاته
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="row text-center h6">
+                    <div class="col-md-4">
+                        Ketua PPM
+                        <br>
+                        <img src="{{ url('storage/logo-apps/ttd_muhammad_yusuf.png') }}" height="48" alt="PPM Logo" loading="lazy" />
+                        <br>
+                        Muhammad Yusuf
+                    </div>
+                    <div class="col-md-4">
+                        KU Daerah
+                        <br>
+                        <img src="{{ url('storage/logo-apps/ttd_kuda.png') }}" height="48" alt="PPM Logo" loading="lazy" />
+                        <br>
+                        H. Sutrisno
+                    </div>
+                    <div class="col-md-4">
+                        Kyai Daerah
+                        <br>
+                        <img src="{{ url('storage/logo-apps/ttd_kida.png') }}" height="48" alt="PPM Logo" loading="lazy" />
+                        <br>
+                        H. Yayat Hernawan
+                    </div>
                 </div>
             </div>
+            <div class="col-md-2"></div>
         </div>
-        <div class="col-md-2"></div>
     </div>
-</div>
 @else
-<div class="card border p-2 mb-2">
-    <div class="row align-items-center justify-content-center text-center">
-        <div class="col-md-5">
-        </div>
-        <div class="col-md-2">
-            <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">Laporan Keuangan {{ App\Helpers\CommonHelpers::periode() }}</h6>
-            <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan" onchange="filterOnchange()">
-                <option value=""></option>
-                @foreach($bulans as $bulan)
-                    <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-5 text-end">
-            <script>
-                function openTab(x){
-                    if(x=="public"){
-                        window.open("{{route('print laporan pusat public',[$select_bulan,true])}}", "_blank");
-                    }else{
-                        window.open("{{route('print laporan pusat',[$select_bulan,true])}}", "_blank");
+    <div class="card border p-2 mb-2">
+        <div class="row align-items-center justify-content-center text-center">
+            <div class="col-md-5">
+            </div>
+            <div class="col-md-2">
+                <h6 class="m-0 mb-2 text-uppercase font-weight-bolder">Laporan Keuangan {{ App\Helpers\CommonHelpers::periode() }}</h6>
+                <select data-mdb-filter="true" class="select form-control" value="" id="periode_bulan" name="periode_bulan" onchange="filterOnchange()">
+                    <option value=""></option>
+                    @foreach($bulans as $bulan)
+                        <option {{ ($select_bulan==$bulan->ym) ? 'selected' : ''; }}>{{$bulan->ym}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-5 text-end">
+                <script>
+                    function openTab(x){
+                        if(x=="public"){
+                            window.open("{{route('print laporan pusat public',[$select_bulan,true])}}", "_blank");
+                        }else{
+                            window.open("{{route('print laporan pusat',[$select_bulan,true])}}", "_blank");
+                        }
                     }
-                }
-            </script>
-            <a onclick="openTab('')" href="#" class="btn btn-sm btn-primary"><i class="fas fa-print" aria-hidden="true"></i></a>
-            <a onclick="openTab('public')" href="#" class="btn btn-sm btn-primary"><i class="fas fa-earth-asia" aria-hidden="true"></i></a>
+                </script>
+                <a onclick="openTab('')" href="#" class="btn btn-sm btn-primary"><i class="fas fa-print" aria-hidden="true"></i></a>
+                <a onclick="openTab('public')" href="#" class="btn btn-sm btn-primary"><i class="fas fa-earth-asia" aria-hidden="true"></i></a>
+            </div>
         </div>
     </div>
-</div>
 @endif
 
 <h6 class="text-uppercase font-weight-bolder">Laporan Posisi Keuangan {{date_format(date_create($select_bulan),'M Y')}}</h6>
@@ -169,6 +169,7 @@
         </tfoot>
     </table>
 </div>
+
 <h6 class="mt-2 text-uppercase font-weight-bolder">Estimasi Posisi Keuangan {{date_format(date_create($nextmonth),'M Y')}}</h6>
 <div class="card border mt-2">
     <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
@@ -624,7 +625,6 @@
                     <th class="text-uppercase text-center font-weight-bolder">Total</th>
                 </tr>
             </thead>
-            <?php $total_rab = 0; ?>
             <tbody id="rab-data">
                 @if(count($rabs)>0)
                 <?php $total_biaya = 0; ?>
@@ -761,6 +761,152 @@
         </div>
     @endforeach
 @endif
+
+<br>
+<div class="card border p-2" style="border-bottom:solid 2px #d96262!important;">
+    <div class="row align-items-center justify-content-center text-center">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <h6 class="m-0 text-uppercase font-weight-bolder">LAMPIRAN</h6>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</div>
+
+<h6 class="mt-2 text-uppercase font-weight-bolder mb-0">Ringkasan Sodaqoh Tahunan</h6>
+<?php $GLOBALS['total_kekurangan_sodaqoh_tahunan'] = 0; ?>
+@include('keuangan.list_sodaqoh_summary', ['list_periode' => $list_periode, 'last_update' => $last_update])
+
+<h6 class="mt-2 text-uppercase font-weight-bolder">Histori Keuangan</h6>
+<div class="card border mt-2">
+    <table class="table align-items-center justify-content-center mb-0 text-center table-bordered text-sm text-uppercase">
+        <thead style="background-color:#f6f9fc;">
+            <tr>
+                <th rowspan="2" width="13%" class="text-uppercase font-weight-bolder ps-2">Periode</th>
+                <th rowspan="2" width="13%" class="text-uppercase font-weight-bolder ps-2">RAB</th>
+                <th rowspan="2" width="13%" class="text-uppercase font-weight-bolder ps-2">Saldo Awal</th>
+                <th rowspan="2" width="13%" class="text-uppercase font-weight-bolder ps-2">Penerimaan</th>
+                <th colspan="3" width="13%" class="text-uppercase font-weight-bolder ps-2">Pengeluaran</th>
+                <th rowspan="2" width="13%" class="text-uppercase font-weight-bolder ps-2">Sisa Saldo</th>
+            </tr>
+            <tr>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2">Rutin</th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2">Non Rutin</th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2">Total Realisasi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $total_rab_all = 0;
+            $total_realisasi = 0;
+            $next_saldo_awal = 0;
+            $seq = 0;
+            ?>
+            @foreach($prev_total as $pt => $val)
+                <tr>
+                    <?php 
+                        $total_rab = 0;
+                        $exp_month = explode("-", $pt);
+                        foreach ($rabs as $rab){
+                            $total = 0;
+                            for ($x = 1; $x <= 5; $x++) {
+                                $check_minggu = json_decode($rab['bulan_'.intval($exp_month[1])]);
+                                if($check_minggu[$x-1][1]){
+                                    $total = $total + ($rab->biaya);
+                                }
+                            } 
+                            $total_rab = $total_rab + $total;
+                        }
+                        $total_rab_all = $total_rab_all + $total_rab;
+                        
+                        $total_mbuilding = 0;
+                        if(date_format(date_create($pt),'m') == date_format(date_create($select_bulan),'m')+1){
+                            if($pengajuan_manag_buildings){
+                                foreach($pengajuan_manag_buildings as $pmb){
+                                    $total_mbuilding = $total_mbuilding + $pmb->total_rab();
+                                }
+                            }
+                            if($val['total_out_nonrutin']==0){
+                                $val['total_out_nonrutin'] = $total_mbuilding;
+                            }else{
+                                $val['total_out_nonrutin'] = $val['total_out_nonrutin'] + $total_mbuilding;
+                            }
+                        }
+                        
+                        if(date_format(date_create($pt),'Y-m') > date_format(date_create($select_bulan),'Y-m')){
+                            $val['saldo_awal'] = $next_saldo_awal;
+                            if($val['total_in']==0){
+                                $val['total_in'] = $GLOBALS['total_kekurangan_sodaqoh_tahunan'] / (12-$seq);
+                            }else{
+                                $val['total_in'] = $val['total_in'] + $GLOBALS['total_kekurangan_sodaqoh_tahunan'] / (12-$seq);
+                            }
+                            if($val['total_out_rutin']==0){
+                                $val['total_out_rutin'] = $total_rab;
+                            }
+                            $val['saldo_akhir'] = ($next_saldo_awal + $val['total_in']) - ($val['total_out_rutin']+$val['total_out_nonrutin']);
+                            $next_saldo_awal = $val['saldo_akhir'];
+                        }else{
+                            $seq++;
+                            $next_saldo_awal = $val['saldo_akhir'];
+                        }
+                    ?>
+                    <th class="new-td text-uppercase ps-2">{{date_format(date_create($pt),'M Y')}}</th>
+                    <th class="new-td text-uppercase ps-2">RP {{number_format($total_rab,0, ',', '.')}}</th>
+                    <th class="new-td text-uppercase ps-2">RP {{number_format($val['saldo_awal'],0, ',', '.')}}</th>
+                    <th class="new-td text-uppercase ps-2">RP {{number_format($val['total_in'],0, ',', '.')}}</th>
+                    <th class="new-td text-uppercase ps-2">RP {{number_format($val['total_out_rutin'],0, ',', '.')}}</th>
+                    <th class="new-td text-uppercase ps-2">RP {{number_format($val['total_out_nonrutin'],0, ',', '.')}}</th>
+                    <?php
+                    $text_warning = '';
+                    if($total_rab<$val['total_out_rutin']+$val['total_out_nonrutin']){
+                        $text_warning = 'text-warning';
+                    }
+                    ?>
+                    <th class="new-td text-uppercase ps-2 {{$text_warning}}">RP {{number_format($val['total_out_rutin']+$val['total_out_nonrutin'],0, ',', '.')}}</th>
+                    <th class="new-td text-uppercase ps-2">RP {{number_format($val['saldo_akhir'],0, ',', '.')}}</th>
+                    <?php 
+                        $total_realisasi = $total_realisasi + $val['total_out_rutin'] + $val['total_out_nonrutin'];
+                    ?>
+                </tr>
+                @if(date_format(date_create($pt),'m') == date_format(date_create($select_bulan),'m'))
+                    <tr style="background-color:#f6f9fc;">
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_rab_all,0, ',', '.')}}</th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_realisasi,0, ',', '.')}}</th>
+                        <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                    </tr> 
+                    <tr style="background-color:#f6f9fc;border-top:solid 2px rgb(126, 93, 224);">
+                        <th colspan="8" class="text-uppercase font-weight-bolder ps-2">
+                            Estimasi Rincian Keuangan Hingga Akhir Periode
+                        </th>
+                    </tr> 
+                    <?php
+                    $total_rab_all = 0;
+                    $total_realisasi = 0;
+                    ?>
+                @endif
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr style="background-color:#f6f9fc;">
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_rab_all,0, ',', '.')}}</th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2">RP {{number_format($total_realisasi,0, ',', '.')}}</th>
+                <th width="13%" class="text-uppercase font-weight-bolder ps-2"></th>
+            </tr>         
+        </tfoot>
+    </table>
+</div>
 
 @if($print)
     <script type="text/javascript" src="{{ asset('js/app-custom.js') }}"></script>

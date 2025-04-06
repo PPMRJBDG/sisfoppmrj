@@ -19,7 +19,19 @@ class RabManagBuildings extends Model
         return $this->hasMany(RabManagBuildingDetails::class, 'fkRabManagBuilding_id');
     }
 
-    public function total_biaya()
+    public function total_rab()
+    {
+        $details = RabManagBuildingDetails::where('fkRabManagBuilding_id',$this->id)->get();
+        $total_biaya = 0;
+        if($details!=null){
+            foreach($details as $d){
+                $total_biaya = $total_biaya + ($d->qty*$d->biaya);
+            }
+        }
+        return $total_biaya;
+    }
+
+    public function total_realisasi()
     {
         $details = RabManagBuildingDetails::where('fkRabManagBuilding_id',$this->id)->get();
         $total_biaya = 0;

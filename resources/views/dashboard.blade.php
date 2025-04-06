@@ -7,7 +7,7 @@ if(isset(auth()->user()->santri)){
 }
 ?>
 
-@if($santri_jaga || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan'))
+@if($santri_jaga || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi keamanan') || auth()->user()->hasRole('dewan guru'))
 <div class="card border mb-2" style="background-color:#f6f9fc;">
     <div class="card-body p-2">
         <script>
@@ -56,7 +56,7 @@ if(isset(auth()->user()->santri)){
                                                 }
                                             ?>
                                             <input class="form-check-input" type="checkbox" {{ $c_1 }} id="jd_kunci_gerbang" name="jd_kunci_gerbang">
-                                            <label class="form-check-label" for="jd_kunci_gerbang">Mengunci Gerbang</label>
+                                            <label class="form-check-label" for="jd_kunci_gerbang">Mengunci Gerbang Pukul 23:00</label>
                                         </div>
                                         <div class="form-check mb-0">
                                             <?php 
@@ -216,7 +216,7 @@ if(isset(auth()->user()->santri)){
 </div>
 @endif
 
-@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong'))
+@if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('dewan guru'))
 <div class="col-12 p-0 mb-2">
     <div class="card border border p-2">
         <p class="m-0 mb-2 text-sm font-weight-bolder">Shortcut Presensi Hari Ini</p>

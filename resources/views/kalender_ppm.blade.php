@@ -293,6 +293,7 @@ echo $table;
     $("#footer-calendar").show();
     document.getElementById('month-'+<?php echo array_search(date('m'), $month); ?>).scrollIntoView()
 </script>
+
 @if(auth()->user())
 <script>
     function changeStart(x,val,month,id_kalender){
