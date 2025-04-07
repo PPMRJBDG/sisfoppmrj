@@ -330,7 +330,7 @@ class MateriController extends Controller
                 $degur_pemb = null;
                 $is_hasda = 0;
                 $is_put_together = 0;
-                
+
                 $currentDate = date_format(date_create(date('Y')."-".$request->input('bulan')."-".$request->input('start')),'Y-m-d');
 
                 $presenceGroup_id = 1;
@@ -407,7 +407,7 @@ class MateriController extends Controller
                             'pre_fkDewan_pengajar_mt' => $degur_mt,
                             'pre_fkDewan_pengajar_reg' => $degur_reg,
                             'pre_fkDewan_pengajar_pemb' => $degur_pemb,
-                            'is_deleted' => 0,
+                            'is_deleted' => 2,
                             'is_hasda' => $is_hasda,
                             'is_put_together' => $is_put_together,
                         ]);
@@ -425,7 +425,7 @@ class MateriController extends Controller
                         'pre_fkDewan_pengajar_mt' => $degur_mt,
                         'pre_fkDewan_pengajar_reg' => $degur_reg,
                         'pre_fkDewan_pengajar_pemb' => $degur_pemb,
-                        'is_deleted' => 0,
+                        'is_deleted' => 2,
                         'is_hasda' => $is_hasda,
                         'is_put_together' => $is_put_together,
                     ]);

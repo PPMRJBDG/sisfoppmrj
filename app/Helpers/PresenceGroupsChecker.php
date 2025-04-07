@@ -217,7 +217,7 @@ class PresenceGroupsChecker
                             'pre_fkDewan_pengajar_mt' => $degur_mt,
                             'pre_fkDewan_pengajar_reg' => $degur_reg,
                             'pre_fkDewan_pengajar_pemb' => $degur_pemb,
-                            'is_deleted' => 0,
+                            'is_deleted' => ($i==0) ? 0 : 2,
                             'is_hasda' => $is_hasda,
                             'is_put_together' => $is_put_together,
                         ]);
