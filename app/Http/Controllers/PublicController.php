@@ -656,6 +656,7 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
                 echo json_encode(['status' => false, 'message' => '[minutes] scheduler off']);
                 exit;
             }
+
             // Nerobos KBM
             $currentDateTime = date('Y-m-d H:i');
             $add_mins = date('Y-m-d H:i', strtotime("+{$setting->reminder_kbm} minutes", strtotime($currentDateTime)));
@@ -668,28 +669,50 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
                     $is_put_together = "
 - *Disatukan di PPM 1*";
                 }
-                $is_hasda = "";
-                if($get_presence_today->is_hasda){
-                    $is_hasda = " - *HASDA*";
-                }
-                $caption = "*INFO ".strtoupper($get_presence_today->name)."*".$is_hasda."
 
-📆 ".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd M Y')."
--
+                $dewan_pengajar = "";
+                if($get_presence_today->fkDewan_pengajar_1!=""){
+                    $dewan_pengajar .= "
+👳🏻 ".$get_presence_today->dewanPdewanPengajar1->name;
+                }
+                if($get_presence_today->fkDewan_pengajar_2!=""){
+                    $dewan_pengajar .= "
+👳🏻 ".$get_presence_today->dewanPdewanPengajar2->name;
+                }
+                if($get_presence_today->pre_fkDewan_pengajar_mt!=""){
+                    $dewan_pengajar .= "
+👳🏻 MT: ".$get_presence_today->dewanPengajar('mt')->name;
+                }
+                if($get_presence_today->pre_fkDewan_pengajar_reg!=""){
+                    $dewan_pengajar .= "
+👳🏻 Reguler: ".$get_presence_today->dewanPengajar('reg')->name;
+                }
+                if($get_presence_today->pre_fkDewan_pengajar_pemb!=""){
+                    $dewan_pengajar .= "
+👳🏻 Pembinaan: ".$get_presence_today->dewanPengajar('pemb')->name;
+                }
+                
+                $caption = "*".strtoupper($get_presence_today->name)."*
+🗓️ ".CommonHelpers::hari_ini(date_format(date_create($get_presence_today->event_date), 'D')).", ".date_format(date_create($get_presence_today->event_date), 'd M Y')."
 ⏰️ Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
 ⏰️ Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
--
-*Fingerprint*:
-🟢 Mulai Sign In -> *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
-🔴 Batas Sign Out -> *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
--
-🗒️ NB:".$is_put_together."
+
+*DEWAN PENGAJAR* ".$dewan_pengajar."
+
+*FINGERPRINT*
+📥 Mulai Sign In: *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
+📤 Batas Sign Out: *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
+
+🗒️ *NB*:".$is_put_together."
 - *Untuk presensi, semua wajib scan Fingerprint setelah Dewan Guru (jika scan sebelum Dewan Guru, maka statusnya masih alpha meskipun mesin fingerprint OK)*
 - Amalsholih untuk dapat hadir tepat waktu, tertib, dan disiplin
 - Supaya mempersiapkan diri sebelum jam KBM dimulai, menuju masjid/mushola untuk sholat berjamaah sekaligus membawa materi yang sudah ditentukan
 - Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman
 - Dilarang scan fingerprint, lalu kembali ke kamar tanpa ada udzur (jika diketahui akan mendapat kafaroh)";
                 WaSchedules::save('Reminder #'.$get_presence_today->name, $caption, $setting->wa_maurus_group_id);
+                if($get_presence_today->is_put_together || $get_presence_today->is_hasda){
+                    WaSchedules::save('Reminder Ortu #'.$get_presence_today->name, $caption, $setting->wa_ortu_group_id);
+                }
             }
 
             // nerobos belum dateng
@@ -738,7 +761,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
     public function generator()
     {
-        PresenceGroupsChecker::checkPresenceGroups();
+        // PresenceGroupsChecker::checkPresenceGroups();
         PresenceGroupsChecker::checkPermitGenerators();
     }
 

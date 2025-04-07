@@ -262,7 +262,7 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         <input type="hidden" id="liburan_id" name="liburan_id" value="">
                                         <div class="form-group">
                                             <label class="form-control-label">
-                                                <span class="text-warning text-xs mb-0 pb-0">Yang sudah lewat dihapus saja!</span>
+                                                <span class="text-warning text-xs mb-0 pb-0">Yang periode tahun lalu dihapus saja!</span>
                                                 <br>
                                                 Awal Liburan
                                             </label>
@@ -862,7 +862,38 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                             <textarea rows="6" class="form-control mb-2" name="wa_info_lulus" required>{{ ($list_setting) ? $list_setting->wa_info_lulus : '' }}</textarea>
                                             @endif
                                         </div>
+                                    </div>
 
+                                    <div class="col-md-12">
+                                        <h5><b>Layanan IT</b></h5>
+                                        
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Expired Layanan Domain
+                                            </label>
+                                            <input class="form-control" type="date" value="{{ ($list_setting) ? $list_setting->reminder_layanan_domain : '' }}" name="reminder_layanan_domain">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Expired Layanan Server
+                                            </label>
+                                            <input class="form-control" type="date" value="{{ ($list_setting) ? $list_setting->reminder_layanan_server : '' }}" name="reminder_layanan_server">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Expired Layanan Fingerprint
+                                            </label>
+                                            <input class="form-control" type="date" value="{{ ($list_setting) ? $list_setting->reminder_layanan_fingerprint : '' }}" name="reminder_layanan_fingerprint">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
+                                                Informasi Akun
+                                            </label>
+                                            <textarea rows="6" class="form-control mb-2" name="account_info" required>{{ ($list_setting) ? $list_setting->account_info : '' }}</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <input class="btn btn-primary btn-sm btn-block mb-0" type="submit" value="Update Setting">
                                         </div>

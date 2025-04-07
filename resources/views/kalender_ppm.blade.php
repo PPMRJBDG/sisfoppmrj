@@ -21,33 +21,55 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
   $selectoption = "";
   if(auth()->user()){
     if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum')){
-      for($x=2; $x>=1; $x--){
-        if($x==1){
-          $option = 'Sequence';
-          $label_select = '<label>Tanggal 1 Start Sequence:</label>';
-          $id_kalender = $id_kalender_seq;
-        }else{
-          $option = 'Tanggal';
-          $label_select = '<label>Sequence 1 Start Tanggal:</label>';
-          $id_kalender = $id_kalender_tgl;
-        }
-        $disabled = "";
-        if($lock_calendar){
-          $disabled = "disabled";
-        }
-        $selectoption .= "<div class='col-md'>$label_select<select $disabled data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
-        $selectoption .= "<option value=''>--Pilih $option--</option>";
-        foreach($template as $t){
+      // for($x=2; $x>=1; $x--){
+      //   if($x==1){
+      //     $display = 'none';
+      //     $option = 'Sequence';
+      //     $label_select = '<label>Tanggal 1 Start Sequence:</label>';
+      //     $id_kalender = $id_kalender_seq;
+      //   }else{
+      //     $display = 'block';
+      //     $option = 'Tanggal';
+      //     $label_select = '<label>Sequence 1 Start Tanggal:</label>';
+      //     $id_kalender = $id_kalender_tgl;
+      //   }
+      //   $disabled = "";
+      //   if($lock_calendar){
+      //     $disabled = "disabled";
+      //   }
+      //   $selectoption .= "<div style='display:$display;' class='col-md'>$label_select<select $disabled data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
+      //   $selectoption .= "<option value=''>--Pilih $option--</option>";
+      //   foreach($template as $t){
+      //     $selected = "";
+      //     if($x==1 && $start_seq==$t->sequence){
+      //       $selected = "selected";
+      //     }elseif($x==2 && $start_tgl==$t->sequence){
+      //       $selected = "selected";
+      //     }
+      //     $selectoption .= "<option $selected value='$t->sequence'>$option $t->sequence</option>";
+      //   }
+      //   $selectoption .= "</select></div>";
+      // }
+
+      $disabled = "";
+      if($lock_calendar){
+        $disabled = "disabled";
+      }
+      $selectoption .= "<div class='col-md'><label>Sequence 1 Start Tanggal:</label><select $disabled data-mdb-filter='true' onchange='changeStart(2, this.value, $month, $id_kalender_tgl)' class='select form-control'>";
+      $selectoption .= "<option value=''>--Pilih Tanggal--</option>";
+      $jumlah_tanggal = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+      for($i=1; $i<=$jumlah_tanggal; $i++){
+        $currentDate = $year."-".$month."-".$i;
+        $currentDay = strtolower(date_format(date_create($currentDate), 'l'));
+        if($currentDay=='saturday'){
           $selected = "";
-          if($x==1 && $start_seq==$t->sequence){
-            $selected = "selected";
-          }elseif($x==2 && $start_tgl==$t->sequence){
+          if($start_tgl==$i){
             $selected = "selected";
           }
-          $selectoption .= "<option $selected value='$t->sequence'>$option $t->sequence</option>";
+          $selectoption .= "<option $selected value='$i'>Tanggal $i</option>";
         }
-        $selectoption .= "</select></div>";
       }
+      $selectoption .= "</select></div>";
     }
   }
 
@@ -226,6 +248,22 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
   }
 </style>
 
+@if(auth()->user())
+  @if(auth()->user()->hasRole('superadmin') && !$GLOBALS['lock_calendar'])
+    <a onclick="return resetKalender()" type="button" href="#" class="btn btn-sm btn-danger mb-2">RESET</a>
+    <script>
+      function resetKalender(){
+        if(confirm('Apakah yakin kalender akan di Reset ?')){
+          $.get(`{{ route('reset_kalender_ppm') }}`,
+            function(data, status) {
+              window.location.reload();
+            }
+          );
+        }
+      }
+    </script>
+  @endif
+@endif
 
 <?php
 $periode = App\Helpers\CommonHelpers::periode();

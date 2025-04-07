@@ -306,6 +306,7 @@ class CommonHelpers
 
     public static function agendaKhusus(){
         $agenda_khusus = [
+            'PENGARAHAN KHUSUS',
             'PRA-PPM',
             'SARASEHAN',
             'MIMBER',

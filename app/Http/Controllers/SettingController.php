@@ -177,6 +177,10 @@ class SettingController extends Controller
                 'reminder_alpha_ortu' => $request->input('reminder_alpha_ortu'),
                 'status_scan_degur' => $request->input('status_scan_degur'),
                 'lock_calendar' => $request->input('lock_calendar'),
+                'reminder_layanan_domain' => $request->input('reminder_layanan_domain'),
+                'reminder_layanan_server' => $request->input('reminder_layanan_server'),
+                'reminder_layanan_fingerprint' => $request->input('reminder_layanan_fingerprint'),
+                'account_info' => $request->input('account_info'),
             ]);
         } else {
             $setting->host_url = $request->input('host_url');
@@ -217,6 +221,10 @@ class SettingController extends Controller
             $setting->reminder_alpha_ortu = $request->input('reminder_alpha_ortu');
             $setting->status_scan_degur = $request->input('status_scan_degur');
             $setting->lock_calendar = $request->input('lock_calendar');
+            $setting->reminder_layanan_domain = $request->input('reminder_layanan_domain');
+            $setting->reminder_layanan_server = $request->input('reminder_layanan_server');
+            $setting->reminder_layanan_fingerprint = $request->input('reminder_layanan_fingerprint');
+            $setting->account_info = $request->input('account_info');
             $setting->save();
         }
 

@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function() 
         {
-            PresenceGroupsChecker::checkPresenceGroups();
+            // PresenceGroupsChecker::checkPresenceGroups();
             PresenceGroupsChecker::checkPermitGenerators();
 
         })->daily();

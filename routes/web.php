@@ -167,6 +167,7 @@ Route::get('/kalender-ppm', [App\Http\Controllers\PublicController::class, 'kale
 Route::get('/kalender-ppm/template', [App\Http\Controllers\MateriController::class, 'template_kalender_ppm'])->name('template_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
 Route::post('/kalender-ppm/template/store', [App\Http\Controllers\MateriController::class, 'store_template_kalender_ppm'])->name('store_template_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
 Route::post('/kalender-ppm/store', [App\Http\Controllers\MateriController::class, 'store_kalender_ppm'])->name('store_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
+Route::get('/kalender-ppm/reset', [App\Http\Controllers\MateriController::class, 'reset_kalender_ppm'])->name('reset_kalender_ppm')->middleware('role:superadmin');
 
 // monitoring materis
 Route::get('/materi/monitoring/list', [App\Http\Controllers\MonitoringMateriController::class, 'list_and_manage'])->name('monitoring materi tm');
@@ -176,16 +177,16 @@ Route::get('/materi/monitoring/matching', [App\Http\Controllers\MonitoringMateri
 Route::post('/materi/monitoring/materi_santri', [App\Http\Controllers\MonitoringMateriController::class, 'materi_santri'])->name('materi santri');
 
 // pelanggaran
-Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm1')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/s/{is_archive}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm2')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/s/{is_archive}/param/{value}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/s/{is_archive}/param/{value}/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran id')->middleware('role:superadmin|rj1|wk');
-// Route::get('/pelanggaran/archive', [App\Http\Controllers\PelanggaranController::class, 'list_archive'])->name('pelanggaran archive')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/create', [App\Http\Controllers\PelanggaranController::class, 'create'])->name('create pelanggaran')->middleware('role:superadmin|rj1|wk');
-Route::post('/pelanggaran/store', [App\Http\Controllers\PelanggaranController::class, 'store'])->name('store pelanggaran')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/edit/{id}', [App\Http\Controllers\PelanggaranController::class, 'edit'])->name('edit pelanggaran')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/delete/{id}', [App\Http\Controllers\PelanggaranController::class, 'delete'])->name('delete pelanggaran')->middleware('role:superadmin|rj1|wk');
-Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranController::class, 'archive'])->name('archive pelanggaran')->middleware('role:superadmin|rj1|wk');
+Route::get('/pelanggaran', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm1')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/s/{is_archive}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('pelanggaran tm2')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/s/{is_archive}/param/{value}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran tm')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/s/{is_archive}/param/{value}/{id}', [App\Http\Controllers\PelanggaranController::class, 'index'])->name('filter pelanggaran id')->middleware('role:superadmin|rj1|wk|dewan guru');
+// Route::get('/pelanggaran/archive', [App\Http\Controllers\PelanggaranController::class, 'list_archive'])->name('pelanggaran archive')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/create', [App\Http\Controllers\PelanggaranController::class, 'create'])->name('create pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::post('/pelanggaran/store', [App\Http\Controllers\PelanggaranController::class, 'store'])->name('store pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/edit/{id}', [App\Http\Controllers\PelanggaranController::class, 'edit'])->name('edit pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/delete/{id}', [App\Http\Controllers\PelanggaranController::class, 'delete'])->name('delete pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranController::class, 'archive'])->name('archive pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
 
 // KEUANGAN
 Route::get('/keuangan/mekanisme', [App\Http\Controllers\KeuanganController::class, 'mekanisme'])->name('mekanisme')->middleware('role:ku|superadmin|santri');

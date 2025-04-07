@@ -157,8 +157,6 @@ class PresenceController extends Controller
      */
     public function list_and_manage()
     {
-        PresenceGroupsChecker::checkPresenceGroups();
-
         $presences = Presence::where('is_deleted', 0)->where('fkPresence_group_id', null)->get();
         $presenceGroups = PresenceGroup::all();
 
@@ -705,7 +703,7 @@ class PresenceController extends Controller
      */
     public function check_schedules()
     {
-        PresenceGroupsChecker::checkPresenceGroups();
+        // PresenceGroupsChecker::checkPresenceGroups();
         PresenceGroupsChecker::checkPermitGenerators();
 
         return redirect()->back();
@@ -1034,7 +1032,7 @@ class PresenceController extends Controller
         $lastScheduleCheck = SystemMetaData::where('key', 'lastScheduleCheck')->first();
 
         if (!$lastScheduleCheck || $lastScheduleCheck->value != date('Y-m-d')) {
-            PresenceGroupsChecker::checkPresenceGroups();
+            // PresenceGroupsChecker::checkPresenceGroups();
             PresenceGroupsChecker::checkPermitGenerators();
             SystemMetaData::updateOrCreate(['key' => 'lastScheduleCheck'], ['value' => date('Y-m-d')]);
         }
@@ -1415,7 +1413,7 @@ class PresenceController extends Controller
         $lastScheduleCheck = SystemMetaData::where('key', 'lastScheduleCheck')->first();
 
         if (!$lastScheduleCheck || $lastScheduleCheck->value != date('Y-m-d')) {
-            PresenceGroupsChecker::checkPresenceGroups();
+            // PresenceGroupsChecker::checkPresenceGroups();
             PresenceGroupsChecker::checkPermitGenerators();
             SystemMetaData::updateOrCreate(['key' => 'lastScheduleCheck'], ['value' => date('Y-m-d')]);
         }

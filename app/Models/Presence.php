@@ -48,7 +48,8 @@ class Presence extends Model
         }elseif($kelas=="pemb"){
             $fk = 'pre_fkDewan_pengajar_pemb';
         }
-        return $this->belongsTo(DewanPengajars::class, $fk);
+        $get = DewanPengajars::where('id', $this->$fk)->first();
+        return $get;
     }
     public function dewanPengajar1()
     {

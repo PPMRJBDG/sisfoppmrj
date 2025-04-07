@@ -8,11 +8,14 @@ use App\Models\DewanPengajars;
 use App\Models\KalenderPpmTemplates;
 use App\Models\KalenderPpms;
 use App\Models\PresenceGroup;
+use App\Models\Presence;
 use App\Models\HourKbms;
 use App\Models\DayKbms;
 use App\Models\JadwalHariJamKbms;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\PresenceGroupsChecker;
+use App\Helpers\CommonHelpers;
+use App\Helpers\CountDashboard;
 
 class MateriController extends Controller
 {
@@ -267,6 +270,7 @@ class MateriController extends Controller
 
     public function store_kalender_ppm(Request $request){
         if($request->input('ak')=="false"){
+            // perubahan start sequence pada tanggal sekian
             $get = KalenderPpms::where('id',$request->input('id'))->where('x',$request->input('x'))->first();
 
             if(!$get){
@@ -276,13 +280,29 @@ class MateriController extends Controller
                             'start' => $request->input('start'),
                         ]);
             }else{
-                $get->x = $request->input('x');
                 $get->bulan = $request->input('bulan');
                 $get->start = $request->input('start');
                 $get->save();
-                PresenceGroupsChecker::createPresence(true);
+
+                if($request->input('x')==2){
+                    $seq = 28;
+                    for($a=$request->input('start'); $a>1; $a--){
+                        $datax = KalenderPpms::where('bulan',$request->input('bulan'))->where('x',1)->first();
+                        if($datax){
+                            $datax->start = $seq;
+                            $datax->save();
+                        }
+                        $seq--;
+                    }
+
+                    // aksi saat mengubah start tanggal dan sequence
+                    if($request->input('bulan')==intval(date('m'))){
+                        PresenceGroupsChecker::createPresence(true);
+                    }
+                }
             }
         }else{
+            // perubahan tanggal tertentu (single)
             $get = KalenderPpms::where('is_certain_conditions',1)->where('waktu_certain_conditions',$request->input('waktu'))->where('bulan',$request->input('bulan'))->where('start',$request->input('start'))->first();
             if($get){
                 if($request->input('nama')=="reset"){
@@ -303,7 +323,149 @@ class MateriController extends Controller
                     
                 }
             }
-            PresenceGroupsChecker::createPresence(true);
+
+            if($request->input('bulan')==intval(date('m'))){
+                $degur_mt = null;
+                $degur_reg = null;
+                $degur_pemb = null;
+                $is_hasda = 0;
+                $is_put_together = 0;
+                
+                $currentDate = date_format(date_create(date('Y')."-".$request->input('bulan')."-".$request->input('start')),'Y-m-d');
+
+                $presenceGroup_id = 1;
+                if($request->input('waktu')=='malam'){
+                    $presenceGroup_id = 2;
+                }elseif(strtolower(date_format(date_create($currentDate), 'l'))=='sunday'){
+                    $presenceGroup_id = 8;
+                }
+
+                $presenceGroup = PresenceGroup::find($presenceGroup_id);
+                $presenceInThisDate = Presence::where('fkPresence_group_id', $presenceGroup_id)
+                        ->where('event_date', $currentDate)->first();
+
+                $presenceName = $presenceGroup->name . ' ' . date_format(date_create($currentDate),'d/m');
+
+                if($request->input('nama')=="reset"){
+                    $data_calendar = PresenceGroupsChecker::getCalendar(date('Y'),$request->input('bulan'),$request->input('start'));
+                    if($presenceGroup->id==1){ // shubuh
+                        if($data_calendar['shubuh']['is_agenda_khusus']==1){
+                            $presenceName .= " ".$data_calendar['shubuh']['nama'];
+                            if (str_contains($data_calendar['shubuh']['nama'], 'HASDA-')) {
+                                $is_hasda = 1;
+                            }
+                        }else{
+                            $degur_mt = $data_calendar['shubuh']['mt']['id_degur'];
+                            $degur_reg = $data_calendar['shubuh']['reguler']['id_degur'];
+                            $degur_pemb = $data_calendar['shubuh']['pemb']['id_degur'];
+                        }
+                    }elseif($presenceGroup->id==2){ // malam
+                        if($data_calendar['malam']['is_agenda_khusus']==1){
+                            $presenceName .= " ".$data_calendar['malam']['nama'];
+                            if (str_contains($data_calendar['malam']['nama'], 'HASDA-')) {
+                                $is_hasda = 1;
+                            }
+                            if (str_contains($data_calendar['malam']['nama'], 'HASDA-TEKS') || 
+                                str_contains($data_calendar['malam']['nama'], 'PENGARAHAN KHUSUS') || 
+                                str_contains($data_calendar['malam']['nama'], 'HASDA-ORGANISASI') || 
+                                str_contains($data_calendar['malam']['nama'], 'ASAD') ||
+                                str_contains($data_calendar['malam']['nama'], 'PRA-PPM') ||
+                                str_contains($data_calendar['malam']['nama'], 'SARASEHAN') ||
+                                str_contains($data_calendar['malam']['nama'], 'MANAJEMEN') ||
+                                str_contains($data_calendar['malam']['nama'], 'NASEHAT PENGURUS') ||
+                                str_contains($data_calendar['malam']['nama'], 'PAT')) {
+                                $is_put_together = 1;
+                            }
+                        }else{
+                            $degur_mt = $data_calendar['malam']['mt']['id_degur'];
+                            $degur_reg = $data_calendar['malam']['reguler']['id_degur'];
+                            $degur_pemb = $data_calendar['malam']['pemb']['id_degur'];
+                        }
+                    }elseif($presenceGroup->id==8){ // bulanan
+                        $is_put_together = 1;
+                        if($data_calendar['shubuh']['is_agenda_khusus']==1){
+                            $presenceName .= " ".$data_calendar['shubuh']['nama'];
+                        }elseif($data_calendar['malam']['is_agenda_khusus']==1){
+                            $presenceName .= " ".$data_calendar['malam']['nama'];
+                        }
+                    }
+                }else{
+                    $presenceName .= " " . $request->input('nama');
+                }
+                
+                if (isset($presenceInThisDate)) {
+                    if(str_contains($presenceName, 'LIBUR')){
+                        $presenceInThisDate->delete();
+                    }else{
+                        $newPresenceInThisDate = Presence::find($presenceInThisDate->id)->update([
+                            'name' => strtoupper($presenceName),
+                            'total_mhs' => CountDashboard::total_mhs('all'),
+                            'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
+                            'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour)),
+                            'presence_start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour)),
+                            'presence_end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour)),
+                            'pre_fkDewan_pengajar_mt' => $degur_mt,
+                            'pre_fkDewan_pengajar_reg' => $degur_reg,
+                            'pre_fkDewan_pengajar_pemb' => $degur_pemb,
+                            'is_deleted' => 0,
+                            'is_hasda' => $is_hasda,
+                            'is_put_together' => $is_put_together,
+                        ]);
+                    }
+                }else{
+                    $newPresenceInThisDate = Presence::create([
+                        'fkPresence_group_id' => $presenceGroup->id,
+                        'name' => strtoupper($presenceName),
+                        'event_date' => $currentDate,
+                        'total_mhs' => CountDashboard::total_mhs('all'),
+                        'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
+                        'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour)),
+                        'presence_start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour)),
+                        'presence_end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour)),
+                        'pre_fkDewan_pengajar_mt' => $degur_mt,
+                        'pre_fkDewan_pengajar_reg' => $degur_reg,
+                        'pre_fkDewan_pengajar_pemb' => $degur_pemb,
+                        'is_deleted' => 0,
+                        'is_hasda' => $is_hasda,
+                        'is_put_together' => $is_put_together,
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function reset_kalender_ppm(){
+        $periode = CommonHelpers::periode();
+        $periode = explode("-",$periode);
+        $month = ['09','10','11','12','01','02','03','04','05','06','07','08'];
+        $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1]];
+
+        $deletes = KalenderPpms::whereNull('x')->where('is_certain_conditions',1)->delete();
+
+        for($i=0; $i<12; $i++){
+            $jumlah_tanggal = cal_days_in_month(CAL_GREGORIAN, $month[$i], $year[$i]);
+            $is_first_saturday = 0;
+            for($x=1; $x<=$jumlah_tanggal; $x++){
+                $currentDay = strtolower(date_format(date_create($x.'-'.$month[$i].'-'.$year[$i]), 'l'));
+                if($currentDay=='saturday' && $is_first_saturday==0){
+                    $is_first_saturday = 1;
+                    $datas = KalenderPpms::where('bulan',intval($month[$i]))->where('x',2)->first();
+                    if($datas){
+                        $datas->start = $x;
+                        $datas->save();
+                    }
+
+                    $seq = 28;
+                    for($a=$x; $a>1; $a--){
+                        $datax = KalenderPpms::where('bulan',intval($month[$i]))->where('x',1)->first();
+                        if($datax){
+                            $datax->start = $seq;
+                            $datax->save();
+                        }
+                        $seq--;
+                    }
+                }
+            }
         }
     }
 }

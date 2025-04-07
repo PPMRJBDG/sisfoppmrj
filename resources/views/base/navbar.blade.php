@@ -85,7 +85,7 @@ $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1]
       </a>
     </li>
 
-    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
+    @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk'))
       <li class="sidenav-item">
         <a data-mdb-dropdown-init class="sidenav-link d-flex" href="#" block-id="return-false" id="navbarDropdownMenuLink-reporting" role="button" aria-expanded="false">
           <i class="fa fa-cog pe-3"></i>Laporan
@@ -114,30 +114,28 @@ $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1]
           <i class="fa fa-cog pe-3"></i>Pengurus
         </a>
         <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-pengurus">
-          @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1'))
+          @if(auth()->user()->hasRole('superadmin'))
           <li>
             <a class="sidenav-link" href="{{ url('setting') }}">
               <span class="sidenav-link-text ms-1">Setting</span>
             </a>
           </li>
           <li>
-            <a class="sidenav-link" href="{{ url('pelanggaran') }}">
-              <span class="sidenav-link-text ms-1">Daftar Pelanggaran</span>
-            </a>
-          </li>
-          @endif
-          <li>
-            <a class="sidenav-link" href="{{ url('catatan-penghubung') }}">
-              <span class="sidenav-link-text ms-1">Catatan Penghubung</span>
-            </a>
-          <li>
-          @if(auth()->user()->hasRole('superadmin'))
-          <li>
             <a class="sidenav-link" href="{{ url('stdbot/contact') }}">
               <span class="sidenav-link-text ms-1">Contact & Bulk</span>
             </a>
           </li>
           @endif
+          <li>
+            <a class="sidenav-link" href="{{ url('pelanggaran') }}">
+              <span class="sidenav-link-text ms-1">Daftar Pelanggaran</span>
+            </a>
+          </li>
+          <li>
+            <a class="sidenav-link" href="{{ url('catatan-penghubung') }}">
+              <span class="sidenav-link-text ms-1">Catatan Penghubung</span>
+            </a>
+          <li>
         </ul>
       </li>
     @endif
