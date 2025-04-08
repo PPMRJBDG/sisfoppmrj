@@ -15,86 +15,24 @@ use App\Helpers\CountDashboard;
 
 class PresenceGroupsChecker
 {
-    public static function checkPresenceGroups() // disabled
+    public static function checkPresenceGroups()
     {
-        exit;
-        $results = [
-            'created_presences' => [],
-            'already_created_presences' => [],
-            'presences_failed_to_create' => [],
-            'presence_groups_have_schedules' => [],
-            'day' => ''
-        ];
-
-        // get current day
         $currentDate = date('Y-m-d');
-        $currentDateNumber = date('d');
-        $currentMonth = date('m');
         $currentDay = strtolower(date('l'));
-        $results['day'] = $currentDay;
 
-        $check_liburan = Liburan::where('liburan_from', '<=', $currentDate)->where('liburan_to', '>=', $currentDate)->get();
+        $presenceGroups = PresenceGroup::where('days', 'LIKE', '%' . $currentDay . '%')->where('status', 'active')->get();
 
-        if (count($check_liburan) == 0 && $currentDay != 'sunday') {
-            // load all presence groups that the 'days' attribute contains current day AND are ACTIVE
-            $presenceGroups = PresenceGroup::where('days', 'LIKE', '%' . $currentDay . '%')->where('status', 'active')->get();
+        foreach ($presenceGroups as $presenceGroup) {
+            $presenceInThisDate = Presence::where('fkPresence_group_id', $presenceGroup->id)
+                ->where('event_date', $currentDate)->first();
 
-            $results['presence_groups_have_schedules'] = $presenceGroups;
-
-            // start to check and create all of them
-            foreach ($presenceGroups as $presenceGroup) {
-                if($currentDay=='saturday' && $presenceGroup->id==2){
-                    continue;
+            if (isset($presenceInThisDate)) {
+                if($presenceInThisDate->is_deleted==2){
+                    $presenceInThisDate->is_deleted = 0;
+                    $presenceInThisDate->save();
                 }
-
-                $presenceName = $presenceGroup->name . ' ' . $currentDateNumber . '/' . $currentMonth;
-
-                // check if the presenceGroup already has a presence in this day
-                $presenceInThisDate = Presence::where('fkPresence_group_id', $presenceGroup->id)
-                    ->where('event_date', $currentDate)->first();
-
-                if (isset($presenceInThisDate)) {
-                    if($presenceInThisDate->is_deleted==2){
-                        $presenceInThisDate->is_deleted = 0;
-                        $presenceInThisDate->save();
-                    }
-                    array_push($results['already_created_presences'], $presenceInThisDate);
-                    continue;
-                }
-
-                $getPengajar1 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
-                    ->where('day', $currentDay)->where('ppm', 1)->first();
-                $getPengajar2 = KalenderPpmTemplates::where('fkPresence_group_id', $presenceGroup->id)
-                    ->where('day', $currentDay)->where('ppm', 2)->first();
-
-                $newPresenceInThisDate = Presence::create([
-                    'fkPresence_group_id' => $presenceGroup->id,
-                    'name' => $presenceName,
-                    'event_date' => $currentDate,
-                    'total_mhs' => CountDashboard::total_mhs('all'),
-                    'start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->start_hour)),
-                    'end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->end_hour)),
-                    'presence_start_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_start_hour)),
-                    'presence_end_date_time' => date('Y-m-d H:i', strtotime($currentDate . ' ' . $presenceGroup->presence_end_hour)),
-                    'fkDewan_pengajar_1' => ($getPengajar1 != null) ? $getPengajar1->fkDewan_pengajar_id : null,
-                    'fkDewan_pengajar_2' => ($getPengajar2 != null) ? $getPengajar2->fkDewan_pengajar_id : null,
-                    'is_deleted' => 0
-                ]);
-
-                if (!$newPresenceInThisDate) {
-                    Log::error('Unable to a create Presence in PresenceGroup scheduling in process of inserting to DB.
-                    Presence name: ' . $presenceName);
-
-                    array_push($results['presences_failed_to_create'], $presenceName);
-
-                    continue;
-                }
-
-                array_push($results['created_presences'], $presenceName);
             }
         }
-
-        return $results;
     }
 
     public static function createPresence($update=false)

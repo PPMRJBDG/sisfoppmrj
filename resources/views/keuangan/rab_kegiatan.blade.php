@@ -26,6 +26,7 @@
     <div class="card-body p-0">
         <form action="{{ route('store rab kegiatan') }}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="parent_id" id="parent_id" value="" required>
+            <input type="hidden" name="is_duplicate" id="is_duplicate" value="0" required>
             <div class="row p-2">
                 <div class="col-md-2">
                     <select class="form-control mb-2" value="" id="fkRab_id" name="fkRab_id" required>
@@ -36,9 +37,9 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input class="form-control mb-2" type="text" placeholder="Nama Kegiatan" id="name" name="name" required>
+                    <input class="form-control mb-2" type="text" placeholder="Nama / Tema Kegiatan" id="name" name="name" required>
                     <select class="form-control mb-2" value="" id="fkSantri_id_ketua" name="fkSantri_id_ketua" required>
-                        <option value="">--ketua panitia--</option>
+                        <option value="">--ketua panitia atau koor divisi--</option>
                             @foreach($santris as $santri)
                             <option value="{{$santri->santri_id}}">{{strtoupper($santri->fullname)}}</option>
                             @endforeach
@@ -46,10 +47,10 @@
                 </div>
                 <div class="col-md-2">
                     <input class="form-control mb-2" type="date" value="{{date('Y-m')}}" id="date" name="date" required>
-                    <select class="form-control mb-2" value="" id="fkSantri_id_bendahara" name="fkSantri_id_bendahara" required>
-                        <option value="">--bendahara panitia--</option>
-                            @foreach($santris as $santri)
-                            <option value="{{$santri->santri_id}}">{{strtoupper($santri->fullname)}}</option>
+                    <select class="form-control mb-2" value="" id="fkSantri_id_bendahara" name="fkSantri_id_bendahara">
+                        <option value="">--bendahara--</option>
+                            @foreach($bendaharas as $bendahara)
+                            <option value="{{$bendahara->santri_id}}">{{strtoupper($bendahara->fullname)}}</option>
                             @endforeach
                     </select>
                 </div>
@@ -69,10 +70,25 @@
 
 <div class="card border mt-2">
     <div class="card-body p-0">
-        <div class="datatable datatable-sm text-uppercase">
-            <table class="table align-items-center justify-content-center mb-0 table-striped table-bordered text-sm text-uppercase">
+        <div class="px-2 py-4">
+            <div>
+                <button type="button" class="btn btn-sm btn-secondary btn-floating" data-mdb-ripple-init>
+                    <i class="fa fa-copy text-white"></i>
+                </button>
+                Duplikat Kegiatan Akan Sekaligus Menduplikasi Rincian / Detail RAB
+            </div>
+            <div>
+                <button type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init>
+                    <i class="fa fa-link text-white"></i>
+                </button>
+                Copy Link URL RAB dan Bagikan ke Masing-masing Divisi
+            </div>
+        </div>
+        <div data-mdb-bordered="true" class="datatable datatable-sm text-uppercase text-center">
+            <table class="table align-items-center justify-content-center mb-0 text-sm">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
+                        <th class="text-uppercase font-weight-bolder">DUPLIKAT</th>
                         <th class="text-uppercase font-weight-bolder">LINK</th>
                         <th class="text-uppercase font-weight-bolder">RAB</th>
                         <th class="text-uppercase font-weight-bolder">NAMA KEGIATAN</th>
@@ -88,13 +104,20 @@
                     @if($kegiatans)
                         @foreach($kegiatans as $mb)
                             <tr>
-                                <td class="new-td text-center">
-                                    <button type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init>
-                                        <i onclick="copyLink('{{$mb->ids}}')" class="fa fa-copy text-white"></i>
+                                <td class="new-td">
+                                    <center>
+                                    <button type="button" class="btn btn-sm btn-secondary btn-floating" data-mdb-ripple-init>
+                                        <i onclick="ubah('parent',{{$mb}},null,true)" class="fa fa-copy text-white"></i>
                                     </button>
                                 </td>
-                                <td class="new-td">{{$mb->rab->keperluan}}</td>
-                                <td class="new-td">{{$mb->nama}}</td>
+                                <td class="new-td">
+                                    <center>
+                                    <button type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init>
+                                        <i onclick="copyLink('{{$mb->ids}}')" class="fa fa-link text-white"></i>
+                                    </button>
+                                </td>
+                                <td class="new-td"><div class="text-start">{{$mb->rab->keperluan}}</div></td>
+                                <td class="new-td"><div class="text-start">{{$mb->nama}}</div></td>
                                 <td class="new-td">{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
                                 <td class="new-td">{{number_format($mb->total_biaya(),0, ',', '.')}}</td>
                                 <td class="new-td">{{$mb->deskripsi}}</td>
@@ -367,12 +390,18 @@ function copyLink(ids){
     navigator.clipboard.writeText(route);
 }
 
-function ubah(x,data,status){
+function ubah(x,data,status=null,duplicate=false){
     if(x=="parent"){
-        $("#fkRab_id").val(data.fkRab_id);
+        if(!duplicate){
+            $("#is_duplicate").val(0);
+            $("#date").val(data.periode_bulan);
+            $("#name").val(data.nama);
+        }else{
+            $("#is_duplicate").val(1);
+            $("#name").val(data.nama+" (Copy)");
+        }
         $("#parent_id").val(data.id);
-        $("#name").val(data.nama);
-        $("#date").val(data.periode_bulan);
+        $("#fkRab_id").val(data.fkRab_id);
         $("#deskripsi").val(data.deskripsi);
         $("#fkSantri_id_ketua").val(data.fkSantri_id_ketua);
         $("#fkSantri_id_bendahara").val(data.fkSantri_id_bendahara);

@@ -837,10 +837,12 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
         $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('create_rab',1)->get();
         $santris = DB::table('v_user_santri')->orderBy('fullname','ASC')->where('gender','male')->get();
+        $bendaharas = $santris;
         $kegiatans = RabKegiatans::get();
         if($ketuapanitia && !(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))){
             $santri_id = auth()->user()->santri->id;
             $kegiatans = RabKegiatans::where('fkSantri_id_ketua', $santri_id)->orWhere('fkSantri_id_bendahara', $santri_id)->get();
+            $santris = DB::table('v_user_santri')->where('santri_id', $santri_id)->orderBy('fullname','ASC')->where('gender','male')->get();
         }
         $detail_kegiatans = null;
         if($id!=null){
@@ -852,6 +854,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             'detail_kegiatans' => $detail_kegiatans,
             'rabs' => $rabs,
             'santris' => $santris,
+            'bendaharas' => $bendaharas,
         ]);
     }
 
@@ -859,7 +862,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         if(!CommonHelpers::isKetuaBendahara()){
             return redirect()->route('dashboard');
         }
-        if($request->input('parent_id')==""){
+        if($request->input('is_duplicate')==1){
             $create = RabKegiatans::create([
                 'fkRab_id' => $request->input('fkRab_id'),
                 'nama' => $request->input('name'),
@@ -870,65 +873,97 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                 'ids' => uniqid()
             ]);
             if($create){
+                if($request->input('parent_id')!=""){
+                    $duplicate_jurnals = RabKegiatanDetails::where('fkRabKegiatan_id',$request->input('parent_id'))->get();
+                    if($duplicate_jurnals){
+                        foreach($duplicate_jurnals as $dj){
+                            RabKegiatanDetails::create([
+                                'fkRabKegiatan_id' => $create->id,
+                                'uraian' => $dj->uraian,
+                                'qty' => $dj->qty,
+                                'satuan' => $dj->satuan,
+                                'biaya' => $dj->biaya,
+                                'divisi' => $dj->divisi,
+                            ]);
+                        }
+                    }
+                }
                 return redirect()->route('rab kegiatan')->with('success', 'Berhasil menambah pengajuan');
             }else{
                 return redirect()->route('rab kegiatan')->withErrors(['failed' => 'Gagal menambah pengajuan']);
             }
         }else{
-            $create = RabKegiatans::find($request->input('parent_id'));
-            if($request->input('status')!=null){
-                if($request->input('status')=='posted'){
-                    // posting jurnal
-                    $check_posted_jurnal = Jurnals::where('fkRabKegiatan_id',$create->id)->first();
-                    if($check_posted_jurnal==null){
-                        $data = Jurnals::create([
-                            'fkBank_id' => 1,
-                            'fkPos_id' => 1,
-                            'fkDivisi_id' => $create->rab->divisi->id,
-                            'fkRab_id' => $create->fkRab_id,
-                            'tanggal' => date('Y-m-d H:i:s'),
-                            'jenis' => 'out',
-                            'uraian' => $create->nama,
-                            'qty' => 1,
-                            'nominal' => $create->total_biaya(),
-                            'created_by' => auth()->user()->fullname,
-                            'tipe_pengeluaran' => 'Rutin',
-                            'fkRabKegiatan_id' => $create->id
-                        ]);
-                    }else{
-                        $check_posted_jurnal->tanggal = $create->periode_bulan;
-                        $check_posted_jurnal->uraian = $create->nama;
-                        $check_posted_jurnal->nominal = $create->total_biaya();
-                        $check_posted_jurnal->created_by = auth()->user()->fullname;
-                        $check_posted_jurnal->save();
-                    }
-                }elseif($request->input('status')=='draft' && $create->status=="posted"){
-                    Jurnals::where('fkRabKegiatan_id',$create->id)->first()->delete();
-                }
-                $create->status = $request->input('status');
-                $create->justifikasi_rab = $request->input('justifikasi_rab');
-                $create->justifikasi_realisasi = $request->input('justifikasi_realisasi');
-                $create->save();
+            if($request->input('parent_id')==""){
+                $create = RabKegiatans::create([
+                    'fkRab_id' => $request->input('fkRab_id'),
+                    'nama' => $request->input('name'),
+                    'periode_bulan' => $request->input('date'),
+                    'deskripsi' => $request->input('deskripsi'),
+                    'fkSantri_id_ketua' => $request->input('fkSantri_id_ketua'),
+                    'fkSantri_id_bendahara' => $request->input('fkSantri_id_bendahara'),
+                    'ids' => uniqid()
+                ]);
                 if($create){
-                    return json_encode(array("status" => true, "message" => 'Berhasil mengubah status pengajuan'));
+                    return redirect()->route('rab kegiatan')->with('success', 'Berhasil menambah pengajuan');
                 }else{
-                    return json_encode(array("status" => false, "message" => 'Gagal mengubah status pengajuan'));
+                    return redirect()->route('rab kegiatan')->withErrors(['failed' => 'Gagal menambah pengajuan']);
                 }
             }else{
-                $create->fkRab_id = $request->input('fkRab_id');
-                $create->nama = $request->input('name');
-                $create->periode_bulan = $request->input('date');
-                $create->deskripsi = $request->input('deskripsi');
-                $create->fkSantri_id_ketua = $request->input('fkSantri_id_ketua');
-                $create->fkSantri_id_bendahara = $request->input('fkSantri_id_bendahara');
-                if($create->ids==""){
-                    $create->ids = uniqid();
-                }
-                $create->save();
-                if($create){
-                    return redirect()->route('rab kegiatan')->with('success', 'Berhasil update pengajuan');
+                $create = RabKegiatans::find($request->input('parent_id'));
+                if($request->input('status')!=null){
+                    if($request->input('status')=='posted'){
+                        // posting jurnal
+                        $check_posted_jurnal = Jurnals::where('fkRabKegiatan_id',$create->id)->first();
+                        if($check_posted_jurnal==null){
+                            $data = Jurnals::create([
+                                'fkBank_id' => 1,
+                                'fkPos_id' => 1,
+                                'fkDivisi_id' => $create->rab->divisi->id,
+                                'fkRab_id' => $create->fkRab_id,
+                                'tanggal' => date('Y-m-d H:i:s'),
+                                'jenis' => 'out',
+                                'uraian' => $create->nama,
+                                'qty' => 1,
+                                'nominal' => $create->total_biaya(),
+                                'created_by' => auth()->user()->fullname,
+                                'tipe_pengeluaran' => 'Rutin',
+                                'fkRabKegiatan_id' => $create->id
+                            ]);
+                        }else{
+                            $check_posted_jurnal->tanggal = $create->periode_bulan;
+                            $check_posted_jurnal->uraian = $create->nama;
+                            $check_posted_jurnal->nominal = $create->total_biaya();
+                            $check_posted_jurnal->created_by = auth()->user()->fullname;
+                            $check_posted_jurnal->save();
+                        }
+                    }elseif($request->input('status')=='draft' && $create->status=="posted"){
+                        Jurnals::where('fkRabKegiatan_id',$create->id)->first()->delete();
+                    }
+                    $create->status = $request->input('status');
+                    $create->justifikasi_rab = $request->input('justifikasi_rab');
+                    $create->justifikasi_realisasi = $request->input('justifikasi_realisasi');
+                    $create->save();
+                    if($create){
+                        return json_encode(array("status" => true, "message" => 'Berhasil mengubah status pengajuan'));
+                    }else{
+                        return json_encode(array("status" => false, "message" => 'Gagal mengubah status pengajuan'));
+                    }
                 }else{
-                    return redirect()->route('rab kegiatan')->withErrors(['failed' => 'Gagal update pengajuan']);
+                    $create->fkRab_id = $request->input('fkRab_id');
+                    $create->nama = $request->input('name');
+                    $create->periode_bulan = $request->input('date');
+                    $create->deskripsi = $request->input('deskripsi');
+                    $create->fkSantri_id_ketua = $request->input('fkSantri_id_ketua');
+                    $create->fkSantri_id_bendahara = $request->input('fkSantri_id_bendahara');
+                    if($create->ids==""){
+                        $create->ids = uniqid();
+                    }
+                    $create->save();
+                    if($create){
+                        return redirect()->route('rab kegiatan')->with('success', 'Berhasil update pengajuan');
+                    }else{
+                        return redirect()->route('rab kegiatan')->withErrors(['failed' => 'Gagal update pengajuan']);
+                    }
                 }
             }
         }
@@ -946,7 +981,6 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'qty' => $request->input('qty'),
                     'satuan' => $request->input('satuan'),
                     'biaya' => $request->input('biaya'),
-                    'realisasi' => $request->input('realisasi'),
                     'divisi' => $request->input('divisi'),
                 ]);
                 if($create){

@@ -761,7 +761,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
     public function generator()
     {
-        // PresenceGroupsChecker::checkPresenceGroups();
+        PresenceGroupsChecker::checkPresenceGroups();
         PresenceGroupsChecker::checkPermitGenerators();
     }
 
