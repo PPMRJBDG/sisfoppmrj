@@ -137,11 +137,11 @@ if(count($rabs)>0){
                         <th class="text-uppercase text-center font-weight-bolder">Jumlah</th>
                         <th class="text-uppercase text-center font-weight-bolder">Biaya</th>
                         <th class="text-uppercase text-center font-weight-bolder">Total</th>
-                        <!-- <th class="text-uppercase text-center font-weight-bolder">Realisasi</th> -->
+                        <th class="text-uppercase text-center font-weight-bolder">Realisasi</th>
                         <th class="text-uppercase text-center font-weight-bolder">Action</th>
                     </tr>
                 </thead>
-                <?php $total_rab = 0; ?>
+                <?php $total_rab = 0; $total_realisasi = 0; ?>
                 <tbody id="rab-data">
                     @if(count($rabs)>0)
                         @foreach ($rabs as $rab)
@@ -178,7 +178,10 @@ if(count($rabs)>0){
                                 <td class="new-td text-end">
                                     {{number_format($total,0)}}
                                 </td>
-                                <!-- <td></td> -->
+                                <td class="new-td text-end">
+                                    <?php $total_realisasi += $rab->totalRealisasi($rab->id); ?>
+                                    {{number_format($rab->totalRealisasi($rab->id),0)}}
+                                </td>
                                 <td class="text-center">
                                     @if($rab->is_lock==0)
                                         <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:5px 15px;" type="submit" value="Edit" onclick="ubahRab({{$rab}})">
@@ -202,7 +205,7 @@ if(count($rabs)>0){
                         <th class="text-uppercase text-center font-weight-bolder"></th>
                         <th class="text-uppercase text-center font-weight-bolder"></th>
                         <th class="text-uppercase text-center font-weight-bolder">{{number_format($total_rab,0)}}</th>
-                        <!-- <th class="text-uppercase text-center font-weight-bolder">Realisasi</th> -->
+                        <th class="text-uppercase text-center font-weight-bolder">{{number_format($total_realisasi,0)}}</th>
                         <th class="text-uppercase text-center font-weight-bolder"></th>
                     </tr>
                 </tfoot>

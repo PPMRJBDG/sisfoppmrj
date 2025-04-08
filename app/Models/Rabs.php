@@ -34,4 +34,16 @@ class Rabs extends Model
     {
         return $this->belongsTo(Divisies::class, 'fkDivisi_id');
     }
+
+    public function totalRealisasi($id_rab)
+    {
+        $jurnals = Jurnals::where('fkRab_id', $id_rab)->get();
+        $total = 0;
+        if($jurnals){
+            foreach($jurnals as $j){
+                $total += $j->qty * $j->nominal;
+            }
+        }
+        return $total;
+    }
 }
