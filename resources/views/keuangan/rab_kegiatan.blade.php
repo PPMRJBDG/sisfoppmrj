@@ -28,7 +28,7 @@
             <input type="hidden" name="parent_id" id="parent_id" value="" required>
             <div class="row p-2">
                 <div class="col-md-2">
-                    <select class="form-control" value="" id="fkRab_id" name="fkRab_id" required>
+                    <select class="form-control mb-2" value="" id="fkRab_id" name="fkRab_id" required>
                         <option value="">--pilih rab--</option>
                             @foreach($rabs as $rab)
                             <option value="{{$rab->id}}">{{strtoupper($rab->keperluan)}}</option>
@@ -36,8 +36,8 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input class="form-control" type="text" placeholder="Nama Kegiatan" id="name" name="name" required>
-                    <select class="form-control mt-2" value="" id="fkSantri_id_ketua" name="fkSantri_id_ketua" required>
+                    <input class="form-control mb-2" type="text" placeholder="Nama Kegiatan" id="name" name="name" required>
+                    <select class="form-control mb-2" value="" id="fkSantri_id_ketua" name="fkSantri_id_ketua" required>
                         <option value="">--ketua panitia--</option>
                             @foreach($santris as $santri)
                             <option value="{{$santri->santri_id}}">{{strtoupper($santri->fullname)}}</option>
@@ -45,8 +45,8 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <input class="form-control" type="date" value="{{date('Y-m')}}" id="date" name="date" required>
-                    <select class="form-control mt-2" value="" id="fkSantri_id_bendahara" name="fkSantri_id_bendahara" required>
+                    <input class="form-control mb-2" type="date" value="{{date('Y-m')}}" id="date" name="date" required>
+                    <select class="form-control mb-2" value="" id="fkSantri_id_bendahara" name="fkSantri_id_bendahara" required>
                         <option value="">--bendahara panitia--</option>
                             @foreach($santris as $santri)
                             <option value="{{$santri->santri_id}}">{{strtoupper($santri->fullname)}}</option>
@@ -54,7 +54,7 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <textarea rows="3" class="form-control" type="textarea" placeholder="Deskripsi" id="deskripsi" name="deskripsi"></textarea>
+                    <textarea rows="3" class="form-control mb-2" type="textarea" placeholder="Deskripsi" id="deskripsi" name="deskripsi"></textarea>
                 </div>
                 <div class="col-md-1">
                     <button type="submit" class="btn btn-primary btn-sm mb-0">
@@ -152,8 +152,8 @@
             </h6>
         </div>
         <div class="p-3 pt-0 pb-0">
-            <h6 class="mb-0">Budget: <b>Rp {{number_format($detail_of->rab->biaya,0, ',', '.')}}</b></h6>
-            <h6 class="mb-0">Deskripsi:</h6>
+            <p class="mb-0">Budget: <b>Rp {{number_format($detail_of->rab->biaya,0, ',', '.')}}</b></p>
+            <p class="mb-0">Deskripsi:</p>
             {{ucwords($detail_of->deskripsi)}}
             <hr>
         </div>
@@ -162,7 +162,7 @@
             <input type="hidden" name="id" id="id" value="" required>
             <input type="hidden" name="parent_id_detail" id="parent_id_detail" value="{{$detail_of->id}}" required>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <select class="form-control" value="" id="divisi" name="divisi" required>
                         <option value="">--pilih divisi--</option>
                         <option value="PERKAB">PERKAB</option>
@@ -173,19 +173,19 @@
                         <option value="HUMAS">HUMAS</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <input class="form-control" type="text" id="uraian" name="uraian" placeholder="Uraian" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 mb-2">
                     <input class="form-control" type="number" id="qty" name="qty" placeholder="Qty" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 mb-2">
                     <input class="form-control" type="text" id="satuan" name="satuan" placeholder="Satuan" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <input class="form-control" type="number" id="biaya" name="biaya" placeholder="Biaya" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 mb-2">
                     @if($detail_of->status=="draft" || $detail_of->status=="submit")
                     <button type="submit" class="btn btn-primary btn-sm mb-0">
                         <i class="fas fa-save" aria-hidden="true"></i>

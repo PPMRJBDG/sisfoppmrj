@@ -36,8 +36,8 @@
             </h6>
         </div>
         <div class="p-3 pt-0 pb-0">
-            <h6 class="mb-0">Budget: <b>Rp {{number_format($detail_of->rab->biaya,0, ',', '.')}}</b></h6>
-            <h6 class="mb-0">Deskripsi:</h6>
+            <p class="mb-0">Budget: <b>Rp {{number_format($detail_of->rab->biaya,0, ',', '.')}}</b></p>
+            <p class="mb-0">Deskripsi:</p>
             {{ucwords($detail_of->deskripsi)}}
             <hr>
         </div>
@@ -47,7 +47,7 @@
             <input type="hidden" name="id" id="id" value="" required>
             <input type="hidden" name="parent_id_detail" id="parent_id_detail" value="{{$detail_of->id}}" required>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <select class="form-control" value="" id="divisi" name="divisi" required>
                         <option value="">--pilih divisi--</option>
                         <option value="PERKAB">PERKAB</option>
@@ -58,16 +58,16 @@
                         <option value="HUMAS">HUMAS</option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <input class="form-control" type="text" id="uraian" name="uraian" placeholder="Uraian" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
+                <div class="col-md-3 mb-2">
+                    <input class="form-control" type="text" id="uraian" name="uraian" placeholder="Uraian / Item" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 mb-2">
                     <input class="form-control" type="number" id="qty" name="qty" placeholder="Qty" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 mb-2">
                     <input class="form-control" type="text" id="satuan" name="satuan" placeholder="Satuan" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2">
                     <input class="form-control" type="number" id="biaya" name="biaya" placeholder="Biaya" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
                 <div class="col-md-1">
