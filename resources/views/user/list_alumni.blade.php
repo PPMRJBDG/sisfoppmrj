@@ -46,7 +46,7 @@
           @foreach($users as $user)
           <tr>
             <td class="text-sm font-weight-bolder">
-              {{ $user->fullname }}
+              <span class="mb-0 font-weight-bolder text-sm">{{ $user->fullname }}</span>
             </td>
             <td class="text-sm">
               {{ $user->nohp }}

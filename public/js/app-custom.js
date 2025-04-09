@@ -639,3 +639,20 @@ function setChangePelanggaran(data){
     $("#jenis_pelanggaran").val(data.jenis_pelanggaran);
     $("#kategori_pelanggaran").val(data.kategori_pelanggaran.toLowerCase());
 }
+
+function searchDataSantri(id,value){
+    var santris = document.querySelectorAll("#"+id+" table tbody tr td span.santri-name");
+    var loop_id = document.querySelectorAll("#"+id+" table tbody tr");
+    for (var i = 0; i < santris.length; i++) {
+        var name = santris[i].getAttribute('santri-name')
+        if(name!=null){
+            name = name.toLowerCase()
+            console.log(name+" - "+value)
+            if(name.includes(value.toLowerCase())){
+                loop_id[i].setAttribute('style','display:table-row;')
+            }else{
+                loop_id[i].setAttribute('style','display:none;');
+            }
+        }
+    }
+}

@@ -75,7 +75,7 @@
                 <button type="button" class="btn btn-sm btn-secondary btn-floating" data-mdb-ripple-init>
                     <i class="fa fa-copy text-white"></i>
                 </button>
-                Duplikat Kegiatan Akan Sekaligus Menduplikasi Rincian / Detail RAB
+                Duplikat Kegiatan Untuk Bulan Selanjutnya Akan Sekaligus Menduplikasi Rincian / Detail RAB
             </div>
             <div>
                 <button type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init>

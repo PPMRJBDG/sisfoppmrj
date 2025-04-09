@@ -379,7 +379,10 @@ if(isset(auth()->user()->santri)){
                 @endif
                 @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('koor lorong') || auth()->user()->hasRole('dewan guru'))
                     <div class="tab-pane fade show {{(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('dewan guru')) ? 'active' : ''}}" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
-                        <div class="datatable datatable-sm border" data-mdb-pagination="false" data-mdb-fixed-header="true">
+                        <div class="p-2">
+                            <input class="form-control" placeholder="Search" type="text" id="search" onkeyup="searchDataSantri('santrix',this.value)">
+                        </div>
+                        <div id="santrix" class="datatable datatable-sm border" data-mdb-pagination="false" data-mdb-fixed-header="true">
                             <table id="table-hadir" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
@@ -401,62 +404,64 @@ if(isset(auth()->user()->santri)){
                                 </thead>
                                 <tbody>
                                     @if($view_usantri!=null)
-                                    @foreach($view_usantri as $vu)
-                                    <tr>
-                                        <td>
-                                            <a href="#" block-id="return-false" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')">
-                                                [{{ $vu->angkatan }}] {{ $vu->fullname }}
-                                            </a>
-                                        </td>
-                                        <?php
-                                        $all_persentase = 0;
-                                        $all_kbm = 0;
-                                        $all_hadir = 0;
-                                        $all_alpha = 0;
-                                        $all_ijin = 0;
-                                        ?>
-                                        @foreach($presence_group as $pg)
-                                        <td class="text-center">
-                                            @foreach($presences[$vu->santri_id][$pg->id] as $listcp)
+                                        @foreach($view_usantri as $vu)
+                                        <tr>
+                                            <td>
+                                                <span class="santri-name" santri-name="{{ $vu->fullname }}">
+                                                    <a style="font-size: 0.85rem;font-weight: 500;" href="#" block-id="return-false" onclick="getReport('<?php echo base64_encode($vu->santri_id); ?>')">
+                                                        [{{ $vu->angkatan }}] {{ $vu->fullname }}
+                                                    </a>
+                                                </span>
+                                            </td>
                                             <?php
-                                            $ijin = 0;
-                                            if (isset($all_permit[$pg->id][$vu->santri_id])) {
-                                                $ijin = $all_permit[$pg->id][$vu->santri_id];
-                                            }
+                                            $all_persentase = 0;
+                                            $all_kbm = 0;
+                                            $all_hadir = 0;
+                                            $all_alpha = 0;
+                                            $all_ijin = 0;
                                             ?>
-                                            {{ $listcp->cp }} | {{ $ijin }} | {{ $all_presences[$vu->santri_id][$pg->id][0]->c_all - ($listcp->cp + $ijin) }} | {{$all_presences[$vu->santri_id][$pg->id][0]->c_all}}
-                                            <?php
-                                            if ($all_presences[$vu->santri_id][$pg->id][0]->c_all == 0) {
-                                                $persentase = 0;
-                                            } else {
-                                                $persentase = number_format(($listcp->cp + $ijin) / $all_presences[$vu->santri_id][$pg->id][0]->c_all * 100, 2);
-                                            }
-                                            $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
-                                            $all_hadir = $all_hadir + $listcp->cp;
-                                            $all_ijin = $all_ijin + $ijin;
-                                            $all_alpha = $all_kbm - ($all_hadir + $all_ijin);
-                                            ?>
-                                            <span class="font-weight-bolder {{($persentase<80) ? 'text-danger' : '' }}">({{ $persentase }}%)</span>
+                                            @foreach($presence_group as $pg)
+                                            <td class="text-center">
+                                                @foreach($presences[$vu->santri_id][$pg->id] as $listcp)
+                                                <?php
+                                                $ijin = 0;
+                                                if (isset($all_permit[$pg->id][$vu->santri_id])) {
+                                                    $ijin = $all_permit[$pg->id][$vu->santri_id];
+                                                }
+                                                ?>
+                                                {{ $listcp->cp }} | {{ $ijin }} | {{ $all_presences[$vu->santri_id][$pg->id][0]->c_all - ($listcp->cp + $ijin) }} | {{$all_presences[$vu->santri_id][$pg->id][0]->c_all}}
+                                                <?php
+                                                if ($all_presences[$vu->santri_id][$pg->id][0]->c_all == 0) {
+                                                    $persentase = 0;
+                                                } else {
+                                                    $persentase = number_format(($listcp->cp + $ijin) / $all_presences[$vu->santri_id][$pg->id][0]->c_all * 100, 2);
+                                                }
+                                                $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
+                                                $all_hadir = $all_hadir + $listcp->cp;
+                                                $all_ijin = $all_ijin + $ijin;
+                                                $all_alpha = $all_kbm - ($all_hadir + $all_ijin);
+                                                ?>
+                                                <span class="font-weight-bolder {{($persentase<80) ? 'text-danger' : '' }}">({{ $persentase }}%)</span>
+                                                @endforeach
+                                            </td>
                                             @endforeach
-                                        </td>
+                                            <td class="text-center"><i class="ni ni-atom text-white text-sm opacity-10"></i></td>
+                                            <td class="text-center">{{ $all_hadir  }}</td>
+                                            <td class="text-center">{{ $all_ijin  }}</td>
+                                            <td class="text-center">{{ $all_alpha }}</td>
+                                            <td class="text-center">{{ $all_kbm }}</td>
+                                            <td class="text-center">
+                                                <?php
+                                                if ($all_kbm > 0) {
+                                                    $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                                                }
+                                                ?>
+                                                <span class="font-weight-bolder {{ ($all_persentase<80) ? 'text-danger' : ''}}">
+                                                    {{ number_format($all_persentase,2) }}%
+                                                </span>
+                                            </td>
+                                        </tr>
                                         @endforeach
-                                        <td class="text-center"><i class="ni ni-atom text-white text-sm opacity-10"></i></td>
-                                        <td class="text-center">{{ $all_hadir  }}</td>
-                                        <td class="text-center">{{ $all_ijin  }}</td>
-                                        <td class="text-center">{{ $all_alpha }}</td>
-                                        <td class="text-center">{{ $all_kbm }}</td>
-                                        <td class="text-center">
-                                            <?php
-                                            if ($all_kbm > 0) {
-                                                $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
-                                            }
-                                            ?>
-                                            <span class="font-weight-bolder {{ ($all_persentase<80) ? 'text-danger' : ''}}">
-                                                {{ number_format($all_persentase,2) }}%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
                                     @endif
                                 </tbody>
                             </table>

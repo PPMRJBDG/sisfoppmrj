@@ -52,10 +52,13 @@ function printMateriOptions($materis, $santri)
                 <div class="card-header p-0">
                     <h6 class="text-center text-lg text-white mb-0 bg-secondary p-2">Kelas Reguler</h6>
                 </div>
+                <div class="p-2">
+                    <input class="form-control" placeholder="Search" type="text" id="search" onkeyup="searchDataSantri('santri-reguler',this.value)">
+                </div>
                 <div class="card-body p-2">
                     @can('view monitoring materis list')
-                    <div class="datatable datatable-sm" data-mdb-pagination="false">
-                        <table id="table-mhs-reg" class="table align-items-center mb-0">
+                    <div id="santri-reguler" class="datatable datatable-sm" data-mdb-pagination="false">
+                        <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-uppercase text-sm text-secondary font-weight-bolder ps-0">NAMA</th>
@@ -67,7 +70,7 @@ function printMateriOptions($materis, $santri)
                                     @if(!$user->santri->user->hasRole('mubalegh'))
                                     <tr style="cursor:pointer;">
                                         <td>
-                                            {{$user->fullname}}
+                                            <span santri-name="{{$user->fullname}}" class="santri-name mb-0 font-weight-bolder text-sm">{{ $user->fullname }}</span>
                                             <br><small>
                                                 <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
                                             </small>
@@ -91,10 +94,13 @@ function printMateriOptions($materis, $santri)
                 <div class="card-header p-0">
                     <h6 class="text-center text-lg text-white mb-0 bg-secondary p-2">Kelas Muballigh</h6>
                 </div>
+                <div class="p-2">
+                    <input class="form-control" placeholder="Search" type="text" id="search" onkeyup="searchDataSantri('santri-muballigh',this.value)">
+                </div>
                 <div class="card-body p-2">
                     <ul class="list-group">
                         @can('view monitoring materis list')
-                        <div class="datatable datatable-sm" data-mdb-pagination="false">
+                        <div id="santri-muballigh" class="datatable datatable-sm" data-mdb-pagination="false">
                             <table id="table-mhs-mt" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
@@ -107,7 +113,7 @@ function printMateriOptions($materis, $santri)
                                     @if($user->santri->user->hasRole('mubalegh'))
                                     <tr>
                                         <td>
-                                            {{$user->fullname}}
+                                            <span santri-name="{{$user->fullname}}" class="santri-name mb-0 font-weight-bolder text-sm">{{ $user->fullname }}</span>
                                             <br><small>
                                                 <i>{{ $user->santri->fkLorong_id!='' ? $user->santri->lorong->name : ($user->santri->lorongUnderLead ? $user->santri->lorongUnderLead->name : '') }}</i>
                                             </small>

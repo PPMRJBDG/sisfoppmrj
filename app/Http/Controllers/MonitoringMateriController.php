@@ -32,11 +32,10 @@ class MonitoringMateriController extends Controller
     public function list_and_manage()
     {
         $lorongs = Lorong::all();
-        // $view_usantri = DB::table('v_user_santri')->orderBy('fullname')->get();
         $users = User::whereHas('santri', function ($query) {
-            $query->whereNull('exit_at');
-        })->orderBy('fullname', 'asc')->get();
-        $monitoringMateris = null; //MonitoringMateri::all();
+                    $query->whereNull('exit_at');
+                })->orderBy('fullname', 'asc')->get();
+        $monitoringMateris = null;
         $materis = Materi::all();
 
         return view('monitoringMateri.list_and_manage', ['lorongs' => $lorongs, 'users' => $users, 'materis' => $materis, 'monitoringMateris' => $monitoringMateris]);
