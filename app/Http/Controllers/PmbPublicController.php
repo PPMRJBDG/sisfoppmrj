@@ -92,12 +92,28 @@ class PmbPublicController extends Controller
         ]);
 
         $setting = Settings::find(1);
-        $caption = '*[PMB '.date('Y').']* Pendaftar Baru an. *'.strtoupper($request->input('fullname')).'* Asal *'.strtoupper($request->input('daerah')).'*.
-*Hubungi:*
+        $caption = '*[PMB '.date('Y').']* Pendaftar Mahasiswa Baru an. *'.strtoupper($request->input('fullname')).'* Asal *'.strtoupper($request->input('daerah')).'*.
+
+*Profil:*
+- Kelamin: '.strtoupper($request->input('gender')).'
+- Kampus: '.strtoupper($request->input('universitas')).' | '.strtoupper($request->input('jurusan')).'
+- Status Mondok: '.strtoupper($request->input('mondok_asal')).'
+- Status Muballigh: '.strtoupper($request->input('muballigh')).'
+
+*Seleksi:*
+- Luring: '.strtoupper($request->input('seleksi_luring')).'
+- Alasan Daring: '.strtoupper($request->input('alasan_seleksi_daring')).'
+- Tanggal: '.date_format(date_create($request->input('tanggal_seleksi')), 'd M Y').'
+
+*Kontak:*
 - No HP Calon Maba: '.$request->input('nomor_wa').'
 - No HP Ortu / Wali: '.$request->input('nomor_wa_ortu_wali').'
-- No HP Pengurus Klp: '.$request->input('wa_pengurus');
-        WaSchedules::save('[PMB] Pendaftar Baru', $caption, $setting->wa_info_presensi_group_id, null, true);
+- No HP Pengurus Klp: '.$request->input('wa_pengurus').'
+
+*Lampiran Foto:*
+https://sisfo.ppmrjbandung.com/storage/users/'.$insert->foto_pas;
+
+        WaSchedules::save('[PMB] Pendaftar Mahasiswa Baru '.date('Y'), $caption, $setting->wa_info_presensi_group_id, null, true);
         
         return redirect()->route('registration successful');
     }

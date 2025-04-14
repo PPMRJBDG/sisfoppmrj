@@ -286,8 +286,8 @@
                 <div class="card border shadow-sm mt-2">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="form-control-label">Nama Ibu <small>(wajib diisi)</small></label>
-                            <input class="form-control" type="text" name="nama_ibu" required>
+                            <label class="form-control-label">Nama Ibu</label>
+                            <input class="form-control" type="text" name="nama_ibu">
                         </div>
                     </div>
                 </div>
@@ -295,8 +295,8 @@
                 <div class="card border shadow-sm mt-2">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="form-control-label">Profesi Ibu <small>(wajib diisi)</small></label>
-                            <input class="form-control" type="text" name="profesi_ibu" required>
+                            <label class="form-control-label">Profesi Ibu</label>
+                            <input class="form-control" type="text" name="profesi_ibu">
                         </div>
                     </div>
                 </div>

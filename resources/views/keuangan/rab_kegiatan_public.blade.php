@@ -36,10 +36,10 @@
             </h6>
         </div>
         <div class="p-3 pt-0 pb-0">
+            <p class="mb-0">Rencana Pelaksanaan: {{date_format(date_create($detail_of->periode_bulan), 'd M Y')}}</p>
             <p class="mb-0">Budget: <b>Rp {{number_format($detail_of->rab->biaya,0, ',', '.')}}</b></p>
             <p class="mb-0">Deskripsi:</p>
-            {{ucwords($detail_of->deskripsi)}}
-            <hr>
+            <div class="p-2 mb-2 border" style="background-color:#f6f9fc;">{{ucwords($detail_of->deskripsi)}}</div>
         </div>
         <form action="{{ route('store detail rab kegiatan public') }}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="status" id="status" value="{{$detail_of->status}}" required>

@@ -846,7 +846,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
         $detail_kegiatans = null;
         if($id!=null){
-            $detail_kegiatans = RabKegiatanDetails::where('fkRabKegiatan_id',$id)->get();
+            $detail_kegiatans = RabKegiatanDetails::where('fkRabKegiatan_id',$id)->orderBy('divisi','ASC')->get();
         }
         return view('keuangan.rab_kegiatan', [
             'detail_of' => RabKegiatans::find($id),

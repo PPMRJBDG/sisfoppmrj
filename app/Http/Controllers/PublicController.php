@@ -894,7 +894,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
     public function rab_kegiatan($ids=null){
         $kegiatans = RabKegiatans::where('ids',$ids)->first();
-        $detail_kegiatans = RabKegiatanDetails::where('fkRabKegiatan_id',$kegiatans->id)->get();
+        $detail_kegiatans = RabKegiatanDetails::where('fkRabKegiatan_id',$kegiatans->id)->orderBy('divisi','ASC')->get();
         
         return view('keuangan.rab_kegiatan_public', [
             'ids' => $ids,

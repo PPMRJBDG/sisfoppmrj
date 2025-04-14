@@ -647,7 +647,6 @@ function searchDataSantri(id,value){
         var name = santris[i].getAttribute('santri-name')
         if(name!=null){
             name = name.toLowerCase()
-            console.log(name+" - "+value)
             if(name.includes(value.toLowerCase())){
                 loop_id[i].setAttribute('style','display:table-row;')
             }else{
