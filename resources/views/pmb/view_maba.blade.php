@@ -31,6 +31,9 @@
                                         <th class="text-uppercase text-sm text-secondary">KELAMIN</th>
                                         <th class="text-uppercase text-sm text-secondary">NOMOR WA</th>
                                         <th class="text-uppercase text-sm text-secondary">ORTU/WALI</th>
+                                        <th class="text-uppercase text-sm text-secondary">SELEKSI</th>
+                                        <th class="text-uppercase text-sm text-secondary">LURING</th>
+                                        <th class="text-uppercase text-sm text-secondary">DARING</th>
                                         <th class="text-uppercase text-sm text-secondary">MENTOR 1</th>
                                         <th class="text-uppercase text-sm text-secondary">MENTOR 2</th>
                                         <th class="text-uppercase text-sm text-secondary">MENTOR 3</th>
@@ -54,6 +57,15 @@
                                             </td>
                                             <td>
                                                 {{ ($camaba->nama_ayah!="") ? $camaba->nama_ayah : $camaba->nama_wali }}
+                                            </td>
+                                            <td>
+                                                {{ date_format(date_create($camaba->tanggal_seleksi), 'd M Y') }}
+                                            </td>
+                                            <td>
+                                                {{ $camaba->seleksi_luring }}
+                                            </td>
+                                            <td>
+                                                {{ $camaba->alasan_seleksi_daring }}
                                             </td>
                                             <td>
                                                 <select class="form-control" id="mentor1-maba{{$camaba->id}}" name="mentor1" onchange="return changeMentor(1,{{$camaba->id}},this.value)">
