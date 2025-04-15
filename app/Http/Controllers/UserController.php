@@ -421,13 +421,6 @@ class UserController extends Controller
         // handling role changes, only authorized are able to update
         if (auth()->user()->can('update users')) {
             if ($request->input('role-santri')) {
-                // if ($user->santri && $request->input('fkLorong_id')) {
-                // validate that picked santri is not a leader
-                // $lorongsUnderLead = Lorong::where('fkSantri_leaderId', $user->santri->id)->get();
-                // if (sizeof($lorongsUnderLead) >= 1)
-                //     return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit user', $userIdToUpdate))->withErrors(['santri_already_a_leader' => 'Santri sudah menjadi koor lorong, tidak bisa menjadi anggota.']);
-                // }
-
                 $updated_santri = Santri::updateOrCreate(
                     ['fkUser_id' => $userIdToUpdate],
                     [
@@ -494,6 +487,21 @@ class UserController extends Controller
         if ($request->input('alasan_keluar') == 'Sudah Lulus') {
             $caption = CommonHelpers::settings()->wa_info_lulus;
             WaSchedules::save($request->input('fullname') . ' Lulus', $caption, WaSchedules::getContactId($request->input('nohp')));
+        }elseif($request->input('alasan_keluar') == 'Pindah KPM'){
+            $caption = "Kepada ".ucwords($request->input('fullname')).",
+Dikarenakan keputusan untuk Pindah KPM sudah bulat, maka dari itu Kami mewakili dari Pengurus PPMRJ memohon maaf apabila ada kesalahan dalam meramut selama di PPM.
+Maka dari itu, mohon berkenan untuk berpamitan kepada seluruh mahasiswa melalui Group Maurus, dan setelah itu mohon untuk meninggalkan Group tersebut.
+
+NB:
+- Jangan lupa minta SS dari PPM, lalu diserahkan ke tempat sambung tujuan";
+            WaSchedules::save($request->input('fullname') . ' Pindah KPM', $caption, WaSchedules::getContactId($request->input('nohp')));
+            $caption = "Kepada Orangtua dari ".ucwords($request->input('fullname')).",
+Dikarenakan keputusan untuk Pindah KPM sudah bulat, maka dari itu Kami mewakili dari Pengurus PPMRJ memohon maaf apabila ada kesalahan dalam meramut selama di PPM.
+Maka dari itu, mohon berkenan untuk berpamitan kepada seluruh Orangtua serta Pengurus melalui Group Orangtua / Wali PPM, dan setelah itu mohon untuk meninggalkan Group tersebut.
+
+NB:
+- Jangan lupa minta SS dari PPM, lalu diserahkan ke tempat sambung tujuan";
+            WaSchedules::save($request->input('fullname') . ' Pindah KPM', $caption, WaSchedules::getContactId($request->input('nohp_ortu')));
         }
 
         if ($request->input('role-santri'))
