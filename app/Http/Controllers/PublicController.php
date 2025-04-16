@@ -171,10 +171,10 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
 
                         $caption = $caption . '
 ------------------------
-📆 *_' . $presence->presenceGroup->name . '_*
+📆 *_' . $presence->name . '_*
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
-*Dewan Pengajar*
+*Pemateri*
 - PPM 1: '.(($presence->fkDewan_pengajar_1!=null) ? $presence->dewanPengajar1->name : '').'
 - PPM 2: '.(($presence->fkDewan_pengajar_2!=null) ? $presence->dewanPengajar2->name : '').'
 ';

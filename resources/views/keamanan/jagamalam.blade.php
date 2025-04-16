@@ -3,14 +3,18 @@
         <div class="card-title font-weight">
             <div class="row">
                 <input type="hidden" name="id" id="id" value="">
-                <div class="col-md-4 p-1">
+                <div class="col-md-3 p-1">
                     <select class="form-control mb-0" value="" id="ppm" name="ppm" required>
                         <option value="1">PPM 1</option>
                         <option value="2">PPM 2</option>
                     </select>
                 </div>
 
-                <div class="col-md-4 mb-2 p-1">
+                <div class="col-md-3 p-1">    
+                    <input type="number" class="form-control" value="" placeholder="putaran ke" id="putaran_ke" name="putaran_ke">
+                </div>
+
+                <div class="col-md-3 mb-2 p-1">
                     <select data-mdb-filter="true" class="select form-control" value="" id="anggota" name="anggota" required onchange="selectAnggota(this)">
                         <option value="">--pilih anggota--</option>
                         @foreach($santris as $s)
@@ -18,10 +22,10 @@
                         @endforeach
                     </select>
                     <input type="hidden" value="" id="anggota_terpilih" name="anggota_terpilih">
-                    <div class="bg-primary text-white mt-2 p-2" id="daftar_pilihan" style="display:none;"></div>
+                    <div class="border mt-2 p-2" id="daftar_pilihan" style="display:none;background-color:#f6f9fc;"></div>
                 </div>
 
-                <div class="col-md-4 mb-2">
+                <div class="col-md-3 mb-2">
                     <dv class="row">
                         <div class="col-md-6 p-0">
                             <a href="#" class="btn btn-primary mb-2 btn-block" onclick="simpanJagaMalam()">
@@ -69,7 +73,7 @@
                                         foreach($split_team as $st){
                                             if($st!=""){
                                                 $nama = App\Models\Santri::find($st)->user->fullname;
-                                                $daftar_pilihan = $daftar_pilihan.$nama.'<br>';
+                                                $daftar_pilihan .= '<div id="mhs'.$st.'"><button onclick="delMhs('.$st.')" type="button" href="#" class="btn btn-sm btn-danger btn-floating"><i class="fa fa-trash"></i></button> '.$nama.'</div>';
                                                 echo $nama.'<br>';
                                             }
                                         }
@@ -100,16 +104,33 @@
     }
 
     function ubahJagaMalam(data,daftar_pilihan){
+        document.getElementById('body-top').scrollIntoView()
         $("#daftar_pilihan").fadeIn();
         $("#id").val(data.id);
         $("#ppm").val(data.ppm);
+        $("#putaran_ke").val(data.putaran_ke);
         $("#daftar_pilihan").html(daftar_pilihan);
         $("#anggota_terpilih").val(data.anggota);
+    }
+
+    function delMhs(id){
+        const element = document.getElementById("mhs"+id);
+        element.remove();
+
+        var pilihan = $("#anggota_terpilih").val().split(",");
+        var new_pilihan = "";
+        pilihan.forEach(function(pil){
+            if(pil!=id && pil!=""){
+                new_pilihan += pil+',';
+            }
+        })
+        $("#anggota_terpilih").val(new_pilihan)
     }
 
     function batalUpdateJagaMalam(t){
         $("#id").val('');
         $("#ppm").val(1);
+        $("#putaran_ke").val('');
         $("#daftar_pilihan").html('');
         $("#anggota_terpilih").val('');
         $("#daftar_pilihan").fadeOut();
@@ -117,7 +138,8 @@
 
     function selectAnggota(t){
         $("#daftar_pilihan").fadeIn();
-        $("#daftar_pilihan").html($("#daftar_pilihan").html()+$("#anggota option:selected").text()+'<br>');
+        var id = $("#anggota option:selected").val()
+        $("#daftar_pilihan").html($("#daftar_pilihan").html()+"<div id='mhs"+id+"'><button onclick='delMhs("+id+")' type='button' href='#' class='btn btn-sm btn-danger btn-floating'><i class='fa fa-trash'></i></button>  "+$("#anggota option:selected").text()+'</div>');
         $("#anggota_terpilih").val($("#anggota_terpilih").val()+$("#anggota option:selected").val()+',');
     }
 
@@ -125,6 +147,7 @@
         var datax = {};
         datax['id'] = $("#id").val();
         datax['ppm'] = $("#ppm").val();
+        datax['putaran_ke'] = $("#putaran_ke").val();
         datax['anggota'] = $("#anggota_terpilih").val();
         if(datax['anggota']==""){
             alert("Silahkan pilih anggota");

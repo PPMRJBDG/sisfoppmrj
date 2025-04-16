@@ -22,7 +22,7 @@ class KeamananController extends Controller
 
     public function index()
     {
-        $datax = JagaMalams::get();
+        $datax = JagaMalams::orderBy('putaran_ke','ASC')->get();
         $santris = DB::table('v_user_santri')->where('gender','male')->orderBy('fullname','ASC')->get();
 
         return view('keamanan.jagamalam', [
@@ -38,18 +38,19 @@ class KeamananController extends Controller
         if($request->input('id')!= ""){
             $insert = JagaMalams::find($request->input('id'));
             $insert->ppm = $request->input('ppm');
+            $insert->putaran_ke = $request->input('putaran_ke');
             $insert->anggota = $request->input('anggota');
             $insert->save();
         }else{
-            $putaran = 0;
-            if($check==null){
-                $putaran = 1;
-            }else{
-                $putaran = count($check)+1;
-            }
+            // $putaran = 0;
+            // if($check==null){
+            //     $putaran = 1;
+            // }else{
+            //     $putaran = count($check)+1;
+            // }
             $insert = JagaMalams::create([
                 'ppm' => $request->input('ppm'),
-                'putaran_ke' => $putaran,
+                'putaran_ke' => $request->input('putaran_ke'),
                 'anggota' => $request->input('anggota'),
             ]);
         }

@@ -127,7 +127,7 @@ if (auth()->user()->hasRole('barcode')) {
   }
 </style>
 
-<body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0" onload="getPage(getCookie('current_url'))">
+<body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0" onload="getPage(getCookie('current_url'))" id="body-top">
   <input type="hidden" value="{{ url('/') }}" id="base-url">
   <input type="hidden" value="#" id="current-url">
   <main class="pt-5 mdb-docs-layout">

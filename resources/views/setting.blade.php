@@ -584,26 +584,26 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                                 @endif
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display:none;">
                                             @if($list_setting->wa_username!='')
                                             <label class="form-control-label">
                                                 WA - Type
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_type : '' }}" name="wa_type" required readonly>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display:none;">
                                             <label class="form-control-label">
                                                 WA - Template
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_template : '' }}" name="wa_template" required readonly>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display:none;">
                                             <label class="form-control-label">
                                                 WA - Min Delay
                                             </label>
                                             <input class="form-control" type="number" value="{{ ($list_setting) ? $list_setting->wa_min_delay : '' }}" name="wa_min_delay" required readonly>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display:none;">
                                             <label class="form-control-label">
                                                 WA - Max Delay
                                             </label>

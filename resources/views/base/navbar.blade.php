@@ -9,9 +9,9 @@
           No Logo
           @endif
         </a>
-        <a type="button" class="btn btn-primary btn-floating m-0" href="#" onclick="getPrevPage()">
+        <button type="button" class="btn btn-primary btn-floating m-0" href="#" onclick="getPrevPage()">
             <i class="fas fa-chevron-left"></i>
-        </a>
+        </button>
       </div>
 
       <div class="d-flex">
