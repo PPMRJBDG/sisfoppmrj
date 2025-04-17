@@ -29,6 +29,7 @@ class PresenceGroupsChecker
             if (isset($presenceInThisDate)) {
                 if($presenceInThisDate->is_deleted==2){
                     $presenceInThisDate->is_deleted = 0;
+                    $presenceInThisDate->total_mhs = CountDashboard::total_mhs('all');
                     $presenceInThisDate->save();
                 }
             }

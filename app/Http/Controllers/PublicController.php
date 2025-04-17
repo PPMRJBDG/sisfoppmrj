@@ -37,6 +37,7 @@ use App\Models\Jurnals;
 use App\Models\DewanPengajars;
 use App\Models\KalenderPpmTemplates;
 use App\Models\KalenderPpms;
+use App\Models\SpWhatsappSchedules;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\DB;
@@ -667,17 +668,17 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
                 $is_put_together = "";
                 if($get_presence_today->is_put_together){
                     $is_put_together = "
-- *Disatukan di PPM 1*";
+- *Disatukan di PPM 1 (Fingerprint yang diaktifkan hanya di PPM 1)*";
                 }
 
                 $dewan_pengajar = "";
                 if($get_presence_today->fkDewan_pengajar_1!=""){
                     $dewan_pengajar .= "
-👳🏻 ".$get_presence_today->dewanPdewanPengajar1->name;
+👳🏻 ".$get_presence_today->dewanPengajar1->name;
                 }
                 if($get_presence_today->fkDewan_pengajar_2!=""){
                     $dewan_pengajar .= "
-👳🏻 ".$get_presence_today->dewanPdewanPengajar2->name;
+👳🏻 ".$get_presence_today->dewanPengajar2->name;
                 }
                 if($get_presence_today->pre_fkDewan_pengajar_mt!=""){
                     $dewan_pengajar .= "
@@ -704,11 +705,10 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
 📤 Batas Sign Out: *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
 
 🗒️ *NB*:".$is_put_together."
-- *Untuk presensi, semua wajib scan Fingerprint setelah Dewan Guru (jika scan sebelum Dewan Guru, maka statusnya masih alpha meskipun mesin fingerprint OK)*
+- *Untuk Presensi, semua diwajibkan scan Fingerprint*
 - Amalsholih untuk dapat hadir tepat waktu, tertib, dan disiplin
 - Supaya mempersiapkan diri sebelum jam KBM dimulai, menuju masjid/mushola untuk sholat berjamaah sekaligus membawa materi yang sudah ditentukan
-- Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman
-- Dilarang scan fingerprint, lalu kembali ke kamar tanpa ada udzur (jika diketahui akan mendapat kafaroh)";
+- Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman";
                 WaSchedules::save('Reminder #'.$get_presence_today->name, $caption, $setting->wa_maurus_group_id);
                 if($get_presence_today->is_put_together || $get_presence_today->is_hasda){
                     WaSchedules::save('Reminder Ortu #'.$get_presence_today->name, $caption, $setting->wa_ortu_group_id);
@@ -752,6 +752,14 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
                             WaSchedules::save('Info Alpha ke Ortu: ' . $vs['name'], $caption_ortu, WaSchedules::getContactId($vs['nohp_ortu']));
                         }
                     }
+                }
+            }
+
+            // Cek WA gagal
+            $get_wa_failed = SpWhatsappSchedules::where('failed',1)->get();
+            if($get_wa_failed){
+                foreach($get_wa_failed as $gwf){
+                    WaSchedules::save($gwf->name, $gwf->caption, $gwf->contact_id, null, false, true);
                 }
             }
 

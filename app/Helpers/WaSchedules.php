@@ -9,7 +9,7 @@ use App\Models\SpWhatsappPhoneNumbers;
 
 class WaSchedules
 {
-    public static function save($name, $caption, $contact_id, $time_post = null, $without_header_footer = false)
+    public static function save($name, $caption, $contact_id, $time_post = null, $without_header_footer = false, $is_failed=false)
     {
         $setting = Settings::find(1);
         if ($contact_id == 'wa_dewanguru_group_id') {
@@ -28,14 +28,18 @@ class WaSchedules
             }
         }
 
-        if ($without_header_footer) {
+        if($is_failed){
             $caption_body = $caption;
-        } else {
-            $caption_body = $setting->wa_header . '
+        }else{
+            if ($without_header_footer) {
+                $caption_body = $caption;
+            } else {
+                $caption_body = $setting->wa_header . '
 
 ' . $caption . '
         
 ' . $setting->wa_footer;
+            }
         }
 
         if ($time_post == null) {

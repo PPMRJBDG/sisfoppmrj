@@ -310,6 +310,16 @@ class FsController extends Controller
                                 }
                             }
 
+                            // Disatukan di PPM 1 -> cek scan FP di PPM 2
+                            if($presence->is_put_together==1){
+                                if($cloud_id=="C2630451072F3523"){
+                                    // kirim WA ke mahasiswa
+                                    WaSchedules::save('FP di PPM 1', '*[Fingerprint]* Mohon maaf *'.$get_santri->user->fullname.'*, silahkan melakukan scan fingerprint di PPM 1.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                    echo "FP di PPM 1";
+                                    exit;
+                                }
+                            }
+
                             $existingPresent = Present::where('fkPresence_id', $presence->id)->where('fkSantri_id', $santri_id)->first();
                             if ($existingPresent == null) {
                                 if($presence->end_date_time < $datetime){
@@ -350,50 +360,16 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
 
                                     // kirim WA ke mahasiswa
                                     if ($inserted) {
-                                        $nohp_ortu = $get_santri->nohp_ortu;
-                                        if ($nohp_ortu != '') {
-                                            if ($nohp_ortu[0] == '0') {
-                                                $nohp_ortu = '62' . substr($nohp_ortu, 1);
-                                            }
-                                            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                                                $query->where('name', 'NOT LIKE', '%Bulk%');
-                                            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-                                            if ($wa_phone != null) {
-                                                $text_late = '';
-                                                if($is_late){
-                                                    $text_late = '🟨 *terlambat*';
-                                                    $nohp = $get_santri->user->nohp;
-                                                    if ($nohp != '') {
-                                                        if ($nohp[0] == '0') {
-                                                            $nohp = '62' . substr($nohp, 1);
-                                                        }
-                                                        $wa_phone_santri = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                                                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                                                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                                                        if ($wa_phone_santri != null) {
-                                                            WaSchedules::save('Presensi Terlambat', '🟨 *[Terlambat KBM]* Silahkan istighfar sebanyak 30x.', $wa_phone_santri->pid, null, true);
-                                                        }
-                                                    }
-                                                }else{
-                                                    $text_late = '✅ *tepat waktu*';
-                                                }
-                                                $sign_in = date_format(date_create($sign_in),"d-m-Y H:i:s");
-                                                WaSchedules::save('Presensi: Berhasil', '*'.$get_santri->user->fullname.'* telah hadir '.$text_late.' pada '.$presence->name.' | Tanggal & Jam: '.$sign_in.'.', $wa_phone->pid);
-                                            }
+                                        if($is_late){
+                                            $text_late = '🟨 *terlambat*';
+                                            WaSchedules::save('Presensi Terlambat', '🟨 *[Terlambat KBM]* Silahkan istighfar sebanyak 30x.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                        }else{
+                                            $text_late = '✅ *tepat waktu*';
                                         }
+                                        $sign_in = date_format(date_create($sign_in),"d-m-Y H:i:s");
+                                        WaSchedules::save('Presensi: Berhasil', '*'.$get_santri->user->fullname.'* telah hadir '.$text_late.' pada '.$presence->name.' | Tanggal & Jam: '.$sign_in.'.', WaSchedules::getContactId($get_santri->nohp_ortu), null, true);
                                     }else{
-                                        $nohp = $get_santri->user->nohp;
-                                        if ($nohp != '') {
-                                            if ($nohp[0] == '0') {
-                                                $nohp = '62' . substr($nohp, 1);
-                                            }
-                                            $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                                                $query->where('name', 'NOT LIKE', '%Bulk%');
-                                            })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                                            if ($wa_phone != null) {
-                                                WaSchedules::save('Presensi: Gagal', '*[Fingerprint]* Anda gagal melakukan scan presensi pada '.$presence->name,', silahkan menghubungi pengurus.', $wa_phone->pid, null, true);
-                                            }
-                                        }
+                                        WaSchedules::save('Presensi: Gagal', '*[Fingerprint]* Anda gagal melakukan scan presensi pada '.$presence->name,', silahkan menghubungi pengurus.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
                                     }
                                     echo "Ok - Presensi Sign In";
                                     exit;
