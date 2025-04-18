@@ -65,7 +65,7 @@ class PublicController extends Controller
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
                 $caption = '*[PREVIEW]*
-*Amalsholih Cek Kehadiran Kemarin, Apabila Ada Yang Tidak Sesuai Silahkan Menghubungi RJ/WK:*';
+Amalsholih cek kehadiran KBM kemarin, apabila ada yang tidak sesuai silahkan menghubungi RJ/WK:*';
                 $get_presence = Presence::where('event_date', $yesterday)->where('is_deleted', 0)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
@@ -760,6 +760,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             if($get_wa_failed){
                 foreach($get_wa_failed as $gwf){
                     WaSchedules::save($gwf->name, $gwf->caption, $gwf->contact_id, null, false, true);
+                    SpWhatsappSchedules::find($gwf->id)->delete();
                 }
             }
 
