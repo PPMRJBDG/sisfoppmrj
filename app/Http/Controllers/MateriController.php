@@ -362,20 +362,6 @@ class MateriController extends Controller
                     }elseif($presenceGroup->id==2){ // malam
                         if($data_calendar['malam']['is_agenda_khusus']==1){
                             $presenceName .= " ".$data_calendar['malam']['nama'];
-                            if (str_contains($data_calendar['malam']['nama'], 'HASDA-')) {
-                                $is_hasda = 1;
-                            }
-                            if (str_contains($data_calendar['malam']['nama'], 'HASDA-TEKS') || 
-                                str_contains($data_calendar['malam']['nama'], 'PENGARAHAN KHUSUS') || 
-                                str_contains($data_calendar['malam']['nama'], 'HASDA-ORGANISASI') || 
-                                str_contains($data_calendar['malam']['nama'], 'ASAD') ||
-                                str_contains($data_calendar['malam']['nama'], 'PRA-PPM') ||
-                                str_contains($data_calendar['malam']['nama'], 'SARASEHAN') ||
-                                str_contains($data_calendar['malam']['nama'], 'MANAJEMEN') ||
-                                str_contains($data_calendar['malam']['nama'], 'NASEHAT PENGURUS') ||
-                                str_contains($data_calendar['malam']['nama'], 'PAT')) {
-                                $is_put_together = 1;
-                            }
                         }else{
                             $degur_mt = $data_calendar['malam']['mt']['id_degur'];
                             $degur_reg = $data_calendar['malam']['reguler']['id_degur'];
@@ -393,6 +379,21 @@ class MateriController extends Controller
                     $presenceName .= " " . $request->input('nama');
                 }
                 
+                if (str_contains($presenceName, 'HASDA-')) {
+                    $is_hasda = 1;
+                }
+                if (str_contains($presenceName, 'HASDA-TEKS') || 
+                    str_contains($presenceName, 'PENGARAHAN KHUSUS') || 
+                    str_contains($presenceName, 'HASDA-ORGANISASI') || 
+                    str_contains($presenceName, 'ASAD') ||
+                    str_contains($presenceName, 'PRA-PPM') ||
+                    str_contains($presenceName, 'SARASEHAN') ||
+                    str_contains($presenceName, 'MANAJEMEN') ||
+                    str_contains($presenceName, 'NASEHAT PENGURUS') ||
+                    str_contains($presenceName, 'PAT')) {
+                    $is_put_together = 1;
+                }
+
                 if (isset($presenceInThisDate)) {
                     if(str_contains($presenceName, 'LIBUR')){
                         $presenceInThisDate->delete();
