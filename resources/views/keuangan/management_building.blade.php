@@ -1,4 +1,4 @@
-<div class="card border p-2 mb-2">
+<div class="card border p-2 mb-2" style="border-bottom:solid 2px #93c2f2!important;">
     <div class="row align-items-center justify-content-center text-center">
         <div class="col-md-12">
             <h6 class="m-0">RAB Management Building</h6>
@@ -6,6 +6,7 @@
     </div>
 </div>
 
+@if($detail_manag_buildings==null)
 <div class="card border mt-2">
     <div class="card-body p-0">
         <form action="{{ route('store management building') }}" method="POST" enctype="multipart/form-data">
@@ -88,8 +89,12 @@
         </div>
     </div>
 </div>
+@endif
 
 @if($detail_manag_buildings!=null)
+<div class="text-end">
+    <a href="{{route('rab management building')}}" class="btn btn-sm btn-outline-secondary text-end">Kembali</a>
+</div>
 <div class="card border p-2 mt-2" style="border-top:solid 2px #f29393!important;">
     <div class="row align-items-center justify-content-center">
         <div class="col-md-12 text-center mb-2">
@@ -121,7 +126,7 @@
                     <input class="form-control" type="text" id="uraian" name="uraian" placeholder="Uraian" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
                 <div class="col-md-2">
-                    <input class="form-control" type="number" id="qty" name="qty" placeholder="Qty" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
+                    <input class="form-control" type="number" step="0.01" id="qty" name="qty" placeholder="Qty" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
                 <div class="col-md-3">
                     <input class="form-control" type="text" id="satuan" name="satuan" placeholder="Satuan" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
@@ -144,7 +149,7 @@
                     Realisasi
                 </div>
                 <div class="col-md-2">
-                    <input class="form-control" type="number" id="qty_realisasi" name="qty_realisasi" placeholder="Qty" required>
+                    <input class="form-control" type="number" step="0.01" id="qty_realisasi" name="qty_realisasi" placeholder="Qty" required>
                 </div>
                 <div class="col-md-3">
                     <input class="form-control" type="text" id="satuan_realisasi" name="satuan_realisasi" placeholder="Satuan" required>

@@ -101,7 +101,7 @@
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>QTY</label>
-                                            <input class="form-control" type="number" value="1" id="qty-out" required>
+                                            <input class="form-control" type="number" step="0.01" value="1" id="qty-out" required>
                                         </td>
                                         <td class="m-0 p-0 pb-2" style="width:10%;">
                                             <label>Nominal</label>

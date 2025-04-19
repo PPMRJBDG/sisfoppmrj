@@ -205,7 +205,7 @@
                         <input class="form-control" type="text" id="uraian" name="uraian" placeholder="Uraian" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                     </div>
                     <div class="col-md-1 mb-2">
-                        <input class="form-control" type="number" id="qty" name="qty" placeholder="Qty" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
+                        <input class="form-control" type="number" id="qty" step="0.01" name="qty" placeholder="Qty" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                     </div>
                     <div class="col-md-1 mb-2">
                         <input class="form-control" type="text" id="satuan" name="satuan" placeholder="Satuan" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
@@ -229,7 +229,7 @@
                         Realisasi
                     </div>
                     <div class="col-md-1">
-                        <input class="form-control" type="number" id="qty_realisasi" name="qty_realisasi" placeholder="Qty" required>
+                        <input class="form-control" type="number" step="0.01" id="qty_realisasi" name="qty_realisasi" placeholder="Qty" required>
                     </div>
                     <div class="col-md-1">
                         <input class="form-control" type="text" id="satuan_realisasi" name="satuan_realisasi" placeholder="Satuan" required>
