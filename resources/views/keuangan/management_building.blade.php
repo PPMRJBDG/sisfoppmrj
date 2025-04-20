@@ -217,13 +217,15 @@
                                 {{number_format($selisih,0, ',', '.')}}
                             </td>
                             <td class="text-center">
+                                @if($detail_of->status=='draft' || $detail_of->status=='approved')
+                                    <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubah('detil',{{$mb}},'{{$detail_of->status}}')">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </a>
+                                @endif
                                 @if($detail_of->status=='draft')
-                                <a block-id="return-false" href="#" class="btn btn-success btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Edit" onclick="ubah('detil',{{$mb}},'{{$detail_of->status}}')">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                </a>
-                                <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapus('detil',{{$mb->id}})">
-                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                </a>
+                                    <a block-id="return-false" href="#" class="btn btn-danger btn-sm mb-0" style="padding:3px 7px;border-radius:0px;" type="submit" value="Hapus" onclick="hapus('detil',{{$mb->id}})">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </a>
                                 @endif
                             </td>
                         </tr>
