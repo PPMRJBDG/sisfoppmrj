@@ -54,9 +54,9 @@ $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1]
 </footer>
 
 <!-- Sidenav -->
-<div id="sidenav-1" class="sidenav" role="navigation">
-  <div class="text-center mb-2 bg-primary justify-content-between align-items-center shadow-1-strong" style="height:60px;">
-    <h5 class="p-3 mb-0 text-white">{{$setting->apps_name}}</h5>
+<div id="sidenav-1" class="sidenav" role="navigation" data-mdb-right="true">
+  <div class="text-center mb-2 justify-content-between align-items-center shadow-1-strong" style="height:60px;">
+    <h5 class="p-3 mb-0" style="font-size: 1.5rem;">{{$setting->apps_name}}</h5>
   </div>
   <ul class="sidenav-menu">
     <li class="sidenav-item">

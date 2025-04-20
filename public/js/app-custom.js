@@ -108,7 +108,7 @@ function getPage(url) {
 }
 
 function showCacahJiwa() {
-    $("#sidenav-1").css('transform', 'translateX(-100%)');
+    $("#sidenav-1").css('transform', 'translateX(100%)');
     var sidenav = document.querySelectorAll(".sidenav-backdrop");
     if (sidenav != null) {
         for (var i = 0; i < sidenav.length; i++) {

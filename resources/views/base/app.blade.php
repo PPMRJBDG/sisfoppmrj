@@ -332,7 +332,7 @@ if (auth()->user()->hasRole('barcode')) {
         e.preventDefault();
         if (this.href != $("#base-url").val() + '/#' && !this.href.match("#")) {
           $("#footer-calendar").hide();
-          $("#sidenav-1").css('transform', 'translateX(-100%)');
+          $("#sidenav-1").css('transform', 'translateX(100%)');
           var sidenav = document.querySelectorAll(".sidenav-backdrop");
           if (sidenav != null) {
             for (var i = 0; i < sidenav.length; i++) {
