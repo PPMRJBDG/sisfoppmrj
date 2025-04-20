@@ -100,8 +100,8 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                             } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
                                 $infodp_xxz = $setting->org_name . ' 1';
                             }
-                            $infodp = 'Dewan Pengajar ' . $infodp_xxz . ' pada '.$presence->name.' belum disesuaikan';
-                            WaSchedules::save('Check Dewan Pengajar', $infodp, $contact_id, $time_post, true);
+                            $infodp = 'Pemateri ' . $infodp_xxz . ' pada '.$presence->name.' belum disesuaikan';
+                            WaSchedules::save('Check Pemateri', $infodp, $contact_id, $time_post, true);
                             $time_post++;
                         }
                     }
@@ -698,7 +698,7 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
 ⏰️ Mulai KBM: *".date_format(date_create($get_presence_today->start_date_time), 'H:i')."*
 ⏰️ Selesai KBM: *".date_format(date_create($get_presence_today->end_date_time), 'H:i')."*
 
-*DEWAN PENGAJAR* ".$dewan_pengajar."
+*Pemateri* ".$dewan_pengajar."
 
 *FINGERPRINT*
 📥 Mulai Sign In: *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*

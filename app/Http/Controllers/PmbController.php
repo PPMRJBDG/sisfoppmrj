@@ -53,13 +53,13 @@ class PmbController extends Controller
     {
         $datax = PmbPanitias::get();
         $santris = DB::table('v_user_santri as a')
-        ->leftJoin('pmb_panitias as b', function ($join) {
-            $join->on('a.santri_id', '=', 'b.fkSantri_id');
-        })
-        ->whereNull('b.fkSantri_id')
-        ->where('b.angkatan', (date('Y')-1))
-        ->orderBy('fullname','ASC')
-        ->get();
+                    ->leftJoin('pmb_panitias as b', function ($join) {
+                        $join->on('a.santri_id', '=', 'b.fkSantri_id');
+                        $join->whereNull('b.fkSantri_id');
+                    })
+                    ->where('a.angkatan', (date('Y')-1))
+                    ->orderBy('fullname','ASC')
+                    ->get();
 
         return view('pmb.view_panitia', [
             'datax' => $datax,

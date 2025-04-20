@@ -51,7 +51,7 @@
           <div class="col-12 pb-2">
             <small id="p1">{{ (($presence->is_hasda && $presence->is_put_together) || $presence->is_put_together) ? 'Pemateri' : 'Pengajar PPM 1' }}</small>
             <select data-mdb-filter="true" name="dewan_pengajar1" id="dewan_pengajar1" class="select form-control">
-              <option value="">Pilih Dewan Pengajar</option>
+              <option value="">Pilih Pemateri</option>
               @foreach($dewan_pengajar as $dp)
               <option {{($presence->fkDewan_pengajar_1==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
               @endforeach
@@ -60,7 +60,7 @@
           <div class="col-12 pb-2">
             <small id="p2">{{ (($presence->is_hasda && $presence->is_put_together) || $presence->is_put_together) ? 'Pemateri' : 'Pengajar PPM 2' }}</small>
             <select data-mdb-filter="true" name="dewan_pengajar2" id="dewan_pengajar2" class="select form-control">
-              <option value="">Pilih Dewan Pengajar</option>
+              <option value="">Pilih Pemateri</option>
               @foreach($dewan_pengajar as $dp)
               <option {{($presence->fkDewan_pengajar_2==$dp->id) ? 'selected' : '' }} value="{{$dp->id}}">{{$dp->name}}</option>
               @endforeach

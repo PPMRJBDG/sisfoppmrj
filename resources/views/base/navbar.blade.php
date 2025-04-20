@@ -393,7 +393,7 @@ $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1]
             @if(!auth()->user()->hasRole('divisi kurikulum'))
               <li>
                 <a class="sidenav-link" href="{{ url('dewan-pengajar') }}">
-                  <span class="sidenav-link-text ms-1">Dewan Pengajar</span>
+                  <span class="sidenav-link-text ms-1">Pemateri</span>
                 </a>
               </li>
               <li>
