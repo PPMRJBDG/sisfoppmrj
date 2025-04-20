@@ -88,7 +88,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input class="btn btn-primary form-control" type="submit" value="Presensi">
+            <input class="btn btn-primary" type="submit" value="Presensi">
           </div>
         </div>
       </div>

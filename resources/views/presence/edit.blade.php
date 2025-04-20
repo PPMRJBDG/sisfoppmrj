@@ -86,7 +86,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input class="btn btn-primary form-control" type="submit" value="Ubah">
+            <input class="btn btn-primary" type="submit" value="Ubah">
           </div>
         </div>
       </div>

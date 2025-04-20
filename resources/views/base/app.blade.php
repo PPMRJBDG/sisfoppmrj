@@ -32,7 +32,7 @@ if (auth()->user()->hasRole('barcode')) {
 </head>
 
 <style>
-  body, .table, .form-control, .select-option {
+  body, .table {
     font-size: .8rem !important;
   }
   .datatable tbody {
@@ -118,6 +118,7 @@ if (auth()->user()->hasRole('barcode')) {
   .dataTables_wrapper .dataTables_filter input {
     margin-bottom: 10px !important;
   }
+
   .modal{
       background: rgba(0, 0, 0, 0.7);
       z-index: 1000;
@@ -125,12 +126,16 @@ if (auth()->user()->hasRole('barcode')) {
       height: 100% !important;
       overflow-x: auto; 
   }
+
+  .select-option, .form-control {
+    font-size: 0.9rem !important;
+  }
 </style>
 
 <body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0" onload="getPage(getCookie('current_url'))" id="body-top">
   <input type="hidden" value="{{ url('/') }}" id="base-url">
   <input type="hidden" value="#" id="current-url">
-  <main class="pt-5 mdb-docs-layout">
+  <main class="pt-5 pb-5 mdb-docs-layout">
 
     <!-- HEADER -->
     @include('base.navbar', ['setting', $setting])
@@ -150,7 +155,7 @@ if (auth()->user()->hasRole('barcode')) {
 
     <div id="al-danger" class="bg-danger p-2 m-2 text-center text-white" style="display:none;border-radius:10px;"></div>
 
-    <footer class="footer text-center p-2">
+    <footer class="footer text-center p-2 pb-4 mb-2">
       <span class="text-xs pb-2"><small style="font-size:10px;">Tim IT {{$setting->apps_name}} © {{ date('Y') }}</small></span>
     </footer>
 

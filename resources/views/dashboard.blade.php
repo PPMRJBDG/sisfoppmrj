@@ -386,7 +386,7 @@ if(isset(auth()->user()->santri)){
                             <table id="table-hadir" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="text-uppercase text-xs font-weight-bolder ps-2" data-mdb-width="300" data-mdb-fixed="true">ANGKATAN<br>NAMA</th>
+                                        <th class="text-uppercase text-xs font-weight-bolder ps-2" data-mdb-width="200" data-mdb-fixed="true">ANGKATAN<br>NAMA</th>
                                         @foreach($presence_group as $pg)
                                         <th class="text-uppercase text-center text-xs font-weight-bolder">
                                             {{strtoupper($pg->name)}}

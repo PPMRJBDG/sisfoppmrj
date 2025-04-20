@@ -105,6 +105,27 @@ function getPage(url) {
             $("#al-danger").html('Sedang terjadi kesalahan<br><a href="/home" class="btn btn-sm btn-info">Kembali ke Beranda</a>');
         }
     });
+
+    const current_urld = $("#current-url").val();
+    var nav_active = document.querySelectorAll(".nav-bottom-cl");
+    if (nav_active != null) {
+        for (var i = 0; i < nav_active.length; i++) {
+            nav_active[i].classList.remove("active");
+        }
+    }
+    if(current_urld.match("home") || base_url==current_urld){
+        var d = document.getElementById("nav-bottom-home");
+        d.classList.add("active");
+    }else if(current_urld.match("presensi/izin/saya")){
+        var d = document.getElementById("nav-bottom-ijin");
+        d.classList.add("active");
+    }else if(current_urld.match("materi/monitoring/list")){
+        var d = document.getElementById("nav-bottom-target");
+        d.classList.add("active");
+    }else if(current_urld.match("profile")){
+        var d = document.getElementById("nav-bottom-profile");
+        d.classList.add("active");
+    }
 }
 
 function showCacahJiwa() {
@@ -351,8 +372,6 @@ function hari_ini(hari) {
 
 function getReport(ids) {
     $('#exampleModalReport').fadeIn();
-    $('#exampleModalReport').css('background', 'rgba(0, 0, 0, 0.7)');
-    $('#exampleModalReport').css('z-index', '10000');
     $('#contentReport').html('<iframe src="/report/' + ids + '"  style="height:100%;width:100%;"></iframe>');
 }
 

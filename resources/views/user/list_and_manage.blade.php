@@ -1,7 +1,7 @@
 <div class="card border">
   <div class="card-header p-2">
     @can('create users')
-    <a href="{{ route('create user') }}" class="btn btn-primary form-control mb-2">
+    <a href="{{ route('create user') }}" class="btn btn-primary mb-2">
       <i class="fas fa-plus" aria-hidden="true"></i>
       Buat User
     </a>

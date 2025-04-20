@@ -16,7 +16,7 @@
      <div class="tab-content p-0" id="nav-tabContent">
        <div class="tab-pane fade show active" id="nav-harian" role="tabpanel" aria-labelledby="nav-harian-tab">
          <div class="card-header align-items-center">
-           <a data-mdb-ripple-init class="btn btn-primary btn-block btn-rounded mb-2 mt-2" href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('presence permit submission') }}" onclick="return false">
+           <a data-mdb-ripple-init class="btn btn-primary btn-sm btn-block btn-rounded mb-2 mt-2" href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('presence permit submission') }}" onclick="return false">
              <i class="fas fa-plus" aria-hidden="true"></i>
              <b>Buat izin</b>
            </a>
@@ -36,7 +36,8 @@
                @foreach($myPermits as $myPermit)
                <tr class="text-sm">
                  <td>
-                   <h6 class="mb-0 text-sm">{{ ($myPermit->santri) ? $myPermit->santri->user->fullname : '-' }}</h6>
+                   <b>{{ ($myPermit->santri) ? $myPermit->santri->user->fullname : '-' }}</b>
+                   <br>
                    <small>{{ $myPermit->presence->name }}</small>
                  </td>
                  <td>
@@ -64,7 +65,7 @@
 
        <div class="tab-pane fade show" id="nav-berjangka" role="tabpanel" aria-labelledby="nav-berjangka-tab">
          <div class="card-header justify-content-between align-items-center">
-           <a href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('ranged presence permit submission') }}" class="btn btn-primary btn-block btn-rounded mb-2 mt-2">
+           <a href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('ranged presence permit submission') }}" class="btn btn-primary btn-sm btn-block btn-rounded mb-2 mt-2">
              <i class="fas fa-plus" aria-hidden="true"></i>
              Buat izin berjangka
            </a>
@@ -84,7 +85,8 @@
                @foreach($myRangedPermits as $myRangedPermit)
                <tr class="text-sm">
                  <td>
-                   <h6 class="mb-0 text-sm">{{ ($myRangedPermit->santri) ? $myRangedPermit->santri->user->fullname : '-' }}</h6>
+                   <b>{{ ($myRangedPermit->santri) ? $myRangedPermit->santri->user->fullname : '-' }}</b>
+                   <br>
                    {{ isset($myRangedPermit->presenceGroup) ? $myRangedPermit->presenceGroup->name : '' }}
                  </td>
                  <td>

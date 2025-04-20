@@ -32,6 +32,35 @@
   </nav>
 </header>
 
+<footer>
+  <nav class="navbar navbar-expand-lg fixed-bottom bg-body-tertiary shadow-1-strong border-top">
+    <div class="col-12">
+      <div class="row justify-content-between align-items-center">
+        <div class="col-3">
+          <a href="{{ url('/home') }}" type="button" id="nav-bottom-home" class="btn btn-link btn-block nav-bottom-cl text-sm">
+            <i class="fa fa-home fa-2x"></i>
+          </a>
+        </div>
+        <div class="col-3">
+          <a href="{{ url('presensi/izin/saya') }}" id="nav-bottom-ijin" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
+            <i class="fa fa-envelope-open-text fa-2x"></i>
+          </a>
+        </div>
+        <div class="col-3">
+          <a href="{{ url('materi/monitoring/list') }}" id="nav-bottom-target" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
+            <i class="fa fa-book fa-2x"></i>
+          </a>
+        </div>
+        <div class="col-3">
+          <a href="{{ route('my profile') }}" id="nav-bottom-profile" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
+            <i class="fa fa-user fa-2x"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</footer>
+
 <?php 
 $periode = App\Helpers\CommonHelpers::periode();
 $periode = explode("-",$periode);
@@ -398,13 +427,13 @@ $year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1]
         <i class="fa fa-user-circle pe-3"></i>Profile
       </a>
       <ul class="sidenav-collapse" aria-labelledby="navbarDropdownMenuLink-profile">
-        <li>
+        <!-- <li>
           <a class="sidenav-link" href="{{ route('my profile') }}">
             <div class="d-flex py-1">
               {{ auth()->user()->fullname }}
             </div>
           </a>
-        </li>
+        </li> -->
         <li>
           <a href="{{ route('my profile') }}" class="sidenav-link">
             Lihat profil
