@@ -121,7 +121,7 @@ if (auth()->user()->hasRole('barcode')) {
 
   .modal{
       background: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
+      z-index: 1050;
       width: 100% !important;
       height: 100% !important;
       overflow-x: auto; 
