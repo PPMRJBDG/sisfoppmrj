@@ -32,7 +32,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
             <div class="modal-header">
                 <div>
                     <h6 class="modal-title" id="modalSodaqohLabel">Input Sodaqoh</h6>
-                    <h5 class="modal-title" id="modalSodaqohLabel"><span id="nm"></span></h5>
+                    <h6 class="modal-title" id="modalSodaqohLabel"><span id="nm"></span></h6>
                 </div>
             </div>
             <div class="modal-body pb-0">
@@ -313,6 +313,10 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
             style: "currency",
             currency: "IDR"
         }).format(parseInt(kekurangan)));
+
+        if(kekurangan<=0){
+            $("#save").hide();
+        }
     }
 
     function reminderSodaqoh(data) {

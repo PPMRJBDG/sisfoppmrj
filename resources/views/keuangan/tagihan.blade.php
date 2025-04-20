@@ -119,13 +119,13 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
 @else
     <div class="card border p-2 mb-2" style="border-bottom:solid 2px #f29393!important;">
         <h6 class="font-weight-bolder">Rekening Pembayaran:</h6>
-        <h6>Bank Muamalat<br>
+        <p>Bank Muamalat<br>
         7354001101017075 <i onclick="navigator.clipboard.writeText('7354001101017075')" class="fa fa-copy text-secondary"></i><br>
         an. Drs. Sutrisno<br>
         <br>
         BMT Rukun Abadi<br>
         001101017075 <i onclick="navigator.clipboard.writeText('001101017075')" class="fa fa-copy text-secondary"></i><br>
-        an. Drs. Sutrisno</h6>
+        an. Drs. Sutrisno</p>
     </div>
     <div class="card border py-2">
         <div class="datatable datatable-sm align-items-center justify-content-center">
