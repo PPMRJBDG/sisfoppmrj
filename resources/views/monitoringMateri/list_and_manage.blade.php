@@ -11,7 +11,7 @@ function printMateriOptions($materis, $santri)
         $totalPages = $completedPages + ($partiallyCompletedPages / 2);
 ?>
         <tr class="text-sm">
-            <td class="p-1 ps-2">{{ $materi->name }}</td>
+            <td class="p-1 ps-2"><b>{{ strtoupper($materi->name) }}</b></td>
             <td class="p-1 ps-2">{{ $totalPages."/".$materi->pageNumbers." page = ".number_format((float) $totalPages / $materi->pageNumbers * 100, 2, '.', '') }}%</td>
             <td class="p-1 ps-2">
                 <a {{ (!auth()->user()->santri) ? 'target="_blank"' : '' }}' href="{{ route('edit monitoring materi', [$materi->id, $santri->id])}}" class="btn btn-success btn-sm mb-0">Lihat</a>
@@ -57,7 +57,7 @@ function printMateriOptions($materis, $santri)
                 </div>
                 <div class="card-body p-2">
                     @can('view monitoring materis list')
-                    <div id="santri-reguler" class="datatable datatable-sm" data-mdb-pagination="false">
+                    <div id="santri-reguler" class="datatable" data-mdb-sm="true" data-mdb-pagination="false">
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
@@ -100,7 +100,7 @@ function printMateriOptions($materis, $santri)
                 <div class="card-body p-2">
                     <ul class="list-group">
                         @can('view monitoring materis list')
-                        <div id="santri-muballigh" class="datatable datatable-sm" data-mdb-pagination="false">
+                        <div id="santri-muballigh" class="datatable" data-mdb-sm="true" data-mdb-pagination="false">
                             <table id="table-mhs-mt" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
@@ -143,7 +143,7 @@ function printMateriOptions($materis, $santri)
             @endif
 
             @if(sizeof($lorongs) >= 0)
-                <div class="datatable datatable-sm">
+                <div class="datatable" data-mdb-sm="true" data-mdb-pagination="false">
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>

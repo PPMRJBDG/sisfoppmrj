@@ -16,7 +16,7 @@
      <div class="tab-content p-0" id="nav-tabContent">
        <div class="tab-pane fade show active" id="nav-harian" role="tabpanel" aria-labelledby="nav-harian-tab">
          <div class="card-header align-items-center">
-           <a data-mdb-ripple-init class="btn btn-primary btn-sm btn-block btn-rounded mb-2 mt-2" href="{{ (auth()->user()->hasRole('superadmin')) ? route('create presence permit') : route('presence permit submission') }}" onclick="return false">
+           <a data-mdb-ripple-init class="btn btn-primary btn-sm btn-block btn-rounded mb-2 mt-2" href="{{ (auth()->user()->hasRole('santri')) ? route('presence permit submission') : route('create presence permit') }}" onclick="return false">
              <i class="fas fa-plus" aria-hidden="true"></i>
              <b>Buat izin</b>
            </a>

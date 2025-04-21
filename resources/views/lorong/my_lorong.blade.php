@@ -2,8 +2,8 @@
 <div class="card shadow border bg-primary text-light">
   <div class="card-body p-2 d-flex">
     <div class="d-flex flex-column">
-      <h6>{{ $lorong->name }}</h6>
-      <span class="mb-2 text-xs">Koor: <span class="ms-sm-2 font-weight-bold">{{ $lorong->leader->user->fullname }}</span></span>
+      <h6 class="mb-0">{{ $lorong->name }}</h6>
+      <span class="mb-0 text-xs">Koor: <span class="ms-sm-2 font-weight-bold">{{ $lorong->leader->user->fullname }}</span></span>
       <span class="text-xs">Anggota: <span class="ms-sm-2 badge badge-warning font-weight-bold">{{ sizeof($lorong->members) }} orang</span></span>
     </div>
     <div class="ms-auto text-end">
@@ -17,16 +17,14 @@
   </div>
 </div>
 
-<div class="card shadow border mt-3">
-  <div class="card-header p-2 pb-1 d-flex justify-content-between align-items-center">
-    <h6 class="font-weight-bolder">Daftar anggota</h6>
-    @can('add lorong members')
-    <a href="{{ route('add lorong member', $lorong->id) }}" class="btn btn-primary mb-0">
-      <i class="fas fa-plus" aria-hidden="true"></i>
-      Tambah anggota
-    </a>
-    @endcan
-  </div>
+<h6 class="mt-2 mb-0 font-weight-bolder">Daftar anggota</h6>
+@can('add lorong members')
+<a href="{{ route('add lorong member', $lorong->id) }}" class="btn btn-primary mb-0">
+  <i class="fas fa-plus" aria-hidden="true"></i>
+  Tambah anggota
+</a>
+@endcan
+<div class="card shadow border">
   <div class="card-body p-2">
     @if (session('success'))
     <div class="alert alert-success text-white">
@@ -49,7 +47,7 @@
           @foreach($lorong->members as $member)
           <tr>
             <td>
-              <h6 class="mb-0 text-sm">{{ $member->user->fullname }}</h6>
+              <p class="mb-0 text-sm font-weight-bolder">{{ $member->user->fullname }}</p>
             </td>
             <td>
               {{ $member->angkatan }}

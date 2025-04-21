@@ -36,14 +36,14 @@
     <div class="card border mb-2">
         <div class="card-body p-2">
             <center>
-                <h4 class="m-0">{{ $santri->user->fullname }}</h4>
+                <h6 class="m-0">{{ $santri->user->fullname }}</h6>
             </center>
         </div>
     </div>
 
     @if(count($sodaqoh)>0)
     <div class="card border mb-2 p-2">
-        <h5 class="text-center mb-1">Pembayaran Sodaqoh</h5>
+        <h6 class="text-center mb-1">Pembayaran Sodaqoh</h6>
         <div class="card-body p-0">
             <div class="datatable datatable-sm p-0" data-mdb-pagination="false">
                 <table class="table align-items-center mb-0">
@@ -98,7 +98,7 @@
     ?>
     @if($datapg!=null)
     <div class="card border mb-2 p-2">
-        <h5 class="text-center mb-1">Presensi Kehadiran</h5>
+        <h6 class="text-center mb-1">Presensi Kehadiran</h6>
         <div class="card-body p-0 text-center">
             <th class="text-center p-1">Total Keseluruhan</th>
             <div class="table-responsive p-0" data-mdb-pagination="false">
@@ -236,7 +236,7 @@
     @endif
 
     <div class="card border mb-2 p-2">
-        <h5 class="text-center mb-1">Pencapaian Materi</h5>
+        <h6 class="text-center mb-1">Pencapaian Materi</h6>
         <div class="card-body p-0">
             <div class="datatable datatable-sm" data-mdb-pagination="false">
                 <table id="recap-materi" class="table align-items-center mb-0">
@@ -257,21 +257,21 @@
 
     @if($catatan_penghubungs!=null)
     <div class="card border mb-2 p-2">
-        <h5 class="text-center mb-1">Catatan Penghubung</h5>
+        <h6 class="text-center mb-1">Catatan Penghubung</h6>
         <div class="card-body p-2">
-            <h6 class="font-weight-bolder">Kepribadian:</h6>
+            <p class="font-weight-bolder">Kepribadian:</p>
             <span>{{ $catatan_penghubungs->cat_kepribadian }}</span>
             <hr>
-            <h6 class="font-weight-bolder">Sholat:</h6>
+            <p class="font-weight-bolder">Sholat:</p>
             <span>{{ $catatan_penghubungs->cat_sholat }}</span>
             <hr>
-            <h6 class="font-weight-bolder">KBM:</h6>
+            <p class="font-weight-bolder">KBM:</p>
             <span>{{ $catatan_penghubungs->cat_kbm }}</span>
             <hr>
-            <h6 class="font-weight-bolder">Asmara:</span>
+            <p class="font-weight-bolder">Asmara:</p>
             <span>{{ $catatan_penghubungs->cat_asmara }}</span>
             <hr>
-            <h6 class="font-weight-bolder">Umum:</h6>
+            <p class="font-weight-bolder">Umum:</p>
             <span>{{ $catatan_penghubungs->cat_umum }}</span>
         </div>
     </div>
@@ -279,9 +279,9 @@
 
     @if(count($pelanggaran)>0)
     <div class="card border mb-2 p-2">
-        <h5 class="text-center mb-1">Riwayat Pelanggaran</h5>
+        <h6 class="text-center mb-1">Riwayat Pelanggaran</h6>
         <div class="card-body p-0">
-            <h6 class="p-2">Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</h6>
+            <p class="p-2 font-weight-bolder">Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</p>
             <div class="datatable datatable-sm p-0">
                 <table id="recap-pelanggaran" class="table align-items-center mb-0">
                     <thead style="background-color:#f6f9fc;">
@@ -355,7 +355,7 @@ if ($all_kbm > 0) {
             <div class="modal-header">
                 <div>
                     <h6 class="modal-title" id="exampleModalLabel">Pencapaian Materi</h6>
-                    <h5 class="modal-title" id="exampleModalLabel"><span id="nm"></span></h5>
+                    <h6 class="modal-title" id="exampleModalLabel"><span id="nm"></span></h6>
                 </div>
             </div>
             <div class="modal-body">

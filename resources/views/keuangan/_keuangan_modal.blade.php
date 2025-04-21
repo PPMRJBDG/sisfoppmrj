@@ -32,7 +32,10 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
             <div class="modal-header">
                 <div>
                     <h6 class="modal-title" id="modalSodaqohLabel">Input Sodaqoh</h6>
-                    <h6 class="modal-title" id="modalSodaqohLabel"><span id="nm"></span></h6>
+                    <p class="modal-title" id="modalSodaqohLabel">
+                        <span id="nm"></span><br>
+                        <span id="nm-per"></span>
+                    </p>
                 </div>
             </div>
             <div class="modal-body p-2">
@@ -72,7 +75,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 
                 </div>
 
-                <h6 class="mt-2 mb-0">Riwayat Pembayaran</h6>
+                <p class="mt-2 mb-0 font-weight-bold">Riwayat Pembayaran</p>
                 <div class="justify-content-center">
                     <table class="table align-items-center mb-0">
                         <tbody id="idx_histori">
@@ -80,7 +83,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                         </tbody>
                     </table>
                 </div>
-                <h6 class="text-sm font-weight-bolder mt-3 pb-2 text-warning">Kekurangan: <span id="kekurangan"></span></h6>
+                <p class="text-sm font-weight-bolder mt-3 pb-2 text-warning">Kekurangan: <span id="kekurangan"></span></p>
             </div>
             <div class="card-header p-2" id="info-update-sodaqoh" style="display:none;border-radius:4px;">
                 <h6 id="bg-warning" class="mb-0 bg-warning p-1 text-white" style="display:none;">
@@ -238,7 +241,8 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $('#nominal').val(data.nominal);
         $('#santri_id').val(data.fkSantri_id);
         $('#ket').val(data.keterangan);
-        $('#nm').text(nm + ' | ' + data.periode);
+        $('#nm').text(nm);
+        $('#nm-per').text('Periode: '+data.periode);
         if(data.status_lunas){
             $("#form-bayar").hide();
         }else{
@@ -270,12 +274,12 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $("#kekurangan").html('');
         var kekurangan = 0;
         var terbayar = 0;
-        var content = '<tr>'+
-                        '<th class="text-uppercase font-weight-bolder">Tanggal</th>'+
-                                '<th class="text-uppercase font-weight-bolder">Nominal</th>'+
-                                '<th class="text-uppercase font-weight-bolder">Status</th>'+
-                                '<th class="text-uppercase font-weight-bolder">Bukti</th>'+
-                            '</tr>';
+        var content =   '<tr style="font-size:0.7rem;background:#f9f9ff;">'+
+                            '<td class="text-uppercase font-weight-bolder">Tanggal</th>'+
+                            '<th class="text-uppercase font-weight-bolder">Nominal</th>'+
+                            '<th class="text-uppercase font-weight-bolder">Status</th>'+
+                            '<th class="text-uppercase font-weight-bolder">Bukti</th>'+
+                        '</tr>';
         document.getElementById('idx_histori').setAttribute('style', 'display:none;');
         $("#idx_histori").html("");
 
@@ -297,11 +301,11 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                 image = '<button  type="button" class="btn btn-primary btn-floating btn-sm" data-mdb-ripple-init onclick="showBukti(\''+show+'\')"><i class="fa fa-image"></i></button>';
             }
             
-            content = content+  '<tr>'+
-                                    '<td><input value="'+item["pay_date"]+'" class="form-control" disabled></td>'+
-                                    '<td><input value="'+nominal+'" class="form-control" disabled></td>'+
-                                    '<td>'+status+'</td>'+
-                                    '<td>'+image+'</td>'+
+            content = content+  '<tr style="font-size:0.7rem;">'+
+                                    '<td>'+item["pay_date"]+
+                                    '<td>'+nominal+
+                                    '<td>'+status+
+                                    '<td>'+image+
                                 '</tr>';
         })
 
@@ -459,6 +463,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
         $('#santri_id').val('');
         $('#ket').val('');
         $('#nm').text('');
+        $('#nm-per').text('');
         var bulan = <?php echo json_encode($bulan); ?>;
         bulan.forEach(function(item, b) {
             $('#' + item).val('');

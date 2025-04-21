@@ -558,7 +558,7 @@ Silahkan klik link dibawah ini:
 ';
 
                             $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.
-Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 di Sisfo.';
+Jangan lupa mengunci gerbang, melaporkan jobdesk dan mencatat mahasiswa yang pulang lewat jam 23:00 di Sisfo.';
                             WaSchedules::save('Nerobos Jaga Malam' . $snt->user->fullname, $capner, WaSchedules::getContactId($snt->user->nohp));
                         }
                     }
@@ -586,12 +586,12 @@ Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 
 ';
 
                             $capner = 'Monggo Mas *'.$snt->user->fullname.'* segera persiapan Jaga Malam, supaya ditetapi dengan hati ridho sakdermo karena Allah.
-Jangan lupa mengunci gerbang dan mencatat mahasiswa yang pulang lewat jam 23:00 di Sisfo.';
+Jangan lupa mengunci gerbang, melaporkan jobdesk  dan mencatat mahasiswa yang pulang lewat jam 23:00 di Sisfo.';
                             WaSchedules::save('Nerobos Jaga Malam' . $snt->user->fullname, $capner, WaSchedules::getContactId($snt->user->nohp));
                         }
                     }
                 }else{
-                    $info_jam_malam = '*Amalsholih Yang Masih Berada Di Lingkungan PPM Turut Menjaga Keamanan.*
+                    $info_jam_malam = '*Amalsholih yang masih berada di lingkungan PPM turut menjaga keamanan.*
 ';
                 }
 

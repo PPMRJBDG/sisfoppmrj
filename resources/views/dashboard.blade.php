@@ -321,8 +321,8 @@ if(isset(auth()->user()->santri)){
                                         <div class="col-12 mb-2">
                                             <div class="">
                                                 <div class="card-body p-2 text-center">
-                                                    <h6 class="text-sm font-weight-bolder mb-0 bg-primary p-2 text-white">
-                                                        {{ $pg->name }}
+                                                    <p class="text-sm font-weight-bolder mb-0 text-italic p-2">
+                                                        <em>{{ $pg->name }}</em>
                                                         (<?php
                                                             if ($datapg[$pg->id]['loopr'] != 0) {
                                                                 echo number_format(($datapg[$pg->id]['kehadiran'] / $datapg[$pg->id]['loopr']) *  100, 2) . "%";
@@ -330,8 +330,8 @@ if(isset(auth()->user()->santri)){
                                                                 echo "-";
                                                             }
                                                             ?>)
-                                                    </h6>
-                                                    <div class="datatable datatable-sm" data-mdb-pagination="false">
+                                                    </p>
+                                                    <div class="datatable" data-mdb-sm="true" data-mdb-pagination="false">
                                                         <table class="table align-items-center mb-0">
                                                             <thead>
                                                                 <tr class="text-xs">

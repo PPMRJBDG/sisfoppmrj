@@ -42,8 +42,8 @@
           </a>
         </div>
         <div class="col-3">
-          <a href="{{ url('presensi/izin/saya') }}" id="nav-bottom-ijin" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
-            <i class="fa fa-envelope-open-text fa-2x"></i>
+          <a href="{{ (auth()->user()->hasRole('santri')) ? route('presence permit submission') : route('create presence permit') }}" id="nav-bottom-ijin" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
+            <i class="fa fa-square-pen fa-2x"></i>
           </a>
         </div>
         <div class="col-3">

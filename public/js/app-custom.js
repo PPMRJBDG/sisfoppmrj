@@ -116,7 +116,7 @@ function getPage(url) {
     if(current_urld.match("home") || base_url==current_urld){
         var d = document.getElementById("nav-bottom-home");
         d.classList.add("active");
-    }else if(current_urld.match("presensi/izin/saya")){
+    }else if(current_urld.match("presensi/izin/persetujuan/create") || current_urld.match("/presensi/izin/pengajuan")){
         var d = document.getElementById("nav-bottom-ijin");
         d.classList.add("active");
     }else if(current_urld.match("materi/monitoring/list")){
