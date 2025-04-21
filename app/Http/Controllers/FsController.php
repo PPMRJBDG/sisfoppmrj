@@ -229,7 +229,7 @@ class FsController extends Controller
                 try {
                     $datetime = $decoded_data['data']['scan'];
                     $setting = Settings::find(1);
-                    $get_santri = Santri::find($santri_id);
+                    $get_santri = Santri::where('id',$santri_id)->whereNull('exit_at')->first();
 
                     $date_format = date_format(date_create($datetime), "Y-m-d");
                     $check_liburan = Liburan::where('liburan_from', '<=', $date_format)->where('liburan_to', '>=', $date_format)->get();
@@ -400,7 +400,7 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                 $i=1;
                 foreach($split_cloud_fs as $cfs){
                     if($cfs==$decoded_data['cloud_id']){
-                        $get_santri = Santri::find($santri_id);
+                        $get_santri = Santri::where('id',$santri_id)->whereNull('exit_at')->first();
                         if($get_santri==null){
                             $get_degur = DewanPengajars::where('pin',$santri_id)->first();
                             if($get_degur!=null){
