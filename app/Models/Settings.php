@@ -25,6 +25,7 @@ class Settings extends Model
         'wa_dewanguru_group_id',
         'wa_info_presensi_group_id',
         'wa_keuangan_group_id',
+        'wa_jam_malam_group_id',
         'host_url',
         'wa_header',
         'wa_footer',

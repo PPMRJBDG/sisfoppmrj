@@ -35,7 +35,7 @@ $bulan = ['sept', 'okt', 'nov', 'des', 'jan', 'feb', 'mar', 'apr', 'mei', 'jun',
                     <h6 class="modal-title" id="modalSodaqohLabel"><span id="nm"></span></h6>
                 </div>
             </div>
-            <div class="modal-body pb-0">
+            <div class="modal-body p-2">
                 <div id="form-bayar" class="p-2" style="background:#f9f9ff;border:1px #ddd solid;">
                     <input class="form-control" readonly type="hidden" id="sodaqoh_id" name="sodaqoh_id" value="">
                     <input class="form-control" readonly type="hidden" id="periode" name="periode" value="">

@@ -65,7 +65,7 @@ class PublicController extends Controller
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
                 $caption = '*[PREVIEW]*
-Amalsholih cek kehadiran KBM kemarin, apabila ada yang tidak sesuai silahkan menghubungi RJ/WK:*';
+Amalsholih cek kehadiran KBM kemarin, apabila ada yang tidak sesuai silahkan menghubungi RJ/WK:';
                 $get_presence = Presence::where('event_date', $yesterday)->where('is_deleted', 0)->get();
                 if (count($get_presence) > 0) {
                     foreach ($get_presence as $presence) {
