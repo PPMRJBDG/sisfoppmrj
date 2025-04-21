@@ -15,7 +15,7 @@
 
 <div class="card shadow border p-2">
     <div class="card-body p-2 pt-0">
-        <div class="datatable justify-content-between align-items-center" data-mdb-max-height="800" data-mdb-fixed-header="true" data-mdb-sm="true" data-mdb-entries="50" data-mdb-pagination="false" data-mdb-hover="true" data-mdb-bordered="true">
+        <div class="datatable justify-content-between align-items-center" data-mdb-max-height="830" data-mdb-fixed-header="true" data-mdb-sm="true" data-mdb-entries="50" data-mdb-pagination="false" data-mdb-hover="true" data-mdb-bordered="true">
             <table id="table" class="table justify-content-between align-items-center text-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
