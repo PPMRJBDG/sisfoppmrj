@@ -17,7 +17,7 @@
     @if($id!=null)
     <a href="/pelanggaran/s/{{$is_archive}}/param/all" class="btn btn-primary btn-sm col-12 col-md-2 mb-1">Tampilkan Semua</a>
     @endif
-    <a href="{{route('pelanggaran by mhs')}}" class="btn btn-secondary btn-sm mb-1">Tampilkan Berdasarkan Mahasiswa</a>
+    <a href="{{route('pelanggaran by mhs')}}" class="btn btn-outline-secondary btn-sm mb-1">Tampilkan Berdasarkan Mahasiswa</a>
     <div class="row">
         @foreach($count_pelanggaran as $key=>$cp)
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">

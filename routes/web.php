@@ -188,6 +188,7 @@ Route::get('/pelanggaran/edit/{id}', [App\Http\Controllers\PelanggaranController
 Route::get('/pelanggaran/delete/{id}', [App\Http\Controllers\PelanggaranController::class, 'delete'])->name('delete pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
 Route::get('/pelanggaran/archive/{id}', [App\Http\Controllers\PelanggaranController::class, 'archive'])->name('archive pelanggaran')->middleware('role:superadmin|rj1|wk|dewan guru');
 Route::get('/pelanggaran/by/mahasiswa', [App\Http\Controllers\PelanggaranController::class, 'by_mahasiswa'])->name('pelanggaran by mhs')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::post('/pelanggaran/wa', [App\Http\Controllers\PelanggaranController::class, 'wa'])->name('pelanggaran wa')->middleware('role:superadmin|rj1|wk|dewan guru');
 
 // KEUANGAN
 Route::get('/keuangan/mekanisme', [App\Http\Controllers\KeuanganController::class, 'mekanisme'])->name('mekanisme')->middleware('role:ku|superadmin|santri');

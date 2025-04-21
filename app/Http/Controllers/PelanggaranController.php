@@ -200,4 +200,40 @@ class PelanggaranController extends Controller
             'column_pelanggarans' => $column_pelanggarans,
         ]);
     }
+
+    public function wa(Request $request){
+        if($request->input('all')==1){
+            $santris = DB::table('v_user_santri')->get();
+        }else{
+            $santris = DB::table('v_user_santri')->where('santri_id',$request->input('santri_id'))->get();
+        }
+
+        if($santris){
+            foreach($santris as $s){
+                $pelanggarans = Pelanggaran::where('fkSantri_id',$s->santri_id)->where('is_archive',0)->get();
+                if($pelanggarans){
+                    $time = 1;
+                    $jenis_pelanggaran = "*Jenis Pelanggaran:*
+";
+                    foreach($pelanggarans as $p){
+                        $jenis_pelanggaran .= "- ".strtoupper($p->jenis->jenis_pelanggaran)."
+";
+                    }
+                    $caption = "*[INFORMASI PEMANGGILAN]*
+Berdasarkan penyaksian dan hasil evaluasi dari Tim Ketertiban PPM, *an. ".$s->fullname."* harap memenuhi panggilan dari Pengurus, yang akan dilaksanakan:
+📆 Waktu: ".date_format(date_create($request->input('datetime')),'d M Y | H:i:s')."
+🕌 Tempat: ".$request->input('tempat')."
+
+".$jenis_pelanggaran."
+NB:
+- Jika berhalangan, harap konfirmasi Pengurus
+- Jika tidak memenuhi panggilan, akan dipanggil Orangtua untuk datang ke PPM";
+                    WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp), $time);
+                    $time++;
+                }
+            }
+        }
+
+        return json_encode(array("status" => true, "message" => 'Berhasil melakukan pemanggilan'));
+    }
 }
