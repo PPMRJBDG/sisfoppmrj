@@ -50,20 +50,20 @@
                             <td>
                                 <div class="row">
                                     <div class="col-8 p-0">
-                                        <input type="datetime-local" value="{{date('Y-m-d H:i:s')}}" class="form-control" value="" id="datetime-{{$data->santri_id}}">
+                                        <input type="datetime-local" value="{{date('Y-m-d H:i:s')}}" class="form-control" value="" id="datetime-{{$data->santri->id}}">
                                     </div>
                                     <div class="col-4 pr-0">
-                                        <a href="#" onclick="callByWa(0,{{$data->santri_id}})" class="btn btn-outline-warning text-end btn-sm mb-1"><i class="fa fa-comment"> WA</i></a>
+                                        <a href="#" onclick="callByWa(0,{{$data->santri->id}})" class="btn btn-outline-warning text-end btn-sm mb-1"><i class="fa fa-comment"> WA</i></a>
                                     </div>
                                 </div>
                             </td>
-                            <td onclick="getReport('<?php echo base64_encode($data->santri_id); ?>')" style="cursor:pointer;">
-                                <b>[{{ $data->angkatan }}] {{ $data->fullname }}</b>
+                            <td onclick="getReport('<?php echo base64_encode($data->santri->id); ?>')" style="cursor:pointer;">
+                                <b>[{{ $data->santri->angkatan }}] {{ $data->santri->user->fullname }}</b>
                             </td>
                             @foreach($column_pelanggarans as $c)
                                 <td><p class="text-center mb-0">
                                     <?php 
-                                        $check = App\Models\Pelanggaran::where('fkSantri_id',$data->santri_id)->where('fkJenis_pelanggaran_id',$c->jenis->id)->where('is_archive',0)->first();
+                                        $check = App\Models\Pelanggaran::where('fkSantri_id',$data->santri->id)->where('fkJenis_pelanggaran_id',$c->jenis->id)->where('is_archive',0)->first();
                                         if($check){
                                             echo '✅';
                                         }

@@ -192,7 +192,8 @@ class PelanggaranController extends Controller
     }
 
     public function by_mahasiswa(){
-        $santris = DB::table('v_user_santri')->get();
+        // $santris = DB::table('v_user_santri')->get();
+        $santris = Pelanggaran::select('fkSantri_id')->groupBy('fkSantri_id')->where('is_archive',0)->get();
         $column_pelanggarans = Pelanggaran::select('fkJenis_pelanggaran_id')->groupBy('fkJenis_pelanggaran_id')->where('is_archive',0)->get();
 
         return view('pelanggaran.by_mahasiswa', [
