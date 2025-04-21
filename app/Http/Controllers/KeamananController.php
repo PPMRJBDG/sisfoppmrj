@@ -74,9 +74,9 @@ class KeamananController extends Controller
         if($insert){
             $setting = Settings::find(1);
             $santri = Santri::find($request->input('santri_id'));
-            $caption = '*[JAGA MALAM]* Laporan dari: *'.auth()->user()->fullname.'*,
+            $caption = '*[JAGA MALAM]* Laporan dari: *'.strtoupper(auth()->user()->fullname).'*,
 - *'.$santri->user->fullname.'* baru pulang pukul '.date_format(date_create($request->input('jam_pulang')),'H:i:s').' dengan alasan: *'.$request->input('alasan').'*';
-            WaSchedules::save('Terlambat Pulang Malam: '.$santri->user->fullname, $caption, $setting->wa_info_presensi_group_id, null, true);
+            WaSchedules::save('Terlambat Pulang Malam: '.$santri->user->fullname, $caption, $setting->wa_jam_malam_group_id, null, true);
             return json_encode(array("status" => true));
         }else{
             return json_encode(array("status" => false));
@@ -125,7 +125,7 @@ class KeamananController extends Controller
             $jd_nerobos_muadzin = ($request->input('jd_nerobos_muadzin')) ? '✅' : '';
             $caption = '*UPDATE INFO JAM MALAM PPM* | _'.date('H:i:s').'_
 
-👮🏼‍♂️ *'.auth()->user()->fullname.'*:
+👮🏼‍♂️ *'.strtoupper(auth()->user()->fullname).'*:
 - Mengunci Gerbang '.$jd_kunci_gerbang.'
 - Mengecek Air '.$jd_cek_air.'
 - Mengecek Listrik '.$jd_cek_listrik.'
@@ -134,7 +134,7 @@ class KeamananController extends Controller
 - Sudah Adzan 1/3 Malam '.$jd_adzan_malam.'
 - Salah Satu Sudah Adzan Shubuh '.$jd_nerobos_muadzin.'
 - Kondisi Umum: '.$request->input('jd_kondisi_umum');
-            WaSchedules::save('Update Info Jam Malam: '.auth()->user()->fullname, $caption, $setting->wa_info_presensi_group_id, null, true);
+            WaSchedules::save('Update Info Jam Malam: '.auth()->user()->fullname, $caption, $setting->wa_jam_malam_group_id, null, true);
 
                 // create presence
                 $event_date = date('Y-m-d', strtotime("+1 day", strtotime($check->event_date)));

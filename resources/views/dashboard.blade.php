@@ -46,6 +46,7 @@ if(isset(auth()->user()->santri)){
                             <form action="{{ route('store jobdesk') }}" method="POST" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-6 mt-2">
+                                        <label class="font-weight-bold">Step 1 (23:00 - 02:30)</label>
                                         <div class="form-check mb-0">
                                             <?php 
                                                 $c_1 = '';
@@ -106,6 +107,8 @@ if(isset(auth()->user()->santri)){
                                             <input class="form-check-input" type="checkbox" {{ $c_5 }} id="jd_cek_lahan" name="jd_cek_lahan">
                                             <label class="form-check-label" for="jd_cek_lahan">Keliling Mengecek Lahan</label>
                                         </div>
+
+                                        <label class="font-weight-bold">Step 2 (02:30 - 05:00)</label>
                                         <div class="form-check mb-0">
                                             <?php 
                                                 $c_6 = '';
@@ -140,7 +143,7 @@ if(isset(auth()->user()->santri)){
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="mt-2 p-2 bg-white border">
+                                        <div class="mt-2 p-2 bg-white border font-weight-bold">
                                             <p>Pelaksanaan ini di monitoring dan di kontrol juga oleh Koor Ketertiban (Ust. Latif & Ust. Yopi), jika ditemukan laporan yang tidak sesuai dengan yang sebenarnya, maka mohon ridhonya untuk diberikan kafaroh oleh Koor Ketertiban.</p>
                                             <p>Bagi yang sudah jaga dan melaporkan ini dinyatakan (auto) "Hadir" pada KBM Shubuh, dan bagi yang tidak jaga (berhalangan) masih memiliki kewajiban untuk mengikuti KBM Shubuh.</p>
                                             <p><b>Ttd,<br>Pegurus PPM</b></p>
