@@ -32,7 +32,7 @@
       <table id="table" class="table align-items-center mb-0">
         <thead style="background-color:#f6f9fc;">
           <tr>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder" data-mdb-width="300" data-mdb-fixed="true">Nama</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder" data-mdb-width="200" data-mdb-fixed="true">Nama</th>
             @for($i=1; $i<=$days_in_month; $i++)
               <th class="text-uppercase text-secondary text-xs font-weight-bolder">
               {{$i}}

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Santri;
 use App\Models\Pelanggaran;
 use App\Models\JenisPelanggaran;
-use Illuminate\Support\Facades\DB;
 use App\Helpers\WaSchedules;
 use App\Helpers\CommonHelpers;
 
@@ -83,48 +83,6 @@ class PelanggaranController extends Controller
             'count_pelanggaran' => $count_pelanggaran
         ]);
     }
-
-    // public function list_archive()
-    // {
-    //     $is_archive = 1;
-    //     $count_pelanggaran = array(); //Pelanggaran::select(DB::raw('fkJenis_pelanggaran_id, COUNT(fkJenis_pelanggaran_id) as kategori'))->where('is_archive', $is_archive)->groupBy('fkJenis_pelanggaran_id')->get();
-    //     $list_pelanggaran = Pelanggaran::where('is_archive', $is_archive)->get();
-
-    //     foreach ($list_pelanggaran as $lp) {
-    //         $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['kategori'] = $lp->jenis->kategori_pelanggaran;
-    //         $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pelanggaran'] = $lp->jenis->jenis_pelanggaran;
-    //         if (!isset($count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan'])) {
-    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan'] = 0;
-    //         }
-    //         if (!isset($count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix'])) {
-    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix'] = 0;
-    //         }
-    //         if ($lp->keringanan_sp == '') {
-    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['pemantauan']++;
-    //         } else {
-    //             $count_pelanggaran[$lp->fkJenis_pelanggaran_id]['fix']++;
-    //         }
-    //     }
-
-    //     $column = [
-    //         'Nama',
-    //         'Angkatan',
-    //         'Pelanggaran',
-    //         'Tanggal Melangar',
-    //         'SP',
-    //         'Tanggal Pemberian ST',
-    //         'Peringatan Keras',
-    //         'Keterangan'
-    //     ];
-
-    //     return view('pelanggaran.list', [
-    //         'id' => null,
-    //         'column' => $column,
-    //         'is_archive' => $is_archive,
-    //         'list_pelanggaran' => $list_pelanggaran,
-    //         'count_pelanggaran' => $count_pelanggaran
-    //     ]);
-    // }
 
     public function create()
     {
@@ -223,8 +181,7 @@ class PelanggaranController extends Controller
 - Jenis Pelanggaran: *[' . $jenis_pelanggaran->kategori_pelanggaran . '] ' . $jenis_pelanggaran->jenis_pelanggaran . '*
 - Waktu: *' . $data->tanggal_melanggar . '*
 - Keterangan: *' . $data->keterangan . '*';
-            $contact_id = 'wa_dewanguru_group_id';
-            WaSchedules::save('Data Pelanggaran ' . $data->santri->user->fullname, $caption, $contact_id);
+            WaSchedules::save('Data Pelanggaran ' . $data->santri->user->fullname, $caption, CommonHelpers::settings()->wa_dewan_guru_group_id);
         }
 
         if ($update) {
@@ -232,5 +189,15 @@ class PelanggaranController extends Controller
         } else {
             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('pelanggaran tm'))->with('success', $message);
         }
+    }
+
+    public function by_mahasiswa(){
+        $santris = DB::table('v_user_santri')->get();
+        $column_pelanggarans = Pelanggaran::select('fkJenis_pelanggaran_id')->groupBy('fkJenis_pelanggaran_id')->where('is_archive',0)->get();
+
+        return view('pelanggaran.by_mahasiswa', [
+            'santris' => $santris,
+            'column_pelanggarans' => $column_pelanggarans,
+        ]);
     }
 }

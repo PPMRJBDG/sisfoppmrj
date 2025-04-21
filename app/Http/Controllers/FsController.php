@@ -362,7 +362,7 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
                                     if ($inserted) {
                                         if($is_late){
                                             $text_late = '🟨 *terlambat*';
-                                            WaSchedules::save('Presensi Terlambat', '🟨 *[Terlambat KBM]* Silahkan istighfar sebanyak 30x.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                                            WaSchedules::save('Presensi Terlambat', '🟨 *[Terlambat KBM]* Sebelum masuk masjid / mushola, Silahkan berdiri dan istighfar sebanyak 30x.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
                                         }else{
                                             $text_late = '✅ *tepat waktu*';
                                         }

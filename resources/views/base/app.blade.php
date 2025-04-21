@@ -130,6 +130,14 @@ if (auth()->user()->hasRole('barcode')) {
   .select-option, .form-control {
     font-size: 0.9rem !important;
   }
+
+  .sidenav-link {
+    font-weight: 500 !important
+  }
+
+  .datatable thead, .datatable thead tr, .datatablex thead, .datatablex thead tr, .datatable thead .fixed-cell {
+    background-color: #f6f9fc !important;
+  }
 </style>
 
 <body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0" onload="getPage(getCookie('current_url'))" id="body-top">
