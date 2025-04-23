@@ -45,6 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $no = 1; ?>
                     @foreach($santris as $data)
                         <tr>
                             <td>
@@ -58,7 +59,7 @@
                                 </div>
                             </td>
                             <td onclick="getReport('<?php echo base64_encode($data->santri->id); ?>')" style="cursor:pointer;">
-                                <b>[{{ $data->santri->angkatan }}] {{ $data->santri->user->fullname }}</b>
+                                <b><?php echo $no; ?>.) [{{ $data->santri->angkatan }}] {{ $data->santri->user->fullname }}</b>
                             </td>
                             @foreach($column_pelanggarans as $c)
                                 <td><p class="text-center mb-0">
@@ -71,6 +72,8 @@
                                 </p></td>
                             @endforeach
                         </tr>
+
+                        <?php $no++; ?>
                     @endforeach
                 </tbody>
             </table>
