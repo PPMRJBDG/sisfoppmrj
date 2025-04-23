@@ -187,7 +187,7 @@ class PelanggaranController extends Controller
         if ($update) {
             return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('edit pelanggaran', $request->input('id')))->with('success', $message);
         } else {
-            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('pelanggaran tm'))->with('success', $message);
+            return ($request->input('previous_url') ? redirect()->to($request->input('previous_url')) : redirect()->route('pelanggaran tm1'))->with('success', $message);
         }
     }
 
@@ -217,19 +217,20 @@ class PelanggaranController extends Controller
                     $jenis_pelanggaran = "*Jenis Pelanggaran:*
 ";
                     foreach($pelanggarans as $p){
-                        $jenis_pelanggaran .= "- ".strtoupper($p->jenis->jenis_pelanggaran)."
+                        $jenis_pelanggaran .= "- [".strtoupper($p->jenis->kategori_pelanggaran)."] ".strtoupper($p->jenis->jenis_pelanggaran)."
 ";
                     }
                     $caption = "*[INFORMASI PEMANGGILAN]*
-Berdasarkan penyaksian dan hasil evaluasi dari Tim Ketertiban PPM, *an. ".$s->fullname."* harap memenuhi panggilan dari Pengurus, yang akan dilaksanakan:
+Berdasarkan penyaksian dan hasil evaluasi dari Tim Ketertiban PPMRJ, *an. ".$s->fullname."* harap memenuhi panggilan dari Pengurus, yang akan dilaksanakan:
 📆 Waktu: ".date_format(date_create($request->input('datetime')),'d M Y | H:i:s')."
 🕌 Tempat: ".$request->input('tempat')."
 
 ".$jenis_pelanggaran."
 NB:
-- Jika berhalangan, harap konfirmasi Pengurus
-- Jika tidak memenuhi panggilan, akan dipanggil Orangtua untuk datang ke PPM";
+- Wajib mendatangi pemanggilan
+- Jika tidak memenuhi panggilan, akan dipanggil Orangtua untuk datang ke PPMRJ";
                     WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp), $time);
+                    WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp_ortu), $time);
                     $time++;
                 }
             }
