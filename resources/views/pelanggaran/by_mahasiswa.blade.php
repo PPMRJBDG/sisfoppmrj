@@ -37,7 +37,7 @@
             <table id="table" class="table justify-content-between align-items-center text-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>
-                        <th data-mdb-width="110" data-mdb-fixed="true">WA</th>
+                        <th data-mdb-width="200" data-mdb-fixed="true">WA</th>
                         <th data-mdb-width="300" data-mdb-fixed="true">NAMA</th>
                         @foreach($column_pelanggarans as $c)
                             <th><center>{{$c->jenis->jenis_pelanggaran}}</center></th>
