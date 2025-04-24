@@ -54,7 +54,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
+            <label for="reason_category" class="form-control-label">Kategori alasan</label>
             <select data-mdb-filter="true" name="reason_category" class="select form-control" required onchange="checkSS(this)">
               <option value="">Pilih kategori alasan</option>
               @foreach(App\Models\JenisAlasanIjins::get() as $alasan)

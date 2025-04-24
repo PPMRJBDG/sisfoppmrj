@@ -134,8 +134,7 @@ class PelanggaranController extends Controller
             $message = 'Data berhasil dihapus';
         }
 
-        // return redirect()->route('pelanggaran tm')->with('success', $message);
-        return redirect()->back()->with('success', $message);
+        return redirect()->route('pelanggaran tm1')->with('success', $message);
     }
 
     public function store(Request $request)
@@ -213,7 +212,8 @@ class PelanggaranController extends Controller
         if($santris){
             foreach($santris as $s){
                 $pelanggarans = Pelanggaran::where('fkSantri_id',$s->santri_id)->where('is_archive',0)->get();
-                if($pelanggarans){
+                
+                if(count($pelanggarans)<0){
                     $time = 1;
                     $jenis_pelanggaran = "*Jenis Pelanggaran:*
 ";
@@ -230,8 +230,8 @@ Berdasarkan penyaksian dan hasil evaluasi dari Tim Ketertiban PPMRJ, *an. ".$s->
 NB:
 - Wajib mendatangi pemanggilan
 - Jika tidak memenuhi panggilan, akan dipanggil Orangtua untuk datang ke PPMRJ";
-                    WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp), $time);
-                    WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp_ortu), $time);
+                    // WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp), $time);
+                    // WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp_ortu), $time);
                     $time++;
                 }
             }

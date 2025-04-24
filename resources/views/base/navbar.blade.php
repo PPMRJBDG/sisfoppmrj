@@ -2,88 +2,39 @@
   <nav class="navbar navbar-expand-lg fixed-top navbar-{{auth()->user()->themes}} bg-body-tertiary shadow-1-strong border-bottom">
     <div class="container-fluid">
       <div class="d-flex">
-        <a class="navbar-brand" href="#">
+        <button data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1" class="btn btn-primary btn-floating m-0" aria-controls="#sidenav-1" aria-haspopup="true">
+          <i class="fas fa-bars"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-floating m-0 ms-2" href="#" onclick="getPrevPage()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+
+      <!-- <div class="d-flex">
+        <div class="flex-fill">
+          <small id="breadcrumb-item" class="float-start font-weight-bolder m-0"></small>
+        </div>
+      </div> -->
+
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary btn-floating m-0" onclick="refreshCurrentUrl()">
+          <i class="fas fa-refresh"></i>
+        </button>
+        <a class="navbar-brand m-0 ms-2" href="#">
           @if($setting->logoImgUrl!='')
           <img src="{{ url('storage/logo-apps/' . $setting->logoImgUrl) }}" height="24" alt="PPM Logo" loading="lazy" />
           @else
           No Logo
           @endif
         </a>
-        <button type="button" class="btn btn-primary btn-floating m-0" href="#" onclick="getPrevPage()">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-      </div>
-
-      <div class="d-flex">
-        <div class="flex-fill">
-          <small id="breadcrumb-item" class="float-start font-weight-bolder m-0"></small>
-        </div>
-      </div>
-
-      <div>
-        <button type="button" class="btn btn-primary btn-floating m-0" onclick="refreshCurrentUrl()">
-          <i class="fas fa-refresh"></i>
-        </button>
-        <button data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1" class="btn btn-primary btn-floating m-0" aria-controls="#sidenav-1" aria-haspopup="true">
-          <i class="fas fa-bars"></i>
-        </button>
       </div>
     </div>
   </nav>
 </header>
 
-<footer>
-  <nav class="navbar navbar-expand-lg fixed-bottom bg-body-tertiary shadow-1-strong border-top">
-    <div class="col-12">
-      <div class="row justify-content-between align-items-center">
-        <div class="col-3">
-          <a href="{{ url('/home') }}" type="button" id="nav-bottom-home" class="btn btn-link btn-block nav-bottom-cl text-sm">
-            <i class="fa fa-home fa-2x"></i>
-          </a>
-        </div>
-        <div class="col-3">
-          <a href="{{ (auth()->user()->hasRole('santri')) ? route('presence permit submission') : route('create presence permit') }}" id="nav-bottom-ijin" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
-            <i class="fa fa-square-pen fa-2x"></i>
-          </a>
-        </div>
-        <div class="col-3">
-          <a href="{{ url('materi/monitoring/list') }}" id="nav-bottom-target" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
-            <i class="fa fa-book fa-2x"></i>
-          </a>
-        </div>
-        <div class="col-3">
-          <a href="{{ route('my profile') }}" id="nav-bottom-profile" type="button" class="btn btn-link btn-block nav-bottom-cl text-sm">
-            <i class="fa fa-user fa-2x"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </nav>
-</footer>
-
-<?php 
-$periode = App\Helpers\CommonHelpers::periode();
-$periode = explode("-",$periode);
-$month = ['09','10','11','12','01','02','03','04','05','06','07','08'];
-$currentMonth = date("m");
-$year = [$periode[0],$periode[0],$periode[0],$periode[0],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1],$periode[1]];
-?>
-<footer id="footer-calendar" style="display:none;">
-  <nav class="navbar fixed-bottom fixed bg-white align-items-center justify-content-center" style="border-top:solid 2px #d6d6d6">
-    <div class="text-center">
-      <?php
-      for($i=0; $i<12; $i++){
-      ?>
-        <button onclick="document.getElementById('month-{{$i}}').scrollIntoView()" class="btn btn-floating btn-sm btn-{{($currentMonth==$month[$i]) ? 'danger' : 'primary'}}">{{$month[$i]}}</button>
-      <?php
-      }
-      ?>
-    </div>
-  </nav>
-</footer>
-
 <!-- Sidenav -->
-<div id="sidenav-1" class="sidenav" role="navigation" data-mdb-right="true">
+<!-- <div id="sidenav-1" class="sidenav" data-mdb-sidenav-init data-mdb-close-on-esc="false" data-mdb-position="absolute" data-mdb-right="true" data-mdb-focus-trap="false" data-mdb-sidenav-initialized="true"> -->
+<div id="sidenav-1" class="sidenav">
   <div class="text-center mb-2 justify-content-between align-items-center shadow-1-strong" style="height:60px;">
     <h5 class="p-3 mb-0" style="font-size: 1.5rem;">{{$setting->apps_name}}</h5>
   </div>

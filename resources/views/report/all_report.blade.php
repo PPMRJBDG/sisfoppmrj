@@ -2,22 +2,24 @@
 
 <style>
     .datatable.datatable-sm td,
-    .datatable.datatable-sm th {
+    .datatable.datatable-sm th,
+    .datatablex.datatable-sm td,
+    .datatablex.datatable-sm th {
         padding: .5rem 0.5rem !important;
     }
-
     .datatable thead,
     .datatable thead tr {
         background-color: #f6f9fc !important;
     }
-
     .nav-link {
         display: block;
         padding: .5rem 1rem !important;
     }
-    
     .table tbody {
         font-weight: 400;
+    }
+    .select-arrow {
+      font-size: .5rem !important;
     }
 </style>
 
@@ -33,7 +35,7 @@
 </div>
 @else
 <div class="p-2 pb-0 pt-0">
-    <div class="card border mb-2">
+    <div class="card border mb-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <div class="card-body p-2">
             <center>
                 <h6 class="m-0">{{ $santri->user->fullname }}</h6>
@@ -42,7 +44,7 @@
     </div>
 
     @if(count($sodaqoh)>0)
-    <div class="card border mb-2 p-2">
+    <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Pembayaran Sodaqoh</h6>
         <div class="card-body p-0">
             <div class="datatable datatable-sm p-0" data-mdb-pagination="false">
@@ -97,7 +99,7 @@
     $all_alpha = 0;
     ?>
     @if($datapg!=null)
-    <div class="card border mb-2 p-2">
+    <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Presensi Kehadiran</h6>
         <div class="card-body p-0 text-center">
             <th class="text-center p-1">Total Keseluruhan</th>
@@ -149,7 +151,7 @@
             }
             ?>
             <div class="tab-pane fade show {{$act}}" id="nav-th{{ $th->y }}" role="tabpanel" aria-labelledby="nav-th{{ $th->y }}-tab">
-                <div class="datatable datatable-sm p-0 mt-1 tabcontent" id="th{{$th->y}}" data-mdb-pagination="false">
+                <div class="datatablex datatable-sm p-0 mt-1 tabcontent" id="th{{$th->y}}" data-mdb-pagination="false">
                     <table id="recap-kehadiran" class="table align-items-center mb-0">
                         <thead>
                             <tr style="background-color:#f6f9fc;">
@@ -165,6 +167,11 @@
                             <?php
                             $m1 = [9, 10, 11, 12];
                             $m2 = [1, 2, 3, 4, 5, 6, 7, 8];
+                            $periode_total_kbm = 0;
+                            $periode_total_hadir = 0;
+                            $periode_total_ijin = 0;
+                            $periode_total_alpha = 0;
+                            $periode_persentase = 0;
                             ?>
                             @foreach($tahun_bulan as $tb)
                             @if(substr($tb->ym,0,4)==($th->y-1) && in_array(intval(substr($tb->ym,5,2)), $m1) || substr($tb->ym,0,4)==$th->y && in_array(intval(substr($tb->ym,5,2)), $m2))
@@ -194,6 +201,13 @@
                                 if ($persentase < 80) {
                                     $color = 'danger';
                                 }
+
+                                $periode_total_kbm = $periode_total_kbm + $total_kbm;
+                                $periode_total_hadir = $periode_total_hadir + $total_hadir;
+                                $periode_total_ijin = $periode_total_ijin + $total_ijin;
+                                $periode_total_alpha = $periode_total_alpha + $total_alpha;
+                                $periode_persentase = ($periode_total_hadir + $periode_total_ijin) / $periode_total_kbm * 100;
+
                                 $all_kbm = $all_kbm + $total_kbm;
                                 $all_hadir = $all_hadir + $total_hadir;
                                 $all_ijin = $all_ijin + $total_ijin;
@@ -221,6 +235,24 @@
                             @endif
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr style="background-color:#f6f9fc;">
+                                <th class="font-weight-bolder text-center p-1">Total Periode</th>
+                                <th class="font-weight-bolder text-center p-1">{{$periode_total_kbm}}</th>
+                                <th class="font-weight-bolder text-center p-1">{{$periode_total_hadir}}</th>
+                                <th class="font-weight-bolder text-center p-1">{{$periode_total_ijin}}</th>
+                                <th class="font-weight-bolder text-center p-1">{{$periode_total_alpha}}</th>
+                                <th class="font-weight-bolder text-center p-1">
+                                    <?php
+                                    $colorp = '';
+                                    if ($periode_persentase < 80) {
+                                        $colorp = 'danger';
+                                    }
+                                    ?>
+                                    <span class="text-{{$colorp}}">{{ number_format($periode_persentase,2) }}%</span>
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -228,14 +260,14 @@
         </div>
     </div>
     @else
-    <div class="card border mb-2 p-2">
+    <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <div class="card-body p-2 text-center">
             Belum dimulai KBM
         </div>
     </div>
     @endif
 
-    <div class="card border mb-2 p-2">
+    <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Pencapaian Materi</h6>
         <div class="card-body p-0">
             <div class="datatable datatable-sm" data-mdb-pagination="false">
@@ -256,7 +288,7 @@
     </div>
 
     @if($catatan_penghubungs!=null)
-    <div class="card border mb-2 p-2">
+    <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Catatan Penghubung</h6>
         <div class="card-body p-2">
             <p class="font-weight-bolder">Kepribadian:</p>
@@ -278,7 +310,7 @@
     @endif
 
     @if(count($pelanggaran)>0)
-    <div class="card border mb-2 p-2">
+    <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(209, 66, 119)!important;">
         <h6 class="text-center mb-1">Riwayat Pelanggaran</h6>
         <div class="card-body p-0">
             <p class="p-2 font-weight-bolder">Berdasarkan catatan ketertiban, an. {{ $santri->user->fullname }} terdapat pelanggaran:</p>

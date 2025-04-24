@@ -9,6 +9,7 @@ use App\Models\Presence;
 use App\Models\Settings;
 use App\Models\Present;
 use App\Models\Santri;
+use App\Models\Permit;
 use App\Models\FsLogs;
 use App\Models\SpWhatsappPhoneNumbers;
 use App\Models\DewanPengajars;
@@ -360,6 +361,10 @@ Jika ternyata hadir dan belum atau lupa scan fingerprint, silahkan menghubungi R
 
                                     // kirim WA ke mahasiswa
                                     if ($inserted) {
+                                        $check_permit = Permit::where('fkPresence_id',$presence->id)->where('fkSantri_id',$santri_id)->first();
+                                        if($check_permit!=null){
+                                            $check_permit->delete();
+                                        }
                                         if($is_late){
                                             $text_late = '🟨 *terlambat*';
                                             // WaSchedules::save('Presensi Terlambat', '🟨 *[Terlambat KBM]* Sebelum masuk masjid / mushola, Silahkan berdiri dan istighfar sebanyak 30x.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
