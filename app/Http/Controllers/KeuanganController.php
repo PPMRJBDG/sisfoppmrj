@@ -937,7 +937,10 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                             $check_posted_jurnal->save();
                         }
                     }elseif($request->input('status')=='draft' && $create->status=="posted"){
-                        Jurnals::where('fkRabKegiatan_id',$create->id)->first()->delete();
+                        $jurnal = Jurnals::where('fkRabKegiatan_id',$create->id)->first();
+                        if($jurnal!=null){
+                            $jurnal->delete();
+                        }
                     }
                     $create->status = $request->input('status');
                     $create->justifikasi_rab = $request->input('justifikasi_rab');
