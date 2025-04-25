@@ -861,7 +861,8 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         }
 
         // get pelanggaran
-        $pelanggaran = Pelanggaran::where('fkSantri_id', $santri_id)->whereNotNull('keringanan_sp')->get();
+        // $pelanggaran = Pelanggaran::where('fkSantri_id', $santri_id)->whereNotNull('keringanan_sp')->get();
+        $pelanggaran = Pelanggaran::where('fkSantri_id', $santri_id)->get();
         $sodaqoh = Sodaqoh::where('fkSantri_id', $santri_id)->get();
 
         // get pencapaian materi

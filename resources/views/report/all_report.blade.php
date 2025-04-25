@@ -319,7 +319,7 @@
                     <thead style="background-color:#f6f9fc;">
                         <tr>
                             <th class="text-uppercase ps-2 font-weight-bolder">Pelanggaran</th>
-                            <th class="text-uppercase ps-2 text-center font-weight-bolder">Tanggal SP</th>
+                            <th class="text-uppercase ps-2 text-center font-weight-bolder">Tanggal</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -68,7 +68,7 @@ class PelanggaranController extends Controller
             'Nama',
             // 'Angkatan',
             // 'Pelanggaran',
-            'Tanggal',
+            'Pemanggilan',
             'SP',
             // 'Peringatan Keras',
             'Keterangan'
@@ -88,7 +88,7 @@ class PelanggaranController extends Controller
     {
         $list_santri = DB::table('v_user_santri')->orderBy('fullname')->get();
         $list_jenis_pelanggaran = JenisPelanggaran::get();
-        $column = Pelanggaran::attr();; //DB::getSchemaBuilder()->getColumnListing('pelanggarans');
+        $column = Pelanggaran::attr(); //DB::getSchemaBuilder()->getColumnListing('pelanggarans');
 
         return view('pelanggaran.create', [
             'column' => $column,
@@ -122,8 +122,7 @@ class PelanggaranController extends Controller
             $message = 'Data berhasil diarsipkan';
         }
 
-        // return redirect()->route('pelanggaran tm')->with('success', $message);
-        return redirect()->back()->with('success', $message);
+        return redirect()->route('pelanggaran tm1')->with('success', $message);
     }
 
     public function delete($id)
@@ -192,18 +191,31 @@ class PelanggaranController extends Controller
 
     public function by_mahasiswa(){
         // Hubungkan dengan Dashboard KBM < 80%
-        // $santris = Pelanggaran::select('fkSantri_id')->groupBy('fkSantri_id')->where('is_archive',0)->whereNotNull('keringanan_sp')->get();
         $santris = Pelanggaran::select('fkSantri_id')->groupBy('fkSantri_id')->where('is_archive',0)->get();
+        $santri_l = Pelanggaran::select('fkSantri_id')->groupBy('fkSantri_id')
+                    ->join('santris','pelanggarans.fkSantri_id', '=', 'santris.id')
+                    ->join('users','users.id', '=', 'santris.fkUser_id')
+                    ->where('pelanggarans.is_archive',0)
+                    ->where('users.gender', 'Male')
+                    ->get();
+        $santri_p = Pelanggaran::select('fkSantri_id')->groupBy('fkSantri_id')
+                    ->join('santris','pelanggarans.fkSantri_id', '=', 'santris.id')
+                    ->join('users','users.id', '=', 'santris.fkUser_id')
+                    ->where('pelanggarans.is_archive',0)
+                    ->where('users.gender', 'Female')
+                    ->get();
         $column_pelanggarans = Pelanggaran::select('fkJenis_pelanggaran_id')->groupBy('fkJenis_pelanggaran_id')->where('is_archive',0)->get();
 
         return view('pelanggaran.by_mahasiswa', [
             'santris' => $santris,
+            'santri_l' => $santri_l,
+            'santri_p' => $santri_p,
             'column_pelanggarans' => $column_pelanggarans,
         ]);
     }
 
     public function wa(Request $request){
-        if($request->input('all')==1){
+        if($request->input('santri_id')==0){
             $santris = DB::table('v_user_santri')->get();
         }else{
             $santris = DB::table('v_user_santri')->where('santri_id',$request->input('santri_id'))->get();
@@ -213,7 +225,7 @@ class PelanggaranController extends Controller
             foreach($santris as $s){
                 $pelanggarans = Pelanggaran::where('fkSantri_id',$s->santri_id)->where('is_archive',0)->get();
                 
-                if(count($pelanggarans)<0){
+                if(count($pelanggarans)>0){
                     $time = 1;
                     $jenis_pelanggaran = "*Jenis Pelanggaran:*
 ";
@@ -230,13 +242,43 @@ Berdasarkan penyaksian dan hasil evaluasi dari Tim Ketertiban PPMRJ, *an. ".$s->
 NB:
 - Wajib mendatangi pemanggilan
 - Jika tidak memenuhi panggilan, akan dipanggil Orangtua untuk datang ke PPMRJ";
-                    // WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp), $time);
-                    // WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp_ortu), $time);
+                    WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp), $time);
+                    $time++;
+                    WaSchedules::save('Pemanggilan an. ' . $s->fullname, $caption, WaSchedules::getContactId($s->nohp_ortu), $time);
                     $time++;
                 }
             }
         }
 
         return json_encode(array("status" => true, "message" => 'Berhasil melakukan pemanggilan'));
+    }
+
+    public function selesai_kafaroh(Request $request)
+    {
+        $pelanggarans = Pelanggaran::where('fkSantri_id',$request->input('santri_id'))->where('is_archive',0)->get();
+        if(count($pelanggarans)>0){
+            foreach($pelanggarans as $p){
+                $done = Pelanggaran::find($p->id);
+                $done->is_archive = 1;
+                $done->save();
+            }
+        }
+        return json_encode(array("status" => true, "message" => 'Berhasil update pelanggaran'));
+    }
+
+    public function update_pelanggaran(Request $request)
+    {
+        $pelanggarans = Pelanggaran::find($request->input('id'));
+        if($pelanggarans!=null){
+            $field = $request->input('field');
+            $pelanggarans->$field = $request->input('value');
+            if($pelanggarans->save()){
+                return json_encode(array("status" => true, "message" => 'Berhasil update pelanggaran'));
+            }else{
+                return json_encode(array("status" => false, "message" => 'Gagal update pelanggaran'));
+            }
+        }else{
+            return json_encode(array("status" => false, "message" => 'Pelanggaran tidak ditemukan'));
+        }
     }
 }

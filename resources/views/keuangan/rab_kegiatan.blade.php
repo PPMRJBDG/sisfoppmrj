@@ -160,6 +160,7 @@
 @if($detail_kegiatans!=null)
     <div class="text-end">
         <a href="{{route('rab kegiatan')}}" class="btn btn-sm btn-outline-secondary text-end">Kembali</a>
+        <a href="{{ url('keuangan/jurnal') }}" class="btn btn-sm btn-outline-primary text-end">Ke Jurnal</a>
     </div>
     <div class="card border p-2 mt-2" style="border-top:solid 2px #f29393!important;">
         <div class="row align-items-center justify-content-center">
@@ -374,10 +375,27 @@
                                         </button>
                                     @endif
                                     @if($detail_of->status=='approved')
-                                        <button type="submit" id="posted" class="btn btn-secondary btn-sm mb-0" onclick="submitKegiatan('posted',{{$detail_of}})">
-                                            <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
-                                            POSTING JURNAL
-                                        </button>
+                                        <div class="card p-2 border mt-2">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="col-8">
+                                                            <input type="date" value="{{date('Y-m-d')}}" class="form-control" name="tanggal-posting" id="tanggal-posting">
+                                                        </div>
+                                                        <div class="col-4 text-start ps-2">
+                                                            <button type="submit" id="posted" class="btn btn-secondary btn-sm mb-0" onclick="submitKegiatan('posted',{{$detail_of}})">
+                                                                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                                                                POSTING JURNAL
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 @endif
                             </th>
@@ -458,14 +476,17 @@ function submitKegiatan(tipe,detail_of){
                 alert("Berikan Justifikasi pada RAB");
                 return false;
             }
+            postData(tipe,detail_of)
         }
         if(tipe=="posted"){
             if(total_rab<total_realisasi && $("#justifikasi-realisasi").val()==""){
                 alert("Berikan Justifikasi pada Realisasi");
                 return false;
             }
+            if(confirm("Apakah Anda yakin akan di Posting ke Jurnal ?")){
+                postData(tipe,detail_of)
+            }
         }
-        postData(tipe,detail_of)
     }else if(tipe=="draft" && detail_of.status=="posted"){
         if(confirm("Status POSTED, jika akan diubah menjadi DRAFT maka catatan di Jurnal Keuangan akan terhapus, apakah Anda yakin ?")){
             postData(tipe,detail_of)
@@ -482,6 +503,7 @@ function postData(tipe,detail_of){
     var datax = {};
     datax['parent_id'] = detail_of.id;
     datax['status'] = tipe;
+    datax['tanggal_posting'] = $("#tanggal-posting").val();
     datax['justifikasi_rab'] = $("#justifikasi-rab").val();
     datax['justifikasi_realisasi'] = $("#justifikasi-realisasi").val();
     $.post("{{ route('store rab kegiatan') }}", datax,
