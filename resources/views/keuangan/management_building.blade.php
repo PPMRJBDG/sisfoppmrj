@@ -1,3 +1,14 @@
+<style>
+    .new-td, .datatable.datatable-sm td {
+        padding: 2px 5px !important;
+    }
+    .form-control {
+        border: transparent;
+        border-bottom: solid 1px #dee2e6;
+        font-size: 0.7rem !important;
+    }
+</style>
+
 <div class="card border p-2 mb-2" style="border-bottom:solid 2px #93c2f2!important;">
     <div class="row align-items-center justify-content-center text-center">
         <div class="col-md-12">
@@ -8,7 +19,8 @@
 
 @if($detail_manag_buildings==null)
 <div class="card border mt-2">
-    <div class="card-body p-0">
+    <button type="button" class="btn btn-sm btn-outline-light text-dark m-2" onclick="$('#s-dash').toggle();"><i class="fa fa-plus"></i> Input RAB</button>
+    <div class="card-body p-0" id="s-dash" style="display:none;">
         <form action="{{ route('store management building') }}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="parent_id" id="parent_id" value="" required>
             <div class="row p-2">
@@ -16,7 +28,7 @@
                     <input class="form-control" type="text" placeholder="Nama Pengajuan" id="name" name="name" required>
                 </div>
                 <div class="col-md-3">
-                    <input class="form-control" type="date" value="{{date('Y-m')}}" id="date" name="date" required>
+                    <input class="form-control" type="date" value="{{date('Y-m-d')}}" id="date" name="date" required>
                 </div>
                 <div class="col-md-5">
                     <textarea rows="5" class="form-control" type="textarea" placeholder="Deskripsi" id="deskripsi" name="deskripsi"></textarea>
@@ -54,7 +66,7 @@
                             <tr>
                                 <td>{{$mb->nama}}</td>
                                 <td>{{date_format(date_create($mb->periode_bulan), 'd-m-Y')}}</td>
-                                <td>{{number_format($mb->total_rab(),0, ',', '.')}}</td>
+                                <td>{{number_format($mb->total_biaya(),0, ',', '.')}}</td>
                                 <td>{{number_format($mb->total_realisasi(),0, ',', '.')}}</td>
                                 <td >{{$mb->deskripsi}}</td>
                                 <td><a href="{{route('rab management building id',$mb->id)}}" class="btn btn-sm btn-outline-secondary">Lihat Detil</a></td>
@@ -122,7 +134,7 @@
             <input type="hidden" name="id" id="id" value="" required>
             <input type="hidden" name="parent_id_detail" id="parent_id_detail" value="{{$detail_of->id}}" required>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <input class="form-control" type="text" id="uraian" name="uraian" placeholder="Uraian" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
                 <div class="col-md-2">
@@ -134,7 +146,7 @@
                 <div class="col-md-3">
                     <input class="form-control" type="number" id="biaya" name="biaya" placeholder="Biaya" required {{($detail_of->status=='approved') ? 'readonly' : ''}}>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1" style="display:none;">
                     @if($detail_of->status=="draft" || $detail_of->status=="submit")
                     <button type="submit" class="btn btn-primary btn-sm mb-0">
                         <i class="fas fa-save" aria-hidden="true"></i>

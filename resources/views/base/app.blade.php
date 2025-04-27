@@ -92,6 +92,9 @@ if (auth()->user()->hasRole('barcode')) {
       background: -webkit-linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important;
       background: linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important
     }
+    .badge-info, .alert-info, .bg-info {
+        background: linear-gradient(to right, rgb(123 212 210), rgb(53 145 143)) !important;
+    }
     .nav-tabs .nav-link {
       font-weight: 600 !important;
     }

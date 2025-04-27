@@ -71,11 +71,11 @@ Route::get('/presensi/izin/saya/edit', [App\Http\Controllers\PresenceController:
 Route::post('/presensi/izin/saya/update', [App\Http\Controllers\PresenceController::class, 'update_permit'])->name('update presence permit')->middleware('role:santri|superadmin|dewan guru');
 Route::get('/presensi/izin/saya/delete', [App\Http\Controllers\PresenceController::class, 'delete_my_permit'])->name('delete my presence permit')->middleware('role:santri|superadmin|dewan guru');
 Route::get('/presensi/izin/saya/berjangka/delete/{id}', [App\Http\Controllers\PresenceController::class, 'delete_my_ranged_permit'])->name('delete my ranged presence permit')->middleware('role:santri|superadmin|dewan guru');
-Route::get('/presensi/izin/saya/approve', [App\Http\Controllers\PresenceController::class, 'approve_permit'])->name('approve presence permit')->middleware('role:koor lorong|superadmin|rj1|wk|dewan guru');
-Route::get('/presensi/izin/pengajuan/berjangka/approve', [App\Http\Controllers\PresenceController::class, 'approve_range_permit'])->name('approve presence range permit')->middleware('role:superadmin|rj1|dewan guru');
-Route::get('/presensi/izin/pengajuan/berjangka/reject', [App\Http\Controllers\PresenceController::class, 'reject_range_permit'])->name('reject presence range permit')->middleware('role:superadmin|rj1|dewan guru');
+Route::get('/presensi/izin/saya/approve', [App\Http\Controllers\PresenceController::class, 'approve_reject_permit'])->name('approve presence permit')->middleware('role:koor lorong|superadmin|rj1|wk|dewan guru');
+Route::get('/presensi/izin/saya/reject', [App\Http\Controllers\PresenceController::class, 'approve_reject_permit'])->name('reject presence permit')->middleware('role:koor lorong|superadmin|rj1|wk|dewan guru');
+Route::get('/presensi/izin/pengajuan/berjangka/approve', [App\Http\Controllers\PresenceController::class, 'approve_reject_range_permit'])->name('approve presence range permit')->middleware('role:superadmin|rj1|dewan guru');
+Route::get('/presensi/izin/pengajuan/berjangka/reject', [App\Http\Controllers\PresenceController::class, 'approve_reject_range_permit'])->name('reject presence range permit')->middleware('role:superadmin|rj1|dewan guru');
 Route::get('/presensi/izin/pengajuan/delete_and_present', [App\Http\Controllers\PresenceController::class, 'delete_and_present'])->name('delete and present permit')->middleware('role:superadmin|rj1|dewan guru');
-Route::get('/presensi/izin/saya/reject', [App\Http\Controllers\PresenceController::class, 'reject_permit'])->name('reject presence permit')->middleware('role:koor lorong|superadmin|rj1|wk|dewan guru');
 Route::get('/presensi/izin/list', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk|dewan guru');
 Route::get('/presensi/izin/list/{tb}', [App\Http\Controllers\PresenceController::class, 'permits_list'])->name('permits list')->middleware('role:dewan guru|superadmin|rj1|wk|dewan guru');
 
@@ -230,9 +230,11 @@ Route::post('/keuangan/rab-kegiatan/store', [App\Http\Controllers\KeuanganContro
 Route::post('/keuangan/rab-detail-kegiatan/store', [App\Http\Controllers\KeuanganController::class, 'store_detail_rab_kegiatan'])->name('store detail rab kegiatan')->middleware('role:superadmin|ku|santri');
 Route::get('/keuangan/rab-kegiatan/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_rab_kegiatan'])->name('delete rab kegiatan')->middleware('role:superadmin|ku|santri');
 Route::get('/keuangan/rab-kegiatan/delete-detail/{id}', [App\Http\Controllers\KeuanganController::class, 'delete_detail_rab_kegiatan'])->name('delete detail rab kegiatan')->middleware('role:superadmin|ku|santri');
+Route::post('/keuangan/rab-detail-by-field/store', [App\Http\Controllers\KeuanganController::class, 'store_detail_by_field'])->name('store detail by field')->middleware('role:superadmin|ku|santri');
 Route::get('/rab/{ids}', [App\Http\Controllers\PublicController::class, 'rab_kegiatan'])->name('rab kegiatan public');
 Route::post('/rab/store-detail', [App\Http\Controllers\PublicController::class, 'store_detail_rab_kegiatan'])->name('store detail rab kegiatan public');
 Route::get('/rab/delete-detail/{id}', [App\Http\Controllers\PublicController::class, 'delete_detail_rab_kegiatan'])->name('delete detail rab kegiatan public');
+Route::post('/rab/store-rab-detail-by-field', [App\Http\Controllers\PublicController::class, 'store_detail_by_field'])->name('store detail by field public');
 Route::get('/ku/{tahun_bulan}/{print}', [App\Http\Controllers\PublicController::class, 'laporan_pusat'])->name('print laporan pusat public');
 
 // setting
@@ -252,7 +254,8 @@ Route::get('/schedule/{time}', [App\Http\Controllers\PublicController::class, 's
 Route::get('/schedule/{time}/{presence_id}', [App\Http\Controllers\PublicController::class, 'schedule']); // CRON
 Route::get('/generator', [App\Http\Controllers\PublicController::class, 'generator']);
 Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view report');
-Route::get('/reporting/link_ortu', [App\Http\Controllers\ReportController::class, 'link_ortu'])->name('report link ortu')->middleware('role:superadmin|rj1|wk');
+Route::get('/reporting/link_ortu', [App\Http\Controllers\ReportController::class, 'link_ortu'])->name('report link ortu')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/penilaian', [App\Http\Controllers\ReportController::class, 'penilaian'])->name('penilaian')->middleware('role:superadmin|rj1|wk|dewan guru');
 
 Route::get('/dwngr/{id}/delete/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_delete_present'])->name('dwngr delete present');
 Route::get('/dwngr/{id}/present/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_present'])->name('dwngr is present');

@@ -13,7 +13,7 @@
     </div>
     @endif
 
-    <div class="datatable datatable-sm" data-mdb-entries="100">
+    <div class="datatable" data-mdb-sm="true" data-mdb-entries="100">
       <table class="table align-items-center">
         <thead>
           <tr>

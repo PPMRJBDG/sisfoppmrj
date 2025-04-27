@@ -529,7 +529,6 @@ function promptDeleteAndPresent(id, presence_id = null, santri_id = null) {
 }
 
 function actionSavePermit(action) {
-    $("#loadingSubmit").show();
     var datax = {};
     datax['json'] = true;
 
@@ -565,6 +564,7 @@ function actionSavePermit(action) {
         $("#contentAlert").html('Silahkan pilih minimal satu mahasiswa / perijinan!');
         return false;
     } else {
+        $("#loadingSubmit").show();
         if (ival.length > 0) {
             var pesan_action = '';
             var url = '/presensi/izin/saya/'
@@ -576,7 +576,7 @@ function actionSavePermit(action) {
             } else if (action == 'reject') {
                 pesan_action = 'menolak';
             }
-            // if (confirm('Apakah anda yakin untuk ' + pesan_action + ' perijinan ini ?')) {
+            datax['action'] = action;
             datax['data_json'] = JSON.stringify(ival);
             $.get(base_url + `` + url + action, datax,
                 function (data, status) {
@@ -586,18 +586,10 @@ function actionSavePermit(action) {
                             $("#alertModal").fadeIn();
                             $("#contentAlert").html(return_data.is_present + ' telah hadir di presensi ini');
                         }
-
                         refreshCurrentUrl()
-                        // ival.forEach(function (iv) {
-                        //     var element = document.getElementById("prmt-" + iv[0] + "-" + iv[1]);
-                        //     if (element != null) {
-                        //         element.remove();
-                        //     }
-                        // })
                     }
                 }
             )
-            // }
         }
         if (ival_berjangka.length > 0) {
             var pesan_action = '';
@@ -610,26 +602,19 @@ function actionSavePermit(action) {
             } else if (action == 'reject') {
                 pesan_action = 'menolak';
             }
-            // if (confirm('Apakah anda yakin untuk ' + pesan_action + ' perijinan berjangka ini ?')) {
+            datax['action'] = action;
             datax['data_json_berjangka'] = JSON.stringify(ival_berjangka);
             $.get(base_url + `/presensi/izin/pengajuan/berjangka/` + action, datax,
                 function (data, status) {
                     var return_data = JSON.parse(data);
                     if (return_data.status) {
                         refreshCurrentUrl()
-                        // ival_berjangka.forEach(function (iv) {
-                        //     var element = document.getElementById("rpg-" + iv[0]);
-                        //     if (element != null) {
-                        //         element.remove();
-                        //     }
-                        // })
                     } else {
                         $("#alertModal").fadeIn();
                         $("#contentAlert").html(return_data.message);
                     }
                 }
             )
-            // }
         }
     }
 }
@@ -673,4 +658,19 @@ function searchDataSantri(id,value){
             }
         }
     }
+}
+
+function toFormatRupiah(angka) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+      split = number_string.split(','),
+      sisa = split[0].length % 3,
+      rupiah = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+  
+    if (ribuan) {
+      separator = sisa ? '.' : '';
+      rupiah += separator + ribuan.join('.');
+    }
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    return rupiah
 }

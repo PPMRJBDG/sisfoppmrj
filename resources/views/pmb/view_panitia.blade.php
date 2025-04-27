@@ -27,7 +27,7 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <div class="datatable datatable-sm" data-mdb-entries="50">
+        <div class="datatable" data-mdb-sm="true" data-mdb-entries="50">
             <table id="table-report" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>

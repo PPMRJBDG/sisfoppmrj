@@ -96,36 +96,4 @@ class WaSchedules
             return 0;
         }
     }
-
-    public static function insertToKetertiban($santri, $caption, $caption_ortu)
-    {
-        $setting = Settings::first();
-
-        // kirim ke group info ketertiban
-        $nohp = $santri->user->nohp;
-        if ($nohp != '') {
-            if ($nohp[0] == '0') {
-                $nohp = '62' . substr($nohp, 1);
-            }
-        }
-        $caption = $caption.'
-Hubungi: wa.me/'.$nohp;
-        WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, $setting->wa_info_presensi_group_id, null, true);
-
-        // kirim ke ortu
-        if ($caption_ortu != null) {
-            $nohp_ortu = $santri->nohp_ortu;
-            if ($nohp_ortu != '') {
-                if ($nohp_ortu[0] == '0') {
-                    $nohp_ortu = '62' . substr($nohp_ortu, 1);
-                }
-                $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                    $query->where('name', 'NOT LIKE', '%Bulk%');
-                })->where('team_id', $setting->wa_team_id)->where('phone', $nohp_ortu)->first();
-                if ($wa_phone != null) {
-                    WaSchedules::save('Perijinan Dari ' . $santri->user->fullname.' ke Ortu', $caption_ortu, $wa_phone->pid, 5);
-                }
-            }
-        }
-    }
 }

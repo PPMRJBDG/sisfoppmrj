@@ -28,92 +28,103 @@ $setting = App\Models\Settings::first();
 </head>
 
 <style>
-  body, .table, .form-control, .select-option {
-    font-size: .8rem !important;
-  }
-
-  .datatable tbody {
-    font-weight: 400;
-  }
-
-  .btn {
-    font-size: .7rem !important;
-  }
-
-  .form-group {
-    margin-bottom: 15px !important;
-  }
-
-  .navbar {
-    min-height: 60px !important;
-  }
-
-  /* .btn-primary, */
-  .bg-primary,
-  .badge-primary {
-    background: #48c6ef !important;
-    /* background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
-    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important */
-  }
-
-  /* .btn-danger, */
-  .badge-danger,
-  .alert-danger,
-  .bg-danger {
-    background: #f093fb !important;
-    /* background: -webkit-linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important;
-    background: linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important */
-  }
-
-  /* .btn-warning, */
-  .badge-warning,
-  .alert-warning,
-  .partial,
-  .bg-warning {
-    background: #f6d365 !important;
-    /* background: -webkit-linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important;
-    background: linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important */
-  }
-
-  /* .btn-success, */
-  .complete,
-  .badge-success,
-  .alert-success,
-  .bg-success {
-    background-color: #00c851 !important;
-    /* background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
-    background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important */
-  }
-
-  /* .btn-secondary, */
-  .bg-secondary,
-  .badge-secondary {
-    background-color: #a6c !important;
-    /* background: -webkit-linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important;
-    background: linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important */
-  }
-
-  .nav-tabs .nav-link {
-    font-weight: 600 !important;
-  }
-
-  .btn {
-    border-radius: 1.875rem !important;
-    font-weight: 700 !important;
-  }
-
-  .font-weight-bolder {
-    font-weight: 700 !important
-  }
-
-  .dropdown-menu {
-    --mdb-dropdown-min-width: 12rem !important;
-  }
-
-  .dataTables_wrapper .dataTables_filter input {
-    margin-bottom: 10px !important;
-  }
-</style>
+    body{
+      font-size: .8rem !important;
+    }
+    .table {
+      font-size: .75rem !important;
+    }
+    .datatable tbody {
+      font-weight: 400;
+    }
+    .select-arrow {
+      font-size: .6rem !important;
+    }
+    .btn {
+      font-size: .7rem !important;
+    }
+    .form-group {
+      margin-bottom: 15px !important;
+    }
+    .navbar {
+      min-height: 60px !important;
+    }
+    /* .btn-primary, */
+    .bg-primary,
+    .badge-primary {
+      background:  #48c6ef !important;
+      background: -webkit-linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important;
+      background: linear-gradient(to right, rgba(72, 198, 239, 1), rgba(111, 134, 214, 1)) !important
+    }
+    /* .btn-danger, */
+    .badge-danger,
+    .alert-danger,
+    .bg-danger {
+      background: #f093fb !important;
+      background: -webkit-linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important;
+      background: linear-gradient(to right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1)) !important
+    }
+    /* .btn-warning, */
+    .badge-warning,
+    .alert-warning,
+    .partial,
+    .bg-warning {
+      background: #f6d365 !important;
+      background: -webkit-linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important;
+      background: linear-gradient(to right, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1)) !important
+    }
+    /* .btn-success, */
+    .complete,
+    .badge-success,
+    .alert-success,
+    .bg-success {
+      background-color: #00c851 !important;
+      background: -webkit-linear-gradient(to right, #48ef82, #2f9e56) !important;
+      background: linear-gradient(to right, #48ef82, #2f9e56) !important
+    }
+    /* .btn-secondary, */
+    .bg-secondary,
+    .badge-secondary {
+      background-color: #a6c !important;
+      background: -webkit-linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important;
+      background: linear-gradient(to right, rgb(218 186 233 / 100%), rgb(134 73 149 / 100%)) !important
+    }
+    .badge-info, .alert-info, .bg-info {
+        background: linear-gradient(to right, rgb(123 212 210), rgb(53 145 143)) !important;
+    }
+    .nav-tabs .nav-link {
+      font-weight: 600 !important;
+    }
+    .btn {
+      border-radius: 1.875rem !important;
+      font-weight: 700 !important;
+    }
+    .font-weight-bolder {
+      font-weight: 700 !important
+    }
+    .dropdown-menu {
+      --mdb-dropdown-min-width: 12rem !important;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+      margin-bottom: 10px !important;
+    }
+    .modal{
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1050;
+        width: 100% !important;
+        height: 100% !important;
+        overflow-x: auto; 
+    }
+    .select-option, .form-control {
+      font-size: 0.9rem !important;
+    }
+    .sidenav-link {
+      font-weight: 500 !important
+    }
+    .datatable thead, .datatable thead tr, .datatablex thead, .datatablex thead tr, .datatable thead .fixed-cell {
+      background-color: #f6f9fc !important;
+    }
+  </style>
 
 <?php 
 $periode = App\Helpers\CommonHelpers::periode();

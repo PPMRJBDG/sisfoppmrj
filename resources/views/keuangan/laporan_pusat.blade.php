@@ -825,7 +825,7 @@
                         if(date_format(date_create($pt),'m') == date_format(date_create($select_bulan),'m')+1){
                             if($pengajuan_manag_buildings){
                                 foreach($pengajuan_manag_buildings as $pmb){
-                                    $total_mbuilding = $total_mbuilding + $pmb->total_rab();
+                                    $total_mbuilding = $total_mbuilding + $pmb->total_realisasi();
                                 }
                             }
                             if($val['total_out_nonrutin']==0){

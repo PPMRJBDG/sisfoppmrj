@@ -6,7 +6,7 @@
             {{ count($status) }} / {{ count($datax) }} sudah membuka
             <hr>
         </div>
-        <div class="datatable datatable-sm" data-mdb-entries="25">
+        <div class="datatable" data-mdb-sm="true" data-mdb-entries="25">
             <table id="table-report" class="table align-items-center mb-0">
                 <thead style="background-color:#f6f9fc;">
                     <tr>

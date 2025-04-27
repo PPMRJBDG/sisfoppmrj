@@ -240,12 +240,10 @@ if(isset(auth()->user()->santri)){
 </div>
 @endif
 
-@if(!auth()->user()->hasRole('superadmin') && !auth()->user()->hasRole('ku') && !auth()->user()->hasRole('dewan guru'))
+@if(auth()->user()->santri)
 <div class="col-12 p-0 mb-2">
     <div class="card border p-2">
-        @if(auth()->user()->santri)
-            <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-sm btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>
-        @endif
+        <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-sm btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>
     </div>
 </div>
 @endif

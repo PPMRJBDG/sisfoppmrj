@@ -653,7 +653,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                             'jenis' => 'out',
                             'uraian' => $create->nama,
                             'qty' => 1,
-                            'nominal' => $create->total_biaya(),
+                            'nominal' => $create->total_realisasi(),
                             'created_by' => auth()->user()->fullname,
                             'tipe_pengeluaran' => 'Non Rutin',
                             'fkRabManagBuilding_id' => $create->id
@@ -661,7 +661,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     }else{
                         $check_posted_jurnal->tanggal = $create->periode_bulan;
                         $check_posted_jurnal->uraian = $create->nama;
-                        $check_posted_jurnal->nominal = $create->total_biaya();
+                        $check_posted_jurnal->nominal = $create->total_realisasi();
                         $check_posted_jurnal->created_by = auth()->user()->fullname;
                         $check_posted_jurnal->save();
                     }
@@ -837,13 +837,13 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         }
         $rabs = Rabs::where('periode_tahun', CommonHelpers::periode())->where('create_rab',1)->get();
         $santris = DB::table('v_user_santri')->orderBy('fullname','ASC')->where('gender','male')->get();
-        $bendaharas = $santris;
         $kegiatans = RabKegiatans::get();
         if($ketuapanitia && !(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('ku'))){
             $santri_id = auth()->user()->santri->id;
             $kegiatans = RabKegiatans::where('fkSantri_id_ketua', $santri_id)->orWhere('fkSantri_id_bendahara', $santri_id)->get();
-            $santris = DB::table('v_user_santri')->where('santri_id', $santri_id)->orderBy('fullname','ASC')->where('gender','male')->get();
+            // $santris = DB::table('v_user_santri')->where('santri_id', $santri_id)->orderBy('fullname','ASC')->where('gender','male')->get();
         }
+        $bendaharas = $santris;
         $detail_kegiatans = null;
         if($id!=null){
             $detail_kegiatans = RabKegiatanDetails::where('fkRabKegiatan_id',$id)->orderBy('divisi','ASC')->get();
@@ -855,6 +855,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             'rabs' => $rabs,
             'santris' => $santris,
             'bendaharas' => $bendaharas,
+            'ketuapanitia' => $ketuapanitia,
         ]);
     }
 
@@ -924,7 +925,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                                 'jenis' => 'out',
                                 'uraian' => $create->nama,
                                 'qty' => 1,
-                                'nominal' => $create->total_biaya(),
+                                'nominal' => $create->total_realisasi(),
                                 'created_by' => auth()->user()->fullname,
                                 'tipe_pengeluaran' => 'Rutin',
                                 'fkRabKegiatan_id' => $create->id
@@ -932,7 +933,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                         }else{
                             $check_posted_jurnal->tanggal = $create->periode_bulan;
                             $check_posted_jurnal->uraian = $create->nama;
-                            $check_posted_jurnal->nominal = $create->total_biaya();
+                            $check_posted_jurnal->nominal = $create->total_realisasi();
                             $check_posted_jurnal->created_by = auth()->user()->fullname;
                             $check_posted_jurnal->save();
                         }
@@ -940,6 +941,17 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                         $jurnal = Jurnals::where('fkRabKegiatan_id',$create->id)->first();
                         if($jurnal!=null){
                             $jurnal->delete();
+                        }
+                    }elseif($request->input('status')=='approved'){
+                        $detail = RabKegiatanDetails::where('fkRabKegiatan_id',$create->id)->get();
+                        if(count($detail)>0){
+                            foreach($detail as $d){
+                                $by_id = RabKegiatanDetails::find($d->id);
+                                $by_id->qty_realisasi = $by_id->qty;
+                                $by_id->satuan_realisasi = $by_id->satuan;
+                                $by_id->biaya_realisasi = $by_id->biaya;
+                                $by_id->save();
+                            }
                         }
                     }
                     $create->status = $request->input('status');
@@ -976,6 +988,10 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
         if(!CommonHelpers::isKetuaBendahara()){
             return redirect()->route('dashboard');
         }
+        
+        $biaya = explode("RP ", $request->input('biaya'));
+        $biaya = preg_replace('/\./', '',$biaya[1]);
+        
         if($request->input('id')==""){
             if($request->input('status')!="approved"){
                 $create = RabKegiatanDetails::create([
@@ -983,7 +999,7 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
                     'uraian' => $request->input('uraian'),
                     'qty' => $request->input('qty'),
                     'satuan' => $request->input('satuan'),
-                    'biaya' => $request->input('biaya'),
+                    'biaya' => $biaya,
                     'divisi' => $request->input('divisi'),
                 ]);
                 if($create){
@@ -994,23 +1010,24 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             }else{
                 return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Status Approved tidak dapat menambah item baru']);
             }
-        }else{
-            $create = RabKegiatanDetails::find($request->input('id'));
-            $create->uraian = $request->input('uraian');
-            $create->qty = $request->input('qty');
-            $create->satuan = $request->input('satuan');
-            $create->biaya = $request->input('biaya');
-            $create->qty_realisasi = $request->input('qty_realisasi');
-            $create->satuan_realisasi = $request->input('satuan_realisasi');
-            $create->biaya_realisasi = $request->input('biaya_realisasi');
-            $create->divisi = $request->input('divisi');
-            $create->save();
-            if($create){
-                return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->with('success', 'Berhasil update detail pengajuan');
-            }else{
-                return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Gagal update detail pengajuan']);
-            }
         }
+        // else{
+        //     $create = RabKegiatanDetails::find($request->input('id'));
+        //     $create->uraian = $request->input('uraian');
+        //     $create->qty = $request->input('qty');
+        //     $create->satuan = $request->input('satuan');
+        //     $create->biaya = $request->input('biaya');
+        //     $create->qty_realisasi = $request->input('qty_realisasi');
+        //     $create->satuan_realisasi = $request->input('satuan_realisasi');
+        //     $create->biaya_realisasi = $request->input('biaya_realisasi');
+        //     $create->divisi = $request->input('divisi');
+        //     $create->save();
+        //     if($create){
+        //         return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->with('success', 'Berhasil update detail pengajuan');
+        //     }else{
+        //         return redirect()->route('rab kegiatan id',$request->input('parent_id_detail'))->withErrors(['failed' => 'Gagal update detail pengajuan']);
+        //     }
+        // }
     }
 
     public function delete_rab_kegiatan($id){
@@ -1043,6 +1060,23 @@ Masih memiliki kekurangannya senilai: *Rp ' . number_format($nominal_kekurangan,
             }
         } else {
             return json_encode(array("status" => false, "message" => 'Detail pengajuan tidak ditemukan'));
+        }
+    }
+
+    public function store_detail_by_field(Request $request){
+        $datax = RabKegiatanDetails::find($request->input('id'));
+        if($datax->kegiatan->status=='rejected'){
+            return json_encode(array("status" => false, "message" => "Rejected"));
+        }elseif(($datax->kegiatan->status=='draft' && $request->input('t')==1) || ($datax->kegiatan->status=='approved' && $request->input('t')==2) || $request->input('field')=='uraian'){
+            $field = $request->input('field');
+            $datax->$field = $request->input('value');
+            if($datax->save()){
+                return json_encode(array("status" => true));
+            }else{
+                return json_encode(array("status" => false));
+            }
+        }else{
+            return json_encode(array("status" => false, "message" => "Data tidak dapat diperbarui"));
         }
     }
 }

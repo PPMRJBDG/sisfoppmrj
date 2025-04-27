@@ -67,7 +67,7 @@ class CountDashboard
         }
 
         $content_body = '
-                    <div class="datatable datatable-sm" data-mdb-pagination="false" data-mdb-fixed-header="true">
+                    <div class="datatable" data-mdb-sm="true" data-mdb-pagination="false" data-mdb-fixed-header="true">
                         <table id="table-dashboard" class="table align-items-center mb-0">
                             <thead>
                                 <tr>

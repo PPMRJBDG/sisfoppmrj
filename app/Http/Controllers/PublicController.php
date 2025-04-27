@@ -343,9 +343,8 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
 
 *Silahkan mengikuti Hasda susulan yang dilaksanakan bulan '.date('M Y').' dengan jadwal sesuai hasil musyawarah. Namun jika ternyata ada yang sudah mengikuti Hasda diluar PPM silahkan konfirmasi ke Pengurus.*';
 
-                WaSchedules::save('Daftar Mahasiswa Yang Belum mengikuti Hasda', $caption_hasda, $setting->wa_maurus_group_id);
-                WaSchedules::save('Daftar Mahasiswa Yang Belum mengikuti Hasda', $caption_hasda, $setting->wa_ortu_group_id);
-                WaSchedules::save('Daftar Mahasiswa Yang Belum mengikuti Hasda', $caption_hasda, $setting->wa_info_presensi_group_id);
+                WaSchedules::save('Daftar Mahasiswa Yang Belum mengikuti Hasda', $caption_hasda, $setting->wa_maurus_group_id, 1);
+                WaSchedules::save('Daftar Mahasiswa Yang Belum mengikuti Hasda', $caption_hasda, $setting->wa_ortu_group_id, 2);
             }
 
             $list_angkatan = DB::table('santris')
@@ -353,118 +352,53 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                 ->whereNull('exit_at')
                 ->groupBy('angkatan')
                 ->get();
-
-            $caption = '*[LAPORAN BULANAN]*
-';
-            $caption = $caption . '*DAFTAR KEHADIRAN MAHASISWA < 80% [BULAN ' . strtoupper(date('M Y', $lsm)) . ']*';
             foreach ($list_angkatan as $la) {
-                foreach ($loop_month as $lm) {
-                    if (date('Y-m', strtotime(date($lm))) < date('Y-m')) {
-                        $result = (new HomeController)->dashboard($lm, $la->angkatan, null, true);
-                        $view_usantri = $result['view_usantri'];
-                        $presence_group = $result['presence_group'];
-                        $presences = $result['presences'];
-                        $all_presences = $result['all_presences'];
-                        $all_permit = $result['all_permit'];
+                $result = (new HomeController)->dashboard($last_month, $la->angkatan, null, true);
+                $view_usantri = $result['view_usantri'];
+                $presence_group = $result['presence_group'];
+                $presences = $result['presences'];
+                $all_presences = $result['all_presences'];
+                $all_permit = $result['all_permit'];
 
-                        foreach ($view_usantri as $vu) {
-                            $all_persentase = 0;
-                            $all_kbm = 0;
-                            $all_hadir = 0;
-                            $all_ijin = 0;
-                            foreach ($presence_group as $pg) {
-                                foreach ($presences[$vu->santri_id][$pg->id] as $listcp) {
-                                    if ($listcp->santri_id == $vu->santri_id) {
-                                        $ijin = 0;
-                                        if (isset($all_permit[$pg->id][$vu->santri_id])) {
-                                            $ijin = $all_permit[$pg->id][$vu->santri_id];
-                                        }
-                                        $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
-                                        $all_hadir = $all_hadir + $listcp->cp;
-                                        $all_ijin = $all_ijin + $ijin;
-                                    }
+                foreach ($view_usantri as $vu) {
+                    $all_persentase = 0;
+                    $all_kbm = 0;
+                    $all_hadir = 0;
+                    $all_ijin = 0;
+                    foreach ($presence_group as $pg) {
+                        foreach ($presences[$vu->santri_id][$pg->id] as $listcp) {
+                            if ($listcp->santri_id == $vu->santri_id) {
+                                $ijin = 0;
+                                if (isset($all_permit[$pg->id][$vu->santri_id])) {
+                                    $ijin = $all_permit[$pg->id][$vu->santri_id];
                                 }
+                                $all_kbm = $all_kbm + $all_presences[$vu->santri_id][$pg->id][0]->c_all;
+                                $all_hadir = $all_hadir + $listcp->cp;
+                                $all_ijin = $all_ijin + $ijin;
                             }
+                        }
+                    }
 
-                            if ($all_kbm > 0) {
-                                $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
-                                $all_persentase = number_format($all_persentase, 2);
-                                // jika kbm < 80%, then auto create pelanggaran and send wa to ketertiban
-                                if ($all_persentase < 80) {
-                                    $check_peringatan = Pelanggaran::where('fkSantri_id', $vu->santri_id)
-                                        ->where('fkJenis_pelanggaran_id', 14)
-                                        // ->whereNull('kategori_sp_real')
-                                        ->where('periode_tahun', CommonHelpers::periode())
-                                        ->first();
-
-                                    $is_50 = false;
-                                    if ($check_peringatan == null) {
-                                        $store['fkSantri_id'] = $vu->santri_id;
-                                        $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
-                                        $store['tanggal_melanggar'] = date("Y-m-d");
-                                        if ($all_persentase < 50) {
-                                            $store['saksi'] = 'sisfo 50%';
-                                        } else {
-                                            $store['saksi'] = 'sisfo 80%';
-                                        }
-                                        $store['keterangan'] = '[Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
-                                        $store['is_archive'] = 0;
-                                        $store['is_peringatan_keras'] = 0;
-                                        $store['peringatan_kbm'] = 1;
-                                        $store['periode_bulan_kbm'] = json_encode([$lm]);
-                                        $store['periode_tahun'] = CommonHelpers::periode();
-                                        $data = Pelanggaran::create($store);
-                                    } else {
-                                        $periode_bulan_kbm = json_decode($check_peringatan->periode_bulan_kbm);
-                                        if (!in_array($lm, $periode_bulan_kbm)) {
-                                            if ($check_peringatan->kategori_sp_real == null) {
-                                                $check_peringatan->peringatan_kbm = $check_peringatan->peringatan_kbm + 1;
-                                                $check_peringatan->keterangan = $check_peringatan->keterangan . ' | [Laporan Bulanan] Presensi kehadiran ' . $lm . ': ' . $all_persentase . '%';
-                                            }
-                                            if ($check_peringatan->peringatan_kbm == 3 || ($check_peringatan->peringatan_kbm == 2 && $check_peringatan->saksi == 'sisfo 50%' && $all_persentase < 50)) {
-                                                $check_peringatan->kategori_sp_real = '2';
-                                                $check_peringatan->keringanan_sp = '1';
-                                                $check_peringatan->is_surat_peringatan = date("Y-m-d");
-                                                $check_peringatan->is_peringatan_keras = 0;
-                                                if ($all_persentase < 50) {
-                                                    $is_50 = true;
-                                                    $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 2 bulan berturut-turut kehadiran dibawah < 50%';
-                                                } else {
-                                                    $check_peringatan->keterangan = $check_peringatan->keterangan . ' | Sudah 3 bulan kehadiran dibawah < 80%';
-                                                }
-                                            } else {
-                                                $check_peringatan->saksi = 'sisfo 80%';
-                                            }
-
-                                            array_push($periode_bulan_kbm, $lm);
-                                            $check_peringatan->periode_bulan_kbm = json_encode(array_unique($periode_bulan_kbm));
-                                        }
-
-                                        $check_peringatan->save();
-                                        $data = Pelanggaran::find($check_peringatan->id);
-                                    }
-
-                                    if ($data) {
-                                        if ($lm == $last_month) {
-                                            $caption = $caption . '
-' . $no . '. *[' . $data->santri->angkatan . '] ' . $data->santri->user->fullname . ' (' . $all_persentase . '%)*';
-                                            if ($is_50) {
-                                                $caption = $caption . ' - Keterangan: Sudah 2 bulan berturut-turut kehadiran < 50%';
-                                            } elseif ($data->peringatan_kbm == 3) {
-                                                $caption = $caption . ' - Keterangan: Sudah mencapai 3 bulan kehadiran < 80%';
-                                            }
-                                            $no++;
-                                        }
-                                    }
-                                }
-                            }
+                    if ($all_kbm > 0) {
+                        $all_persentase = ($all_hadir + $all_ijin) / $all_kbm * 100;
+                        $all_persentase = number_format($all_persentase, 2);
+                        // if kbm < 80%, then auto create pelanggaran
+                        if ($all_persentase < 80) {
+                            $store['fkSantri_id'] = $vu->santri_id;
+                            $store['fkJenis_pelanggaran_id'] = 14; // Amrin Jami' Tanpa Ijin
+                            $store['tanggal_melanggar'] = date("Y-m-d");
+                            $store['saksi'] = 'Sisfo';
+                            $store['keterangan'] = $last_month . ': ' . $all_persentase . '%';
+                            $store['is_archive'] = 0;
+                            $store['is_peringatan_keras'] = 0;
+                            $store['peringatan_kbm'] = 1;
+                            $store['periode_bulan_kbm'] = json_encode([$last_month]);
+                            $store['periode_tahun'] = CommonHelpers::periode();
+                            // $data = Pelanggaran::create($store);
                         }
                     }
                 }
             }
-            $contact_id = $setting->wa_info_presensi_group_id;
-            WaSchedules::save('Amrin Jami Tanpa Ijin Bulan ' . $last_month, $caption, $contact_id, $time_post);
-            $time_post++;
 
             // kirim absensi bulanan - bulk ortu
             $view_usantri = DB::table('v_user_santri')->whereNotNull('nohp_ortu')->orderBy('fullname', 'ASC')->get();
@@ -486,37 +420,13 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                     $create_report = $check_report->save();
                 }
                 if ($create_report) {
-                    $nohp = $vs->nohp_ortu;
-                    if ($nohp != '') {
-                        if ($nohp[0] == '0') {
-                            $nohp = '62' . substr($nohp, 1);
-                        }
-                        $wa_phone = SpWhatsappPhoneNumbers::whereHas('contact', function ($query) {
-                            $query->where('name', 'NOT LIKE', '%Bulk%');
-                        })->where('team_id', $setting->wa_team_id)->where('phone', $nohp)->first();
-                        if ($wa_phone != null) {
-                            $caption = 'Berikut kami informasikan laporan mahasiswa an. *' . $vs->fullname . '*
+                    $caption = 'Berikut kami informasikan *LAPORAN MAHASISWA* an. *' . $vs->fullname . '*
 Silahkan klik link dibawah ini:
 ' . $setting->host_url . '/report/' . $vs->ids;
-                            WaSchedules::save('All Report: ' . $vs->fullname, $caption, $wa_phone->pid, $time_post);
-                        }
-                        $time_post++;
-                    }
+                    WaSchedules::save('All Report: ' . $vs->fullname, $caption, WaSchedules::getContactId($vs->nohp_ortu), $time_post);
+                    $time_post++;
                 }
             }
-
-            $check_akumulasi_sp = Pelanggaran::where('is_archive', 0)->whereNotNull('keringanan_sp')->orderBy('fkSantri_id')->get();
-            $caption_pelanggaran = '*[DAFTAR PELANGGARAN AKTIF]*
-';
-            $nox = 1;
-            foreach ($check_akumulasi_sp as $casp) {
-                $caption_pelanggaran = $caption_pelanggaran . '
-' . $nox . '. *' . $casp->santri->user->fullname . '*: ' . $casp->jenis->jenis_pelanggaran; // . ' (SP ' . $casp->keringanan_sp . ')';
-                $nox++;
-            }
-            $contact_id = $setting->wa_info_presensi_group_id;
-            WaSchedules::save('Daftar Pelanggaran Aktif', $caption_pelanggaran, $contact_id, $time_post);
-            $time_post++;
 
             echo json_encode(['status' => true, 'message' => '[monthly] success running scheduler']);
         } elseif ($time == 'jam-malam') {
@@ -916,12 +826,14 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
     public function store_detail_rab_kegiatan(Request $request){
         if($request->input('id')==""){
             if($request->input('status')!="approved"){
+                $biaya = explode("RP ", $request->input('biaya'));
+                $biaya = preg_replace('/\./', '',$biaya[1]);
                 $create = RabKegiatanDetails::create([
                     'fkRabKegiatan_id' => $request->input('parent_id_detail'),
                     'uraian' => $request->input('uraian'),
                     'qty' => $request->input('qty'),
                     'satuan' => $request->input('satuan'),
-                    'biaya' => $request->input('biaya'),
+                    'biaya' => $biaya,
                     'realisasi' => $request->input('realisasi'),
                     'divisi' => $request->input('divisi'),
                 ]);
@@ -929,20 +841,38 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             }else{
                 return redirect()->route('rab kegiatan public',$request->input('ids'))->withErrors(['failed' => 'Status Approved tidak dapat menambah item baru']);
             }
-        }else{
-            $create = RabKegiatanDetails::find($request->input('id'));
-            $create->uraian = $request->input('uraian');
-            $create->qty = $request->input('qty');
-            $create->satuan = $request->input('satuan');
-            $create->biaya = $request->input('biaya');
-            $create->qty_realisasi = $request->input('qty_realisasi');
-            $create->satuan_realisasi = $request->input('satuan_realisasi');
-            $create->biaya_realisasi = $request->input('biaya_realisasi');
-            $create->divisi = $request->input('divisi');
-            $create->save();
-            return redirect()->route('rab kegiatan public',$request->input('ids'));
         }
+        // else{
+        //     $create = RabKegiatanDetails::find($request->input('id'));
+        //     $create->uraian = $request->input('uraian');
+        //     $create->qty = $request->input('qty');
+        //     $create->satuan = $request->input('satuan');
+        //     $create->biaya = $request->input('biaya');
+        //     $create->qty_realisasi = $request->input('qty_realisasi');
+        //     $create->satuan_realisasi = $request->input('satuan_realisasi');
+        //     $create->biaya_realisasi = $request->input('biaya_realisasi');
+        //     $create->divisi = $request->input('divisi');
+        //     $create->save();
+        //     return redirect()->route('rab kegiatan public',$request->input('ids'));
+        // }
     }
+
+    public function store_detail_by_field(Request $request){
+        $datax = RabKegiatanDetails::find($request->input('id'));
+        if($datax->kegiatan->status=='rejected'){
+            return json_encode(array("status" => false, "message" => "Rejected"));
+        }elseif(($datax->kegiatan->status=='draft' && $request->input('t')==1) || ($datax->kegiatan->status=='approved' && $request->input('t')==2) || $request->input('field')=='uraian'){
+            $field = $request->input('field');
+            $datax->$field = $request->input('value');
+            if($datax->save()){
+                return json_encode(array("status" => true));
+            }else{
+                return json_encode(array("status" => false));
+            }
+        }else{
+            return json_encode(array("status" => false, "message" => "Data tidak dapat diperbarui"));
+        }
+    }    
 
     public function delete_detail_rab_kegiatan($id){
         $data = RabKegiatanDetails::find($id);

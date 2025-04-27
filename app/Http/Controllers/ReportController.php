@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ReportScheduler;
+use App\Helpers\CommonHelpers;
 
 class ReportController extends Controller
 {
@@ -26,6 +27,15 @@ class ReportController extends Controller
         return view('report.report', [
             'datax' => $datax,
             'status' => $status,
+        ]);
+    }
+
+    public function penilaian()
+    {
+        $mahasiswa = DB::table('v_user_santri')->orderBy('fullname','ASC')->get();
+
+        return view('report.penilaian', [
+            'mahasiswa' => $mahasiswa,
         ]);
     }
 }

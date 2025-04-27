@@ -270,7 +270,7 @@
     <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Pencapaian Materi</h6>
         <div class="card-body p-0">
-            <div class="datatable datatable-sm" data-mdb-pagination="false">
+            <div class="datatable" data-mdb-sm="true" data-mdb-pagination="false">
                 <table id="recap-materi" class="table align-items-center mb-0">
                     <thead>
                         <tr>
@@ -287,7 +287,7 @@
         </div>
     </div>
 
-    @if($catatan_penghubungs!=null)
+    <!-- @if($catatan_penghubungs!=null)
     <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Catatan Penghubung</h6>
         <div class="card-body p-2">
@@ -307,7 +307,7 @@
             <span>{{ $catatan_penghubungs->cat_umum }}</span>
         </div>
     </div>
-    @endif
+    @endif -->
 
     @if(count($pelanggaran)>0)
     <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(209, 66, 119)!important;">
@@ -330,8 +330,8 @@
                                 {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small>
                             </td>
                             <td class="p-1 ps-2 text-center">
-                                @if($plg->is_surat_peringatan!='')
-                                {{ date_format(date_create($plg->is_surat_peringatan),'d M Y') }}
+                                @if($plg->tanggal_melanggar!='')
+                                {{ date_format(date_create($plg->tanggal_melanggar),'d M Y') }}
                                 @endif
                             </td>
                         </tr>

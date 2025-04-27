@@ -247,7 +247,8 @@ class FsController extends Controller
                     if ($presence == null) {
                         if($get_degur==null){
                             // kirim WA ke mahasiswa
-                            WaSchedules::save('Presensi: Null', '*[Fingerprint]* Mohon maaf *'.$get_santri->user->fullname.'*, mungkin KBM sudah selesai atau belum mulai KBM selanjutnya.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
+                            WaSchedules::save('Presensi: Null', '*[Fingerprint]* Mohon maaf *'.$get_santri->user->fullname.'*, mungkin KBM sudah selesai atau belum mulai KBM selanjutnya.
+Mohon diperhatikan jam *Sign-in* nya pada setiap KBM di Group Maurus.', WaSchedules::getContactId($get_santri->user->nohp), null, true);
                             echo "Nok - Presensi Null";
                             exit;
                         }
