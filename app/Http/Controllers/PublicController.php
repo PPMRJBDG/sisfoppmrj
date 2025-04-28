@@ -1031,7 +1031,7 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
         $today = date('Y-m-d', strtotime(today()));
         $pengajars = DewanPengajars::all();
         $template = KalenderPpmTemplates::select('sequence')->groupBy('sequence')->get();
-        $templates = KalenderPpmTemplates::orderBy('waktu', 'ASC')->get();
+        $templates = KalenderPpmTemplates::orderBy('id', 'ASC')->get();
         $kalenders = KalenderPpms::get();
         return view('kalender_ppm', ['today' => $today, 'pengajars' => $pengajars, 'template' => $template, 'templates' => $templates, 'kalenders' => $kalenders]);
     }

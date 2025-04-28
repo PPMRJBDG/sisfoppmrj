@@ -1603,7 +1603,7 @@ class PresenceController extends Controller
 - Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 - Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss_k.'
-Hubungi: '.$santri->nohp;
+Hubungi: '.$santri->user->nohp;
 
                 $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . ']*
 ' . $lorong . '
@@ -1766,7 +1766,7 @@ Hubungi: '.$santri->nohp;
 - Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
 ' . $add_ss_k.'
 *PERLU PERSETUJUAN PENGURUS*
-Hubungi: '.$santri->nohp;
+Hubungi: '.$santri->user->nohp;
 
                 WaSchedules::save('Perijinan Dari ' . $santri->user->fullname, $caption, CommonHelpers::settings()->wa_info_presensi_group_id, null, true);
 
@@ -1925,7 +1925,7 @@ Hubungi: '.$santri->nohp;
 - Alasan: [' . $request->input('reason_category') . '] ' . $request->input('reason') . '
 - Perijinan ke: *' . ($data_kbm_ijin['ijin'] + 1) . ' (dari Kuota ' . $data_kbm_ijin['kuota'] . ')*
 ' . $add_ss_k.$need_approval.'
-Hubungi: '.$santri->nohp;
+Hubungi: '.$santri->user->nohp;
 
             $caption_ortu = '*[Perijinan Dari ' . $santri->user->fullname . '] -> Diinput oleh ' . auth()->user()->fullname . '*
 ' . $lorong . '
@@ -2080,7 +2080,7 @@ Hubungi: '.$santri->nohp;
 - Tanggal: ' . $request->input('from_date') . ' s.d. ' . $request->input('to_date') . '
 ' . $sttijn . '
 ' . $add_ss_k.'
-Hubungi: '.$santri->nohp;
+Hubungi: '.$santri->user->nohp;
 
             if ($request->input('status') == 'pending') {
                 $sttijn = 'Status: *Pending*';

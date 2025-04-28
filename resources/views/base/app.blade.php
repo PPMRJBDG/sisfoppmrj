@@ -127,6 +127,10 @@ if (auth()->user()->hasRole('barcode')) {
     .datatable thead, .datatable thead tr, .datatablex thead, .datatablex thead tr, .datatable thead .fixed-cell {
       background-color: #f6f9fc !important;
     }
+    .form-control:focus {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
   </style>
 
   <body data-mdb-spy="scroll" data-mdb-target="#scrollspy" data-mdb-offset="0" onload="getPage(getCookie('current_url'))" id="body-top">

@@ -255,7 +255,8 @@ Route::get('/schedule/{time}/{presence_id}', [App\Http\Controllers\PublicControl
 Route::get('/generator', [App\Http\Controllers\PublicController::class, 'generator']);
 Route::get('/report/{ids}', [App\Http\Controllers\PublicController::class, 'report'])->name('view report');
 Route::get('/reporting/link_ortu', [App\Http\Controllers\ReportController::class, 'link_ortu'])->name('report link ortu')->middleware('role:superadmin|rj1|wk|dewan guru');
-Route::get('/penilaian', [App\Http\Controllers\ReportController::class, 'penilaian'])->name('penilaian')->middleware('role:superadmin|rj1|wk|dewan guru');
+Route::get('/penilaian', [App\Http\Controllers\ReportController::class, 'penilaian'])->name('penilaian')->middleware('role:superadmin|dewan guru');
+Route::post('/evaluation/store', [App\Http\Controllers\ReportController::class, 'store_evaluation'])->name('store evaluation')->middleware('role:superadmin|dewan guru');
 
 Route::get('/dwngr/{id}/delete/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_delete_present'])->name('dwngr delete present');
 Route::get('/dwngr/{id}/present/{santriId}', [App\Http\Controllers\PublicController::class, 'presence_is_present'])->name('dwngr is present');

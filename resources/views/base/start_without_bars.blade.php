@@ -124,6 +124,10 @@ $setting = App\Models\Settings::first();
     .datatable thead, .datatable thead tr, .datatablex thead, .datatablex thead tr, .datatable thead .fixed-cell {
       background-color: #f6f9fc !important;
     }
+    .form-control:focus {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
   </style>
 
 <?php 

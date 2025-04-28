@@ -21,36 +21,6 @@ function build_calendar($month, $year, $today, $templates, $template, $start_seq
   $selectoption = "";
   if(auth()->user()){
     if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('divisi kurikulum')){
-      // for($x=2; $x>=1; $x--){
-      //   if($x==1){
-      //     $display = 'none';
-      //     $option = 'Sequence';
-      //     $label_select = '<label>Tanggal 1 Start Sequence:</label>';
-      //     $id_kalender = $id_kalender_seq;
-      //   }else{
-      //     $display = 'block';
-      //     $option = 'Tanggal';
-      //     $label_select = '<label>Sequence 1 Start Tanggal:</label>';
-      //     $id_kalender = $id_kalender_tgl;
-      //   }
-      //   $disabled = "";
-      //   if($lock_calendar){
-      //     $disabled = "disabled";
-      //   }
-      //   $selectoption .= "<div style='display:$display;' class='col-md'>$label_select<select $disabled data-mdb-filter='true' onchange='changeStart($x, this.value, $month, $id_kalender)' class='select form-control'>";
-      //   $selectoption .= "<option value=''>--Pilih $option--</option>";
-      //   foreach($template as $t){
-      //     $selected = "";
-      //     if($x==1 && $start_seq==$t->sequence){
-      //       $selected = "selected";
-      //     }elseif($x==2 && $start_tgl==$t->sequence){
-      //       $selected = "selected";
-      //     }
-      //     $selectoption .= "<option $selected value='$t->sequence'>$option $t->sequence</option>";
-      //   }
-      //   $selectoption .= "</select></div>";
-      // }
-
       $disabled = "";
       if($lock_calendar){
         $disabled = "disabled";
