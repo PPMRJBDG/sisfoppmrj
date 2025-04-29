@@ -1140,7 +1140,6 @@ class PresenceController extends Controller
     public function approve_reject_permit(Request $request)
     {
         // get current santri
-        $json = $request->get('json');
         $setting = Settings::find(1);
 
         $status = 'approved';
@@ -1149,69 +1148,64 @@ class PresenceController extends Controller
             $status = 'rejected';
             $status_text = 'Menolak';
         }
-
-        if (isset($json)) {
-            if ($json) {
-                $caption = '*' . auth()->user()->fullname . '* '.$status_text.' perizinan dari:
+        $caption = '*' . auth()->user()->fullname . '* '.$status_text.' perizinan dari:
 ';
-                $message = '';
-                $updated = false;
-                $data_json = json_decode($request->get('data_json'));
-                $is_present = '';
-                $notifikasi = array();
-                $alasan_rejected = '';
-                foreach ($data_json as $dt) {
-                    $presenceId = $dt[0];
-                    $santriId = $dt[1];
+        $message = '';
+        $updated = false;
+        $data_json = json_decode($request->get('data_json'));
+        $is_present = '';
+        $notifikasi = array();
+        $alasan_rejected = '';
+        foreach ($data_json as $dt) {
+            $presenceId = $dt[0];
+            $santriId = $dt[1];
+            if($status=='rejected'){
+                $alasan_rejected = $dt[2];
+            }
+
+            $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
+            if ($permit) {
+                $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
+                if ($present) {
+                    $permit->delete();
+                } else {
+                    $permit->status = $status;
+
                     if($status=='rejected'){
-                        $alasan_rejected = $dt[2];
-                    }
-
-                    $permit = Permit::where('fkPresence_id', $presenceId)->where('fkSantri_id', $santriId)->first();
-                    if ($permit) {
-                        $present = Present::where('fkSantri_id', $santriId)->where('fkPresence_id', $presenceId)->first();
-                        if ($present) {
-                            $permit->delete();
-                        } else {
-                            $permit->status = $status;
-
-                            if($status=='rejected'){
-                                $permit->rejected_by = auth()->user()->fullname;
-                                if (isset($alasan_rejected)) {
-                                    $permit->alasan_rejected = $alasan_rejected;
-                                }
-                            }else{
-                                $permit->approved_by = auth()->user()->fullname;
-                                $permit->alasan_rejected = '';
-                            }
-
-                            $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
-                            $updated = $permit->save();
-                            $notif_info = '- '.$permit->presence->name . ': _[' . $permit->reason_category . '] ' . $permit->reason.'_
-';
-                            $notifikasi[$dt[1]]['contact'] = $permit->santri->user->nohp;
-                            $notifikasi[$dt[1]]['contact_ortu'] = $permit->santri->nohp_ortu;
-                            if(!isset($notifikasi[$dt[1]]['message'])){
-                                $notifikasi[$dt[1]]['message'] = '*' . auth()->user()->fullname . '* '.$status_text.' perizinan dari *'.$permit->santri->user->fullname.'* pada:
-'.$notif_info;
-                            }else{
-                                $notifikasi[$dt[1]]['message'] = $notifikasi[$dt[1]]['message'].$notif_info;
-                            }
+                        $permit->rejected_by = auth()->user()->fullname;
+                        if (isset($alasan_rejected)) {
+                            $permit->alasan_rejected = $alasan_rejected;
                         }
-                        $caption = $caption . '- *' . $permit->santri->user->fullname . '* _pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message . '_
+                    }else{
+                        $permit->approved_by = auth()->user()->fullname;
+                        $permit->alasan_rejected = '';
+                    }
+
+                    $permit->metadata = $_SERVER['HTTP_USER_AGENT'];
+                    $updated = $permit->save();
+                    $notif_info = '- '.$permit->presence->name . ': _[' . $permit->reason_category . '] ' . $permit->reason.'_
 ';
+                    $notifikasi[$dt[1]]['contact'] = $permit->santri->user->nohp;
+                    $notifikasi[$dt[1]]['contact_ortu'] = $permit->santri->nohp_ortu;
+                    if(!isset($notifikasi[$dt[1]]['message'])){
+                        $notifikasi[$dt[1]]['message'] = '*' . auth()->user()->fullname . '* '.$status_text.' perizinan dari *'.$permit->santri->user->fullname.'* pada:
+'.$notif_info;
+                    }else{
+                        $notifikasi[$dt[1]]['message'] = $notifikasi[$dt[1]]['message'].$notif_info;
                     }
                 }
-
-                foreach($notifikasi as $n){
-                    WaSchedules::save($status_text.' - Mahasiswa', $n['message'], WaSchedules::getContactId($n['contact']), null, true);
-                    WaSchedules::save($status_text.' - Ortu', $n['message'], WaSchedules::getContactId($n['contact_ortu']), null, true);
-                }
-                
-                WaSchedules::save($status_text.' - Info Perizinan', $caption, $setting->wa_info_presensi_group_id, null, true);
-                return json_encode(['status' => true, 'message' => 'Berhasil '.$status_text.' Perijinan.', 'is_present' => $is_present]);
+                $caption = $caption . '- *' . $permit->santri->user->fullname . '* _pada ' . $permit->presence->name . ': [' . $permit->reason_category . '] ' . $permit->reason . $message . '_
+';
             }
         }
+
+        foreach($notifikasi as $n){
+            WaSchedules::save($status_text.' - Mahasiswa', $n['message'], WaSchedules::getContactId($n['contact']), null, true);
+            WaSchedules::save($status_text.' - Ortu', $n['message'], WaSchedules::getContactId($n['contact_ortu']), null, true);
+        }
+        
+        WaSchedules::save($status_text.' - Info Perizinan', $caption, $setting->wa_info_presensi_group_id, null, true);
+        return json_encode(['status' => true, 'message' => 'Berhasil '.$status_text.' Perijinan.', 'is_present' => $is_present]);
     }
 
     public function approve_reject_range_permit(Request $request)

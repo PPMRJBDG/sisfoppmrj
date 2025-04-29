@@ -108,9 +108,7 @@
             <br>
             <div class="row">
               <div class="col-md-12">
-                <div class="form-group">
-                  <input class="btn btn-primary" type="submit" value="Ajukan">
-                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="Ajukan">
               </div>
             </div>
           </form>
@@ -222,9 +220,7 @@
             <br>
             <div class="row">
               <div class="col-md-12">
-                <div class="form-group">
-                  <input class="btn btn-primary" type="submit" value="Ajukan">
-                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="Ajukan">
               </div>
             </div>
           </form>

@@ -27,7 +27,10 @@
     </div>
     @endif
 
-    <div class="datatable datatable-sm p-0">
+    <div class="p-2">
+        <input class="form-control" placeholder="Search" type="text" id="search" onkeyup="searchDataSantri('santrix',this.value)">
+    </div>
+    <div id="santrix" class="datatable p-0" data-md-sm="true">
       <table id="table" class="table align-items-center mb-0">
         <thead>
           <tr>
@@ -46,7 +49,7 @@
           @foreach($users as $user)
           <tr>
             <td class="text-sm font-weight-bolder">
-              <span class="mb-0 font-weight-bolder text-sm">{{ $user->fullname }}</span>
+              <span class="santri-name mb-0 font-weight-bolder text-sm" santri-name="{{ $user->fullname }}">{{ $user->fullname }}</span>
             </td>
             <td class="text-sm">
               {{ $user->nohp }}

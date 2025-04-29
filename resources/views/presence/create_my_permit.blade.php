@@ -90,9 +90,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="form-group">
-            <input id="btn-prsc" class="btn btn-primary btn-block" type="submit" value="Ajukan">
-          </div>
+          <input id="btn-prsc" class="btn btn-primary btn-block" type="submit" value="Ajukan">
         </div>
       </div>
       @else

@@ -146,7 +146,7 @@
 
   <div class="card shadow border p-2">
     <nav>
-      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <div class="nav nav-tabs nav-fill nav-justified" id="nav-tab" role="tablist">
         <a data-mdb-ripple-init onclick="return false;" class="nav-link active font-weight-bolder" id="nav-hadir-tab" data-bs-toggle="tab" href="#nav-hadir" role="tab" aria-controls="nav-hadir" aria-selected="true">Hadir <span id="c-hdr">{{count($presents)}}</span></a>
         <a data-mdb-ripple-init onclick="return false;" class="nav-link font-weight-bolder" id="nav-ijin-tab" data-bs-toggle="tab" href="#nav-ijin" role="tab" aria-controls="nav-ijin">Ijin {{count($permits)}}</a>
         <a data-mdb-ripple-init onclick="return false;" class="nav-link font-weight-bolder" id="nav-alpha-tab" data-bs-toggle="tab" href="#nav-alpha" role="tab" aria-controls="nav-alpha">Alpha <span id="c-alp">{{count($mhs_alpha)}}</span></a>
@@ -199,9 +199,9 @@
         <div class="tab-pane fade show" id="nav-ijin" role="tabpanel" aria-labelledby="nav-ijin-tab">
           @if(count($permits)>0 || count($need_approval)>0)
           <div class="text-center">
-            <h6 class="mb-0 bg-warning p-1 text-white">
+            <p class="mb-0 bg-warning text-white">
               Perlu persetujuan/ditolak: {{count($need_approval)}}
-            </h6>
+            </p>
           </div>
 
           <div class="datatable datatable-sm">
@@ -305,7 +305,7 @@
                     <td class="text-sm" id="slbtna-{{$mhs['santri_id']}}">
                       @if($update)
                         @if (auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('rj1') || auth()->user()->hasRole('wk') || auth()->user()->hasRole('dewan guru'))
-                          <a class="btn btn-primary btn-block btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">Hadir</a>
+                          <a class="btn btn-primary btn-sm mb-0" href="#" onclick="selectForHadir(<?php echo $mhs['santri_id']; ?>)">H</a>
                         @endif
                       @endif
                     </td>
@@ -392,13 +392,15 @@
           var zxca = parseInt($("#c-hdr").html());
           var zxcb = parseInt($("#c-alp").html());
           var x = 'a'; // berarti proses delete
-          var tedf = 'Hadir';
+          var tedf = 'H';
+          var tedfn = 'Hadir';
           var ghdf = 'alpha';
           var btn = 'primary';
           var datetime = '';
           if (st == 'present') {
             x = 'h'; // berarti proses present
-            tedf = 'Alpha';
+            tedf = 'A';
+            tedfn = 'Alpha';
             ghdf = 'hadir';
             btn = 'danger';
             zxca++;
@@ -418,8 +420,8 @@
             '<b>' + name + '</b>' + datetime +
             '</td>' +
             '<td class="align-middle text-center text-sm" id="slbtn' + x + '-' + santriId + '">' +
-            '<small style="font-size: 9px;">Updated by ' + user + '</small><br>' +
-            '<a class = "btn btn-' + btn + ' btn-block btn-sm mb-0" href = "#" onclick = "selectFor' + tedf + '(' + santriId + ')">' + tedf + '</a>' +
+            '<small style="font-size: 9px;">' + user + '</small><br>' +
+            '<a class = "btn btn-' + btn + ' btn-sm mb-0" href = "#" onclick = "selectFor' + tedf + '(' + santriId + ')">' + tedf + '</a>' +
             '</td>' +
             '</tr>';
 

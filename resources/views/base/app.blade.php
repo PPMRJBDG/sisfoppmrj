@@ -36,6 +36,7 @@ if (auth()->user()->hasRole('barcode')) {
     }
     .table {
       font-size: .75rem !important;
+      margin-bottom: 15px !important;
     }
     .datatable tbody {
       font-weight: 400;

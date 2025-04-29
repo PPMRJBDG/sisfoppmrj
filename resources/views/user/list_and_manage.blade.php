@@ -43,19 +43,22 @@
     </div>
     @endif
 
-    <div class="datatable datatable-sm p-0" data-mdb-entries="200">
-      <table id="table" class="table align-items-center mb-0">
+    <div class="p-2">
+        <input class="form-control" placeholder="Search" type="text" id="search" onkeyup="searchDataSantri('santrix',this.value)">
+    </div>
+    <div id="santrix" class="datatable p-0" data-md-sm="true" data-mdb-entries="200">
+      <table id="table" class="table align-items-center mb-4">
         <thead class="thead-light" style="background-color:#f6f9fc;">
           <tr class="list">
             <th class="text-center text-uppercase text-xxs font-weight-bolder">Action</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder">Sync</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder">Nama</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">No HP</th>
+            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">No HP Ortu</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Kelamin</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Tgl Lahir</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Angkatan</th>
-            <!-- <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Nama Ortu</th>
-            <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">No HP Ortu</th> -->
+            <!-- <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Nama Ortu</th> -->
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Role</th>
             <th class="text-uppercase sort text-xxs font-weight-bolder ps-2">Lorong</th>
           </tr>
@@ -64,19 +67,18 @@
           @foreach($users as $user)
           <tr>
             <td class="align-middle text-center text-sm">
-              @can('delete users')
-              <!-- <a href="{{ route('delete user', $user->id) }}" class="btn btn-danger btn-sm mb-0" onclick="return confirm('Yakin menghapus {{ $user->fullname }}?')">Hapus</a> -->
-              @endcan
-              @can('update users')
-              <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Edit</a>
-              @endcan
+              <span class="santri-name" santri-name="{{ $user->fullname }}">
+                @can('update users')
+                <a href="{{ route('edit user', $user->id) }}" class="btn btn-primary btn-sm mb-0">Edit</a>
+                @endcan
+              </span>
             </td>
             <td class="text-sm">
               <a href="#" class="btn {{ ($user->santri->template_fs1!=null) ? 'btn-warning' : 'btn-danger' }} btn-sm mb-0">
                 {{ ($user->santri->template_fs1!=null) ? 'Ok' : 'Nok'; }}
               </a>
             </td>
-            <td class="text-sm" data-toggle="tooltip" data-placement="top" title="Klik unutk melihat report" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')" style="cursor:pointer;">
+            <td>
               <?php
                 $is_kl = false;
                 foreach ($user->getRoleNames() as $role) {
@@ -94,10 +96,13 @@
                   }
                 }
                 ?>
-                <span class="mb-0 font-weight-bolder text-sm {{ $unkl }}">{{ $user->fullname }}</span>
+                <span class="mb-0 font-weight-bolder text-sm {{ $unkl }}" onclick="getReport('<?php echo base64_encode($user->santri->id); ?>')">{{ $user->fullname }}</span>
             </td>
             <td class="text-sm">
               {{ $user->nohp }}
+            </td>
+            <td>
+              {{ $user->santri->nohp_ortu }}
             </td>
             <td class="text-sm">
               @if($user->gender == 'male')
@@ -115,9 +120,6 @@
             </td>
             <!-- <td>
               {{ $user->santri->nama_ortu }}
-            </td>
-            <td>
-              {{ $user->santri->nohp_ortu }}
             </td> -->
             <td class="text-sm">
               @foreach ($user->getRoleNames() as $role)
