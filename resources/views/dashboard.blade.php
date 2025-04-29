@@ -243,10 +243,10 @@ if(isset(auth()->user()->santri)){
 @if(auth()->user()->santri)
 <div class="col-12 p-0 mb-2">
     <div class="card border p-2 text-center">
-        <div class="col-lg-3 col-md-6 mb-2 mb-md-2 mb-lg-0 position-relative">
+        <div class="mb-2 position-relative">
             <i class="fas fa-user fa-2x {{$score_text}} mb-0"></i>
             <h5 class="{{$score_text}} fw-bold mb-0"><small>SCORE</small> {{ number_format($score, 2) }}</h5>
-            <h6 class="fw-normal {{$score_text}} mb-0">Sangat Aman</h6>
+            <h6 class="fw-normal {{$score_text}} mb-0">{{$score_desc}}</h6>
         </div>
           
         <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-sm btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>

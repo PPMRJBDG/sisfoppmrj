@@ -370,12 +370,13 @@ class CountDashboard
         }
         $jam_malam = TelatPulangMalams::where('fkSantri_id', $mhs->santri_id)->get();
         // kefahaman = 2
+        // ibadah = 3
         // akhlaq = 3
         // ta'dzim = 3
         // amalsholih = 3
         // penampilan = 3
         // kuliah = 2
-        $nilai_per_item = ($mhs->kefahaman + $mhs->akhlaq + $mhs->takdzim + $mhs->amalsholih + $mhs->penampilan + $mhs->kuliah) / 16 * 100;
+        $nilai_per_item = ($mhs->kefahaman + $mhs->akhlaq + $mhs->takdzim + $mhs->amalsholih + $mhs->penampilan + $mhs->kuliah) / 19 * 100;
         $kehadiran = $mhs->hadir / $mhs->kbm * 100;
         $perijinan = $mhs->ijin / $mhs->kbm * 100;
         return (($nilai_per_item + $kehadiran + $perijinan) / 2) - count($jam_malam) - ($p_ringan+$p_sedang+$p_berat);

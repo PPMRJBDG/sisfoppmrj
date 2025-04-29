@@ -10,6 +10,7 @@ class Evaluations extends Model
     protected $fillable = [
         'fkSantri_id',
         'kefahaman',
+        'ibadah',
         'akhlaq',
         'takdzim',
         'amalsholih',

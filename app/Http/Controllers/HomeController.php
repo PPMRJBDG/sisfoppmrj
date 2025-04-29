@@ -326,6 +326,7 @@ class HomeController extends Controller
             return [
                 'score' => $score,
                 'score_text' => $score_text,
+                'score_desc' => $score_desc,
                 'presences' => $presences,
                 'presences_santri' => $presences_santri,
                 'presence_group' => $presence_group,
@@ -344,6 +345,7 @@ class HomeController extends Controller
             return view('dashboard', [
                 'score' => $score,
                 'score_text' => $score_text,
+                'score_desc' => $score_desc,
                 'periode_tahun' => $periode_tahun,
                 'presences_santri' => $presences_santri,
                 'presences' => $presences,

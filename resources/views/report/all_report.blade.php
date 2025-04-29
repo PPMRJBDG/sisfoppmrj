@@ -43,6 +43,14 @@
         </div>
     </div>
 
+    <center>
+    <div class="mb-2 position-relative">
+        <i class="fas fa-user fa-2x {{$score_text}} mb-0"></i>
+        <h5 class="{{$score_text}} fw-bold mb-0"><small>SCORE</small> {{ number_format($score, 2) }}</h5>
+        <h6 class="fw-normal {{$score_text}} mb-0">{{$score_desc}}</h6>
+    </div>
+    </center>
+
     @if(count($sodaqoh)>0)
     <div class="card border mb-2 p-2" style="border-bottom:solid 2px rgb(66, 209, 181)!important;">
         <h6 class="text-center mb-1">Pembayaran Sodaqoh</h6>

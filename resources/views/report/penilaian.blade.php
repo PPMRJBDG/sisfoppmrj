@@ -68,6 +68,7 @@ $score_tidak_aman = 0;
             <th>KBM-ALPHA</th>
             <th data-mdb-width="50">IJIN MALAM</th>
             <th>AKHLAQ</th>
+            <th>IBADAH</th>
             <th>TA'DZIM</th>
             <th>AMALSHOLIH</th>
             <th>PENAMPILAN</th>
@@ -169,6 +170,15 @@ $score_tidak_aman = 0;
                         <option {{ ($mhs->akhlaq==1) ? 'selected' : '' }} value="1">Cukup Baik</option>
                         <option {{ ($mhs->akhlaq==2) ? 'selected' : '' }} value="2">Baik</option>
                         <option {{ ($mhs->akhlaq==3) ? 'selected' : '' }} value="3">Sangat Baik</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" name="ibadah" id="ibadah" onchange="updateEvaluasi(this,{{$mhs->santri_id}})">
+                        <option value="-"></option>
+                        <option {{ ($mhs->ibadah==0) ? 'selected' : '' }} value="0">Tidak Semangat</option>
+                        <option {{ ($mhs->ibadah==1) ? 'selected' : '' }} value="1">Kurang Semangat</option>
+                        <option {{ ($mhs->ibadah==2) ? 'selected' : '' }} value="2">Cukup Semangat</option>
+                        <option {{ ($mhs->ibadah==3) ? 'selected' : '' }} value="3">Sangat Semangat</option>
                     </select>
                 </td>
                 <td>
