@@ -80,7 +80,7 @@ class PelanggaranController extends Controller
             'column' => $column,
             'is_archive' => $is_archive,
             'list_pelanggaran' => $list_pelanggaran,
-            'jenis_pelanggaran' => JenisPelanggaran::get(),
+            'jenis_pelanggaran' => JenisPelanggaran::orderBy('kategori_pelanggaran','ASC')->get(),
             'count_pelanggaran' => $count_pelanggaran
         ]);
     }
