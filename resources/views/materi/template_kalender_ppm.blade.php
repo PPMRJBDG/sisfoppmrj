@@ -182,7 +182,7 @@ for($i=1; $i<=8; $i++){
     }
 
     function onChange(id,tipe,kbm,seq,kelas){
-        $("#loadingSubmit").show();
+        // $("#loadingSubmit").show();
         var datax = {};
         datax['id'] = id;
         var checkBox = document.getElementById("check-"+seq+"-"+kbm);
@@ -200,7 +200,7 @@ for($i=1; $i<=8; $i++){
 
         $.post("{{ route('store_template_kalender_ppm') }}", datax,
             function(data, status) {
-                window.location.reload();
+                // window.location.reload();
             }
         )
     }
