@@ -296,28 +296,13 @@ class HomeController extends Controller
         $yesterday = date('Y-m-d', $yesterday);
         $data_telatpulang = TelatPulangMalams::where('jam_pulang','like',date('Y-m-d').'%')->orWhere('jam_pulang','like',$yesterday.'%')->orderBy('id','DESC')->get();
         $data_jobdesk_jaga = null;
-        $score = 0;
-        $score_text = "";
-        $score_desc = "";
+        $score = array();
         if(isset(auth()->user()->id)){
             if(auth()->user()->santri){
                 $data_jobdesk_jaga = LaporanKeamanans::where('id',auth()->user()->santri->fkLaporan_keamanan_id)->first();
                 $mahasiswa = DB::table('v_evaluasi_mahasiswa')->where('santri_id', auth()->user()->santri->id)->first();
                 if($mahasiswa!=null){
                     $score = CountDashboard::score($mahasiswa);
-                    if($score>=80){
-                        $score_text = 'text-black';
-                        $score_desc = 'Sangat Aman';
-                    }elseif($score<80 && $score>=50){
-                        $score_text = 'text-info';
-                        $score_desc = 'Aman';
-                    }elseif($score<50 && $score>=20){
-                        $score_text = 'text-warning';
-                        $score_desc = 'Hati-Hati';
-                    }elseif($score<20){
-                        $score_text = 'text-danger';
-                        $score_desc = 'Tidak Aman';
-                    }
                 }
             }
         }
@@ -325,8 +310,6 @@ class HomeController extends Controller
         if ($json) {
             return [
                 'score' => $score,
-                'score_text' => $score_text,
-                'score_desc' => $score_desc,
                 'presences' => $presences,
                 'presences_santri' => $presences_santri,
                 'presence_group' => $presence_group,
@@ -344,8 +327,6 @@ class HomeController extends Controller
         } else {
             return view('dashboard', [
                 'score' => $score,
-                'score_text' => $score_text,
-                'score_desc' => $score_desc,
                 'periode_tahun' => $periode_tahun,
                 'presences_santri' => $presences_santri,
                 'presences' => $presences,

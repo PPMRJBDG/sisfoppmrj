@@ -725,25 +725,10 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
             }
         }
 
-        $score = 0;
-        $score_text = "";
-        $score_desc = "";
+        $score = array();
         $mahasiswa = DB::table('v_evaluasi_mahasiswa')->where('santri_id', $santri_id)->first();
         if($mahasiswa!=null){
             $score = CountDashboard::score($mahasiswa);
-            if($score>=80){
-                $score_text = 'text-black';
-                $score_desc = 'Sangat Aman';
-            }elseif($score<80 && $score>=50){
-                $score_text = 'text-info';
-                $score_desc = 'Aman';
-            }elseif($score<50 && $score>=20){
-                $score_text = 'text-warning';
-                $score_desc = 'Hati-Hati';
-            }elseif($score<20){
-                $score_text = 'text-danger';
-                $score_desc = 'Tidak Aman';
-            }
         }
 
         // get pelanggaran
@@ -777,8 +762,6 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
 
         return view('report.all_report', [
             'score' => $score,
-            'score_text' => $score_text,
-            'score_desc' => $score_desc,
             'santri' => $santri,
             'tahun' => $tahun,
             'tahun_bulan' => $tahun_bulan,

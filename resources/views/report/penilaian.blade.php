@@ -87,30 +87,26 @@ $score_tidak_aman = 0;
                   $jam_malam = App\Models\TelatPulangMalams::where('fkSantri_id', $mhs->santri_id)->get();
                   $kehadiran = $mhs->hadir / $mhs->kbm * 100;
                   $score = App\Helpers\CountDashboard::score($mhs);
-                  $text_score = '';
-                  if($score>=80){
+                  if($score['score']>=80){
                     $score_sangat_aman ++;
-                  }elseif($score<80 && $score>=50){
+                  }elseif($score['score']<80 && $score['score']>=50){
                     $score_aman ++;
-                    $text_score = 'text-info';
-                  }elseif($score<50 && $score>=20){
+                  }elseif($score['score']<50 && $score['score']>=20){
                     $score_hati_hati ++;
-                    $text_score = 'text-warning';
-                  }elseif($score<20){
+                  }elseif($score['score']<20){
                     $score_tidak_aman ++;
-                    $text_score = 'text-danger';
                   }
                 ?>
                 <td>
-                  <span class="santri-name text-left {{$text_score}}" santri-name="{{ $mhs->fullname }}" onclick="getReport('<?php echo base64_encode($mhs->santri_id); ?>')" style="cursor:pointer;">
+                  <span class="santri-name text-left {{$score['score_text']}}" santri-name="{{ $mhs->fullname }}" onclick="getReport('<?php echo base64_encode($mhs->santri_id); ?>')" style="cursor:pointer;">
                       <b>[{{ $mhs->angkatan }}] {{ $mhs->fullname }}</b>
                   </span>
                 </td>
                 <td>
                   <center>
-                    <span class="{{$text_score}}">
+                    <span class="{{$score['score_text']}}" id="update-score{{$mhs->santri_id}}">
                       <?php
-                        echo number_format($score, 2);
+                        echo number_format($score['score'], 2);
                       ?>
                     </span>
                   </center>
@@ -273,7 +269,9 @@ function updateEvaluasi(thisx,id){
       function(dataz, status) {
         var return_data = JSON.parse(dataz);
             if (return_data.status) {
-                refreshCurrentUrl();
+              $("#update-score"+id).html(return_data.score.score)
+              $("#update-score"+id).attr('class',return_data.score.score_text)
+                // refreshCurrentUrl();
             }
       }
   );

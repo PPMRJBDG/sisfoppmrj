@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ReportScheduler;
 use App\Models\Evaluations;
 use App\Helpers\CommonHelpers;
+use App\Helpers\CountDashboard;
 
 class ReportController extends Controller
 {
@@ -42,6 +43,9 @@ class ReportController extends Controller
 
     public function store_evaluation(Request $request)
     {
+        if($request->input('value')=="-"){
+            return json_encode(array("status" => false));
+        }
         $datax = Evaluations::where('fkSantri_id',$request->input('santri_id'))->first();
         
         if($datax==null){
@@ -54,6 +58,12 @@ class ReportController extends Controller
             $datax->save();
         }
 
-        return json_encode(array("status" => true));
+        $score = array();
+        $mahasiswa = DB::table('v_evaluasi_mahasiswa')->where('santri_id', $request->input('santri_id'))->first();
+        if($mahasiswa!=null){
+            $score = CountDashboard::score($mahasiswa);
+        }
+
+        return json_encode(array("status" => true, "score" => $score));
     }
 }

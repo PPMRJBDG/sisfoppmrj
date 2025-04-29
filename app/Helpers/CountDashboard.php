@@ -357,6 +357,7 @@ class CountDashboard
         $p_ringan = 0;
         $p_sedang = 0;
         $p_berat = 0;
+        $return_score = array();
         if(count($pelanggaran)>0){
         foreach($pelanggaran as $p){
             if($p->jenis->kategori_pelanggaran=='Ringan'){
@@ -379,6 +380,21 @@ class CountDashboard
         $nilai_per_item = ($mhs->kefahaman + $mhs->akhlaq + $mhs->takdzim + $mhs->amalsholih + $mhs->penampilan + $mhs->kuliah) / 19 * 100;
         $kehadiran = $mhs->hadir / $mhs->kbm * 100;
         $perijinan = $mhs->ijin / $mhs->kbm * 100;
-        return (($nilai_per_item + $kehadiran + $perijinan) / 2) - count($jam_malam) - ($p_ringan+$p_sedang+$p_berat);
+        $score = (($nilai_per_item + $kehadiran + $perijinan) / 2) - count($jam_malam) - ($p_ringan+$p_sedang+$p_berat);
+        $return_score['score'] = number_format($score,2);
+        if($return_score['score']>=80){
+            $return_score['score_text'] = 'text-black';
+            $return_score['score_desc'] = 'Sangat Aman';
+        }elseif($return_score['score']<80 && $return_score['score']>=50){
+            $return_score['score_text'] = 'text-info';
+            $return_score['score_desc'] = 'Aman';
+        }elseif($return_score['score']<50 && $return_score['score']>=20){
+            $return_score['score_text'] = 'text-warning';
+            $return_score['score_desc'] = 'Hati-Hati';
+        }elseif($return_score['score']<20){
+            $return_score['score_text'] = 'text-danger';
+            $return_score['score_desc'] = 'Tidak Aman';
+        }
+        return $return_score;
     }
 }
