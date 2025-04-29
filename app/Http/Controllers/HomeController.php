@@ -292,28 +292,40 @@ class HomeController extends Controller
             $data_presensi = ['total_presensi' => $total_presensi, 'tanggal_presensi' => $tanggal_presensi, 'detil_presensi' => $detil_presensi];
         }
 
-        $datetime = date("Y-m-d H:i:s");
-        $sign_in_out = Presence::where('is_deleted', 0)->where('start_date_time', '<=', $datetime)
-            ->where('end_date_time', '>=', $datetime)->first();
-        $my_sign = null;
-        if ($sign_in_out != null) {
-            $santriIdToInsert = auth()->user()->santri;
-            $my_sign = Present::where('fkPresence_id', $sign_in_out->id)
-                ->where('fkSantri_id', $santriIdToInsert)->first();
-        }
-
         $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
         $yesterday = date('Y-m-d', $yesterday);
         $data_telatpulang = TelatPulangMalams::where('jam_pulang','like',date('Y-m-d').'%')->orWhere('jam_pulang','like',$yesterday.'%')->orderBy('id','DESC')->get();
         $data_jobdesk_jaga = null;
+        $score = 0;
+        $score_text = "";
+        $score_desc = "";
         if(isset(auth()->user()->id)){
             if(auth()->user()->santri){
                 $data_jobdesk_jaga = LaporanKeamanans::where('id',auth()->user()->santri->fkLaporan_keamanan_id)->first();
+                $mahasiswa = DB::table('v_evaluasi_mahasiswa')->where('santri_id', auth()->user()->santri->id)->first();
+                if($mahasiswa!=null){
+                    $score = CountDashboard::score($mahasiswa);
+                    if($score>=80){
+                        $score_text = 'text-black';
+                        $score_desc = 'Sangat Aman';
+                    }elseif($score<80 && $score>=50){
+                        $score_text = 'text-info';
+                        $score_desc = 'Aman';
+                    }elseif($score<50 && $score>=20){
+                        $score_text = 'text-warning';
+                        $score_desc = 'Hati-Hati';
+                    }elseif($score<20){
+                        $score_text = 'text-danger';
+                        $score_desc = 'Tidak Aman';
+                    }
+                }
             }
         }
 
         if ($json) {
             return [
+                'score' => $score,
+                'score_text' => $score_text,
                 'presences' => $presences,
                 'presences_santri' => $presences_santri,
                 'presence_group' => $presence_group,
@@ -330,8 +342,8 @@ class HomeController extends Controller
             ];
         } else {
             return view('dashboard', [
-                'sign_in_out' => $sign_in_out,
-                'my_sign' => $my_sign,
+                'score' => $score,
+                'score_text' => $score_text,
                 'periode_tahun' => $periode_tahun,
                 'presences_santri' => $presences_santri,
                 'presences' => $presences,

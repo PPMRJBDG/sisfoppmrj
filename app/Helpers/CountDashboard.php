@@ -8,6 +8,8 @@ use App\Models\Presence;
 use App\Models\Permit;
 use App\Models\Present;
 use App\Models\Lorong;
+use App\Models\Pelanggaran;
+use App\Models\TelatPulangMalams;
 
 class CountDashboard
 {
@@ -348,5 +350,34 @@ class CountDashboard
         } else {
             return 0;
         }
+    }
+
+    public static function score($mhs){
+        $pelanggaran = Pelanggaran::where('fkSantri_id', $mhs->santri_id)->get();
+        $p_ringan = 0;
+        $p_sedang = 0;
+        $p_berat = 0;
+        if(count($pelanggaran)>0){
+        foreach($pelanggaran as $p){
+            if($p->jenis->kategori_pelanggaran=='Ringan'){
+            $p_ringan += 3;
+            }elseif($p->jenis->kategori_pelanggaran=='Sedang'){
+            $p_sedang += 10;
+            }elseif($p->jenis->kategori_pelanggaran=='Berat'){
+            $p_berat += 30;
+            }
+        }
+        }
+        $jam_malam = TelatPulangMalams::where('fkSantri_id', $mhs->santri_id)->get();
+        // kefahaman = 2
+        // akhlaq = 3
+        // ta'dzim = 3
+        // amalsholih = 3
+        // penampilan = 3
+        // kuliah = 2
+        $nilai_per_item = ($mhs->kefahaman + $mhs->akhlaq + $mhs->takdzim + $mhs->amalsholih + $mhs->penampilan + $mhs->kuliah) / 16 * 100;
+        $kehadiran = $mhs->hadir / $mhs->kbm * 100;
+        $perijinan = $mhs->ijin / $mhs->kbm * 100;
+        return (($nilai_per_item + $kehadiran + $perijinan) / 2) - count($jam_malam) - ($p_ringan+$p_sedang+$p_berat);
     }
 }

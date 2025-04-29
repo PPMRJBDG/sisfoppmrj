@@ -11,8 +11,43 @@
     font-size: 0.7rem !important;
 }
 </style>
-
+<?php
+$score_sangat_aman = 0;
+$score_aman = 0;
+$score_hati_hati = 0;
+$score_tidak_aman = 0;
+?>
 <h6 class="font-weight-bold">Penilaian Mahasiswa</h6>
+
+<div class="card border mb-2 p-2">
+  <section class="text-center">
+      <div class="row">
+          <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
+              <i class="fas fa-user fa-2x text-black mb-2"></i>
+              <h5 class="text-black fw-bold mb-2" id="score-sangat-aman"></h5>
+              <h6 class="fw-normal mb-0">Sangat Aman</h6>
+              <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
+              <i class="fas fa-user fa-2x text-info mb-2"></i>
+              <h5 class="text-info fw-bold mb-2" id="score-aman"></h5>
+              <h6 class="fw-normal mb-0">Aman</h6>
+              <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
+              <i class="fas fa-user fa-2x text-warning mb-2"></i>
+              <h5 class="text-warning fw-bold mb-2" id="score-hati-hati"></h5>
+              <h6 class="fw-normal mb-0">Hati-Hati</h6>
+              <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
+          </div>
+          <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
+              <i class="fas fa-user fa-2x text-danger mb-2"></i>
+              <h5 class="text-danger fw-bold mb-2" id="score-tidak-aman"></h5>
+              <h6 class="fw-normal mb-0">Tidak Aman</h6>
+          </div>
+      </div>
+  </section>
+</div>
 
 <div class="card">
   <div class="p-2">
@@ -48,36 +83,20 @@
               <tr>
                 <?php 
                   $pelanggaran = App\Models\Pelanggaran::where('fkSantri_id', $mhs->santri_id)->get();
-                  $p_ringan = 0;
-                  $p_sedang = 0;
-                  $p_berat = 0;
-                  if(count($pelanggaran)>0){
-                    foreach($pelanggaran as $p){
-                      if($p->jenis->kategori_pelanggaran=='Ringan'){
-                        $p_ringan += 3;
-                      }elseif($p->jenis->kategori_pelanggaran=='Sedang'){
-                        $p_sedang += 5;
-                      }elseif($p->jenis->kategori_pelanggaran=='Berat'){
-                        $p_berat += 10;
-                      }
-                    }
-                  }
                   $jam_malam = App\Models\TelatPulangMalams::where('fkSantri_id', $mhs->santri_id)->get();
-                  // kefahaman = 2
-                  // akhlaq = 3
-                  // ta'dzim = 3
-                  // amalsholih = 3
-                  // penampilan = 3
-                  // kuliah = 2
-                  $nilai_per_item = ($mhs->kefahaman + $mhs->akhlaq + $mhs->takdzim + $mhs->amalsholih + $mhs->penampilan + $mhs->kuliah) / 16 * 100;
                   $kehadiran = $mhs->hadir / $mhs->kbm * 100;
-                  $score = (($nilai_per_item + $kehadiran) / 2) - count($jam_malam) - ($p_ringan+$p_sedang+$p_berat);
+                  $score = App\Helpers\CountDashboard::score($mhs);
                   $text_score = '';
-                  if($score<80 && $score>=50){
+                  if($score>=80){
+                    $score_sangat_aman ++;
+                  }elseif($score<80 && $score>=50){
+                    $score_aman ++;
                     $text_score = 'text-info';
                   }elseif($score<50 && $score>=20){
+                    $score_hati_hati ++;
                     $text_score = 'text-warning';
                   }elseif($score<20){
+                    $score_tidak_aman ++;
                     $text_score = 'text-danger';
                   }
                 ?>
@@ -230,6 +249,11 @@ try {
   window.location.replace(`{{ url("/") }}`)
 }
 
+$("#score-sangat-aman").html("<?php echo $score_sangat_aman; ?>");
+$("#score-aman").html("<?php echo $score_aman; ?>");
+$("#score-hati-hati").html("<?php echo $score_hati_hati; ?>");
+$("#score-tidak-aman").html("<?php echo $score_tidak_aman; ?>");
+
 function updateEvaluasi(thisx,id){
   var datax = {};
   datax['santri_id'] = id
@@ -237,7 +261,10 @@ function updateEvaluasi(thisx,id){
   datax['value'] = thisx.value
   $.post("{{ route('store evaluation') }}", datax,
       function(dataz, status) {
-          
+        var return_data = JSON.parse(dataz);
+            if (return_data.status) {
+                refreshCurrentUrl();
+            }
       }
   );
 }
