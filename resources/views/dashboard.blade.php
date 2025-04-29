@@ -246,7 +246,7 @@ if(isset(auth()->user()->santri)){
         <div class="mb-2 position-relative">
             <i class="fas fa-user fa-2x {{$score['score_text']}} mb-0"></i>
             <h5 class="{{$score['score_text']}} fw-bold mb-0"><small>SCORE</small> {{ number_format($score['score'], 2) }}</h5>
-            <h6 class="fw-normal {{$score['score_text']}} mb-0">{{$score['score_desc']}}</h6>
+            <p class="fw-normal {{$score['score_text']}} mb-0">{{ ($score['score_desc']=='Hati-Hati' || $score['score_desc']=='Tidak Aman') ? 'Tetap Semangat, Kamu BISA!' : 'Tingkatkan, dan Terus Semangat!' }}</p>
         </div>
           
         <button type="button" onclick="getReport('<?php echo base64_encode(auth()->user()->santri->id); ?>')" data-mdb-ripple-init class="btn font-weight-bolder btn-sm btn-warning btn-rounded mb-0">Lihat Laporan Saya</a>

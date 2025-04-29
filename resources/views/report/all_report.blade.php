@@ -334,8 +334,7 @@
                         @foreach($pelanggaran as $plg)
                         <tr>
                             <td class="p-1 ps-2">
-                                <!-- [SP {{ $plg->keringanan_sp }}]  -->
-                                {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small>
+                                [{{ $plg->jenis->kategori_pelanggaran }}] {{ $plg->jenis->jenis_pelanggaran }} <small class="text-primary">{{ ($plg->is_archive==1) ? '[Pemutihan]' : '[Hati-hati]' }}</small>
                             </td>
                             <td class="p-1 ps-2 text-center">
                                 @if($plg->tanggal_melanggar!='')
