@@ -67,8 +67,8 @@ class PelanggaranController extends Controller
         $column = [
             'Nama',
             // 'Angkatan',
-            // 'Pelanggaran',
-            'Pemanggilan',
+            'Pelanggaran',
+            // 'Pemanggilan',
             'SP',
             // 'Peringatan Keras',
             'Keterangan'
@@ -80,6 +80,7 @@ class PelanggaranController extends Controller
             'column' => $column,
             'is_archive' => $is_archive,
             'list_pelanggaran' => $list_pelanggaran,
+            'jenis_pelanggaran' => JenisPelanggaran::get(),
             'count_pelanggaran' => $count_pelanggaran
         ]);
     }

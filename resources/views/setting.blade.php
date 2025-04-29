@@ -586,6 +586,21 @@ $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'ags', 'sep', 'okt', 
                                         </div>
                                         <div class="form-group">
                                             <label class="form-control-label">
+                                                WA - Grup OM
+                                            </label>
+                                            <select data-mdb-filter="true" class="select wa_om_group_id form-control" name="wa_om_group_id" id="wa_om_group_id">
+                                                <option value="">--pilih--</option>
+                                                @if(count($list_wa_group)>0)
+                                                @foreach($list_wa_group as $wg)
+                                                <option <?php if ($list_setting != null) {
+                                                            echo ($wg->id == $list_setting->wa_om_group_id) ? 'selected' : '';
+                                                        } ?> value="{{$wg->id}}">{{$wg->name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label">
                                                 WA - Grup Ortu
                                             </label>
                                             <select data-mdb-filter="true" class="select wa_ortu_group_id form-control" name="wa_ortu_group_id" id="wa_ortu_group_id">

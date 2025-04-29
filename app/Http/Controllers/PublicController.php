@@ -38,6 +38,7 @@ use App\Models\DewanPengajars;
 use App\Models\KalenderPpmTemplates;
 use App\Models\KalenderPpms;
 use App\Models\SpWhatsappSchedules;
+use App\Models\PmbCamabas;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,8 @@ class PublicController extends Controller
         $caption = '';
         $yesterday = strtotime('-1 day', strtotime(date("Y-m-d")));
         $yesterday = date('Y-m-d', $yesterday);
+        $tomorrow = strtotime('+1 day', strtotime(date("Y-m-d")));
+        $tomorrow = date('Y-m-d', $tomorrow);
 
         // PREVIEW + DAILY
         if ($time == 'preview-daily') {
@@ -80,7 +83,7 @@ Amalsholih cek kehadiran KBM kemarin, apabila ada yang tidak sesuai silahkan men
 
                         $caption = $caption . '
 ________________________
-*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->presenceGroup->name . '_*
+*_' . CommonHelpers::hari_ini(date_format(date_create($yesterday), "D")) . ', ' . date_format(date_create($yesterday), "d M") . ' | ' . $presence->name . '_*
 Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . count($mhs_alpha) . '
 
 ';
@@ -91,18 +94,6 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
 ';
                             }
-                        }
-
-                        if ($presence->fkDewan_pengajar_1 == '' || $presence->fkDewan_pengajar_2 == '') {
-                            $infodp_xxz = $setting->org_name . ' 1 dan 2';
-                            if ($presence->fkDewan_pengajar_1 != '' && $presence->fkDewan_pengajar_2 == '') {
-                                $infodp_xxz = $setting->org_name . ' 2';
-                            } elseif ($presence->fkDewan_pengajar_1 == '' && $presence->fkDewan_pengajar_2 != '') {
-                                $infodp_xxz = $setting->org_name . ' 1';
-                            }
-                            $infodp = 'Pemateri ' . $infodp_xxz . ' pada '.$presence->name.' belum disesuaikan';
-                            WaSchedules::save('Check Pemateri', $infodp, $contact_id, $time_post, true);
-                            $time_post++;
                         }
                     }
                 }
@@ -126,32 +117,18 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                 echo json_encode(['status' => false, 'message' => '[daily] scheduler off']);
                 exit;
             }
+
+            $camabas = PmbCamabas::where('tanggal_seleksi',$tomorrow)->get();
+            if(count($camabas)>0){
+                $text_camaba = "*[REMINDER]* H-1 wawancara dan seleksi atas nama:
+";
+                foreach($camabas as $camaba){
+                    $text_camaba = $text_camaba .  "- *".$camaba->fullname."*";
+                }
+                WaSchedules::save('Reminder Seleksi Camaba', $text_camaba, $setting->wa_om_group_id, null, true);
+            }
             
             $time_post = 1;
-            // update pemutihan
-            $get_pelanggaran = Pelanggaran::where('is_archive', 0)->get();
-            foreach ($get_pelanggaran as $gp) {
-                $today = date("Y-m-d");
-                $first_date = date("Y-m-d", strtotime(date("Y-m-d", strtotime($gp->is_surat_peringatan)) . " + 1 year"));
-                if ($first_date == $today) {
-                    $set_archive = Pelanggaran::find($gp->id);
-                    $set_archive->is_archive = 1;
-                    if ($set_archive->save()) {
-                        $caption = 'Pemutihan SP ' . $gp->keringanan_sp . ' an. ' . $gp->santri->user->fullname;
-                        WaSchedules::save($caption, $caption, $setting->wa_info_presensi_group_id, $time_post, true);
-                        $time_post++;
-                    }
-                }
-                // khusus KBM status masih dipantau
-                if ($gp->fkJenis_pelanggaran_id == 14) {
-                    if ($gp->periode_tahun != CommonHelpers::periode() && $gp->is_surat_peringatan == '') {
-                        $set_archive = Pelanggaran::find($gp->id);
-                        $set_archive->is_archive = 1;
-                        $set_archive->save();
-                    }
-                }
-            }
-
             // bulk presensi harian ke wa group ortu
             $check_liburan = Liburan::where('liburan_from', '<', $yesterday)->where('liburan_to', '>', $yesterday)->get();
             if (count($check_liburan) == 0) {
@@ -177,17 +154,8 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
 
 *Pemateri*
 - PPM 1: '.(($presence->fkDewan_pengajar_1!=null) ? $presence->dewanPengajar1->name : '').'
-- PPM 2: '.(($presence->fkDewan_pengajar_2!=null) ? $presence->dewanPengajar2->name : '').'
+- PPM 2: '.(($presence->is_put_together==1) ? $presence->dewanPengajar1->name : (($presence->fkDewan_pengajar_2!=null) ? $presence->dewanPengajar2->name : '')).'
 ';
-
-//                         if (count($mhs_alpha) > 0) {
-//                             $caption = $caption . '*Daftar Mahasiswa Alpha*
-// ';
-//                             foreach ($mhs_alpha as $d) {
-//                                 $caption = $caption . '- ' . $d['name'] . ' [' . $d['angkatan'] . ']
-// ';
-//                             }
-//                         }
                     }
                 }
                 $caption = $caption . '
@@ -199,13 +167,6 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                 $name = '[Ortu Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
                 if ($contact_id != '' && count($get_presence) > 0) {
                     $insert = WaSchedules::save($name, $caption, $contact_id);
-
-                    // $contact_id = SpWhatsappContacts::where('name', 'Group PPM RJ Maurus')->first();
-                    // if ($contact_id != null) {
-                    //     $name = '[Maurus Group] Daily Report ' . date_format(date_create($yesterday), "d M Y");
-                    //     $insert = WaSchedules::save($name, $caption, $contact_id->id, 2);
-                    // }
-
                     if ($insert) {
                         echo json_encode(['status' => true, 'message' => 'success insert scheduler']);
                     } else {
@@ -217,10 +178,7 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
             } else {
                 echo json_encode(['status' => false, 'message' => 'holiday']);
             }
-        }
-
-        // WEEKLY
-        elseif ($time == 'weekly') {
+        }elseif ($time == 'weekly') {
             if(!$setting->cron_weekly){
                 echo json_encode(['status' => false, 'message' => '[weekly] scheduler off']);
                 exit;
@@ -297,10 +255,7 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
             }
 
             echo json_encode(['status' => true, 'message' => '[weekly] success running scheduler']);
-        }
-
-        // MONTHLY
-        elseif ($time == 'monthly') {
+        }elseif ($time == 'monthly') {
             PresenceGroupsChecker::createPresence();
             if(!$setting->cron_monthly){
                 echo json_encode(['status' => false, 'message' => '[monthly] scheduler off']);
@@ -842,19 +797,6 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
                 return redirect()->route('rab kegiatan public',$request->input('ids'))->withErrors(['failed' => 'Status Approved tidak dapat menambah item baru']);
             }
         }
-        // else{
-        //     $create = RabKegiatanDetails::find($request->input('id'));
-        //     $create->uraian = $request->input('uraian');
-        //     $create->qty = $request->input('qty');
-        //     $create->satuan = $request->input('satuan');
-        //     $create->biaya = $request->input('biaya');
-        //     $create->qty_realisasi = $request->input('qty_realisasi');
-        //     $create->satuan_realisasi = $request->input('satuan_realisasi');
-        //     $create->biaya_realisasi = $request->input('biaya_realisasi');
-        //     $create->divisi = $request->input('divisi');
-        //     $create->save();
-        //     return redirect()->route('rab kegiatan public',$request->input('ids'));
-        // }
     }
 
     public function store_detail_by_field(Request $request){

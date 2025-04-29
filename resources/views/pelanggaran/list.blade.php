@@ -128,11 +128,18 @@
                             <span class="santri-name text-left" santri-name="{{ $data->santri->user->fullname }}" onclick="getReport('<?php echo base64_encode($data->santri->id); ?>')" style="cursor:pointer;"> 
                                 <b>[{{ $data->santri->angkatan }}] {{ $data->santri->user->fullname }}</b>
                                 <br>
-                                [{{ isset($data->jenis) ? $data->jenis->kategori_pelanggaran : '-' }}] {{ isset($data->jenis) ? $data->jenis->jenis_pelanggaran : '' }}
+                                <b>Pemanggilan:</b> {{ date_format(date_create($data->tanggal_melanggar), 'd M Y') }}
+                                
                             </span>
                         </td>
                         <td class="text-xs">
-                            <b>Pemanggilan:</b> {{ date_format(date_create($data->tanggal_melanggar), 'd M Y') }}
+                            <select style="font-size:11px!important;" class="form-control" id="fkJenis_pelanggaran_id{{$data->id}}" name="fkJenis_pelanggaran_id{{$data->id}}" onchange="updatePelanggaran(event,'fkJenis_pelanggaran_id',this.value,{{$data->id}})">
+                                @foreach($jenis_pelanggaran as $jp)
+                                    <option <?php if (isset($data)) { echo $data->fkJenis_pelanggaran_id == $jp->id ? 'selected' : ''; } ?> value="{{$jp->id}}">
+                                        [{{ $jp->kategori_pelanggaran }}] {{ $jp->jenis_pelanggaran }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </td>
                         <td>
                             <div class="row">

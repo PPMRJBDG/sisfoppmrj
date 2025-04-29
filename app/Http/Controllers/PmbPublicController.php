@@ -113,7 +113,7 @@ class PmbPublicController extends Controller
 *Lampiran Foto:*
 https://sisfo.ppmrjbandung.com/storage/users/'.$insert->foto_pas;
 
-        WaSchedules::save('[PMB] Pendaftar Mahasiswa Baru '.date('Y'), $caption, $setting->wa_info_presensi_group_id, null, true);
+        WaSchedules::save('[PMB] Pendaftar Mahasiswa Baru '.date('Y'), $caption, $setting->wa_om_group_id, null, true);
         
         return redirect()->route('registration successful');
     }

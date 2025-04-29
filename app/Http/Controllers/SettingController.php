@@ -156,6 +156,7 @@ class SettingController extends Controller
                 'wa_dewanguru_group_id' => $request->input('wa_dewanguru_group_id'),
                 'wa_keuangan_group_id' => $request->input('wa_keuangan_group_id'),
                 'wa_jam_malam_group_id' => $request->input('wa_jam_malam_group_id'),
+                'wa_om_group_id' => $request->input('wa_om_group_id'),
                 'wa_header' => $request->input('wa_header'),
                 'wa_footer' => $request->input('wa_footer'),
                 'wa_info_alpha_ortu' => $request->input('wa_info_alpha_ortu'),
@@ -201,6 +202,7 @@ class SettingController extends Controller
             $setting->wa_dewanguru_group_id = $request->input('wa_dewanguru_group_id');
             $setting->wa_keuangan_group_id = $request->input('wa_keuangan_group_id');
             $setting->wa_jam_malam_group_id = $request->input('wa_jam_malam_group_id');
+            $setting->wa_om_group_id = $request->input('wa_om_group_id');
             $setting->wa_header = $request->input('wa_header');
             $setting->wa_footer = $request->input('wa_footer');
             $setting->wa_info_alpha_ortu = $request->input('wa_info_alpha_ortu');
