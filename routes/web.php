@@ -165,7 +165,8 @@ Route::post('/dewan-pengajar/store', [App\Http\Controllers\MateriController::cla
 Route::post('/dewan-pengajar/update/{id}', [App\Http\Controllers\MateriController::class, 'update_pengajar'])->name('materi update pengajar')->middleware('role:superadmin|dewan guru|rj1|divisi kurikulum');
 Route::get('/kalender-ppm', [App\Http\Controllers\PublicController::class, 'kalender_ppm'])->name('kalender_ppm');
 Route::get('/kalender-ppm/template', [App\Http\Controllers\MateriController::class, 'template_kalender_ppm'])->name('template_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
-Route::post('/kalender-ppm/template/store', [App\Http\Controllers\MateriController::class, 'store_template_kalender_ppm'])->name('store_template_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
+Route::post('/kalender-ppm/template/store', [App\Http\Controllers\MateriController::class, 'store_template_kalender_ppm'])->name('store_template_kalender_ppm')->middleware('role:superadmin|rj1|divisi kurikulum|dewan guru');
+Route::get('/kalender-ppm/template/reset', [App\Http\Controllers\MateriController::class, 'reset_degur_template_kalender_ppm'])->name('reset_degur_template_kalender_ppm')->middleware('role:superadmin|rj1|divisi kurikulum|dewan guru');
 Route::post('/kalender-ppm/store', [App\Http\Controllers\MateriController::class, 'store_kalender_ppm'])->name('store_kalender_ppm')->middleware('role:superadmin|rj1|wk|divisi kurikulum|dewan guru');
 Route::get('/kalender-ppm/reset', [App\Http\Controllers\MateriController::class, 'reset_kalender_ppm'])->name('reset_kalender_ppm')->middleware('role:superadmin');
 

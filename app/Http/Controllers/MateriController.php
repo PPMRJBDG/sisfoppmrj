@@ -230,6 +230,37 @@ class MateriController extends Controller
         return view('materi.template_kalender_ppm', ['today' => $today, 'pengajars' => $pengajars, 'template' => $template, 'counts' => $counts]);
     }
 
+    public function reset_degur_template_kalender_ppm(){
+        $tempalets = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('id','ASC')->get();
+        $pengajars = DewanPengajars::whereNotNull('is_degur')->orderBy('is_degur','ASC')->get();
+        $kelas = ['mt','reguler','pemb'];
+        $seq_degur = 1;
+        $seq_degur_max = 5;
+        $seq_kelas = 1;
+        $seq_kelas_max = 3;
+        if(count($tempalets)>0){
+            foreach($tempalets as $t){
+                $update_a = KalenderPpmTemplates::find($t->id);
+                $update_a->kelas = $kelas[($seq_kelas-1)];
+                $update_a->save();
+                if($seq_kelas==$seq_kelas_max){
+                    $seq_kelas=1;
+                }else{
+                    $seq_kelas++;
+                }
+
+                $get_degur = DewanPengajars::where('is_degur',$seq_degur)->first();
+                $update_a->fkDewanPengajar_id = $get_degur->id;
+                $update_a->save();
+                if($seq_degur==$seq_degur_max){
+                    $seq_degur=1;
+                }else{
+                    $seq_degur++;
+                }
+            }
+        }
+        return json_encode(['status' => true, 'message' => 'Berhasil reset']);
+    }
     public function store_template_kalender_ppm(Request $request){
         $get = KalenderPpmTemplates::find($request->input('id'));
         if(!$get){
@@ -266,6 +297,8 @@ class MateriController extends Controller
                 $delete = KalenderPpmTemplates::where('is_agenda_khusus',1)->where('waktu',$request->input('waktu'))->where('sequence',$request->input('sequence'))->delete();
             }
         }
+
+        $this->reset_degur_template_kalender_ppm();
     }
 
     public function store_kalender_ppm(Request $request){

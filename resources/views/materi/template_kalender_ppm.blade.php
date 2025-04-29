@@ -20,7 +20,14 @@ $kelas = ['mt','reguler','pemb'];
 $ke = 0;
 ?>
 
-<h6>Status Kalender:  {{($lock_calendar) ? 'Dikunci' : 'Dibuka'}}</h6>
+<div class="row p-2">
+    <div class="col-6">
+        <h6>Status Kalender:  {{($lock_calendar) ? 'Dikunci' : 'Dibuka'}}</h6>
+    </div>
+    <div class="col-6 text-end">
+        <a href="#" onclick="resetDegurSeq()" class="btn btn-sm btn-secondary text-end">Reset Degur</a>
+    </div>
+</div>
 
 <?php
 for($i=1; $i<=8; $i++){
@@ -81,7 +88,7 @@ for($i=1; $i<=8; $i++){
                                                 }
                                             }
                                             ?>
-                                            <select style="font-size: 13px !important;" {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'nonkhusus','shubuh',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-shubuh-{{$seq}}" id="{{$k}}-shubuh-{{$seq}}" class="form-control cursor-pointer">
+                                            <select style="font-size: 13px !important;" disabled readonly onchange="onChange({{$data_shubuh_id}},'nonkhusus','shubuh',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-shubuh-{{$seq}}" id="{{$k}}-shubuh-{{$seq}}" class="form-control cursor-pointer">
                                                 <option value="">{{strtoupper($k)}} -</option>
                                                 @foreach($pengajars as $p)
                                                     <option {{($val_select_shubuh==$p->id) ? 'selected' : ''}} value="{{$p->id}}">{{strtoupper($k)}} | {{$p->name}}</option>
@@ -135,7 +142,7 @@ for($i=1; $i<=8; $i++){
                                                 }
                                             }
                                             ?>
-                                            <select style="font-size: 13px !important;" {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'nonkhusus','malam',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-malam-{{$seq}}" id="{{$k}}-malam-{{$seq}}" class="form-control cursor-pointer">
+                                            <select style="font-size: 13px !important;" disabled readonly onchange="onChange({{$data_malam_id}},'nonkhusus','malam',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-malam-{{$seq}}" id="{{$k}}-malam-{{$seq}}" class="form-control cursor-pointer">
                                                 <option value="">{{strtoupper($k)}} -</option>
                                                 @foreach($pengajars as $p)
                                                     <option {{($val_select_malam==$p->id) ? 'selected' : ''}} value="{{$p->id}}">{{strtoupper($k)}} | {{$p->name}}</option>
@@ -182,7 +189,7 @@ for($i=1; $i<=8; $i++){
     }
 
     function onChange(id,tipe,kbm,seq,kelas){
-        // $("#loadingSubmit").show();
+        $("#loadingSubmit").show();
         var datax = {};
         datax['id'] = id;
         var checkBox = document.getElementById("check-"+seq+"-"+kbm);
@@ -200,8 +207,18 @@ for($i=1; $i<=8; $i++){
 
         $.post("{{ route('store_template_kalender_ppm') }}", datax,
             function(data, status) {
-                // window.location.reload();
+                window.location.reload();
             }
         )
+    }
+
+    function resetDegurSeq(){
+        if(confirm("Apakah Anda yakin untuk mereset Urutan Dewan Guru ?")){
+            $.get("{{ route('reset_degur_template_kalender_ppm') }}", null,
+                function(data, status) {
+                    window.location.reload();
+                }
+            )
+        }
     }
 </script>
