@@ -238,7 +238,9 @@ class CommonHelpers
         // $persentase = count($get_total_kbm) * 30 / 100;
 
         if ($santri_id == null) {
-            $santri_id = auth()->user()->santri->id;
+            if(isset(auth()->user()->santri)){
+                $santri_id = auth()->user()->santri->id;
+            }
         }
         $get_total_kbm = (cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) - 4) * 2;
         $get_total_permit = Permit::where('created_at', 'LIKE', '%' . date('Y-m') . '%')->where('fkSantri_id', $santri_id)->where('status', 'approved')->get();

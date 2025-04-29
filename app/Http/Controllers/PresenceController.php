@@ -1645,7 +1645,7 @@ Hubungi: '.$santri->user->nohp;
             // check whether another ranged permit already exists within similar range
             if ($request->input('fkPresenceGroup_id') == 'all-kbm') {
                 $all_presence = PresenceGroup::get();
-                $pres_name = 'KBM Shubuh, KBM Malam, Apel Malam, MM Drh';
+                $pres_name = 'KBM Shubuh, KBM Malam, Apel Malam, Agenda Bulanan';
             } else {
                 $all_presence = PresenceGroup::where('id', $request->input('fkPresenceGroup_id'))->get();
                 $pres_name = $all_presence[0]->name;
@@ -1955,7 +1955,7 @@ Hubungi: '.$santri->user->nohp;
         // check whether another ranged permit already exists within similar range
         if ($request->input('fkPresenceGroup_id') == 'all-kbm') {
             $all_presence = PresenceGroup::get();
-            $pres_name = 'KBM Shubuh, KBM Malam, Apel Malam, MM Drh';
+            $pres_name = 'KBM Shubuh, KBM Malam, Apel Malam, Agenda Bulanan';
         } else {
             $all_presence = PresenceGroup::where('id', $request->input('fkPresenceGroup_id'))->get();
             $pres_name = $all_presence[0]->name;

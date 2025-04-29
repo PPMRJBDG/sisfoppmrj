@@ -44,7 +44,7 @@
             <label for="fkPresence_id" class="form-control-label">Presensi untuk diajukan izin</label>
             <select data-mdb-filter="true" name="fkPresenceGroup_id" class="select form-control" required>
               <option value="">Pilih presensi</option>
-              <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam, MM Drh)</option>
+              <option value="all-kbm">Semua KBM (KBM Shubuh, KBM Malam, Apel Malam, Agenda Bulanan)</option>
               @foreach($presenceGroups as $presenceGroup)
               <option value="{{ $presenceGroup->id }}">Hanya {{ $presenceGroup->name }} Saja</option>
               @endforeach
@@ -72,7 +72,7 @@
             <label for="fkPresence_id" class="form-control-label">Kategori alasan</label>
             <select data-mdb-filter="true" name="reason_category" class="select form-control" required onchange="checkSS(this)">
               <option value="">Pilih kategori alasan</option>
-              @foreach(App\Models\JenisAlasanIjins::get() as $alasan)
+              @foreach(App\Models\JenisAlasanIjins::orderBy('kategori_alasan','ASC')->get() as $alasan)
               <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
               @endforeach
             </select>
