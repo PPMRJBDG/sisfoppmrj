@@ -128,7 +128,7 @@
                             <span class="santri-name text-left" santri-name="{{ $data->santri->user->fullname }}" onclick="getReport('<?php echo base64_encode($data->santri->id); ?>')" style="cursor:pointer;"> 
                                 <b>[{{ $data->santri->angkatan }}] {{ $data->santri->user->fullname }}</b>
                                 <br>
-                                <b>Pemanggilan:</b> {{ date_format(date_create($data->tanggal_melanggar), 'd M Y') }}
+                                <b>Pemanggilan:</b> {{ ($data->tanggal_melanggar!='') ? date_format(date_create($data->tanggal_melanggar), 'd M Y') : date_format(date_create($data->created_at), 'd M Y') }}
                                 
                             </span>
                         </td>
