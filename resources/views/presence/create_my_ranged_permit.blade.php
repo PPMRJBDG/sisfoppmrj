@@ -73,7 +73,7 @@
             <select data-mdb-filter="true" name="reason_category" class="select form-control" required onchange="checkSS(this)">
               <option value="">Pilih kategori alasan</option>
               @foreach(App\Models\JenisAlasanIjins::orderBy('kategori_alasan','ASC')->get() as $alasan)
-              <option value="{{ $alasan->jenis_alasan }}">{{ $alasan->jenis_alasan }}</option>
+              <option value="{{ $alasan->jenis_alasan }}">[{{ $alasan->kategori_alasan }}] {{ $alasan->jenis_alasan }}</option>
               @endforeach
             </select>
           </div>
