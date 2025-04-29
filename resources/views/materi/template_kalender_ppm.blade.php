@@ -31,7 +31,7 @@ for($i=1; $i<=8; $i++){
             @for($j=1; $j<=4; $j++)
                 @if($seq<=31)
                     <div class="col-md-3">
-                        <table class="table table-bordered align-items-center justify-content-center">
+                        <table class="table table-sm table-bordered align-items-center justify-content-center">
                             <tr colspan="3" class="font-weight-bolder"><b>Urutan <span class="badge badge-danger h6">{{$seq}}</span> | {{$hari[$ke]}}</b></tr>
                             <?php
                             $ke++;
@@ -61,7 +61,7 @@ for($i=1; $i<=8; $i++){
                                 </td>
                                 <td>
                                     <div id="khusus-{{$seq}}-shubuh" style="display:{{($checkbox_shubuh) ? 'block' : 'none'}};">
-                                        <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'khusus','shubuh',{{$seq}})" data-mdb-filter="true" name="khusus-shubuh-{{$seq}}" id="khusus-shubuh-{{$seq}}" class="form-control cursor-pointer">
+                                        <select style="font-size: 13px !important;" {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'khusus','shubuh',{{$seq}})" data-mdb-filter="true" name="khusus-shubuh-{{$seq}}" id="khusus-shubuh-{{$seq}}" class="form-control cursor-pointer">
                                             <option value="">-</option>
                                             @foreach($agenda_khusus as $ak)
                                             <option {{($checkbox_shubuh_val==$ak) ? 'selected' : ''}} value="{{$ak}}">{{$ak}}</option>
@@ -81,7 +81,7 @@ for($i=1; $i<=8; $i++){
                                                 }
                                             }
                                             ?>
-                                            <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'nonkhusus','shubuh',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-shubuh-{{$seq}}" id="{{$k}}-shubuh-{{$seq}}" class="form-control cursor-pointer">
+                                            <select style="font-size: 13px !important;" {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_shubuh_id}},'nonkhusus','shubuh',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-shubuh-{{$seq}}" id="{{$k}}-shubuh-{{$seq}}" class="form-control cursor-pointer">
                                                 <option value="">{{strtoupper($k)}} -</option>
                                                 @foreach($pengajars as $p)
                                                     <option {{($val_select_shubuh==$p->id) ? 'selected' : ''}} value="{{$p->id}}">{{strtoupper($k)}} | {{$p->name}}</option>
@@ -115,7 +115,7 @@ for($i=1; $i<=8; $i++){
                                 </td>
                                 <td>
                                     <div id="khusus-{{$seq}}-malam" style="display:{{($checkbox_malam) ? 'block' : 'none'}};">
-                                        <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'khusus','malam',{{$seq}})" data-mdb-filter="true" name="khusus-malam-{{$seq}}" id="khusus-malam-{{$seq}}" class="form-control cursor-pointer">
+                                        <select style="font-size: 13px !important;" {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'khusus','malam',{{$seq}})" data-mdb-filter="true" name="khusus-malam-{{$seq}}" id="khusus-malam-{{$seq}}" class="form-control cursor-pointer">
                                             <option value="">-</option>
                                             @foreach($agenda_khusus as $ak)
                                             <option {{($checkbox_malam_val==$ak) ? 'selected' : ''}} value="{{$ak}}">{{$ak}}</option>
@@ -135,7 +135,7 @@ for($i=1; $i<=8; $i++){
                                                 }
                                             }
                                             ?>
-                                            <select {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'nonkhusus','malam',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-malam-{{$seq}}" id="{{$k}}-malam-{{$seq}}" class="form-control cursor-pointer">
+                                            <select style="font-size: 13px !important;" {{($lock_calendar) ? 'disabled readonly' : ''}} onchange="onChange({{$data_malam_id}},'nonkhusus','malam',{{$seq}},'{{$k}}')" data-mdb-filter="true" name="{{$k}}-malam-{{$seq}}" id="{{$k}}-malam-{{$seq}}" class="form-control cursor-pointer">
                                                 <option value="">{{strtoupper($k)}} -</option>
                                                 @foreach($pengajars as $p)
                                                     <option {{($val_select_malam==$p->id) ? 'selected' : ''}} value="{{$p->id}}">{{strtoupper($k)}} | {{$p->name}}</option>

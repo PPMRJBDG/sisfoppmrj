@@ -8,6 +8,7 @@ class DewanPengajars extends Model
 {
     protected $fillable = [
         'name',
+        'is_degur',
         'pin',
         'cloud_fs1',
         'cloud_fs2',

@@ -216,7 +216,7 @@ class MateriController extends Controller
 
     public function template_kalender_ppm(){
         $today = date('Y-m-d', strtotime(today()));
-        $pengajars = DewanPengajars::all();
+        $pengajars = DewanPengajars::whereNotNull('is_degur')->orderBy('is_degur','ASC')->get();
         $template = KalenderPpmTemplates::all();
         $counts = DB::table('kalender_ppm_templates as a')
                     ->select('a.fkDewanPengajar_id', 'b.name', DB::raw('count(a.id) as total'))

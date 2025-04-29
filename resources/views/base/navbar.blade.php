@@ -34,11 +34,11 @@
 
 <!-- Sidenav -->
 <!-- <div id="sidenav-1" class="sidenav" data-mdb-sidenav-init data-mdb-close-on-esc="false" data-mdb-position="absolute" data-mdb-right="true" data-mdb-focus-trap="false" data-mdb-sidenav-initialized="true"> -->
-<div id="sidenav-1" class="sidenav">
+<div id="sidenav-1" class="sidenav" data-mdb-scroll-container="#scroll-container" data-mdb-mode="side" role="navigation">
   <div class="text-center mb-2 justify-content-between align-items-center shadow-1-strong" style="height:60px;">
     <h5 class="p-3 mb-0" style="font-size: 1.5rem;">{{$setting->apps_name}}</h5>
   </div>
-  <ul class="sidenav-menu">
+  <ul class="sidenav-menu" id="scroll-container">
     <li class="sidenav-item">
       <a class="sidenav-link d-flex" aria-current="page" href="{{ url('/home') }}">
         <i class="fa fa-home pe-3"></i>Home
