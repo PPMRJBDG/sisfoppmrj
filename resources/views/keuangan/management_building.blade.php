@@ -106,6 +106,7 @@
 @if($detail_manag_buildings!=null)
 <div class="text-end">
     <a href="{{route('rab management building')}}" class="btn btn-sm btn-outline-secondary text-end">Kembali</a>
+    <a href="{{ url('keuangan/jurnal') }}" class="btn btn-sm btn-outline-primary text-end">Ke Jurnal</a>
 </div>
 <div class="card border p-2 mt-2" style="border-top:solid 2px #f29393!important;">
     <div class="row align-items-center justify-content-center">
@@ -279,10 +280,27 @@
                                 </button>
                             @endif
                             @if($detail_of->status=='approved')
-                                <button type="submit" id="posted" class="btn btn-secondary btn-sm mb-0" onclick="submitManagBuilding('posted',{{$detail_of}})">
-                                    <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
-                                    POSTING JURNAL
-                                </button>
+                                <div class="card p-2 border mt-2 mb-2">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="col-8">
+                                                    <input type="date" value="{{date('Y-m-d')}}" class="form-control" name="tanggal-posting" id="tanggal-posting">
+                                                </div>
+                                                <div class="col-4 text-start ps-2">
+                                                    <button type="submit" id="posted" class="btn btn-secondary btn-sm mb-0" onclick="submitManagBuilding('posted',{{$detail_of}})">
+                                                        <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                                                        POSTING JURNAL
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                             <button type="submit" id="posted" class="btn btn-success btn-sm mb-0" onclick="submitManagBuilding('draft',{{$detail_of}})">
                                 <i class="fab fa-firstdraft" aria-hidden="true"></i>
@@ -357,6 +375,7 @@ function postData(tipe,detail_of){
     $("#loadingSubmit").show();
     var datax = {};
     datax['parent_id'] = detail_of.id;
+    datax['tanggal_posting'] = $("#tanggal-posting").val();
     datax['status'] = tipe;
     $.post("{{ route('store management building') }}", datax,
         function(data, status) {
