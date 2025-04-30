@@ -15,6 +15,7 @@ class KalenderPpmTemplates extends Model
         'is_agenda_khusus',
         'nama_agenda_khusus',
         'day',
+        'requires_presence'
     ];
 
     public function pengajar()

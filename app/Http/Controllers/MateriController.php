@@ -231,7 +231,7 @@ class MateriController extends Controller
     }
 
     public function reset_degur_template_kalender_ppm(){
-        $tempalets = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('id','ASC')->get();
+        $tempalets = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('sequence','ASC')->get();
         $pengajars = DewanPengajars::whereNotNull('is_degur')->orderBy('is_degur','ASC')->get();
         $kelas = ['mt','reguler','pemb'];
         $seq_degur = 1;
@@ -266,7 +266,6 @@ class MateriController extends Controller
         if(!$get){
             $get = KalenderPpmTemplates::where('sequence',$request->input('sequence'))->where('waktu',$request->input('waktu'))->where('kelas',$request->input('kelas'))->first();
         }
-
         if(!$get){
             $insert = KalenderPpmTemplates::create([
                         'waktu' => $request->input('waktu'),
@@ -276,28 +275,47 @@ class MateriController extends Controller
                         'is_agenda_khusus' => $request->input('is_agenda_khusus'),
                         'nama_agenda_khusus' => $request->input('nama_agenda_khusus'),
                         'day' => $request->input('day'),
+                        'requires_presence' => 1,
                     ]);
         }else{
-            $get->is_agenda_khusus = $request->input('is_agenda_khusus');
-            if($request->input('is_agenda_khusus')==1){
-                $get->nama_agenda_khusus = $request->input('nama_agenda_khusus');
-                $get->waktu = $request->input('waktu');
-                $get->kelas = null;
-                $get->fkDewanPengajar_id = null;
+            if($request->input('is_requires_presence')){
+                $get->requires_presence = ($request->input('requires_presence')) ? 1 : null;
+                $get->save();
             }else{
-                $get->nama_agenda_khusus = null;
-                $get->waktu = $request->input('waktu');
-                $get->kelas = $request->input('kelas');
-                $get->fkDewanPengajar_id = $request->input('fkDewanPengajar_id');
+                $get->is_agenda_khusus = $request->input('is_agenda_khusus');
+                if($request->input('is_agenda_khusus')==1){
+                    if($request->input('nama_agenda_khusus')=="RESET"){
+                        if($get->delete()){
+                            $kelas = ['mt','reguler','pemb'];
+                            foreach($kelas as $k){
+                                KalenderPpmTemplates::create([
+                                    'waktu' => $request->input('waktu'),
+                                    'kelas' => $k,
+                                    'sequence' => $request->input('sequence'),
+                                    'fkDewanPengajar_id' => null,
+                                    'is_agenda_khusus' => 0,
+                                    'nama_agenda_khusus' => null,
+                                    'day' => null,
+                                ]);
+                            }
+                        }
+                    }else{
+                        $get->nama_agenda_khusus = $request->input('nama_agenda_khusus');
+                        $get->waktu = $request->input('waktu');
+                        $get->kelas = null;
+                        $get->fkDewanPengajar_id = null;
+                        $get->save();
+                    }
+                }
             }
-            $get->save();
+        }
+        if($request->input('nama_agenda_khusus')!="RESET"){
             if($request->input('is_agenda_khusus')==1){
                 $delete = KalenderPpmTemplates::where('is_agenda_khusus',0)->where('waktu',$request->input('waktu'))->where('sequence',$request->input('sequence'))->delete();
             }else{
                 $delete = KalenderPpmTemplates::where('is_agenda_khusus',1)->where('waktu',$request->input('waktu'))->where('sequence',$request->input('sequence'))->delete();
             }
         }
-
         $this->reset_degur_template_kalender_ppm();
     }
 
