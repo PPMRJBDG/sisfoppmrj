@@ -231,31 +231,64 @@ class MateriController extends Controller
     }
 
     public function reset_degur_template_kalender_ppm(){
-        $templates = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('sequence','ASC')->get();
+        // $templates = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('sequence','ASC')->get();
+        // $pengajars = DewanPengajars::whereNotNull('is_degur')->orderBy('is_degur','ASC')->get();
+        // $kelas = ['mt','reguler','pemb'];
+        // $seq_degur = 1;
+        // $seq_degur_max = 5;
+        // $seq_kelas = 1;
+        // $seq_kelas_max = 3;
+        // if(count($templates)>0){
+        //     foreach($templates as $t){
+        //         $update_a = KalenderPpmTemplates::find($t->id);
+        //         $update_a->kelas = $kelas[($seq_kelas-1)];
+        //         $update_a->save();
+        //         if($seq_kelas==$seq_kelas_max){
+        //             $seq_kelas=1;
+        //         }else{
+        //             $seq_kelas++;
+        //         }
+
+        //         $get_degur = DewanPengajars::where('is_degur',$seq_degur)->first();
+        //         $update_a->fkDewanPengajar_id = $get_degur->id;
+        //         $update_a->save();
+        //         if($seq_degur==$seq_degur_max){
+        //             $seq_degur=1;
+        //         }else{
+        //             $seq_degur++;
+        //         }
+        //     }
+        // }
+
+        KalenderPpmTemplates::where('is_agenda_khusus', 0)->delete();
         $pengajars = DewanPengajars::whereNotNull('is_degur')->orderBy('is_degur','ASC')->get();
         $kelas = ['mt','reguler','pemb'];
+        $waktu = ['shubuh','malam'];
         $seq_degur = 1;
         $seq_degur_max = 5;
         $seq_kelas = 1;
         $seq_kelas_max = 3;
-        if(count($templates)>0){
-            foreach($templates as $t){
-                $update_a = KalenderPpmTemplates::find($t->id);
-                $update_a->kelas = $kelas[($seq_kelas-1)];
-                $update_a->save();
-                if($seq_kelas==$seq_kelas_max){
-                    $seq_kelas=1;
-                }else{
-                    $seq_kelas++;
-                }
-
-                $get_degur = DewanPengajars::where('is_degur',$seq_degur)->first();
-                $update_a->fkDewanPengajar_id = $get_degur->id;
-                $update_a->save();
-                if($seq_degur==$seq_degur_max){
-                    $seq_degur=1;
-                }else{
-                    $seq_degur++;
+        for($i=1; $i<=31; $i++){
+            foreach($waktu as $w){
+                $templates = KalenderPpmTemplates::where('is_agenda_khusus', 1)->where('waktu', $w)->where('sequence',$i)->get();
+                if(count($templates)==0){
+                    foreach($kelas as $k){
+                        $get_degur = DewanPengajars::where('is_degur',$seq_degur)->first();
+                        $insert = KalenderPpmTemplates::create([
+                            'waktu' => $w,
+                            'kelas' => $k,
+                            'sequence' => $i,
+                            'fkDewanPengajar_id' => $get_degur->id,
+                            'is_agenda_khusus' => 0,
+                            'nama_agenda_khusus' => null,
+                            'day' => null,
+                        ]);
+                        if($seq_degur==$seq_degur_max){
+                            $seq_degur=1;
+                        }else{
+                            $seq_degur++;
+                        }
+                    }
                 }
             }
         }
