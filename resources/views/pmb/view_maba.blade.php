@@ -34,7 +34,7 @@
                                         <th class="text-uppercase text-sm text-secondary">SELEKSI</th>
                                         <th class="text-uppercase text-sm text-secondary">LURING</th>
                                         <th class="text-uppercase text-sm text-secondary">DARING</th>
-                                        <th class="text-uppercase text-sm text-secondary" style="width:250px;">MENTOR 1</th>
+                                        <th class="text-uppercase text-sm text-secondary">MENTOR 1</th>
                                         <th class="text-uppercase text-sm text-secondary">MENTOR 2</th>
                                         <th class="text-uppercase text-sm text-secondary">MENTOR 3</th>
                                         <th class="text-uppercase text-sm text-secondary">STATUS</th>
@@ -68,7 +68,7 @@
                                                 {{ $camaba->alasan_seleksi_daring }}
                                             </td>
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="mentor1-maba{{$camaba->id}}" name="mentor1" onchange="return changeMentor(1,{{$camaba->id}},this.value)">
+                                                <select style="width:200px;font-size: 13px !important;" class="form-control" id="mentor1-maba{{$camaba->id}}" name="mentor1" onchange="return changeMentor(1,{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->mentor1) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -76,7 +76,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="mentor2-maba{{$camaba->id}}" name="mentor2" onchange="return changeMentor(2,{{$camaba->id}},this.value)">
+                                                <select style="width:200px;font-size: 13px !important;" class="form-control" id="mentor2-maba{{$camaba->id}}" name="mentor2" onchange="return changeMentor(2,{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->mentor2) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -84,7 +84,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="mentor3-maba{{$camaba->id}}" name="mentor3" onchange="return changeMentor(3,{{$camaba->id}},this.value)">
+                                                <select style="width:200px;font-size: 13px !important;" class="form-control" id="mentor3-maba{{$camaba->id}}" name="mentor3" onchange="return changeMentor(3,{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->mentor3) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -153,7 +153,7 @@
                                                         $bg_status = '#fbb5b5';
                                                     }
                                                     ?>
-                                                    <select style="width:200px;" style="background:{{$bg_status}};" class="form-control" id="status-nilai-maba{{$camaba->id}}" name="status" onchange="return changeStatus({{$camaba->id}},this.value)">
+                                                    <select style="width:320px;background:{{$bg_status}};" class="form-control" id="status-nilai-maba{{$camaba->id}}" name="status" onchange="return changeStatus({{$camaba->id}},this.value)">
                                                         <option {{ ($camaba->status=='pending') ? 'selected' : '' }} value="pending">PENDING</option>
                                                         <option {{ ($camaba->status=='interview') ? 'selected' : '' }} value="interview">INTERVIEW</option>
                                                         <option {{ ($camaba->status=='tes') ? 'selected' : '' }} value="tes">TES</option>
@@ -164,7 +164,7 @@
                                             </td>
 
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="nilai-bacaan-maba{{$camaba->id}}" onchange="return changeNilai('bacaan',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-bacaan-maba{{$camaba->id}}" onchange="return changeNilai('bacaan',{{$camaba->id}},this.value)">
                                                     <option {{($camaba->nilai_bacaan=='-') ? 'selected' : ''}} value="-">-</option>
                                                     <option {{($camaba->nilai_bacaan=='kurang') ? 'selected' : ''}} value="kurang">Kurang</option>
                                                     <option {{($camaba->nilai_bacaan=='cukup') ? 'selected' : ''}} value="cukup">Cukup</option>
@@ -172,9 +172,9 @@
                                                     <option {{($camaba->nilai_bacaan=='sangatbaik') ? 'selected' : ''}} value="sangatbaik">Sangat Baik</option>
                                                 </select>
                                                 <br>
-                                                <input style="width:200px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_bacaan_ket}}" id="nilai-bacaan-ket{{$camaba->id}}" onkeyup="return changeNilai('bacaan_ket',{{$camaba->id}},this.value)">
+                                                <input style="width:320px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_bacaan_ket}}" id="nilai-bacaan-ket{{$camaba->id}}" onkeyup="return changeNilai('bacaan_ket',{{$camaba->id}},this.value)">
                                                 <br>
-                                                <select style="width:200px;" class="form-control" id="nilai-bacaan-mentor{{$camaba->id}}" name="nilai-bacaan-mentor" onchange="return changeNilai('bacaan_mentor',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-bacaan-mentor{{$camaba->id}}" name="nilai-bacaan-mentor" onchange="return changeNilai('bacaan_mentor',{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->nilai_bacaan_mentor) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -183,7 +183,7 @@
                                             </td>
 
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="nilai-quran-maba{{$camaba->id}}" onchange="return changeNilai('penyampaian_quran',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-quran-maba{{$camaba->id}}" onchange="return changeNilai('penyampaian_quran',{{$camaba->id}},this.value)">
                                                     <option {{($camaba->nilai_penyampaian_quran=='-') ? 'selected' : ''}} value="-">-</option>
                                                     <option {{($camaba->nilai_penyampaian_quran=='kurang') ? 'selected' : ''}} value="kurang">Kurang</option>
                                                     <option {{($camaba->nilai_penyampaian_quran=='cukup') ? 'selected' : ''}} value="cukup">Cukup</option>
@@ -191,9 +191,9 @@
                                                     <option {{($camaba->nilai_penyampaian_quran=='sangatbaik') ? 'selected' : ''}} value="sangatbaik">Sangat Baik</option>
                                                 </select>
                                                 <br>
-                                                <input style="width:200px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_penyampaian_quran_ket}}" id="nilai-quran-ket{{$camaba->id}}" onkeyup="return changeNilai('penyampaian_quran_ket',{{$camaba->id}},this.value)">
+                                                <input style="width:320px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_penyampaian_quran_ket}}" id="nilai-quran-ket{{$camaba->id}}" onkeyup="return changeNilai('penyampaian_quran_ket',{{$camaba->id}},this.value)">
                                                 <br>
-                                                <select style="width:200px;" class="form-control" id="nilai-quran-mentor{{$camaba->id}}" name="nilai-quran-mentor" onchange="return changeNilai('penyampaian_quran_mentor',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-quran-mentor{{$camaba->id}}" name="nilai-quran-mentor" onchange="return changeNilai('penyampaian_quran_mentor',{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->nilai_penyampaian_quran_mentor) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -202,7 +202,7 @@
                                             </td>
 
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="nilai-adzan-maba{{$camaba->id}}" onchange="return changeNilai('adzan',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-adzan-maba{{$camaba->id}}" onchange="return changeNilai('adzan',{{$camaba->id}},this.value)">
                                                     <option {{($camaba->nilai_adzan=='-') ? 'selected' : ''}} value="-">-</option>
                                                     <option {{($camaba->nilai_adzan=='kurang') ? 'selected' : ''}} value="kurang">Kurang</option>
                                                     <option {{($camaba->nilai_adzan=='cukup') ? 'selected' : ''}} value="cukup">Cukup</option>
@@ -210,9 +210,9 @@
                                                     <option {{($camaba->nilai_adzan=='sangatbaik') ? 'selected' : ''}} value="sangatbaik">Sangat Baik</option>
                                                 </select>
                                                 <br>
-                                                <input style="width:200px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_adzan_ket}}" id="nilai-adzan-ket{{$camaba->id}}" onkeyup="return changeNilai('adzan_ket',{{$camaba->id}},this.value)">
+                                                <input style="width:320px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_adzan_ket}}" id="nilai-adzan-ket{{$camaba->id}}" onkeyup="return changeNilai('adzan_ket',{{$camaba->id}},this.value)">
                                                 <br>
-                                                <select style="width:200px;" class="form-control" id="nilai-adzan-mentor{{$camaba->id}}" name="nilai-adzan-mentor" onchange="return changeNilai('adzan_mentor',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-adzan-mentor{{$camaba->id}}" name="nilai-adzan-mentor" onchange="return changeNilai('adzan_mentor',{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->nilai_adzan_mentor) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -221,7 +221,7 @@
                                             </td>
 
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="nilai-pegon-maba{{$camaba->id}}" onchange="return changeNilai('pegon',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-pegon-maba{{$camaba->id}}" onchange="return changeNilai('pegon',{{$camaba->id}},this.value)">
                                                     <option {{($camaba->nilai_bacaan=='-') ? 'selected' : ''}} value="-">-</option>
                                                     <option {{($camaba->nilai_pegon=='kurang') ? 'selected' : ''}} value="kurang">Kurang</option>
                                                     <option {{($camaba->nilai_pegon=='cukup') ? 'selected' : ''}} value="cukup">Cukup</option>
@@ -229,9 +229,9 @@
                                                     <option {{($camaba->nilai_pegon=='sangatbaik') ? 'selected' : ''}} value="sangatbaik">Sangat Baik</option>
                                                 </select>
                                                 <br>
-                                                <input style="width:200px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_pegon_ket}}" id="nilai-pegon-ket{{$camaba->id}}" onkeyup="return changeNilai('pegon_ket',{{$camaba->id}},this.value)">
+                                                <input style="width:320px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_pegon_ket}}" id="nilai-pegon-ket{{$camaba->id}}" onkeyup="return changeNilai('pegon_ket',{{$camaba->id}},this.value)">
                                                 <br>
-                                                <select style="width:200px;" class="form-control" id="nilai-pegon-mentor{{$camaba->id}}" name="nilai-pegon-mentor" onchange="return changeNilai('pegon_mentor',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-pegon-mentor{{$camaba->id}}" name="nilai-pegon-mentor" onchange="return changeNilai('pegon_mentor',{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->nilai_pegon_mentor) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -240,7 +240,7 @@
                                             </td>
 
                                             <td>
-                                                <select style="width:200px;" class="form-control" id="nilai-wawancara-maba{{$camaba->id}}" onchange="return changeNilai('wawancara',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-wawancara-maba{{$camaba->id}}" onchange="return changeNilai('wawancara',{{$camaba->id}},this.value)">
                                                     <option {{($camaba->nilai_bacaan=='-') ? 'selected' : ''}} value="-">-</option>
                                                     <option {{($camaba->nilai_wawancara=='1') ? 'selected' : ''}} value="1">Ortu OK - Anak OK</option>
                                                     <option {{($camaba->nilai_wawancara=='2') ? 'selected' : ''}} value="2">Ortu OK - Anak NOK</option>
@@ -248,9 +248,9 @@
                                                     <option {{($camaba->nilai_wawancara=='4') ? 'selected' : ''}} value="4">Ortu NOK - Anak NOK</option>
                                                 </select>
                                                 <br>
-                                                <input style="width:200px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_wawancara_ket}}" id="nilai-wawancara-ket{{$camaba->id}}" onkeyup="return changeNilai('wawancara_ket',{{$camaba->id}},this.value)">
+                                                <input style="width:320px;" placeholder="Keterangan" class="form-control" type="text" value="{{$camaba->nilai_wawancara_ket}}" id="nilai-wawancara-ket{{$camaba->id}}" onkeyup="return changeNilai('wawancara_ket',{{$camaba->id}},this.value)">
                                                 <br>
-                                                <select style="width:200px;" class="form-control" id="nilai-wawancara-mentor{{$camaba->id}}" name="nilai-wawancara-mentor" onchange="return changeNilai('wawancara_mentor',{{$camaba->id}},this.value)">
+                                                <select style="width:320px;" class="form-control" id="nilai-wawancara-mentor{{$camaba->id}}" name="nilai-wawancara-mentor" onchange="return changeNilai('wawancara_mentor',{{$camaba->id}},this.value)">
                                                     <option value="">-- pilih mentor --</option>
                                                     @foreach($panitias as $panitia)
                                                         <option {{ ($panitia->santri->user->fullname==$camaba->nilai_wawancara_mentor) ? 'selected' : '' }} value="{{$panitia->santri->user->fullname}}">{{$panitia->santri->user->fullname}}</option>
@@ -268,3 +268,11 @@
         </nav>
     </div>
 </div>
+
+<script>
+    try {
+        $(document).ready();
+    } catch (e) {
+        window.location.replace(`{{ url("/") }}`)
+    }
+</script>

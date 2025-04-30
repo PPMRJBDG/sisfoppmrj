@@ -294,9 +294,9 @@ echo $table;
 
 <script>
     try {
-        $(document).ready();
+      $(document).ready();
     } catch (e) {
-        window.location.replace(`{{ url("/") }}`)
+      window.location.replace(`{{ url("/") }}`)
     }
     $("#footer-calendar").show();
     document.getElementById('month-'+<?php echo array_search(date('m'), $month); ?>).scrollIntoView()

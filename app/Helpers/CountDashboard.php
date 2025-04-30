@@ -384,16 +384,16 @@ class CountDashboard
         $return_score['score'] = number_format($score,2);
         if($return_score['score']>=80){
             $return_score['score_text'] = 'text-black';
-            $return_score['score_desc'] = 'Sangat Aman';
+            $return_score['score_desc'] = 'Alhamdulillah, Pertahankan!';
         }elseif($return_score['score']<80 && $return_score['score']>=50){
             $return_score['score_text'] = 'text-info';
-            $return_score['score_desc'] = 'Aman';
+            $return_score['score_desc'] = 'Tingkatkan & Pertahankan!';
         }elseif($return_score['score']<50 && $return_score['score']>=20){
             $return_score['score_text'] = 'text-warning';
-            $return_score['score_desc'] = 'Hati-Hati';
+            $return_score['score_desc'] = 'Tingkatkan & Tetap Semangat!';
         }elseif($return_score['score']<20){
             $return_score['score_text'] = 'text-danger';
-            $return_score['score_desc'] = 'Tidak Aman';
+            $return_score['score_desc'] = 'Terus Tingkatkan & Semangat!';
         }
         return $return_score;
     }
