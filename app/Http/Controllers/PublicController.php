@@ -978,10 +978,10 @@ Jika ada *kendala*, silahkan menghubungi *Pengurus Koor Lorong*:
     public function kalender_ppm()
     {
         $today = date('Y-m-d', strtotime(today()));
-        $pengajars = DewanPengajars::all();
+        // $pengajars = DewanPengajars::all();
         $template = KalenderPpmTemplates::select('sequence')->groupBy('sequence')->get();
-        $templates = KalenderPpmTemplates::orderBy('id', 'ASC')->get();
+        $templates = KalenderPpmTemplates::orderBy('sequence', 'ASC')->get();
         $kalenders = KalenderPpms::get();
-        return view('kalender_ppm', ['today' => $today, 'pengajars' => $pengajars, 'template' => $template, 'templates' => $templates, 'kalenders' => $kalenders]);
+        return view('kalender_ppm', ['today' => $today, 'template' => $template, 'templates' => $templates, 'kalenders' => $kalenders]);
     }
 }

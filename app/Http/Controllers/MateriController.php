@@ -231,15 +231,15 @@ class MateriController extends Controller
     }
 
     public function reset_degur_template_kalender_ppm(){
-        $tempalets = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('sequence','ASC')->get();
+        $templates = KalenderPpmTemplates::where('is_agenda_khusus',0)->orderBy('sequence','ASC')->get();
         $pengajars = DewanPengajars::whereNotNull('is_degur')->orderBy('is_degur','ASC')->get();
         $kelas = ['mt','reguler','pemb'];
         $seq_degur = 1;
         $seq_degur_max = 5;
         $seq_kelas = 1;
         $seq_kelas_max = 3;
-        if(count($tempalets)>0){
-            foreach($tempalets as $t){
+        if(count($templates)>0){
+            foreach($templates as $t){
                 $update_a = KalenderPpmTemplates::find($t->id);
                 $update_a->kelas = $kelas[($seq_kelas-1)];
                 $update_a->save();

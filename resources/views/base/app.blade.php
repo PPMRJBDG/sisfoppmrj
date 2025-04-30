@@ -282,8 +282,8 @@ if (auth()->user()->hasRole('barcode')) {
                       <input type="hidden" value="" id="ak-bulan">
                       <input type="hidden" value="" id="ak-tanggal">
                       <select name="ak-waktu" id="ak-waktu" class="form-control">
+                        <option value="shubuh">Shubuh</option>
                           <option value="malam">Malam</option>
-                          <option value="shubuh">Shubuh</option>
                       </select>
                       <br>
                       <select onchange="changeFormKalenderAk(this.value)" data-mdb-filter="true" name="ak-nama" id="ak-nama" class="form-control cursor-pointer">
