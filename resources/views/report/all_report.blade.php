@@ -46,7 +46,7 @@
     <center>
     <div class="mb-2 position-relative">
         <i class="fas fa-user fa-2x {{$score['score_text']}} mb-0"></i>
-        <h5 class="{{$score['score_text']}} fw-bold mb-0"><small>SCORE</small> {{ number_format($score['score'], 2) }}</h5>
+        <h5 class="{{$score['score_text']}} fw-bold mb-0"><small>SCORE</small> {{ number_format($score['score'], 2) * 100 }}</h5>
         <h6 class="fw-normal {{$score['score_text']}} mb-0">{{$score['score_desc']}}</h6>
     </div>
     </center>
