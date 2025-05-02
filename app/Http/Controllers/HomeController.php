@@ -248,33 +248,37 @@ class HomeController extends Controller
             }
         }
 
-        if (auth()->user()->hasRole('santri')) {
-            $presences_santri = DB::table('presences as a')
-                ->leftJoin('presents as b', function ($join) {
-                    $join->on('a.id', '=', 'b.fkPresence_id');
-                    $join->where('b.fkSantri_id', auth()->user()->santri->id);
-                })
-                ->where('is_deleted', 0)
-                ->where('a.event_date', 'like', '%' . $tb . '%')
-                ->orderBy('a.event_date', 'ASC')
-                ->get();
-            if ($presences_santri != null) {
-                foreach ($presence_group as $pg) {
-                    $datapg[$pg->id]['loopr'] = 0;
-                    $datapg[$pg->id]['kehadiran'] = 0;
-                    $loopr = 0;
-                    $kehadiran = 0;
-                    foreach ($presences_santri as $ps) {
-                        if ($pg->id == $ps->fkPresence_group_id) {
-                            $loopr++;
-                            if ($ps->fkSantri_id != "") {
-                                $kehadiran++;
+        if (auth()->user()) {
+            if (auth()->user()->hasRole('santri')) {
+                $presences_santri = DB::table('presences as a')
+                    ->leftJoin('presents as b', function ($join) {
+                        $join->on('a.id', '=', 'b.fkPresence_id');
+                        $join->where('b.fkSantri_id', auth()->user()->santri->id);
+                    })
+                    ->where('is_deleted', 0)
+                    ->where('a.event_date', 'like', '%' . $tb . '%')
+                    ->orderBy('a.event_date', 'ASC')
+                    ->get();
+                if ($presences_santri != null) {
+                    foreach ($presence_group as $pg) {
+                        $datapg[$pg->id]['loopr'] = 0;
+                        $datapg[$pg->id]['kehadiran'] = 0;
+                        $loopr = 0;
+                        $kehadiran = 0;
+                        foreach ($presences_santri as $ps) {
+                            if ($pg->id == $ps->fkPresence_group_id) {
+                                $loopr++;
+                                if ($ps->fkSantri_id != "") {
+                                    $kehadiran++;
+                                }
+                                $datapg[$pg->id]['loopr'] = $loopr;
                             }
-                            $datapg[$pg->id]['loopr'] = $loopr;
+                            $datapg[$pg->id]['kehadiran'] = $kehadiran;
                         }
-                        $datapg[$pg->id]['kehadiran'] = $kehadiran;
                     }
                 }
+            } else {
+                $presences_santri = null;
             }
         } else {
             $presences_santri = null;
