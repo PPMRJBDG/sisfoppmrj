@@ -349,7 +349,7 @@ Hadir: ' . count($presents) . ' | Ijin: ' . count($permits) . ' | Alpha: ' . cou
                             $store['peringatan_kbm'] = 1;
                             $store['periode_bulan_kbm'] = json_encode([$last_month]);
                             $store['periode_tahun'] = CommonHelpers::periode();
-                            // $data = Pelanggaran::create($store);
+                            $data = Pelanggaran::create($store);
                         }
                     }
                 }
