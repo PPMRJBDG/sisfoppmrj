@@ -567,13 +567,14 @@ Jangan lupa mengunci gerbang, melaporkan jobdesk  dan mencatat mahasiswa yang pu
 
 *FINGERPRINT*
 📥 Mulai Sign In: *".date_format(date_create($get_presence_today->presence_start_date_time), 'H:i')."*
-📤 Batas Sign Out: *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
+📤 Batas Sign Out: *Tidak Perlu*
 
 🗒️ *NB*:".$is_put_together."
 - *Untuk Presensi, semua diwajibkan scan Fingerprint*
 - Amalsholih untuk dapat hadir tepat waktu, tertib, dan disiplin
 - Supaya mempersiapkan diri sebelum jam KBM dimulai, menuju masjid/mushola untuk sholat berjamaah sekaligus membawa materi yang sudah ditentukan
 - Dalam pelaksanaan KBM supaya ta'dzim, dipersungguh dan diniati mencari kefahaman";
+                // Sign Out *".date_format(date_create($get_presence_today->presence_end_date_time), 'H:i')."*
                 WaSchedules::save('Reminder #'.$get_presence_today->name, $caption, $setting->wa_maurus_group_id);
                 if($get_presence_today->is_put_together || $get_presence_today->is_hasda){
                     WaSchedules::save('Reminder Ortu #'.$get_presence_today->name, $caption, $setting->wa_ortu_group_id);
